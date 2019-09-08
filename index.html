@@ -380,6 +380,912 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/response/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/response/" class="post-title-link" itemprop="url">response</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:40:54" itemprop="dateCreated datePublished" datetime="2019-09-08T15:40:54+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="response"><a href="#response" class="headerlink" title="response"></a>response</h2><ol>
+<li><p>请求消息：客户端发送给服务器的数据</p>
+<p>数据格式：</p>
+<p>请求行</p>
+<p>请求头</p>
+<p>请求空行</p>
+<p>请求体</p>
+</li>
+<li><p>响应消息服务器端发给客户端的数据</p>
+<p>响应行</p>
+<p>响应头</p>
+<p>响应空行</p>
+<p>响应体</p>
+<ol>
+<li><p>响应行</p>
+<ol>
+<li><p>组成：协议/版本 响应状态码 状态码描述</p>
+</li>
+<li><p>响应状态码：服务器告诉客户端浏览器本次请求和响应的一个状态</p>
+<ol>
+<li><p>状态码都是3位数字</p>
+</li>
+<li><p>分类：</p>
+<ol>
+<li><p>1xx：服务器接受客户端信息，但没有接受完成，等待一段时间后，发送1xx状态码</p>
+</li>
+<li><p>2xx：成功 </p>
+</li>
+<li><p>3xx：重定向   代表:304 重定向   客户端向服务器请求a，服务器a说在c那，告诉客户端，客户端再去请求服务器c</p>
+<p><img src="/2019/09/08/response/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cresponse.png" alt></p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<pre><code>   ​                                 304 访问缓存：浏览器a向服务器请求a.png,服务器给，并在本地有缓存，当第二次请求时，服务器对浏览器回应304去访问自己的缓存。
+
+4. 4xx：客户端错误。代表：404 （请求路径不对）
+
+   1. 404：路径没有对应资源
+   2. 405：请求方式没有对应的doxx方法
+
+5. 5xx：服务器错误</code></pre><ol start="2">
+<li><p>响应头</p>
+<ol>
+<li><p>格式：头名称：值</p>
+</li>
+<li><p>常见的响应头：</p>
+<ol>
+<li><p>Content-Type：服务器告诉客户端本次响应体数据格式以及编码格式</p>
+</li>
+<li><p>Content-Type：服务器告诉客户端义什么格式打开响应体数据</p>
+<p>in-line：默认值在当前页面内打开</p>
+<p>attachment：以附件形式打开响应体.文件下载</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>响应体：传输的数据</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>response功能</p>
+<ol>
+<li><p>设置响应行</p>
+<ol>
+<li>格式：HTTP/1.1 200 ok</li>
+<li>设置状态码：setStatus(int sc)</li>
+</ol>
+</li>
+<li><p>设置响应头：setHeader(String name，String  value)</p>
+</li>
+<li><p>设置响应体：</p>
+<ul>
+<li><p>获取输出流</p>
+<p>字符输出流：PrintWriter getwriter（）</p>
+<p>字节输出流：ServletOutputStream getOutOutputStream()</p>
+</li>
+<li><p>使用输出流：将数据输出到客户端</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>案例</p>
+<ol>
+<li><p>完成重定向</p>
+<p>重定向：资源跳转的方式</p>
+<p>代码实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">response.setStatus(302);</span><br><span class="line">response.setHeader(&quot;location&quot;, &quot;/demo/responsedemo2&quot;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.sendRedirect(&quot;/demo/responsedemo2&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>转发特点：</p>
+<p>1.转发地址路径不变</p>
+<p>2.转发只能访问当前服务器下的资源</p>
+<p>3.转发是一次请求，可以使用request对象来共享数据</p>
+<p>重定向特点：</p>
+<p>1.地址栏发生变化</p>
+<p>2.重定向可以访问其他站点（服务器）的资源</p>
+<p>3.重定向是2次请求，不能使用request对象来共享数据</p>
+<p>foward和redirect区别</p>
+<p>路径写法：</p>
+<ol>
+<li>相对路径：通过相对路径不可以确定唯一资源  ./index.html不以/开头，以.开头<ul>
+<li>找到当前与目标资源之间的相对位置关系</li>
+<li>./:当前目录</li>
+<li>../：后退一级目录</li>
+</ul>
+</li>
+<li>绝对路径：通过绝对路径可以确定唯一资源<ul>
+<li>判断定义的路径给谁用</li>
+<li>给客户端用，需要加虚拟目录</li>
+<li>给服务器用：不需要加</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p>2.服务器输出字符数据到浏览器</p>
+<p>​       步骤：1.获取字符数据</p>
+<p>​                   2.输出数据</p>
+<p>​     注意乱码问题：PrintWriter pw=response.getWriter();默认编码方式是ISO-8859-1</p>
+<p>Writer类的常用方法</p>
+<p>void write(int n)：写入单个字符</p>
+<p>void write(byte b[])：写入一个字符数组</p>
+<p>void write(byte b[],int off,int len)：从字节数组中起始于偏移量off处取len个字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//告诉浏览器服务器的编码方式，建议浏览器使用该编码解码（浏览器默认gbk）</span><br><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset= utf-8&quot;);</span><br><span class="line">//获取字符数据</span><br><span class="line">PrintWriter pw=response.getWriter();</span><br><span class="line">//输出数据</span><br><span class="line">pw.write(&quot;你好啊&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>3.输出字节数据到浏览器（一般输出图片）</p>
+<p><code>ServletOutputStream</code>类提供了将二进制数据写入响应的流 </p>
+<p>getBytes()返回默认编码的字节数组</p>
+<p>OutputStream类的常用方法</p>
+<p>void write(int n)：写入单个字节</p>
+<p>void write(byte b[])：写入一个字节数组</p>
+<p>void write(byte b[],int off,int len)：从字节数组中起始于偏移量off处取len个字节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//获取字符数据</span><br><span class="line">ServletOutputStream pw=response.getOutputStream();</span><br><span class="line">//输出数据</span><br><span class="line">pw.write(&quot;你好&quot;.getBytes());</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/过滤器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/过滤器/" class="post-title-link" itemprop="url">过滤器</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:38:59" itemprop="dateCreated datePublished" datetime="2019-09-08T15:38:59+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><p>作用：</p>
+<ol>
+<li>对服务器接受的资源和响应给浏览器的资源进行管理</li>
+<li>保护servlet</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建一个实现Filter接口的普通java类</p>
+</li>
+<li><p>覆写接口的方法</p>
+<ol>
+<li>init方法：服务器启动即执行，资源初始化</li>
+<li>doFilter方法：拦截请求，在此方法中对资源实现管理 要手动对资源放行：chain.doFilter(request,response)</li>
+<li>destroy方法：服务器关闭</li>
+</ol>
+<p>在web.xml配置过滤器（是服务器在使用过滤器）  </p>
+<p>​              url-patten：/*表示拦截所有请求。</p>
+<p>​              url-patten：*.do 表示所有以.do结尾的请求。一般用来进行模块拦截。</p>
+<p>​              url-patten：/ts 表示拦截指定url的请求，针对某个servlet拦截，保护servlet</p>
+<p>过滤器生命周期：服务器启动到关闭。</p>
+<p>总结：过滤器程序员声明和配置，服务器根据请求中的url信息调用。</p>
+<p>执行机制：浏览器发起请求到服务器，服务器接到请求后，根据url在web.xml中找到对应的过滤器执行doFilter方法，该方法对此次请求进行处理后如果符合则放行，放行后还有其他符合要求的进行过滤，找到执行对应的servlet进行处理。servlet对请求处理完毕后，service方法结束。还需继续返回相应的doFilter检修执行</p>
+<p>案例：统一编码格式设置</p>
+<p>​            session管理</p>
+<p>​             权限管理</p>
+<p>​             资源管理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 在过滤器类前使用@WebFilter()注释</span><br><span class="line"> * filterName:名称</span><br><span class="line"> * urlPatterns:过滤器作用url地址</span><br><span class="line"> * initParams:初始化参数，以WebInitParam()形式存入</span><br><span class="line"> * */</span><br><span class="line">@WebFilter(filterName = &quot;filterusers&quot;,urlPatterns =&quot;/demo/*&quot;,</span><br><span class="line">        initParams =&#123;@WebInitParam(name=&quot;ip&quot;,value = &quot;192.168.*.*&quot;)&#125; )</span><br><span class="line">public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">    HttpServletRequest request = (HttpServletRequest) servletRequest;</span><br><span class="line">    HttpServletResponse response = (HttpServletResponse) servletResponse;</span><br><span class="line">    HttpSession session = request.getSession();</span><br><span class="line">    if (session.getAttribute(&quot;user&quot;)==null) &#123;</span><br><span class="line">        response.sendRedirect();</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">        //放行</span><br><span class="line">        filterChain.doFilter(request,response);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Session/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/Session/" class="post-title-link" itemprop="url">Session</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:37:43" itemprop="dateCreated datePublished" datetime="2019-09-08T15:37:43+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
+<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
+<p>解决：Session</p>
+<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
+
+<p>特点：</p>
+<ol>
+<li>存储在服务器</li>
+<li>服务器进行创建</li>
+<li>依赖Cookie技术</li>
+<li>一次会话</li>
+<li>默认存储时间30分钟</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建session对象/获取session对象         HttpSession hs=request.getSession()</p>
+<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
+<p>如果没有创建，那么新建一个</p>
+</li>
+<li><p>设置session存储时间 hs.invalidate( )</p>
+</li>
+<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
+<p>获取数据 hs.getAttribute(String name)</p>
+</li>
+</ol>
+<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
+<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
+<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
+<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+
+<p>session1存数据，session2读数据，但是是一个用户</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Cookie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/Cookie/" class="post-title-link" itemprop="url">Cookie</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><h2 id="设置Cookie"><a href="#设置Cookie" class="headerlink" title="设置Cookie"></a>设置Cookie</h2><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
+<p>识别返回用户包括三个步骤：</p>
+<ul>
+<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
+<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
+<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
+</ul>
+<p>这里给一个Cookie响应头例子，来自于菜鸟</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
+
+<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。在到期之后浏览器便会”忘记”Cookie。expire翻译有去世的意思，补充英语单词，哈哈。</p>
+<p>特点：</p>
+<ol>
+<li><p>这是浏览器端的数据存储技术</p>
+</li>
+<li><p>数据声明是在服务器</p>
+</li>
+<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
+<p>​                定时存储：到期之后才会没得</p>
+</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置最大生命周期（以秒为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送Cookie到HTTP响应头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/05/java装箱与拆箱/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1445,7 +2351,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1470,7 +2376,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1491,7 +2399,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
