@@ -1746,11 +1746,44 @@
 <li><p>无编号</p>
 </li>
 </ul>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><h2 id="5-1"><a href="#5-1" class="headerlink" title="5.1"></a>5.1</h2><h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>overleaf上有多种参考文献格式，这里使用常见的方式，详细步骤如下：</p>
+<ol>
+<li>新建.bib文件，里面存放引用文献的信息</li>
+<li>在谷歌学术或百度学术中找到相应文献的  “ 引用 ”功能，然后在导入链接那点击 “ BibTex ”。复制其中的内容至新建立的.bib文件</li>
+<li>相关命令</li>
+</ol>
+<ul>
+<li><p><code>\usepackage{biblatex}</code></p>
+<p>导入包<strong>biblatex</strong>。</p>
+</li>
+<li><p><code>\addbibresource{sample.bib}</code></p>
+<p>导入bibtex数据文件<em>sample.bib</em>，此文件包含有关每个引用的书籍，文章等信息。 </p>
+</li>
+<li><p><code>\cite{einstein}</code></p>
+<p>此命令在文档中插入引用[1]，在这种情况下，对应于参考书目中的元素，“einstein”是对应于<em>sample.bib中</em>的条目的关键字。</p>
+</li>
+<li><p>\printbibliography`</p>
+<p>打印引用的参考文献列表，默认标题是文章文档类的“参考文献”和书籍和报告的“参考书目”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line"> </span><br><span class="line">\usepackage&#123;biblatex&#125;</span><br><span class="line">\addbibresource&#123;sample.bib&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">Let&apos;s cite! The Einstein&apos;s journal paper \cite&#123;einstein&#125; and the Dirac&apos;s </span><br><span class="line">book \cite&#123;dirac&#125; are physics related items. </span><br><span class="line"> </span><br><span class="line">\printbibliography</span><br><span class="line"> </span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/i.png" alt></p>
+<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\section&#123;Introduction&#125;</span><br><span class="line"> </span><br><span class="line">This is the first section.</span><br><span class="line"> </span><br><span class="line">Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  </span><br><span class="line">elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et </span><br><span class="line">neque pharetra sollicitudin.  Praesent imperdietmi nec ante. </span><br><span class="line">Donec ullamcorper, felis non sodales...</span><br><span class="line"> </span><br><span class="line">\section&#123;Second Section&#125;</span><br><span class="line"> </span><br><span class="line">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  </span><br><span class="line">Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra </span><br><span class="line">sollicitudin.  Praesent imperdiet mi necante...</span><br></pre></td></tr></table></figure>
 
 <p>​                                                                    </p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png" alt></p>
+<h1 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h1><p>同时有很多样式，这里用本人喜欢的风格</p>
+<p>\usepackage{fancyhdr} 导入包</p>
+<p>\fancyhf 清除页眉和页脚，否则将出现默认“普通”页面样式的元素。 </p>
+<p>\rhead{ } 右上角页眉</p>
+<p>\lhead{ } 左上角页眉</p>
+<p>\rfoot{ }  页脚</p>
+<p>{ }内推荐写 \thepage这样可以自动写入页数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage&#123;fancyhdr&#125;</span><br><span class="line"></span><br><span class="line">\pagestyle&#123;fancy&#125;</span><br><span class="line">\fancyhf&#123;&#125;</span><br><span class="line">\rhead&#123;Overleaf&#125;</span><br><span class="line">\lhead&#123;\LaTeX&#123;&#125; tutorials&#125;</span><br><span class="line">\rfoot&#123; \thepage&#125;</span><br><span class="line"></span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line"></span><br><span class="line">\section&#123;First Section&#125;</span><br><span class="line"></span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png" alt></p>
 
           
         
