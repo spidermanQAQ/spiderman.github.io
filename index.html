@@ -1867,24 +1867,24 @@
         
           
             <h1 id="LaTex"><a href="#LaTex" class="headerlink" title="LaTex"></a>LaTex</h1><p>[TOC]</p>
-<h1 id="LaTex预备知识"><a href="#LaTex预备知识" class="headerlink" title="LaTex预备知识"></a>LaTex预备知识</h1><h2 id="1-1-第一个LaTex文档"><a href="#1-1-第一个LaTex文档" class="headerlink" title="1.1 第一个LaTex文档"></a>1.1 <strong>第一个LaTex文档</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">First document. This is a simple example, with no </span><br><span class="line">extra parameters or packages included.</span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="LaTex预备知识"><a href="#LaTex预备知识" class="headerlink" title="LaTex预备知识"></a>LaTex预备知识</h1><h2 id="第一个LaTex文档"><a href="#第一个LaTex文档" class="headerlink" title="第一个LaTex文档"></a><strong>第一个LaTex文档</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">First document. This is a simple example, with no </span><br><span class="line">extra parameters or packages included.</span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
 
 <p> 第一行说明文档类型，在<code>\begin{document} \end{document}</code>标签之间编写文档的文本。 </p>
 <p>article 排版科技期刊、短报告、程序文档、邀请函等。</p>
 <p>report 排版多章节的长报告、短篇的书籍、博士论文等。</p>
 <p>book 排版书籍。</p>
 <p>slides 排版幻灯片。</p>
-<h2 id="1-2-序言"><a href="#1-2-序言" class="headerlink" title="1.2 序言"></a>1.2 <strong>序言</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass[12pt, letterpaper]&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line"> </span><br><span class="line">\title&#123;First document&#125;</span><br><span class="line">\author&#123;Hubert Farnsworth \thanks&#123;funded by the ShareLaTeX team&#125;&#125;</span><br><span class="line">\date&#123;February 2014&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a><strong>序言</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass[12pt, letterpaper]&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line"> </span><br><span class="line">\title&#123;First document&#125;</span><br><span class="line">\author&#123;Hubert Farnsworth \thanks&#123;funded by the ShareLaTeX team&#125;&#125;</span><br><span class="line">\date&#123;February 2014&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在<code>\begin{document}</code>命令之前输入的文本称为<strong>前导码</strong>。在序言中，您可以定义要编写的文档类型和语言，加载您需要的额外包，并设置几个参数 。</p>
 <p>下面对各部分进行说明：</p>
 <p>\documentclass[12pt, letterpaper]{article} ：在示例中，额外参数设置字体大小（12pt）和纸张大小（letterpaper）。默认大小为10pt。纸张尺寸默认为A4</p>
 <p>\usepackage[utf8]{inputenc} ：如果不是特别需要其他编码，将此行添加到前导码中  </p>
 <p>接下来的三行是自我描述的 。如果要让标题显示，可以通过\maketitle来达到</p>
-<h2 id="1-3-斜体-粗体-下划线"><a href="#1-3-斜体-粗体-下划线" class="headerlink" title="1.3 斜体 粗体 下划线"></a>1.3 <strong>斜体 粗体 下划线</strong></h2><p>斜体：\textit{ }</p>
+<h2 id="斜体-粗体-下划线"><a href="#斜体-粗体-下划线" class="headerlink" title="斜体 粗体 下划线"></a><strong>斜体 粗体 下划线</strong></h2><p>斜体：\textit{ }</p>
 <p>粗体：\textbf{ }</p>
 <p>下划线：\underline{ }</p>
-<h2 id="1-4-换行-分页-水平空格-垂直空格"><a href="#1-4-换行-分页-水平空格-垂直空格" class="headerlink" title="1.4 换行 分页 水平空格 垂直空格"></a>1.4 <strong>换行 分页 水平空格 垂直空格</strong></h2><p>换行(新的一行会顶格开始)</p>
+<h2 id="换行-分页-水平空格-垂直空格"><a href="#换行-分页-水平空格-垂直空格" class="headerlink" title="换行 分页 水平空格 垂直空格"></a><strong>换行 分页 水平空格 垂直空格</strong></h2><p>换行(新的一行会顶格开始)</p>
 <ul>
 <li>\\</li>
 <li>\newline</li>
@@ -1905,7 +1905,7 @@
 <li>\vspace{ }：填指定长度空白</li>
 <li>\vfill：填空白到页面底部</li>
 </ul>
-<h1 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h1><h2 id="2-1-新段落"><a href="#2-1-新段落" class="headerlink" title="2.1 新段落"></a>2.1 <strong>新段落</strong></h2><ul>
+<h1 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h1><h2 id="新段落"><a href="#新段落" class="headerlink" title="新段落"></a><strong>新段落</strong></h2><ul>
 <li><p>空一行</p>
 </li>
 <li><p>段末 \par</p>
@@ -1914,17 +1914,17 @@
 </li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/d.png" alt></p>
-<h2 id="2-2-居中-左对齐-右对齐"><a href="#2-2-居中-左对齐-右对齐" class="headerlink" title="2.2 居中 左对齐 右对齐"></a><strong>2.2 居中 左对齐 右对齐</strong></h2><p>左对齐示例</p>
+<h2 id="居中-左对齐-右对齐"><a href="#居中-左对齐-右对齐" class="headerlink" title="居中 左对齐 右对齐"></a><strong>居中 左对齐 右对齐</strong></h2><p>左对齐示例</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;flushleft&#125;</span><br><span class="line">``LaTeX is a document preparation system and document markup </span><br><span class="line">language. LaTeX uses the TeX typesetting program for formatting </span><br><span class="line">its output, and is itself written in the TeX macro language. </span><br><span class="line">LaTeX is not the name of a particular editing program, but refers </span><br><span class="line">to the encoding or tagging conventions that are used in LaTeX documents&quot;.</span><br><span class="line">\end&#123;flushleft&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/e.png" alt></p>
-<h1 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h1><h2 id="3-1-插入图片"><a href="#3-1-插入图片" class="headerlink" title="3.1 插入图片"></a>3.1 <strong>插入图片</strong></h2><p> Latex无法自行管理图像，因此我们需要使用<strong>graphicx</strong>包 </p>
+<h1 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h1><h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a><strong>插入图片</strong></h2><p> Latex无法自行管理图像，因此我们需要使用<strong>graphicx</strong>包 </p>
 <p>\usepackage{graphicx} </p>
 <p>\includegraphics{universe}  universe为图片名</p>
-<h2 id="3-2-图片路径"><a href="#3-2-图片路径" class="headerlink" title="3.2 图片路径"></a>3.2 <strong>图片路径</strong></h2><p>图片路径有多种选择，<strong>最佳做法是将图形路径指定为相对于主.tex文件</strong>，例如将主.tex文件目录表示 <code>./</code> </p>
+<h2 id="图片路径"><a href="#图片路径" class="headerlink" title="图片路径"></a><strong>图片路径</strong></h2><p>图片路径有多种选择，<strong>最佳做法是将图形路径指定为相对于主.tex文件</strong>，例如将主.tex文件目录表示 <code>./</code> </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%Path relative to the main .tex file </span><br><span class="line">\graphicspath&#123; &#123;./images/&#125; &#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="3-3-图片大小和旋转"><a href="#3-3-图片大小和旋转" class="headerlink" title="3.3 图片大小和旋转"></a>3.3 <strong>图片大小和旋转</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = 3cm，height = 4cm ] &#123;lion-logo &#125;                     长宽</span><br></pre></td></tr></table></figure>
+<h2 id="图片大小和旋转"><a href="#图片大小和旋转" class="headerlink" title="图片大小和旋转"></a><strong>图片大小和旋转</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = 3cm，height = 4cm ] &#123;lion-logo &#125;                     长宽</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = \ textwidth ] &#123;universe &#125;                            图片和文本等宽</span><br></pre></td></tr></table></figure>
 
@@ -1936,7 +1936,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">The universe is immense and it seems to be homogeneous, </span><br><span class="line">in a large scale, everywhere we look at.</span><br><span class="line"> </span><br><span class="line">\includegraphics[width=\textwidth]&#123;universe&#125;</span><br></pre></td></tr></table></figure>
 
 <p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/g.png" alt></p>
-<h2 id="3-4-图片与文字的组合"><a href="#3-4-图片与文字的组合" class="headerlink" title="3.4 图片与文字的组合"></a>3.4 <strong>图片与文字的组合</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">In the next example the figure will be positioned </span><br><span class="line">right below this sentence.</span><br><span class="line"> </span><br><span class="line">\begin&#123;figure&#125;[h]</span><br><span class="line">\includegraphics[width=8cm]&#123;Plot&#125;</span><br><span class="line">\end&#123;figure&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="图片与文字的组合"><a href="#图片与文字的组合" class="headerlink" title="图片与文字的组合"></a><strong>图片与文字的组合</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">In the next example the figure will be positioned </span><br><span class="line">right below this sentence.</span><br><span class="line"> </span><br><span class="line">\begin&#123;figure&#125;[h]</span><br><span class="line">\includegraphics[width=8cm]&#123;Plot&#125;</span><br><span class="line">\end&#123;figure&#125;</span><br></pre></td></tr></table></figure>
 
 <p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/a.png" alt></p>
 <p>该<code>figure</code>环境用于将图片显示为文档中的浮动元素 ，LaTex会自动对图片进行定位</p>
