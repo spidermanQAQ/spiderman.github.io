@@ -1966,7 +1966,7 @@
 <p>{0.25\textwidth}：图片相对于文本的宽度</p>
 <p>效果图</p>
 <p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/c.png" alt></p>
-<h1 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h1><h1 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h1><p>数学表达式的写入模式有2种：<strong>inline</strong> mode ，<strong>display</strong> mode 。第一个用于编写作为文本一部分的公式。第二个用于编写不属于文本或段落的表达式 。</p>
+<h1 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h1><p>数学表达式的写入模式有2种：<strong>inline</strong> mode ，<strong>display</strong> mode 。第一个用于编写作为文本一部分的公式。第二个用于编写不属于文本或段落的表达式 。</p>
 <p><strong>inline</strong> mode(行内模式)：用这些分隔符之一：<code>\( \)</code>，<code>$ $</code>或<code>\begin{math} \end{math}</code></p>
 <p><strong>display</strong> mode (行内模式）：<code>\[ \]</code>, <code>$$ $$</code>, <code>\begin{displaymath} \end{displaymath}</code> or <code>\begin{equation} \end{equation}</code> </p>
 <ul>
@@ -1975,6 +1975,21 @@
 <li><p>无编号</p>
 </li>
 </ul>
+<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\section&#123;Introduction&#125;</span><br><span class="line"> </span><br><span class="line">This is the first section.</span><br><span class="line"> </span><br><span class="line">Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  </span><br><span class="line">elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et </span><br><span class="line">neque pharetra sollicitudin.  Praesent imperdietmi nec ante. </span><br><span class="line">Donec ullamcorper, felis non sodales...</span><br><span class="line"> </span><br><span class="line">\section&#123;Second Section&#125;</span><br><span class="line"> </span><br><span class="line">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  </span><br><span class="line">Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra </span><br><span class="line">sollicitudin.  Praesent imperdiet mi necante...</span><br></pre></td></tr></table></figure>
+
+<p>​                                                                    </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png" alt></p>
+<h1 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h1><p>同时有很多样式，这里用本人喜欢的风格</p>
+<p>\usepackage{fancyhdr} 导入包</p>
+<p>\fancyhf 清除页眉和页脚，否则将出现默认“普通”页面样式的元素。 </p>
+<p>\rhead{ } 右上角页眉</p>
+<p>\lhead{ } 左上角页眉</p>
+<p>\rfoot{ }  页脚</p>
+<p>{ }内推荐写 \thepage这样可以自动写入页数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage&#123;fancyhdr&#125;</span><br><span class="line"></span><br><span class="line">\pagestyle&#123;fancy&#125;</span><br><span class="line">\fancyhf&#123;&#125;</span><br><span class="line">\rhead&#123;Overleaf&#125;</span><br><span class="line">\lhead&#123;\LaTeX&#123;&#125; tutorials&#125;</span><br><span class="line">\rfoot&#123; \thepage&#125;</span><br><span class="line"></span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line"></span><br><span class="line">\section&#123;First Section&#125;</span><br><span class="line"></span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png" alt></p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>overleaf上有多种参考文献格式，这里使用常见的方式，详细步骤如下：</p>
 <ol>
 <li>新建.bib文件，里面存放引用文献的信息</li>
@@ -1998,21 +2013,6 @@
 </li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/i.png" alt></p>
-<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\section&#123;Introduction&#125;</span><br><span class="line"> </span><br><span class="line">This is the first section.</span><br><span class="line"> </span><br><span class="line">Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  </span><br><span class="line">elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et </span><br><span class="line">neque pharetra sollicitudin.  Praesent imperdietmi nec ante. </span><br><span class="line">Donec ullamcorper, felis non sodales...</span><br><span class="line"> </span><br><span class="line">\section&#123;Second Section&#125;</span><br><span class="line"> </span><br><span class="line">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  </span><br><span class="line">Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra </span><br><span class="line">sollicitudin.  Praesent imperdiet mi necante...</span><br></pre></td></tr></table></figure>
-
-<p>​                                                                    </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png" alt></p>
-<h1 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h1><p>同时有很多样式，这里用本人喜欢的风格</p>
-<p>\usepackage{fancyhdr} 导入包</p>
-<p>\fancyhf 清除页眉和页脚，否则将出现默认“普通”页面样式的元素。 </p>
-<p>\rhead{ } 右上角页眉</p>
-<p>\lhead{ } 左上角页眉</p>
-<p>\rfoot{ }  页脚</p>
-<p>{ }内推荐写 \thepage这样可以自动写入页数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage&#123;fancyhdr&#125;</span><br><span class="line"></span><br><span class="line">\pagestyle&#123;fancy&#125;</span><br><span class="line">\fancyhf&#123;&#125;</span><br><span class="line">\rhead&#123;Overleaf&#125;</span><br><span class="line">\lhead&#123;\LaTeX&#123;&#125; tutorials&#125;</span><br><span class="line">\rfoot&#123; \thepage&#125;</span><br><span class="line"></span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line"></span><br><span class="line">\section&#123;First Section&#125;</span><br><span class="line"></span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png" alt></p>
 
           
         
