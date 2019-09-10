@@ -1920,10 +1920,9 @@
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/e.png" alt></p>
 <h1 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h1><h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a><strong>插入图片</strong></h2><p> Latex无法自行管理图像，因此我们需要使用<strong>graphicx</strong>包 </p>
 <p>\usepackage{graphicx} </p>
+<p>\graphicspath{ {./images/} }</p>
 <p>\includegraphics{universe}  universe为图片名</p>
-<h2 id="图片路径"><a href="#图片路径" class="headerlink" title="图片路径"></a><strong>图片路径</strong></h2><p>图片路径有多种选择，<strong>最佳做法是将图形路径指定为相对于主.tex文件</strong>，例如将主.tex文件目录表示 <code>./</code> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%Path relative to the main .tex file </span><br><span class="line">\graphicspath&#123; &#123;./images/&#125; &#125;</span><br></pre></td></tr></table></figure>
-
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/pic.png" alt></p>
 <h2 id="图片大小和旋转"><a href="#图片大小和旋转" class="headerlink" title="图片大小和旋转"></a><strong>图片大小和旋转</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = 3cm，height = 4cm ] &#123;lion-logo &#125;                     长宽</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = \ textwidth ] &#123;universe &#125;                            图片和文本等宽</span><br></pre></td></tr></table></figure>
