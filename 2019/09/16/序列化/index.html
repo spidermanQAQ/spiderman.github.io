@@ -112,18 +112,21 @@
   </script>
 
 
-  <meta name="description" content="SessionSession是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session  问题：一个用户的不同请求处理的数据共享怎么办 解决：Session 原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用">
-<meta name="keywords" content="servlet">
+  <meta name="description" content="序列化序列化和反序列化的概念序列化：把对象转换成字节序列的过程 反序列化：把字节序列转换成对象的过程 什么时候使用序列化 对象序列化可以实现分布式对象。主要应用例如：RMI(即远程调用Remote Method Invocation)要利用对象序列化运行远程主机上的服务，就像在本地机上运行对象时一样。 java对象序列化不仅保留一个对象的数据，而且递归保存对象引用的每个对象的数据。可以将整个对象层">
+<meta name="keywords" content="java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Session">
-<meta property="og:url" content="http://yoursite.com/2019/09/08/Session/index.html">
+<meta property="og:title" content="序列化">
+<meta property="og:url" content="http://yoursite.com/2019/09/16/序列化/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="SessionSession是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session  问题：一个用户的不同请求处理的数据共享怎么办 解决：Session 原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用">
+<meta property="og:description" content="序列化序列化和反序列化的概念序列化：把对象转换成字节序列的过程 反序列化：把字节序列转换成对象的过程 什么时候使用序列化 对象序列化可以实现分布式对象。主要应用例如：RMI(即远程调用Remote Method Invocation)要利用对象序列化运行远程主机上的服务，就像在本地机上运行对象时一样。 java对象序列化不仅保留一个对象的数据，而且递归保存对象引用的每个对象的数据。可以将整个对象层">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-08T07:38:36.812Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/xuliehuaone.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/serialization.png">
+<meta property="og:updated_time" content="2019-09-16T03:58:48.629Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Session">
-<meta name="twitter:description" content="SessionSession是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session  问题：一个用户的不同请求处理的数据共享怎么办 解决：Session 原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用">
+<meta name="twitter:title" content="序列化">
+<meta name="twitter:description" content="序列化序列化和反序列化的概念序列化：把对象转换成字节序列的过程 反序列化：把字节序列转换成对象的过程 什么时候使用序列化 对象序列化可以实现分布式对象。主要应用例如：RMI(即远程调用Remote Method Invocation)要利用对象序列化运行远程主机上的服务，就像在本地机上运行对象时一样。 java对象序列化不仅保留一个对象的数据，而且递归保存对象引用的每个对象的数据。可以将整个对象层">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/xuliehuaone.png">
 
 
 
@@ -131,7 +134,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/09/08/Session/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/16/序列化/">
 
 
 
@@ -141,7 +144,7 @@
   };
 </script>
 
-  <title>Session | 万乔少女的梦QAQ</title>
+  <title>序列化 | 万乔少女的梦QAQ</title>
   
 
 
@@ -381,7 +384,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Session/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/序列化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -398,7 +401,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Session
+          <h1 class="post-title" itemprop="name headline">序列化
 
               
             
@@ -424,7 +427,7 @@
                 
               
 
-              <time title="创建时间：2019-09-08 15:37:43" itemprop="dateCreated datePublished" datetime="2019-09-08T15:37:43+08:00">2019-09-08</time>
+              <time title="创建时间：2019-09-16 11:58:09" itemprop="dateCreated datePublished" datetime="2019-09-16T11:58:09+08:00">2019-09-16</time>
             </span>
           
 
@@ -439,7 +442,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
 
                 
                 
@@ -479,42 +482,42 @@
       
 
       
-        <h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
-<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
-<p>解决：Session</p>
-<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
-
-<p>特点：</p>
+        <h1 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h1><h2 id="序列化和反序列化的概念"><a href="#序列化和反序列化的概念" class="headerlink" title="序列化和反序列化的概念"></a>序列化和反序列化的概念</h2><p>序列化：把对象转换成字节序列的过程</p>
+<p>反序列化：把字节序列转换成对象的过程</p>
+<h2 id="什么时候使用序列化"><a href="#什么时候使用序列化" class="headerlink" title="什么时候使用序列化"></a>什么时候使用序列化</h2><ul>
+<li>对象序列化可以<code>实现分布式对象</code>。<br>主要应用例如：<code>RMI(即远程调用Remote Method Invocation)</code>要利用对象序列化运行远程主机上的服务，就像在本地机上运行对象时一样。</li>
+<li>java对象序列化不仅保留一个对象的数据，而且递归保存对象引用的每个对象的数据。<br>可以将整个对象层次写入字节流中，可以保存在文件中或在网络连接上传递。利用对象序列化可以进行对象的”<strong>深复制</strong>“，即<code>复制对象本身及引用的对象本身</code>。序列化一个对象可能得到整个对象序列。</li>
+<li>序列化可以将内存中的类写入文件或数据库中。<br>比如：将某个类序列化后存为文件，下次读取时只需将文件中的数据<code>反序列化</code>就可以将原先的类还原到内存中。也可以将类序列化为流数据进行传输。总的来说就是<code>将一个已经实例化的类转成文件存储</code>，下次需要实例化的时候只要反序列化即可将类实例化到内存中并保留序列化时类中的所有变量和状态。</li>
+<li>对象、文件、数据，有许多不同的格式，很难统一传输和保存。<br>序列化以后就都是字节流了，无论原来是什么东西，都能<code>变成一样的东西</code>，就可以进行通用的格式传输或保存，传输结束以后，要再次使用，就进行反序列化还原，这样对象还是对象，文件还是文件</li>
+</ul>
+<p>（上面也就存储在文件上用过，其余的没试过，参考的网上不错的总结，以后用到再补充）</p>
+<p><strong>主要用途</strong>：</p>
 <ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
+<li>把对象的字节序列永久地保存到硬盘上，通常存放在一个文件中</li>
+<li>在网络上传送对象的字节序列（当两个进程在进行远程通信时，彼此可以发送各种类型的数据。无论是何种类型的数据，都会以二进制序列的形式在网络上传送。发送方需要把这个Java对象转换为字节序列，才能在网络上传送；接收方则需要把字节序列再恢复为Java对象）</li>
 </ol>
-<p>使用：</p>
-<ol>
-<li><p>创建session对象/获取session对象         HttpSession hs=request.getSession()</p>
-<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-<p>如果没有创建，那么新建一个</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ol>
-<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
-<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
-<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
-<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>点进Serializable接口看一下</p>
+<h2 id="一个问题"><a href="#一个问题" class="headerlink" title="一个问题"></a>一个问题</h2><p>点进Serializable接口看一下</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/xuliehuaone.png" alt></p>
+<p>里面啥都没有，它是一个空接口，仅仅是一个标识，用来告诉jvm进行序列化，真正的序列化操作不是由他来完成的</p>
+<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class person implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 1L；</span><br><span class="line">    private String name;</span><br><span class="line">    private String age;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getAge() &#123;</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAge(String age) &#123;</span><br><span class="line">        this.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Serialization();</span><br><span class="line">        person per3=DestroySerialization();</span><br><span class="line">        System.out.println(per3.toString());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    private static void Serialization() throws IOException &#123;</span><br><span class="line">        person per1=new person();</span><br><span class="line">        per1.setName(&quot;小李&quot;);</span><br><span class="line">        per1.setAge(&quot;19&quot;);</span><br><span class="line">        ObjectOutputStream os=new ObjectOutputStream(new FileOutputStream(new File(&quot;d:/flyPig.txt&quot;)));</span><br><span class="line">        os.writeObject(per1);</span><br><span class="line">        System.out.println(&quot;序列化成功&quot;);</span><br><span class="line">        os.close();</span><br><span class="line">    &#125;</span><br><span class="line">    private static person DestroySerialization() throws Exception&#123;</span><br><span class="line">        ObjectInputStream is=new ObjectInputStream(new FileInputStream(new File(&quot;d:/flyPig.txt&quot;)));</span><br><span class="line">        person per2=(person) is.readObject();</span><br><span class="line">        System.out.println(&quot;反序列化成功&quot;);</span><br><span class="line">        return per2;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>session1存数据，session2读数据，但是是一个用户</p>
+<p>运行结果：</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/serialization.png" alt></p>
+<p><strong>transient和static修饰的变量不会被序列化</strong></p>
+<h2 id="关于serialversionUID变量"><a href="#关于serialversionUID变量" class="headerlink" title="关于serialversionUID变量"></a>关于<strong>serialversionUID变量</strong></h2><p>如果自己没有声明一个serialVersionUID变量，默认会自动生成一个serialVersionUID，但是推荐自己写一个，因为默认的serialVersinUID对于class的细节非常敏感，反序列化时可能会导致InvalidClassException这个异常。</p>
+<p>serialVersionUID作用：用来辅助对象的序列化与反序列化的，原则上序列化后的数据当中的serialVersionUID与当前类当中的serialVersionUID一致，那么该对象才能被反序列化成功。</p>
+<p>serialVersionUID的工作机制：</p>
+<ul>
+<li>序列化时serialVersionUID会被写入到序列化的文件中去</li>
+<li>反序列化时JVM会把传来的字节流中的serialVersionUID于本地相应实体类的serialVersionUID进行比较。如果相同说明是一致的，可以进行反序列化，否则会出现反序列化版本一致的异常。</li>
+</ul>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a href="https://www.jianshu.com/p/664ef87f5fdb" target="_blank" rel="noopener">https://www.jianshu.com/p/664ef87f5fdb</a></li>
+<li><a href="https://baijiahao.baidu.com/s?id=1633305649182361563&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">https://baijiahao.baidu.com/s?id=1633305649182361563&amp;wfr=spider&amp;for=pc</a></li>
+</ul>
 
       
     </div>
@@ -588,7 +591,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/servlet/" rel="tag"># servlet</a>
+            <a href="/tags/java基础/" rel="tag"># java基础</a>
           
         </div>
       
@@ -601,8 +604,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/08/Cookie/" rel="next" title="Cookie">
-                <i class="fa fa-chevron-left"></i> Cookie
+              <a href="/2019/09/09/final关键字/" rel="next" title="final关键字">
+                <i class="fa fa-chevron-left"></i> final关键字
               </a>
             
           </div>
@@ -610,10 +613,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/08/过滤器/" rel="prev" title="过滤器">
-                过滤器 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -838,7 +837,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Session"><span class="nav-number">1.</span> <span class="nav-text">Session</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序列化"><span class="nav-number">1.</span> <span class="nav-text">序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化和反序列化的概念"><span class="nav-number">1.1.</span> <span class="nav-text">序列化和反序列化的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么时候使用序列化"><span class="nav-number">1.2.</span> <span class="nav-text">什么时候使用序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个问题"><span class="nav-number">1.3.</span> <span class="nav-text">一个问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#demo"><span class="nav-number">1.4.</span> <span class="nav-text">demo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于serialversionUID变量"><span class="nav-number">1.5.</span> <span class="nav-text">关于serialversionUID变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">2.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>
