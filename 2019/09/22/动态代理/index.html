@@ -112,21 +112,22 @@
   </script>
 
 
-  <meta name="description" content="spring学习IOC的概念及作用程序的耦合和解耦耦合性：对模块间关联程度的度量。耦合的强弱取决于模块间接口的复杂性、调 用模块的方式以及通过界面传送数据的多少。模块间的耦合度是指模块之间的依赖关系，包括控制关系、调用关系、数据传递关系。模块间联系越多，其耦合性越强，同时表明其独立性越差。 解决程序耦合的思路以jdbc为例，是通过反射来注册驱动的，即Class.forName(“com.mysql">
+  <meta name="description" content="学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接） 1.静态代理代理模式上，基本上有Subject角色，RealSubject角色，Proxy角色。其中：Subject角色负责定义RealSubject和Proxy角色应该实现的接口；RealSubject角色用来真正完成业务服务功能；Proxy角色负责将自身的Request请求，调用realsubject 对">
 <meta name="keywords" content="spring">
 <meta property="og:type" content="article">
-<meta property="og:title" content="spring 01">
-<meta property="og:url" content="http://yoursite.com/2019/09/16/spring-01/index.html">
+<meta property="og:title" content="动态代理">
+<meta property="og:url" content="http://yoursite.com/2019/09/22/动态代理/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="spring学习IOC的概念及作用程序的耦合和解耦耦合性：对模块间关联程度的度量。耦合的强弱取决于模块间接口的复杂性、调 用模块的方式以及通过界面传送数据的多少。模块间的耦合度是指模块之间的依赖关系，包括控制关系、调用关系、数据传递关系。模块间联系越多，其耦合性越强，同时表明其独立性越差。 解决程序耦合的思路以jdbc为例，是通过反射来注册驱动的，即Class.forName(“com.mysql">
+<meta property="og:description" content="学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接） 1.静态代理代理模式上，基本上有Subject角色，RealSubject角色，Proxy角色。其中：Subject角色负责定义RealSubject和Proxy角色应该实现的接口；RealSubject角色用来真正完成业务服务功能；Proxy角色负责将自身的Request请求，调用realsubject 对">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC01.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC02.png">
-<meta property="og:updated_time" content="2019-09-16T12:22:49.743Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili%20a.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili%20b.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidailic.png">
+<meta property="og:updated_time" content="2019-09-22T07:35:59.711Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="spring 01">
-<meta name="twitter:description" content="spring学习IOC的概念及作用程序的耦合和解耦耦合性：对模块间关联程度的度量。耦合的强弱取决于模块间接口的复杂性、调 用模块的方式以及通过界面传送数据的多少。模块间的耦合度是指模块之间的依赖关系，包括控制关系、调用关系、数据传递关系。模块间联系越多，其耦合性越强，同时表明其独立性越差。 解决程序耦合的思路以jdbc为例，是通过反射来注册驱动的，即Class.forName(“com.mysql">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC01.png">
+<meta name="twitter:title" content="动态代理">
+<meta name="twitter:description" content="学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接） 1.静态代理代理模式上，基本上有Subject角色，RealSubject角色，Proxy角色。其中：Subject角色负责定义RealSubject和Proxy角色应该实现的接口；RealSubject角色用来真正完成业务服务功能；Proxy角色负责将自身的Request请求，调用realsubject 对">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili%20a.png">
 
 
 
@@ -134,7 +135,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/09/16/spring-01/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/22/动态代理/">
 
 
 
@@ -144,7 +145,7 @@
   };
 </script>
 
-  <title>spring 01 | 万乔少女的梦QAQ</title>
+  <title>动态代理 | 万乔少女的梦QAQ</title>
   
 
 
@@ -384,7 +385,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/spring-01/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/动态代理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -401,7 +402,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">spring 01
+          <h1 class="post-title" itemprop="name headline">动态代理
 
               
             
@@ -427,7 +428,7 @@
                 
               
 
-              <time title="创建时间：2019-09-16 20:01:31" itemprop="dateCreated datePublished" datetime="2019-09-16T20:01:31+08:00">2019-09-16</time>
+              <time title="创建时间：2019-09-22 11:34:26" itemprop="dateCreated datePublished" datetime="2019-09-22T11:34:26+08:00">2019-09-22</time>
             </span>
           
 
@@ -482,16 +483,79 @@
       
 
       
-        <h1 id="spring学习"><a href="#spring学习" class="headerlink" title="spring学习"></a>spring学习</h1><h2 id="IOC的概念及作用"><a href="#IOC的概念及作用" class="headerlink" title="IOC的概念及作用"></a>IOC的概念及作用</h2><h3 id="程序的耦合和解耦"><a href="#程序的耦合和解耦" class="headerlink" title="程序的耦合和解耦"></a>程序的耦合和解耦</h3><p>耦合性：对模块间关联程度的度量。耦合的强弱取决于模块间接口的复杂性、调 用模块的方式以及通过界面传送数据的多少。模块间的耦合度是指模块之间的依赖关系，包括控制关系、调用关系、数据传递关系。模块间联系越多，其耦合性越强，同时表明其独立性越差。</p>
-<h3 id="解决程序耦合的思路"><a href="#解决程序耦合的思路" class="headerlink" title="解决程序耦合的思路"></a>解决程序耦合的思路</h3><p>以jdbc为例，是通过反射来注册驱动的，即Class.forName(“com.mysql.jdbc.Driver”）</p>
-<p>此时的好处是，我们的类中不再依赖具体的驱动类，此时就算删除 mysql 的驱动 jar包，依然可以编译。同时，也产生了一个新的问题，mysql 驱动的全限定类名字符串是在 java 类中写死的，一旦要改还是要修改源码。解决这个问题就要使用配置文件配置。</p>
-<h3 id="工厂模式解耦"><a href="#工厂模式解耦" class="headerlink" title="工厂模式解耦"></a>工厂模式解耦</h3><p>可以把三层的对象都使用配置文件配置起来，当启动服务器应用加载的时候，让一个类中的方法通过读取配置文件，把这些对象创建出来并存起来。在接下来的使用的时候，直接拿过来用就好了。那么，这个读取配置文件，创建和获取三层对象的类就是工厂。 </p>
-<h3 id="控制反转-Inversion-Of-Control"><a href="#控制反转-Inversion-Of-Control" class="headerlink" title="控制反转-Inversion Of Control"></a>控制反转-Inversion Of Control</h3><p>由于我们是很多对象，肯定要找个集合来存。在应用加载时，创建一个 Map，用于存放三层对象。 我们把这个 map 称之为容器。工厂就是负责给我们从容器中获取指定对象的类。</p>
-<p>我们在获取对象时，都是采用 new 的方式，是主动的，如下图</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC01.png" alt></p>
-<p>现在：我们获取对象时，同时跟工厂要，有工厂为我们查找或者创建对象，是被动的。 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC02.png" alt></p>
-<p><strong>IOC：将创建对象的权力交给框架，可以削减代码间的依赖。</strong></p>
+        <p>学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接）</p>
+<h2 id="1-静态代理"><a href="#1-静态代理" class="headerlink" title="1.静态代理"></a>1.静态代理</h2><p>代理模式上，基本上有Subject角色，RealSubject角色，Proxy角色。其中：Subject角色负责定义RealSubject和Proxy角色应该实现的接口；RealSubject角色用来真正完成业务服务功能；Proxy角色负责将自身的Request请求，调用realsubject 对应的request功能来实现业务功能，自己不真正做业务。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili%20a.png" alt></p>
+<p>上面的这幅代理结构图是典型的静态的代理模式：</p>
+<p>​       当在代码阶段规定这种代理关系，Proxy类通过编译器编译成class文件，当系统运行时，此class已经存在了。这种静态的代理模式固然在访问无法访问的资源，增强现有的接口业务功能方面有很大的优点，但是大量使用这种静态代理，会使我们系统内的类的规模增大，并且不易维护；并且由于Proxy和RealSubject的功能 本质上是相同的，Proxy只是起到了中介的作用，这种代理在系统中的存在，导致系统结构比较臃肿和松散。</p>
+<p>　　为了解决这个问题，就有了动态地创建Proxy的想法：在运行状态中，需要代理的地方，根据Subject 和RealSubject，动态地创建一个Proxy，用完之后，就会销毁，这样就可以避免了Proxy 角色的class在系统中冗杂的问题了。</p>
+<h2 id="2-动态代理"><a href="#2-动态代理" class="headerlink" title="2.动态代理"></a>2.动态代理</h2><h3 id="InvocationHandler角色的由来"><a href="#InvocationHandler角色的由来" class="headerlink" title="InvocationHandler角色的由来"></a>InvocationHandler角色的由来</h3><p>　　仔细思考代理模式中的代理Proxy角色。Proxy角色在执行代理业务的时候，无非是在调用真正业务之前或者之后做一些“额外”业务。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili%20b.png" alt></p>
+<p>有上图可以看出，代理类处理的逻辑很简单：在调用某个方法前及方法后做一些额外的业务。换一种思路就是：在触发（invoke）真实角色的方法之前或者之后做一些额外的业务。那么，为了构造出具有通用性和简单性的代理类，可以将所有的触发真实角色动作交给一个触发的管理器，让这个管理器统一地管理触发。这种管理器就是Invocation Handler。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidailic.png" alt></p>
+<p>在静态代理中，代理Proxy中的方法，都指定了调用了特定的realSubject中的对应的方法：<br>　　在上面的静态代理模式下，Proxy所做的事情，无非是调用在不同的request时，调用触发realSubject对应的方法；更抽象点看，Proxy所作的事情；在Java中 方法（Method）也是作为一个对象来看待了，<br>　　动态代理工作的基本模式就是将自己的方法功能的实现交给 InvocationHandler角色，外界对Proxy角色中的每一个方法的调用，Proxy角色都会交给InvocationHandler来处理，而InvocationHandler则调用具体对象角色的方法。</p>
+<p><strong>在这种模式之中：代理Proxy 和RealSubject 应该实现相同的功能，这一点相当重要。（我这里说的功能，可以理解为某个类的public方法）</strong></p>
+<p>在面向对象的编程之中，如果我们想要约定Proxy 和RealSubject可以实现相同的功能，有两种方式：</p>
+<p>　　a.一个比较直观的方式，就是定义一个功能接口，然后让Proxy 和RealSubject来实现这个接口。</p>
+<p>​    　b.还有比较隐晦的方式，就是通过继承。因为如果Proxy 继承自RealSubject，这样Proxy则拥有了RealSubject的功能，</p>
+<p>　　　Proxy还可以通过重写RealSubject中的方法，来实现多态。</p>
+<p><strong>其中JDK中提供的创建动态代理的机制，是以a 这种思路设计的，而cglib 则是以b思路设计的。</strong></p>
+<p><strong>JDK的动态代理创建机制—-通过接口</strong></p>
+<p>比如现在想为RealSubject这个类创建一个动态代理对象，JDK主要会做以下工作：</p>
+<p>　　1. 获取 RealSubject上的所有接口列表；<br>　　2. 确定要生成的代理类的类名，默认为：com.sun.proxy.$ProxyXXXX ；<br>　　3. 根据需要实现的接口信息，在代码中动态创建 该Proxy类的字节码；<br>　　4 . 将对应的字节码转换为对应的class 对象；<br>　　5. 创建InvocationHandler 实例handler，用来处理Proxy所有方法调用；<br>　　6. Proxy 的class对象 以创建的handler对象为参数，实例化一个proxy对象</p>
+<p>JDK通过 java.lang.reflect.Proxy包来支持动态代理，一般情况下，我们使用下面的newProxyInstance方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">static Object newProxyInstance(ClassLoader loader,Class&lt;?&gt;[] interfaces,InvocationHandler h)</span><br><span class="line">          返回一个指定接口的代理类实例，该接口可以将方法调用指派到指定的调用处理程序。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>loder，选用的类加载器 。</li>
+<li>interfaces，被代理的类所实现的接口，这个接口可以是多个。</li>
+<li>h，绑定代理类的一个方法。</li>
+</ul>
+<p>而对于InvocationHandler，我们需要实现下列的invoke方法：</p>
+<p>在调用代理对象中的每一个方法时，在代码内部，都是直接调用了InvocationHandler 的invoke方法，而invoke方法根据代理类传递给自己的method参数来区分是什么方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object invoke(Object proxy,Method method,Object[] args)</span><br><span class="line">          在代理实例上处理方法调用并返回结果。</span><br></pre></td></tr></table></figure>
+
+<p>InvocationHandler作用就是，当代理对象的原本方法被调用的时候，会绑定执行一个方法，这个方法就是InvocationHandler里面定义的内容，同时会替代原本方法的结果返回。</p>
+<p>InvocationHandler接收三个参数</p>
+<ul>
+<li><p>proxy，代理后的实例对象。</p>
+</li>
+<li><p>method，对象被调用方法。</p>
+</li>
+<li><p>args，调用时的参数。 </p>
+<p>讲的有点抽象，下面通过一个实例来演示一下吧：</p>
+</li>
+</ul>
+<p><strong>JDK动态代理示例</strong></p>
+<p>　　现在定义两个接口Vehicle和Rechargable，Vehicle表示交通工具类，有drive()方法；Rechargable接口表示可充电的（工具），有recharge() 方法；定义一个实现两个接口的类ElectricCar </p>
+<p>通过下面的代码片段，来为ElectricCar创建动态代理类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.foo.proxy;  </span><br><span class="line">  </span><br><span class="line">import java.lang.reflect.InvocationHandler;  </span><br><span class="line">import java.lang.reflect.Proxy;  </span><br><span class="line">  </span><br><span class="line">public class Test &#123;  </span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) &#123;  </span><br><span class="line">  </span><br><span class="line">        ElectricCar car = new ElectricCar();  </span><br><span class="line">        // 1.获取对应的ClassLoader  </span><br><span class="line">        ClassLoader classLoader = car.getClass().getClassLoader();  </span><br><span class="line">  </span><br><span class="line">        // 2.获取ElectricCar 所实现的所有接口  </span><br><span class="line">        Class[] interfaces = car.getClass().getInterfaces();  </span><br><span class="line">        // 3.设置一个来自代理传过来的方法调用请求处理器，处理所有的代理对象上的方法调用  </span><br><span class="line">        InvocationHandler handler = new InvocationHandlerImpl(car);  </span><br><span class="line">        /* </span><br><span class="line">          4.根据上面提供的信息，创建代理对象 在这个过程中，这部分是反射的知识  </span><br><span class="line">                 a.JDK会通过根据传入的参数信息动态地在内存中创建和.class 文件等同的字节码 </span><br><span class="line">                 b.然后根据相应的字节码转换成对应的class，  </span><br><span class="line">                 c.然后调用newInstance()创建实例 </span><br><span class="line">        */  </span><br><span class="line">        Object o = Proxy.newProxyInstance(classLoader, interfaces, handler);  </span><br><span class="line">        Vehicle vehicle = (Vehicle) o;  </span><br><span class="line">        vehicle.drive();  </span><br><span class="line">        Rechargable rechargeable = (Rechargable) o;  </span><br><span class="line">        rechargeable.recharge();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package com.foo.proxy;  </span><br><span class="line">/** </span><br><span class="line"> * 交通工具接口 </span><br><span class="line"> * @author louluan </span><br><span class="line"> */  </span><br><span class="line">public interface Vehicle &#123;  </span><br><span class="line">    public void drive();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package com.foo.proxy;  </span><br><span class="line">/** </span><br><span class="line"> * 可充电设备接口 </span><br><span class="line"> * @author louluan </span><br><span class="line"> */  </span><br><span class="line">public interface Rechargable &#123;  </span><br><span class="line">  </span><br><span class="line">    public void recharge();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package com.foo.proxy;  </span><br><span class="line">/** </span><br><span class="line"> * 电能车类，实现Rechargable，Vehicle接口 </span><br><span class="line"> * @author louluan </span><br><span class="line"> */  </span><br><span class="line">public class ElectricCar implements Rechargable, Vehicle &#123;  </span><br><span class="line">  </span><br><span class="line">    @Override  </span><br><span class="line">    public void drive() &#123;  </span><br><span class="line">        System.out.println(&quot;Electric Car is Moving silently...&quot;);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    @Override  </span><br><span class="line">    public void recharge() &#123;  </span><br><span class="line">        System.out.println(&quot;Electric Car is Recharging...&quot;);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package com.foo.proxy;  </span><br><span class="line">  </span><br><span class="line">import java.lang.reflect.InvocationHandler;  </span><br><span class="line">import java.lang.reflect.Method;  </span><br><span class="line">  </span><br><span class="line">public class InvocationHandlerImpl implements InvocationHandler &#123;  </span><br><span class="line">  </span><br><span class="line">    private ElectricCar car;  </span><br><span class="line">      </span><br><span class="line">    public InvocationHandlerImpl(ElectricCar car)  </span><br><span class="line">    &#123;  </span><br><span class="line">        this.car=car;  </span><br><span class="line">    &#125;  </span><br><span class="line">      </span><br><span class="line">    @Override  </span><br><span class="line">    public Object invoke(Object paramObject, Method paramMethod,  </span><br><span class="line">            Object[] paramArrayOfObject) throws Throwable &#123;  </span><br><span class="line">        System.out.println(&quot;You are going to invoke &quot;+paramMethod.getName()+&quot; ...&quot;);  </span><br><span class="line">        paramMethod.invoke(car, null);  </span><br><span class="line">        System.out.println(paramMethod.getName()+&quot; invocation Has Been finished...&quot;);  </span><br><span class="line">        return null;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">IProducer proxyProducer=(IProducer) Proxy.newProxyInstance(producer.getClass().getClassLoader(), producer.getClass().getInterfaces(), new InvocationHandler() &#123;</span><br><span class="line">            //作用：执行被代理对象的任何接口方法都会经过该方法</span><br><span class="line">            //proxy:代理对象的引用</span><br><span class="line">            //method:当前执行的方法</span><br><span class="line">            //args:执行当前方法所需的参数</span><br><span class="line">            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line">                //提供增强的代码</span><br><span class="line">                Object returnValue=null;</span><br><span class="line">                //1.获取方法执行的参数</span><br><span class="line">                Float money=(Float)args[0];</span><br><span class="line">                //2.判断当前方法是不是销售</span><br><span class="line">                if (&quot;saleProduct&quot;.equals(method.getName()))&#123;</span><br><span class="line">                    returnValue=method.invoke(producer,money*0.8f);</span><br><span class="line">                &#125;</span><br><span class="line">                return returnValue;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>cglib 生成动态代理类的机制—-通过类继承：</strong></p>
+<p>　　JDK中提供的生成动态代理类的机制有个鲜明的特点是： 某个类必须有实现的接口，而生成的代理类也只能代理某个类接口定义的方法，比如：如果上面例子的ElectricCar实现了继承自两个接口的方法外，另外实现了方法bee() ,则在产生的动态代理类中不会有这个方法了！更极端的情况是：如果某个类没有实现接口，那么这个类就不能同JDK产生动态代理了！</p>
+<p>​      幸好我们有cglib。“CGLIB（Code Generation Library），是一个强大的，高性能，高质量的Code生成类库，它可以在运行期扩展Java类与实现Java接口。”</p>
+<p>cglib 创建某个类A的动态代理类的模式是：</p>
+<p>　　1. 查找A上的所有非final的public类型的方法定义；<br>  　　2. 将这些方法的定义转换成字节码；<br>  　　3. 将组成的字节码转换成相应的代理的class对象；<br>  　　4. 实现MethodInterceptor接口，用来处理对代理类上所有方法的请求（这个接口和JDK动态代理InvocationHandler的功能和角色是一样的）</p>
+<p>一个有趣的例子：定义一个Programmer类，一个Hacker类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package samples;  </span><br><span class="line">/** </span><br><span class="line"> * 程序猿类 </span><br><span class="line"> * @author louluan </span><br><span class="line"> */  </span><br><span class="line">public class Programmer &#123;  </span><br><span class="line">  </span><br><span class="line">    public void code()  </span><br><span class="line">    &#123;  </span><br><span class="line">        System.out.println(&quot;I&apos;m a Programmer,Just Coding.....&quot;);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package samples;  </span><br><span class="line">  </span><br><span class="line">import java.lang.reflect.Method;  </span><br><span class="line">  </span><br><span class="line">import net.sf.cglib.proxy.MethodInterceptor;  </span><br><span class="line">import net.sf.cglib.proxy.MethodProxy;  </span><br><span class="line">/* </span><br><span class="line"> * 实现了方法拦截器接口 </span><br><span class="line"> */  </span><br><span class="line">public class Hacker implements MethodInterceptor &#123;  </span><br><span class="line">    @Override  </span><br><span class="line">    public Object intercept(Object obj, Method method, Object[] args,  </span><br><span class="line">            MethodProxy proxy) throws Throwable &#123;  </span><br><span class="line">        System.out.println(&quot;**** I am a hacker,Let&apos;s see what the poor programmer is doing Now...&quot;);  </span><br><span class="line">        proxy.invokeSuper(obj, args);  </span><br><span class="line">        System.out.println(&quot;****  Oh,what a poor programmer.....&quot;);  </span><br><span class="line">        return null;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package samples;  </span><br><span class="line">  </span><br><span class="line">import net.sf.cglib.proxy.Enhancer;  </span><br><span class="line">  </span><br><span class="line">public class Test &#123;  </span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) &#123;  </span><br><span class="line">        Programmer progammer = new Programmer();  </span><br><span class="line">          </span><br><span class="line">        Hacker hacker = new Hacker();  </span><br><span class="line">        //cglib 中加强器，用来创建动态代理  </span><br><span class="line">        Enhancer enhancer = new Enhancer();    </span><br><span class="line">                 //设置要创建动态代理的类  </span><br><span class="line">        enhancer.setSuperclass(progammer.getClass());    </span><br><span class="line">               // 设置回调，这里相当于是对于代理类上所有方法的调用，都会调用CallBack，而Callback则需要实行intercept()方法进行拦截  </span><br><span class="line">                enhancer.setCallback(hacker);  </span><br><span class="line">                Programmer proxy =(Programmer)enhancer.create();  </span><br><span class="line">                proxy.code();  </span><br><span class="line">          </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Producer cglibProducer = (Producer) Enhancer.create(producer.getClass(), new MethodInterceptor() &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 执行北地阿里对象的任何方法都会经过该方法</span><br><span class="line">             * @param proxy</span><br><span class="line">             * @param method</span><br><span class="line">             * @param args</span><br><span class="line">             *    以上三个参数和基于接口的动态代理中invoke方法的参数是一样的</span><br><span class="line">             * @param methodProxy ：当前执行方法的代理对象</span><br><span class="line">             * @return</span><br><span class="line">             * @throws Throwable</span><br><span class="line">             */</span><br><span class="line"></span><br><span class="line">            public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable &#123;</span><br><span class="line">                //提供增强的代码</span><br><span class="line">                Object returnValue = null;</span><br><span class="line"></span><br><span class="line">                //1.获取方法执行的参数</span><br><span class="line">                Float money = (Float) args[0];</span><br><span class="line">                //2.判断当前方法是不是销售</span><br><span class="line">                if (&quot;saleProduct&quot;.equals(method.getName())) &#123;</span><br><span class="line">                    returnValue = method.invoke(producer, money * 0.8f);</span><br><span class="line">                &#125;</span><br><span class="line">                return returnValue;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.cnblogs.com/rinack/p/7742682.html" target="_blank" rel="noopener">https://www.cnblogs.com/rinack/p/7742682.html</a></p>
 
       
     </div>
@@ -578,8 +642,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/16/序列化/" rel="next" title="序列化">
-                <i class="fa fa-chevron-left"></i> 序列化
+              <a href="/2019/09/16/spring03/" rel="next" title="spring03">
+                <i class="fa fa-chevron-left"></i> spring03
               </a>
             
           </div>
@@ -588,8 +652,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/16/spring-02/" rel="prev" title="spring 02">
-                spring 02 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/09/22/泛型/" rel="prev" title="泛型">
+                泛型 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -819,7 +883,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring学习"><span class="nav-number">1.</span> <span class="nav-text">spring学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC的概念及作用"><span class="nav-number">1.1.</span> <span class="nav-text">IOC的概念及作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#程序的耦合和解耦"><span class="nav-number">1.1.1.</span> <span class="nav-text">程序的耦合和解耦</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决程序耦合的思路"><span class="nav-number">1.1.2.</span> <span class="nav-text">解决程序耦合的思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂模式解耦"><span class="nav-number">1.1.3.</span> <span class="nav-text">工厂模式解耦</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制反转-Inversion-Of-Control"><span class="nav-number">1.1.4.</span> <span class="nav-text">控制反转-Inversion Of Control</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-静态代理"><span class="nav-number">1.</span> <span class="nav-text">1.静态代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-动态代理"><span class="nav-number">2.</span> <span class="nav-text">2.动态代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InvocationHandler角色的由来"><span class="nav-number">2.1.</span> <span class="nav-text">InvocationHandler角色的由来</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">3.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
             
 
           </div>
