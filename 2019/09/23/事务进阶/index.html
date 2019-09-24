@@ -112,17 +112,22 @@
   </script>
 
 
-  <meta name="description" content="研狗一枚">
-<meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+  <meta name="description" content="一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？ @Transactional：  对接口加上@Transactional注解,表示对该接口的所有实现类进行事务控制 对类加上@Transactional注解,表示对类中的所有方法进行事务控制 对具体某一方法加以@Transactional注解,表示对具体方法进行事务控制  一个@T">
+<meta name="keywords" content="spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务进阶">
+<meta property="og:url" content="http://yoursite.com/2019/09/23/事务进阶/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="研狗一枚">
+<meta property="og:description" content="一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？ @Transactional：  对接口加上@Transactional注解,表示对该接口的所有实现类进行事务控制 对类加上@Transactional注解,表示对类中的所有方法进行事务控制 对具体某一方法加以@Transactional注解,表示对具体方法进行事务控制  一个@T">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-13T09:38:43.008Z">
+<meta property="og:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie1.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie2.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie3.png">
+<meta property="og:updated_time" content="2019-09-24T00:38:24.152Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tags">
-<meta name="twitter:description" content="研狗一枚">
+<meta name="twitter:title" content="事务进阶">
+<meta name="twitter:description" content="一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？ @Transactional：  对接口加上@Transactional注解,表示对该接口的所有实现类进行事务控制 对类加上@Transactional注解,表示对类中的所有方法进行事务控制 对具体某一方法加以@Transactional注解,表示对具体方法进行事务控制  一个@T">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie1.png">
 
 
 
@@ -130,7 +135,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/tags/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/23/事务进阶/">
 
 
 
@@ -140,7 +145,7 @@
   };
 </script>
 
-  <title>tags | 万乔少女的梦QAQ</title>
+  <title>事务进阶 | 万乔少女的梦QAQ</title>
   
 
 
@@ -262,7 +267,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -360,73 +365,262 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/事务进阶/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">tags
+        
+        
+          <h1 class="post-title" itemprop="name headline">事务进阶
 
-</h1>
+              
+            
+          </h1>
+        
 
-<div class="post-meta">
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-23 21:25:46" itemprop="dateCreated datePublished" datetime="2019-09-23T21:25:46+08:00">2019-09-23</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？</strong></p>
+<p>@Transactional：</p>
+<ul>
+<li>对接口加上<code>@Transactional</code>注解,表示对该接口的所有实现类进行事务控制</li>
+<li>对类加上<code>@Transactional</code>注解,表示对类中的所有方法进行事务控制</li>
+<li>对具体某一方法加以<code>@Transactional</code>注解,表示对具体方法进行事务控制</li>
+</ul>
+<p>一个<code>@Transactional</code>的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void deleteAllAndAddOneTransactional(Customer customer) &#123;</span><br><span class="line"> customerRepository.deleteAll();</span><br><span class="line"> if (&quot;Yang&quot;.equals(customer.getFirstName())) &#123;</span><br><span class="line"> throw new RuntimeException();</span><br><span class="line"> &#125;</span><br><span class="line"> customerRepository.save(customer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法内先去执行deleteAll()，删除表中全部数据；然后执行save()保存数据。</p>
+<p>这两个方法中间，会判断传进来的firstName是不是等于“Yang”，是，则抛异常，用于模拟两个数据库操作之间可能发生的异常场景。</p>
+<p>如果没有加@Transactional注解，那么这两个操作就不在一个事务里面，不具有原子性。如果deleteAll之后抛异常，那么就会导致只删除不新增。</p>
+<p>而加了@Transactional之后，这两个动作在一个事务里头，具有原子性，要么全部成功，要么全部失败。如果deleteAll之后抛异常，则事务回滚，恢复原先被删除的数据。</p>
+<p><strong>问题登场，这种情况下</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAllAndAddOne</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">System.out.println(<span class="string">"go into deleteAllAndAddOne"</span>);</span><br><span class="line">deleteAllAndAddOneTransactional(customer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAllAndAddOneTransactional</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">customerRepository.deleteAll();</span><br><span class="line"><span class="keyword">if</span> (<span class="string">"Yang"</span>.equals(customer.getFirstName())) &#123;</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">&#125;</span><br><span class="line">customerRepository.save(customer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>其实Spring的@Transactional，跟Spring AOP一样，都是利用了动态代理。</strong></p>
+<p>我们写了一个类，里面写了一个加了@Transactional注解的方法，这原本平淡无奇，什么用也没有，就像这样：</p>
+<p><img src="/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie1.png" alt></p>
+<p>关键在于，Spring在检查到@Transactional注解之后，给这个对象生成了一个代理对象proxy：</p>
+<p><img src="/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie2.png" alt></p>
+<p>代理对象的methodB，会先开启事务（beginTransaction），然后再去执行原先对象target的methodB，如果抛异常，则回滚（rollBack），如果一切顺利，则提交（commit）。</p>
+<p>而最后注入Spring容器的，也正是这个带有事务逻辑的代理对象。所以我们调用methodB时会产生事务。</p>
+<p>现在，我们写了一个新方法，methodA，里头去调用methodB：</p>
+<p><img src="/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie3.png" alt></p>
+<p>由于methodA没有加@Transactional注解，所以代理对象里面，直接就是target.methodA()，直接调用了原来对象的methodA。</p>
+<p>这下就很清晰了，代理对象的methodA，去调用原来对象的methodA，原来对象的methodA，再去调用原来对象的methodB，而原来对象的methodB，是不具有事务的。事务只存在于代理对象的methodB. 所以整个方法也就没有事务了。</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+<div>
   
+    ﻿<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+    
+</div>
   
-
-
-
 </div>
 
-</header>
+    
 
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>求大佬赏饭.</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
       
       
-      
-      <div class="post-body">
         
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="spiderman 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="spiderman 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
         
           
         
-      </div>
+        <div class="post-tags">
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+        </div>
+      
+
       
       
       
-    </div>
-    
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/23/jdbcTemplate和事务/" rel="next" title="jdbcTemplate和事务">
+                <i class="fa fa-chevron-left"></i> jdbcTemplate和事务
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
 
 
-
-    
-    
-    
   </div>
 
 
