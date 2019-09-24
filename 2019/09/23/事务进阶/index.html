@@ -120,14 +120,14 @@
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？ @Transactional：  对接口加上@Transactional注解,表示对该接口的所有实现类进行事务控制 对类加上@Transactional注解,表示对类中的所有方法进行事务控制 对具体某一方法加以@Transactional注解,表示对具体方法进行事务控制  一个@T">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie1.png">
-<meta property="og:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie2.png">
-<meta property="og:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie3.png">
-<meta property="og:updated_time" content="2019-09-24T00:38:24.152Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie1.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie2.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie3.png">
+<meta property="og:updated_time" content="2019-09-24T08:07:18.852Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="事务进阶">
 <meta name="twitter:description" content="一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？ @Transactional：  对接口加上@Transactional注解,表示对该接口的所有实现类进行事务控制 对类加上@Transactional注解,表示对类中的所有方法进行事务控制 对具体某一方法加以@Transactional注解,表示对具体方法进行事务控制  一个@T">
-<meta name="twitter:image" content="http://yoursite.com/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie1.png">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie1.png">
 
 
 
@@ -502,13 +502,13 @@
 
 <p><strong>其实Spring的@Transactional，跟Spring AOP一样，都是利用了动态代理。</strong></p>
 <p>我们写了一个类，里面写了一个加了@Transactional注解的方法，这原本平淡无奇，什么用也没有，就像这样：</p>
-<p><img src="/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie1.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie1.png" alt></p>
 <p>关键在于，Spring在检查到@Transactional注解之后，给这个对象生成了一个代理对象proxy：</p>
-<p><img src="/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie2.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie2.png" alt></p>
 <p>代理对象的methodB，会先开启事务（beginTransaction），然后再去执行原先对象target的methodB，如果抛异常，则回滚（rollBack），如果一切顺利，则提交（commit）。</p>
 <p>而最后注入Spring容器的，也正是这个带有事务逻辑的代理对象。所以我们调用methodB时会产生事务。</p>
 <p>现在，我们写了一个新方法，methodA，里头去调用methodB：</p>
-<p><img src="/2019/09/23/事务进阶/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cshiwujinjie3.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie3.png" alt></p>
 <p>由于methodA没有加@Transactional注解，所以代理对象里面，直接就是target.methodA()，直接调用了原来对象的methodA。</p>
 <p>这下就很清晰了，代理对象的methodA，去调用原来对象的methodA，原来对象的methodA，再去调用原来对象的methodB，而原来对象的methodB，是不具有事务的。事务只存在于代理对象的methodB. 所以整个方法也就没有事务了。</p>
 
