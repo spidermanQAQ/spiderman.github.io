@@ -112,20 +112,18 @@
   </script>
 
 
-  <meta name="description" content="java自动装箱与拆箱简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float   double Double   char Character   举个简单例子 123451">
+  <meta name="description" content="java装箱与拆箱包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   fl">
 <meta name="keywords" content="java基础">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java装箱与拆箱">
 <meta property="og:url" content="http://yoursite.com/2019/09/05/java装箱与拆箱/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="java自动装箱与拆箱简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float   double Double   char Character   举个简单例子 123451">
+<meta property="og:description" content="java装箱与拆箱包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   fl">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%9C%B0%E5%9D%80.png">
-<meta property="og:updated_time" content="2019-09-05T02:52:27.317Z">
+<meta property="og:updated_time" content="2019-10-06T02:47:16.570Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java装箱与拆箱">
-<meta name="twitter:description" content="java自动装箱与拆箱简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float   double Double   char Character   举个简单例子 123451">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%9C%B0%E5%9D%80.png">
+<meta name="twitter:description" content="java装箱与拆箱包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   fl">
 
 
 
@@ -481,7 +479,8 @@
       
 
       
-        <h1 id="java自动装箱与拆箱"><a href="#java自动装箱与拆箱" class="headerlink" title="java自动装箱与拆箱"></a>java自动装箱与拆箱</h1><p>简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型</p>
+        <h1 id="java装箱与拆箱"><a href="#java装箱与拆箱" class="headerlink" title="java装箱与拆箱"></a>java装箱与拆箱</h1><p><strong>包装类</strong>：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类</p>
+<p>简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型</p>
 <p>对应关系如下</p>
 <table>
 <thead>
@@ -519,38 +518,47 @@
 <td>Character</td>
 </tr>
 </tbody></table>
-<p>举个简单例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 //自动装箱</span><br><span class="line">2 Integer total = 99;</span><br><span class="line">3 </span><br><span class="line">4 //自定拆箱</span><br><span class="line">5 int totalprim = total;</span><br></pre></td></tr></table></figure>
+<h3 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h3><p><strong>静态方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//返回保存指定int的值的Integer对象</span><br><span class="line">Integer in1=Integer.valueof(1);</span><br><span class="line">//返回保存指定String的值的Integer对象</span><br><span class="line">Integer in2=Integer.valueof(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
 
-<p>解析一下 ，Interger total=99实际上执行了Interger total =Interger.value(99);</p>
-<p>​                     int totalprim = total 实际上执行了int totalprim =total.invalue( );</p>
-<p>看一下Interger.value源码：</p>
+<p>看一下Interger.valueof源码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 public static Integer valueOf(int i) &#123;</span><br><span class="line">2 return  i &gt;= 128 || i &lt; -128 ? new Integer(i) : SMALL_VALUES[i + 128];</span><br><span class="line">3 &#125;</span><br></pre></td></tr></table></figure>
 
 <p>它会首先判断i的大小：如果i小于-128或者大于等于128，就创建一个Integer对象，否则执行SMALL_VALUES[i + 128] 。注意这里i如果小于-128或者大于等于128，就会创建不同对象，而处于中间的都会创建同一个对象。</p>
-<p>Interger构造函数如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 private final int value;</span><br><span class="line">2 </span><br><span class="line">3 public Integer(int value) &#123;</span><br><span class="line">4     this.value = value;</span><br><span class="line">5 &#125;</span><br><span class="line">6 </span><br><span class="line">7 public Integer(String string) throws NumberFormatException &#123;</span><br><span class="line">8     this(parseInt(string));</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
+<p>总结来说装箱即valueof( )方法就是会返回Interger类型的对象</p>
+<p><strong>Interger构造函数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Integer in1=new Integer(1);</span><br><span class="line">//这里只能是基本类型的字符串</span><br><span class="line">Integer in1=new Integer(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 private final int value;</span><br><span class="line">2 </span><br><span class="line">3 public Integer(int value) &#123;</span><br><span class="line">4     this.value = value;</span><br><span class="line">5 &#125;</span><br><span class="line">6 //这里的String必须是基本类型的字符串，100可以，a就不行</span><br><span class="line">7 public Integer(String string) throws NumberFormatException &#123;</span><br><span class="line">8     this(parseInt(string));</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面看看SMALL_VALUES[i + 128]是什么东西：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private static final Integer[] SMALL_VALUES = new Integer[256];</span><br></pre></td></tr></table></figure>
 
-<p>总结来说装箱即valueof( )方法就是会返回Interger类型的对象</p>
+<p> <strong>拆箱的intvalue( )源码</strong></p>
 <p>接着看看intValue函数,就是返回value值</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @Override</span><br><span class="line">2 public int intValue() &#123;</span><br><span class="line">3     return value;</span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
 
-<p>那具体装箱拆箱有哪些用呢，见下</p>
-<ul>
-<li><p>将基本数据类型放入集合类中(集合部分还没学，下面是网上相关代码)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; li = new ArrayList&lt;&gt;();</span><br><span class="line">for (int i = 1; i &lt; 50; i ++)&#123;</span><br><span class="line">    li.add(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自动装箱与拆箱"><a href="#自动装箱与拆箱" class="headerlink" title="自动装箱与拆箱"></a>自动装箱与拆箱</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 //自动装箱</span><br><span class="line">2 Integer total = 99;</span><br><span class="line">3 </span><br><span class="line">4 //自定拆箱</span><br><span class="line">5 int totalprim = total;</span><br></pre></td></tr></table></figure>
 
-<p>这里li.add(i)就用到了自动装箱即为li.add(Interger.valueof(i);</p>
+<p>自动装箱：直接把int类型的整数赋值包装类</p>
+<p>自动拆箱：包装类无法直接参与运算，可以自动转换为基本数据类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Interger total=99实际上执行了Interger total =Interger.valueof(99);</span><br><span class="line"></span><br><span class="line">int totalprim = total 实际上执行了int totalprim =total.intvalue( );</span><br></pre></td></tr></table></figure>
+
+<h3 id="装箱拆箱作用"><a href="#装箱拆箱作用" class="headerlink" title="装箱拆箱作用"></a>装箱拆箱作用</h3><ul>
+<li><p>将基本数据类型放入集合类中 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.add(1);//自动装箱list.add(new Integer(1));</span><br><span class="line">list.get(1);//自动拆箱list.get(0).intvalue();</span><br></pre></td></tr></table></figure>
+
+
 </li>
+</ul>
+<ul>
 <li><p>包装类型和基本数据类型比较</p>
 </li>
 <li><p>包装类型运算</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i = 10;</span><br><span class="line">Integer j = 20;</span><br><span class="line"> </span><br><span class="line">System.out.println(i+j);</span><br></pre></td></tr></table></figure>
 
-<p>(i+j)即为(Interger.invalue(i)+interger,invalue(j))</p>
+<p>(i+j)即为(Interger.invalue(i)+interger.invalue(j))</p>
 <p>最后给出一道面试题</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void testAutoBox2() &#123;</span><br><span class="line">     //1</span><br><span class="line">     int a = 100;</span><br><span class="line">     Integer b = 100;</span><br><span class="line">     System.out.println(a == b);</span><br><span class="line">     </span><br><span class="line">     //2</span><br><span class="line">     Integer c = 100;</span><br><span class="line">     Integer d = 100;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">     </span><br><span class="line">     //3   </span><br><span class="line">     c = 200;</span><br><span class="line">     d = 200;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -559,10 +567,20 @@
 <p>结果为 True True false 原因就是100 200值的不同，见上所述。</p>
 <p>当需要进行自动装箱时，如果数字在-128至127之间时，会直接使用缓存中的对象，而不是重新创建一个对象 。</p>
 <p>（缓存部分就不详细说了，本人还没看，哈哈）</p>
-<p>（因本人较菜，这里记录下对象相关的知识）</p>
-<p>java中引用型数据包括有数组，对象以及接口。对象创建后存放的是地址，成员变量则是直接存放。</p>
-<p>Point p1=new Point(5,15);</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%9C%B0%E5%9D%80.png" alt></p>
+<h3 id="字符串和基本类型的相互转换"><a href="#字符串和基本类型的相互转换" class="headerlink" title="字符串和基本类型的相互转换"></a>字符串和基本类型的相互转换</h3><p>基本类型-&gt;字符串</p>
+<ul>
+<li>基本类型的值+” “</li>
+<li>包装类的静态方法toString(参数)，不是Object类的toString()</li>
+<li>String类的静态方法valueof(参数)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i1=100;</span><br><span class="line">String s1=i1+&quot;&quot;;</span><br><span class="line">System.out.println(s1+200);//100200这里是字符串的加</span><br><span class="line"></span><br><span class="line">String s2=Integer.toString(100);</span><br><span class="line">System.out.println(s2+200);</span><br><span class="line"></span><br><span class="line">String s3=String.valueOf(100);</span><br><span class="line">System.out.println(s3+200);</span><br></pre></td></tr></table></figure>
+
+<p> 字符串-&gt;基本类型</p>
+<p>使用包装类的静态方法parsexxx(“字符串”)；</p>
+<p>​          Integer类：static int parseInt(String s)</p>
+<p>​          Double类：static double parseDouble(String s)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i=Integer.parseInt(s1);</span><br><span class="line">System.out.println(i);</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -894,7 +912,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java自动装箱与拆箱"><span class="nav-number">1.</span> <span class="nav-text">java自动装箱与拆箱</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java装箱与拆箱"><span class="nav-number">1.</span> <span class="nav-text">java装箱与拆箱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#装箱与拆箱"><span class="nav-number">1.0.1.</span> <span class="nav-text">装箱与拆箱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动装箱与拆箱"><span class="nav-number">1.0.2.</span> <span class="nav-text">自动装箱与拆箱</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装箱拆箱作用"><span class="nav-number">1.0.3.</span> <span class="nav-text">装箱拆箱作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串和基本类型的相互转换"><span class="nav-number">1.0.4.</span> <span class="nav-text">字符串和基本类型的相互转换</span></a></li></ol></li></ol></div>
             
 
           </div>
