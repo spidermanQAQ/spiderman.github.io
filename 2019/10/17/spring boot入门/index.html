@@ -112,20 +112,21 @@
   </script>
 
 
-  <meta name="description" content="spring boot诞生的背景 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置   随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错  xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的">
+  <meta name="description" content="spring boot诞生的背景 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置   随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错   xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上">
 <meta name="keywords" content="spring boot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring boot入门">
 <meta property="og:url" content="http://yoursite.com/2019/10/17/spring boot入门/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="spring boot诞生的背景 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置   随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错  xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的">
+<meta property="og:description" content="spring boot诞生的背景 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置   随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错   xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2019/10/17/spring%20boot入门/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cspringboot%E5%85%A5%E9%97%A83.png">
-<meta property="og:updated_time" content="2019-10-21T09:46:44.135Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ba6ad7fd3388f98bfc326f00b33de814_868x905.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E5%85%A5%E9%97%A83.png">
+<meta property="og:updated_time" content="2019-10-22T01:58:00.844Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring boot入门">
-<meta name="twitter:description" content="spring boot诞生的背景 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置   随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错  xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的">
-<meta name="twitter:image" content="http://yoursite.com/2019/10/17/spring%20boot入门/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cspringboot%E5%85%A5%E9%97%A83.png">
+<meta name="twitter:description" content="spring boot诞生的背景 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置   随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错   xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ba6ad7fd3388f98bfc326f00b33de814_868x905.png">
 
 
 
@@ -483,10 +484,13 @@
       
         <h2 id="spring-boot诞生的背景"><a href="#spring-boot诞生的背景" class="headerlink" title="spring boot诞生的背景"></a>spring boot诞生的背景</h2><p> 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置 </p>
 <ul>
-<li>随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错 </li>
-<li>xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的配置是不断重复的。也就是说在这个web项目里面这样配置，挪到另一个项目里面这部分配置仍然相同 </li>
+<li><p>随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错 </p>
+</li>
+<li><p>xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的配置是不断重复的。也就是说在这个web项目里面这样配置，挪到另一个项目里面这部分配置仍然相同 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ba6ad7fd3388f98bfc326f00b33de814_868x905.png" alt></p>
+</li>
 </ul>
-<p><strong>举一个例子:自己接电线与标准化插座</strong><br>Spring Boot的配置方式，就像是插头插座，就是这个标准。你第三方开源类库想接入进来，你就做一个starter的适配。spring MVC方式就像是手动接电线，很灵活，但是不同的人接出来的效果千差万别，而且很容易出错。Spring boot虽然灵活性不如Spring MVC的方式，你也不太清楚插座里面的线路是什么样，但就是方便易用 </p>
+<p>举一个例子:自己接电线与标准化插座<br>Spring Boot的配置方式，就像是插头插座，就是这个标准。你第三方开源类库想接入进来，你就做一个starter的适配。spring MVC方式就像是手动接电线，很灵活，但是不同的人接出来的效果千差万别，而且很容易出错。Spring boot虽然灵活性不如Spring MVC的方式，你也不太清楚插座里面的线路是什么样，但就是方便易用 </p>
 <h2 id="spring-boot-改变了什么"><a href="#spring-boot-改变了什么" class="headerlink" title="spring boot 改变了什么"></a>spring boot 改变了什么</h2><p> Spring Boot 的目标不在于为已解决的问题领域提供新的解决方案，而是为平台带来另一种新的开发体验，从而简化对这些已有技术的使用 </p>
 <ul>
 <li>使配置变简单</li>
@@ -526,7 +530,7 @@
 <li>嵌入式 Servlet Container — Tomcat</li>
 <li>日志框架Logging — logback, slf4j</li>
 </ul>
-<p><img src="/2019/10/17/spring boot入门/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Cspringboot%E5%85%A5%E9%97%A83.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E5%85%A5%E9%97%A83.png" alt></p>
 
       
     </div>
