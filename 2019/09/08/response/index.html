@@ -120,7 +120,7 @@
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="requestRequest 对象是一个专门用来存储HTTP 请求信息的对象  request对象的由来 浏览器发送的http请求纪要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储 request对象中存储请求信息，服务器调用servlet时将request对象作为参数传给Servlet方法  request功能 获取请求头数据">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-17T11:26:33.076Z">
+<meta property="og:updated_time" content="2019-10-22T12:49:54.988Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="request,response">
 <meta name="twitter:description" content="requestRequest 对象是一个专门用来存储HTTP 请求信息的对象  request对象的由来 浏览器发送的http请求纪要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储 request对象中存储请求信息，服务器调用servlet时将request对象作为参数传给Servlet方法  request功能 获取请求头数据">
@@ -538,6 +538,7 @@
 <li><p>2xx：成功 </p>
 </li>
 <li><p>3xx：重定向   代表:304 重定向   客户端向服务器请求a，服务器a说在c那，告诉客户端，客户端再去请求服务器c</p>
+<p>304 访问缓存：浏览器a向服务器请求a.png,服务器给，并在本地有缓存，当第二次请求时，服务器对浏览器回应304去访问自己的缓存。</p>
 </li>
 </ol>
 </li>
@@ -548,18 +549,13 @@
 </ol>
 </li>
 </ol>
-<pre><code>   ![](https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/response.png)
-
-
-
-    304 访问缓存：浏览器a向服务器请求a.png,服务器给，并在本地有缓存，当第二次请求时，服务器对浏览器回应304去访问自己的缓存。
+<pre><code>   ![](https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/response.png)  
 
 4. 4xx：客户端错误。代表：404 （请求路径不对）
 
-   1. 404：路径没有对应资源
-   2. 405：请求方式没有对应的doxx方法
-
-5. 5xx：服务器错误</code></pre><ol start="2">
+   1. 404：路径没有对应资源</code></pre><ol start="2">
+<li><p>405：请求方式没有对应的doxx方法</p>
+<pre><code>5. 5xx：服务器错误</code></pre></li>
 <li><p>响应头</p>
 <ol>
 <li><p>格式：头名称：值</p>
@@ -828,7 +824,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

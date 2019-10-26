@@ -120,10 +120,13 @@
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="CookieCookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。 识别返回用户包括三个步骤：  服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。 浏览器将这些信息存储在本地计算机上，以备将来使用。 当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-22T02:01:24.914Z">
+<meta property="og:image" content="http://yoursite.com/2019/09/08/Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/09/08/Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png">
+<meta property="og:updated_time" content="2019-10-22T02:36:22.255Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cookie和session">
 <meta name="twitter:description" content="CookieCookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。 识别返回用户包括三个步骤：  服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。 浏览器将这些信息存储在本地计算机上，以备将来使用。 当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/08/Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg">
 
 
 
@@ -486,20 +489,19 @@
 <li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
 <li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
 </ul>
-<p>这里给一个Cookie响应头例子，来自于菜鸟</p>
+<p>cookie设置过程：</p>
+<ul>
+<li><strong>客户端发送一个http请求到服务器端</strong> </li>
+<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
+<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
+<li><strong>服务器端发送一个http响应到客户端</strong></li>
+</ul>
+<p><img src="/2019/09/08/Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
+<p>这里给一个Cookie响应头例子</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
 
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。在到期之后浏览器便会”忘记”Cookie。 </p>
-<p>特点：</p>
-<ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
+<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
+<p><img src="/2019/09/08/Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png" alt></p>
 <p>使用：</p>
 <ol>
 <li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
@@ -516,6 +518,16 @@
 <p>代码示例</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
 
+<p> 特点：</p>
+<ol>
+<li><p>这是浏览器端的数据存储技术</p>
+</li>
+<li><p>数据声明是在服务器</p>
+</li>
+<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
+<p>​                定时存储：到期之后才会没得</p>
+</li>
+</ol>
 <h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
 <p>问题：一个用户的不同请求处理的数据共享怎么办</p>
 <p>解决：Session</p>
@@ -722,7 +734,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
