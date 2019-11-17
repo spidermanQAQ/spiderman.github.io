@@ -380,6 +380,575 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/09/final关键字/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/09/final关键字/" class="post-title-link" itemprop="url">final关键字</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-09 09:45:50" itemprop="dateCreated datePublished" datetime="2019-09-09T09:45:50+08:00">2019-09-09</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h1><h2 id="final关键字基本用法"><a href="#final关键字基本用法" class="headerlink" title="final关键字基本用法"></a>final关键字基本用法</h2><ol>
+<li><p>final修饰类</p>
+<p>当一个类用final修饰时，这个类就不能被继承了。所以在使用final修饰类的时候，要注意谨慎选择，除非这个类真的在以后不会用来继承或者出于安全的考虑，尽量不要将类设计为final类。 </p>
+</li>
+<li><p>final修饰方法</p>
+<p> 如果只有在想明确禁止 该方法在子类中被覆盖的情况下才将方法设置为final的。即父类的final方法是不能被子类所覆盖的，也就是说子类是不能够存在和父类一模一样的方法的 </p>
+</li>
+<li><p>final修饰变量</p>
+<p> final<strong>成员变量表示常量，只能被赋值一次，赋值后值不再改变</strong> </p>
+<p>先来个很常见的题目引入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123; </span><br><span class="line">    public static void main(String[] args)  &#123; </span><br><span class="line">        String a = &quot;hello2&quot;;   </span><br><span class="line">        final String b = &quot;hello&quot;; </span><br><span class="line">        String d = &quot;hello&quot;; </span><br><span class="line">        String c = b + 2;   </span><br><span class="line">        String e = d + 2; </span><br><span class="line">        System.out.println((a == c)); </span><br><span class="line">        System.out.println((a == e)); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>​       分析：final变量是基本数据类型以及String类型时 ，如果在编译器就知道其确切值，编译器就会把它当作常量来看，所以b会直接以hello来替代。常量字符串的“+”操作，编译阶段直接会合成为一个字符串。在编译期间，这种拼接会被优化，编译器直接帮你拼好 ，如string str=”ja”+”va”，在编译阶段会直接合并成语句String str=”java”，于是会去常量池中查找是否存在”java” ，从而进行创建或引用，这里的c即为“hello”+2，也就是“hello2”，所以a和c指向的是同一个hello2，而a和e则是不同对象，为什么呢，一开始我也不知道，在查阅相关博客后，对常量池等知识有了了解，下面对String创建的变量进行详细解析。</p>
+<ol>
+<li><p>new String都是在堆上创建字符串对象。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/newString.png" alt></p>
+<p>其实这里常量池中也会有一个“abcd”的字符串，当new时，会拷贝一份该字符串存放到堆中，于是y指向了堆中的那个“abcd”字符串 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s = new String(&quot;abc&quot;);</span><br><span class="line">String s1 = &quot;abc&quot;;</span><br><span class="line">String s2 = new String(&quot;abc&quot;);</span><br><span class="line">  </span><br><span class="line">System.out.println(s == s1);</span><br><span class="line">System.out.println(s == s2);</span><br><span class="line">System.out.println(s1 == s2);</span><br></pre></td></tr></table></figure>
+
+<p>这里在详细分析以下这两行代码：</p>
+<ol>
+<li><p>首先在常量池中创建abc对象，然后new关键字会在堆里再创建一个对象，在堆里的这个对象则是在栈中的s1所指向的</p>
+</li>
+<li><p>当轮到s2时，首先同样会在常量池中看有没有abc，这里已经有了，则不用自己创建。然后new自己创建一个在堆中的对象，s2指向这个对象</p>
+<p>所以虽然s1和s2指向的最终内容都是abc，但它们是2个不同的对象，因为指向的是不同堆对象</p>
+</li>
+</ol>
+</li>
+<li><p>通过字面量赋值创建字符串（如：String str=”twm”）时，会先在常量池中查找是否存在相同的字符串，若存在，则将栈中的引用直接指向该字符串；若不存在，则在常量池中生成一个字符串，再将栈中的引用指向该字符串。 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/String.png" alt></p>
+<p> 再来个经典例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> 1 String s1 = &quot;Hello&quot;;</span><br><span class="line"> 2 String s2 = &quot;Hello&quot;;</span><br><span class="line"> 3 String s3 = &quot;Hel&quot; + &quot;lo&quot;;</span><br><span class="line"> 4 String s4 = &quot;Hel&quot; + new String(&quot;lo&quot;);</span><br><span class="line"> 5 String s5 = new String(&quot;Hello&quot;);</span><br><span class="line"> 6 String s6 = s5.intern();</span><br><span class="line"> 7 String s7 = &quot;H&quot;;</span><br><span class="line"> 8 String s8 = &quot;ello&quot;;</span><br><span class="line"> 9 String s9 = s7 + s8;</span><br><span class="line">10           </span><br><span class="line">11 System.out.println(s1 == s2);  // true</span><br><span class="line">12 System.out.println(s1 == s3);  // true</span><br><span class="line">13 System.out.println(s1 == s4);  // false</span><br><span class="line">14 System.out.println(s1 == s9);  // false</span><br><span class="line">15 System.out.println(s4 == s5);  // false</span><br><span class="line">16 System.out.println(s1 == s6);  // true</span><br></pre></td></tr></table></figure>
+
+<p> s1 == s2这个非常好理解，s1、s2在赋值时，均使用的字符串字面量，说白话点，就是直接把字符串写死，在编译期间，这种字面量会直接放入class文件的常量池中，从而实现复用，载入运行时常量池后，s1、s2指向的是同一个内存地址，所以相等。</p>
+<p> s1 == s3这个地方有个坑，s3虽然是动态拼接出来的字符串，但是所有参与拼接的部分都是已知的字面量，在编译期间，这种拼接会被优化，编译器直接帮你拼好，因此String s3 = “Hel” + “lo”;在class文件中被优化成String s3 = “Hello”，所以s1 == s3成立。</p>
+<p>s1 == s4当然不相等，s4虽然也是拼接出来的，但new String(“lo”)这部分不是已知字面量，是一个不可预料的部分，编译器不会优化，必须等到运行时才可以确定结果，结合<strong>字符串不变</strong>定理，鬼知道s4被分配到哪去了，所以地址肯定不同 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/final.png" alt></p>
+</li>
+</ol>
+<p>   s1 == s9也不相等，道理差不多，虽然s7、s8在赋值的时候使用的字符串字面量，但是拼接成s9的时候，s7、s8作为<strong>两个变量</strong>，都是<strong>不可预料</strong>的，编译器毕竟是编译器，不可能当解释器用，不能在编译期被确定，所以不做优化，只能等到运行时，在堆中创建s7、s8拼接成的新字符串，在堆中地址不确定，不可能与方法区常量池中的s1地址相同 </p>
+<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/helnewstring.jpg" alt></p>
+<p>   s4 == s5已经不用解释了，绝对不相等，二者都在堆中，但地址不同。</p>
+<p>   s1 == s6这两个相等完全归功于intern方法，s5在堆中，内容为Hello ，intern方法会尝试将Hello字符串添加到常量池中，并返回其在常量池中的地址，因为常量池中已经有了Hello字符串，所以intern方法直接返回地址；而s1在编译期就已经指向常量池了，因此s1和s6指向同一地址，相等。</p>
+<p>   注意：<strong>只有使用引号包含文本的方式创建的String对象之间使用“+”连接产生的新对象才会被加入字符串池中</strong> </p>
+<p>   <strong>对于所有包含new方式新建对象（包括null）的“+”连接表达式，它所产生的新对象都不会被加入字符串池中</strong> </p>
+<h2 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h2><p>   Java中的常量池，实际上分为两种形态：<strong>静态常量池</strong>和<strong>运行时常量池</strong>。</p>
+<p>   ​     所谓<strong>静态常量池</strong>，即<em>.class文件中的常量池，class文件中的常量池不仅仅包含字符串(数字)字面量，还包含类、方法的信息，占用class文件绝大部分空间。这种常量池主要用于存放两大类常量：*</em>字面量<strong>(Literal)和</strong>符号引用量**(Symbolic References)，字面量相当于Java语言层面常量的概念，如文本字符串，声明为final的常量值等，符号引用则属于编译原理方面的概念，包括了如下三种类型的常量：</p>
+<ul>
+<li><p>类和接口的全限定名</p>
+</li>
+<li><p>字段名称和描述符</p>
+</li>
+<li><p>方法名称和描述符</p>
+<p>​     而<strong>运行时常量池</strong>，则是jvm虚拟机在完成类装载操作后，将class文件中的常量池载入到内存中，并保存在<strong>方法区</strong>中，我们常说的常量池，就是指方法区中的运行时常量池。</p>
+<p>运行时常量池相对于CLass文件常量池的另外一个重要特征是<strong>具备动态性</strong>，Java语言并不要求常量一定只有编译期才能产生，也就是并非预置入CLass文件中常量池的内容才能进入方法区运行时常量池，运行期间也可能将新的常量放入池中，这种特性被开发人员利用比较多的就是<strong>String类的intern()</strong>方法。</p>
+<p>String的intern()方法会查找在常量池中是否存在一份equal相等的字符串,如果有则返回该字符串的引用,如果没有则添加自己的字符串进入常量池。</p>
+</li>
+</ul>
+<p>   <strong>常量池的好处</strong> 常量池是为了避免频繁的创建和销毁对象而影响系统性能，其实现了对象的共享。 例如字符串常量池，在编译阶段就把所有的字符串文字放到一个常量池中。 </p>
+<p>   （1）节省内存空间：常量池中所有相同的字符串常量被合并，只占用一个空间。 </p>
+<p>   （2）节省运行时间：比较字符串时，==比equals()快。对于两个引用变量，只用==判断引用是否相等，也就可以判断实际值是否相等。 </p>
+<p>   参考博客：<a href="https://www.cnblogs.com/lizhangyong/p/8909329.html" target="_blank" rel="noopener">https://www.cnblogs.com/lizhangyong/p/8909329.html</a> </p>
+<p>   ​                   <a href="https://www.cnblogs.com/xiaoxi/p/6392154.html" target="_blank" rel="noopener">https://www.cnblogs.com/xiaoxi/p/6392154.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/response/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/response/" class="post-title-link" itemprop="url">request,response</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:40:54" itemprop="dateCreated datePublished" datetime="2019-09-08T15:40:54+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="request"><a href="#request" class="headerlink" title="request"></a>request</h2><p>Request 对象是一个专门用来存储HTTP 请求信息的对象 </p>
+<h3 id="request对象的由来"><a href="#request对象的由来" class="headerlink" title="request对象的由来"></a>request对象的由来</h3><ul>
+<li>浏览器发送的http请求纪要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储</li>
+<li>request对象中存储请求信息，服务器调用servlet时将request对象作为参数传给Servlet方法</li>
+</ul>
+<h3 id="request功能"><a href="#request功能" class="headerlink" title="request功能"></a>request功能</h3><ol>
+<li><p>获取请求头数据</p>
+<ul>
+<li><code>getMethod()</code>:<code>获取请求方式 [GET,POST或PUT]</code></li>
+<li><code>getRequestURL()</code>:<code>获取请求路径</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(req.getMethod()); //GET </span><br><span class="line">System.out.println(req.getRequestURL()); //http://localhost:8089/servlet/update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取请求体数据</p>
+<ul>
+<li><code>java.lang.String    getHeader(java.lang.String name)</code>: <code>以a形式返回指定请求标头的值String。</code></li>
+<li><code>java.util.Enumeration    getHeaderNames()</code>:<code>返回此请求包含的所有标头名称的枚举。</code></li>
+<li><code>java.util.Enumeration    getHeaders(java.lang.String name)</code>:<code>返回指定请求头作为的所有值Enumeration的String对象。</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> Enumeration enums = request.getHeaderNames();</span><br><span class="line"> while (enums.hasMoreElements())&#123;</span><br><span class="line">     System.out.println(enums.nextElement());</span><br><span class="line"> &#125;</span><br><span class="line">   </span><br><span class="line">/*</span><br><span class="line"> host:localhost:8089</span><br><span class="line"> connection:keep-alive</span><br><span class="line"> upgrade-insecure-requests:1</span><br><span class="line"> user-agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36</span><br><span class="line"> accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line"> accept-encoding:gzip, deflate, br</span><br><span class="line"> accept-language:zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line"> cookie:JSESSIONID=F054B1A83D51D3320C177469DC567048; Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取用户信息</p>
+<ul>
+<li><p><code>getMethod()</code>:<code>获取请求方式 [GET,POST或PUT]</code></p>
+</li>
+<li><p><code>getRequestURL()</code>:<code>获取请求路径</code></p>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="response"><a href="#response" class="headerlink" title="response"></a>response</h2><ol>
+<li><p>请求消息：客户端发送给服务器的数据</p>
+<p>数据格式：</p>
+<p>请求行</p>
+<p>请求头</p>
+<p>请求空行</p>
+<p>请求体</p>
+</li>
+<li><p>响应消息服务器端发给客户端的数据</p>
+<p>响应行</p>
+<p>响应头</p>
+<p>响应空行</p>
+<p>响应体</p>
+<ol>
+<li><p>响应行</p>
+<ol>
+<li><p>组成：协议/版本 响应状态码 状态码描述</p>
+</li>
+<li><p>响应状态码：服务器告诉客户端浏览器本次请求和响应的一个状态</p>
+<ol>
+<li><p>状态码都是3位数字</p>
+</li>
+<li><p>分类：</p>
+<ol>
+<li><p>1xx：服务器接受客户端信息，但没有接受完成，等待一段时间后，发送1xx状态码</p>
+</li>
+<li><p>2xx：成功 </p>
+</li>
+<li><p>3xx：重定向   代表:304 重定向   客户端向服务器请求a，服务器a说在c那，告诉客户端，客户端再去请求服务器c</p>
+<p>304 访问缓存：浏览器a向服务器请求a.png,服务器给，并在本地有缓存，当第二次请求时，服务器对浏览器回应304去访问自己的缓存。</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<pre><code>   ![](https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/response.png)  
+
+4. 4xx：客户端错误。代表：404 （请求路径不对）
+
+   1. 404：路径没有对应资源</code></pre><ol start="2">
+<li><p>405：请求方式没有对应的doxx方法</p>
+<pre><code>5. 5xx：服务器错误</code></pre></li>
+<li><p>响应头</p>
+<ol>
+<li><p>格式：头名称：值</p>
+</li>
+<li><p>常见的响应头：</p>
+<ol>
+<li><p>Content-Type：服务器告诉客户端本次响应体数据格式以及编码格式</p>
+</li>
+<li><p>Content-Type：服务器告诉客户端义什么格式打开响应体数据</p>
+<p>in-line：默认值在当前页面内打开</p>
+<p>attachment：以附件形式打开响应体.文件下载</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>响应体：传输的数据</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>response功能</p>
+<ol>
+<li><p>设置响应行</p>
+<ol>
+<li>格式：HTTP/1.1 200 ok</li>
+<li>设置状态码：setStatus(int sc)</li>
+</ol>
+</li>
+<li><p>设置响应头：setHeader(String name，String  value)</p>
+</li>
+<li><p>设置响应体：</p>
+<ul>
+<li><p>获取输出流</p>
+<p>字符输出流：PrintWriter getwriter（）</p>
+<p>字节输出流：ServletOutputStream getOutOutputStream()</p>
+</li>
+<li><p>使用输出流：将数据输出到客户端</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>案例</p>
+<ol>
+<li><p>完成重定向</p>
+<p>重定向：资源跳转的方式</p>
+<p>代码实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">response.setStatus(302);</span><br><span class="line">response.setHeader(&quot;location&quot;, &quot;/demo/responsedemo2&quot;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.sendRedirect(&quot;/demo/responsedemo2&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>转发特点：</p>
+<p>1.转发地址路径不变</p>
+<p>2.转发只能访问当前服务器下的资源</p>
+<p>3.转发是一次请求，可以使用request对象来共享数据</p>
+<p>重定向特点：</p>
+<p>1.地址栏发生变化</p>
+<p>2.重定向可以访问其他站点（服务器）的资源</p>
+<p>3.重定向是2次请求，不能使用request对象来共享数据</p>
+<p>foward和redirect区别</p>
+<p>路径写法：</p>
+<ol>
+<li>相对路径：通过相对路径不可以确定唯一资源  ./index.html不以/开头，以.开头<ul>
+<li>找到当前与目标资源之间的相对位置关系</li>
+<li>./:当前目录</li>
+<li>../：后退一级目录</li>
+</ul>
+</li>
+<li>绝对路径：通过绝对路径可以确定唯一资源<ul>
+<li>判断定义的路径给谁用</li>
+<li>给客户端用，需要加虚拟目录</li>
+<li>给服务器用：不需要加</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<p>2.服务器输出字符数据到浏览器</p>
+<p>​       步骤：1.获取字符数据</p>
+<p>​                   2.输出数据</p>
+<p>​     注意乱码问题：PrintWriter pw=response.getWriter();默认编码方式是ISO-8859-1</p>
+<p>Writer类的常用方法</p>
+<p>void write(int n)：写入单个字符</p>
+<p>void write(byte b[])：写入一个字符数组</p>
+<p>void write(byte b[],int off,int len)：从字节数组中起始于偏移量off处取len个字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//告诉浏览器服务器的编码方式，建议浏览器使用该编码解码（浏览器默认gbk）</span><br><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset= utf-8&quot;);</span><br><span class="line">//获取字符数据</span><br><span class="line">PrintWriter pw=response.getWriter();</span><br><span class="line">//输出数据</span><br><span class="line">pw.write(&quot;你好啊&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>3.输出字节数据到浏览器（一般输出图片）</p>
+<p><code>ServletOutputStream</code>类提供了将二进制数据写入响应的流 </p>
+<p>getBytes()返回默认编码的字节数组</p>
+<p>OutputStream类的常用方法</p>
+<p>void write(int n)：写入单个字节</p>
+<p>void write(byte b[])：写入一个字节数组</p>
+<p>void write(byte b[],int off,int len)：从字节数组中起始于偏移量off处取len个字节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//获取字符数据</span><br><span class="line">ServletOutputStream pw=response.getOutputStream();</span><br><span class="line">//输出数据</span><br><span class="line">pw.write(&quot;你好&quot;.getBytes());</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/过滤器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -774,253 +1343,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/session和Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
-<p>识别返回用户包括三个步骤：</p>
-<ul>
-<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
-<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
-<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
-</ul>
-<p>cookie设置过程：</p>
-<ul>
-<li><strong>客户端发送一个http请求到服务器端</strong> </li>
-<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
-<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
-<li><strong>服务器端发送一个http响应到客户端</strong></li>
-</ul>
-<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
-<p>这里给一个Cookie响应头例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
-
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
-<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png" alt></p>
-<p>使用：</p>
-<ol>
-<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置最大生命周期（以秒为单位）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发送Cookie到HTTP响应头</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
-
-<p> 特点：</p>
-<ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
-<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
-<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
-<p>解决：Session</p>
-<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
-
-<p>特点：</p>
-<ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<p>使用：</p>
-<ol>
-<li><p>创建session对象/获取session对象         </p>
-</li>
-<li><p>HttpSession hs=request.getSession()</p>
-<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-<p>如果没有创建，那么新建一个</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ol>
-<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
-<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
-<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
-<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Cookie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1205,6 +1527,253 @@
 <p>​          一次会话（即可以多次请求，主要session没失效）</p>
 <p>代码示例</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">    //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/session和Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
+<p>识别返回用户包括三个步骤：</p>
+<ul>
+<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
+<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
+<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
+</ul>
+<p>cookie设置过程：</p>
+<ul>
+<li><strong>客户端发送一个http请求到服务器端</strong> </li>
+<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
+<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
+<li><strong>服务器端发送一个http响应到客户端</strong></li>
+</ul>
+<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
+<p>这里给一个Cookie响应头例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
+
+<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
+<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png" alt></p>
+<p>使用：</p>
+<ol>
+<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置最大生命周期（以秒为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送Cookie到HTTP响应头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
+
+<p> 特点：</p>
+<ol>
+<li><p>这是浏览器端的数据存储技术</p>
+</li>
+<li><p>数据声明是在服务器</p>
+</li>
+<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
+<p>​                定时存储：到期之后才会没得</p>
+</li>
+</ol>
+<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
+<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
+<p>解决：Session</p>
+<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
+
+<p>特点：</p>
+<ol>
+<li>存储在服务器</li>
+<li>服务器进行创建</li>
+<li>依赖Cookie技术</li>
+<li>一次会话</li>
+<li>默认存储时间30分钟</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建session对象/获取session对象         </p>
+</li>
+<li><p>HttpSession hs=request.getSession()</p>
+<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
+<p>如果没有创建，那么新建一个</p>
+</li>
+<li><p>设置session存储时间 hs.invalidate( )</p>
+</li>
+<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
+<p>获取数据 hs.getAttribute(String name)</p>
+</li>
+</ol>
+<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
+<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
+<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
+<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
 
@@ -2181,173 +2750,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/13/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/13/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-13 16:39:34" itemprop="dateCreated datePublished" datetime="2019-07-13T16:39:34+08:00">2019-07-13</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2391,7 +2798,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">39</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
