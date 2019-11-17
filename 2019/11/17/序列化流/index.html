@@ -112,29 +112,21 @@
   </script>
 
 
-  <meta name="description" content="LaTex[TOC] LaTex预备知识第一个LaTex文档123456\documentclass&amp;#123;article&amp;#125; \begin&amp;#123;document&amp;#125;First document. This is a simple example, with no extra parameters or packages included.\end&amp;#123;docume">
-<meta name="keywords" content="LaTex">
+  <meta name="description" content="概述Java 提供了一种对象序列化的机制。用一个字节序列可以表示一个对象，该字节序列包含该对象的数据、对象的类型和对象中存储的属性等信息。字节序列写出到文件之后，相当于文件中持久保存了一个对象的信息。  反之，该字节序列还可以从文件中读取回来，重构对象，对它进行反序列化。对象的数据、对象的类型和对象中存储的数据信息，都可以用来在内存中创建对象。看图理解序列化：  ObjectOutputStrea">
+<meta name="keywords" content="java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LaTex">
-<meta property="og:url" content="http://yoursite.com/2019/09/04/LaTex/index.html">
+<meta property="og:title" content="序列化流">
+<meta property="og:url" content="http://yoursite.com/2019/11/17/序列化流/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="LaTex[TOC] LaTex预备知识第一个LaTex文档123456\documentclass&amp;#123;article&amp;#125; \begin&amp;#123;document&amp;#125;First document. This is a simple example, with no extra parameters or packages included.\end&amp;#123;docume">
+<meta property="og:description" content="概述Java 提供了一种对象序列化的机制。用一个字节序列可以表示一个对象，该字节序列包含该对象的数据、对象的类型和对象中存储的属性等信息。字节序列写出到文件之后，相当于文件中持久保存了一个对象的信息。  反之，该字节序列还可以从文件中读取回来，重构对象，对它进行反序列化。对象的数据、对象的类型和对象中存储的数据信息，都可以用来在内存中创建对象。看图理解序列化：  ObjectOutputStrea">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/d.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/e.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/pic.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/f.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/g.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/a.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/c.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/i.png">
-<meta property="og:updated_time" content="2019-09-10T02:46:26.973Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/3_xuliehua.jpg">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%812.png">
+<meta property="og:updated_time" content="2019-11-17T07:56:12.871Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LaTex">
-<meta name="twitter:description" content="LaTex[TOC] LaTex预备知识第一个LaTex文档123456\documentclass&amp;#123;article&amp;#125; \begin&amp;#123;document&amp;#125;First document. This is a simple example, with no extra parameters or packages included.\end&amp;#123;docume">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/d.png">
+<meta name="twitter:title" content="序列化流">
+<meta name="twitter:description" content="概述Java 提供了一种对象序列化的机制。用一个字节序列可以表示一个对象，该字节序列包含该对象的数据、对象的类型和对象中存储的属性等信息。字节序列写出到文件之后，相当于文件中持久保存了一个对象的信息。  反之，该字节序列还可以从文件中读取回来，重构对象，对它进行反序列化。对象的数据、对象的类型和对象中存储的数据信息，都可以用来在内存中创建对象。看图理解序列化：  ObjectOutputStrea">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/3_xuliehua.jpg">
 
 
 
@@ -142,7 +134,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/09/04/LaTex/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/17/序列化流/">
 
 
 
@@ -152,7 +144,7 @@
   };
 </script>
 
-  <title>LaTex | 万乔少女的梦QAQ</title>
+  <title>序列化流 | 万乔少女的梦QAQ</title>
   
 
 
@@ -392,7 +384,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/04/LaTex/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/17/序列化流/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -409,7 +401,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LaTex
+          <h1 class="post-title" itemprop="name headline">序列化流
 
               
             
@@ -435,7 +427,7 @@
                 
               
 
-              <time title="创建时间：2019-09-04 09:19:42" itemprop="dateCreated datePublished" datetime="2019-09-04T09:19:42+08:00">2019-09-04</time>
+              <time title="创建时间：2019-11-17 15:32:57" itemprop="dateCreated datePublished" datetime="2019-11-17T15:32:57+08:00">2019-11-17</time>
             </span>
           
 
@@ -450,7 +442,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LaTex/" itemprop="url" rel="index"><span itemprop="name">LaTex</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
 
                 
                 
@@ -490,152 +482,51 @@
       
 
       
-        <h1 id="LaTex"><a href="#LaTex" class="headerlink" title="LaTex"></a>LaTex</h1><p>[TOC]</p>
-<h1 id="LaTex预备知识"><a href="#LaTex预备知识" class="headerlink" title="LaTex预备知识"></a>LaTex预备知识</h1><h2 id="第一个LaTex文档"><a href="#第一个LaTex文档" class="headerlink" title="第一个LaTex文档"></a><strong>第一个LaTex文档</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">First document. This is a simple example, with no </span><br><span class="line">extra parameters or packages included.</span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-<p> 第一行说明文档类型，在<code>\begin{document} \end{document}</code>标签之间编写文档的文本。 </p>
-<p>article 排版科技期刊、短报告、程序文档、邀请函等。</p>
-<p>report 排版多章节的长报告、短篇的书籍、博士论文等。</p>
-<p>book 排版书籍。</p>
-<p>slides 排版幻灯片。</p>
-<h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a><strong>序言</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass[12pt, letterpaper]&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line"> </span><br><span class="line">\title&#123;First document&#125;</span><br><span class="line">\author&#123;Hubert Farnsworth \thanks&#123;funded by the ShareLaTeX team&#125;&#125;</span><br><span class="line">\date&#123;February 2014&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在<code>\begin{document}</code>命令之前输入的文本称为<strong>前导码</strong>。在序言中，您可以定义要编写的文档类型和语言，加载您需要的额外包，并设置几个参数 。</p>
-<p>下面对各部分进行说明：</p>
-<p>\documentclass[12pt, letterpaper]{article} ：在示例中，额外参数设置字体大小（12pt）和纸张大小（letterpaper）。默认大小为10pt。纸张尺寸默认为A4</p>
-<p>\usepackage[utf8]{inputenc} ：如果不是特别需要其他编码，将此行添加到前导码中  </p>
-<p>接下来的三行是自我描述的 。如果要让标题显示，可以通过\maketitle来达到</p>
-<h2 id="斜体-粗体-下划线"><a href="#斜体-粗体-下划线" class="headerlink" title="斜体 粗体 下划线"></a><strong>斜体 粗体 下划线</strong></h2><p>斜体：\textit{ }</p>
-<p>粗体：\textbf{ }</p>
-<p>下划线：\underline{ }</p>
-<h2 id="换行-分页-水平空格-垂直空格"><a href="#换行-分页-水平空格-垂直空格" class="headerlink" title="换行 分页 水平空格 垂直空格"></a><strong>换行 分页 水平空格 垂直空格</strong></h2><p>换行(新的一行会顶格开始)</p>
-<ul>
-<li>\\</li>
-<li>\newline</li>
-<li>\hfile \break</li>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Java 提供了一种对象<strong>序列化</strong>的机制。用一个字节序列可以表示一个<strong>对象</strong>，该字节序列包含该<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的属性</code>等信息。字节序列写出到文件之后，相当于文件中<strong>持久保存</strong>了一个对象的信息。 </p>
+<p>反之，该字节序列还可以从文件中读取回来，重构对象，对它进行<strong>反序列化</strong>。<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的数据</code>信息，都可以用来在内存中创建对象。看图理解序列化： <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/3_xuliehua.jpg" alt></p>
+<h2 id="ObjectOutputStream类"><a href="#ObjectOutputStream类" class="headerlink" title="ObjectOutputStream类"></a>ObjectOutputStream类</h2><p><code>java.io.ObjectOutputStream</code> 类，将Java对象的原始数据类型写出到文件,实现对象的持久存储。</p>
+<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
+<li><code>public ObjectOutputStream(OutputStream out)</code>： 创建一个指定OutputStream的ObjectOutputStream。</li>
 </ul>
-<p>分页</p>
-<ul>
-<li>\newpage：在图片插入后换页，即图片依然可以正常显示，文本换页</li>
-<li>\clearpage：在图片显示前换页，即图片和文本也会换页</li>
-</ul>
-<p>水平空格</p>
-<ul>
-<li>\hspace{ }：填指定长度空白</li>
-<li>\hfill：填空白到行最后</li>
-</ul>
-<p>垂直空格</p>
-<ul>
-<li>\vspace{ }：填指定长度空白</li>
-<li>\vfill：填空白到页面底部</li>
-</ul>
-<h1 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h1><h2 id="新段落"><a href="#新段落" class="headerlink" title="新段落"></a><strong>新段落</strong></h2><ul>
-<li><p>空一行</p>
-</li>
-<li><p>段末 \par</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">This is the text in first paragraph. This is the text in first </span><br><span class="line">paragraph. This is the text in first paragraph. \par</span><br><span class="line">This is the text in second paragraph. This is the text in second </span><br><span class="line">paragraph. This is the text in second paragraph.</span><br></pre></td></tr></table></figure>
+<p>构造举例，代码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fileOut = <span class="keyword">new</span> FileOutputStream(<span class="string">"employee.txt"</span>);</span><br><span class="line">ObjectOutputStream out = <span class="keyword">new</span> ObjectOutputStream(fileOut);</span><br></pre></td></tr></table></figure>
 
-</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/d.png" alt></p>
-<h2 id="居中-左对齐-右对齐"><a href="#居中-左对齐-右对齐" class="headerlink" title="居中 左对齐 右对齐"></a><strong>居中 左对齐 右对齐</strong></h2><p>左对齐示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;flushleft&#125;</span><br><span class="line">``LaTeX is a document preparation system and document markup </span><br><span class="line">language. LaTeX uses the TeX typesetting program for formatting </span><br><span class="line">its output, and is itself written in the TeX macro language. </span><br><span class="line">LaTeX is not the name of a particular editing program, but refers </span><br><span class="line">to the encoding or tagging conventions that are used in LaTeX documents&quot;.</span><br><span class="line">\end&#123;flushleft&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/e.png" alt></p>
-<h1 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h1><h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a><strong>插入图片</strong></h2><p> Latex无法自行管理图像，因此我们需要使用<strong>graphicx</strong>包 </p>
-<p>\usepackage{graphicx} </p>
-<p>\graphicspath{ {./images/} }</p>
-<p>\includegraphics{universe}  universe为图片名</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/pic.png" alt></p>
-<h2 id="图片大小和旋转"><a href="#图片大小和旋转" class="headerlink" title="图片大小和旋转"></a><strong>图片大小和旋转</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = 3cm，height = 4cm ] &#123;lion-logo &#125;                     长宽</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = \ textwidth ] &#123;universe &#125;                            图片和文本等宽</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ scale = 1.2，angle = 45 ] &#123;lion-logo &#125;                       缩放并旋转</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">Overleaf is a great professional tool to edit online, </span><br><span class="line">share and backup your \LaTeX&#123;&#125; projects. Also offers a </span><br><span class="line">rather large help documentation.</span><br><span class="line"> </span><br><span class="line">\includegraphics[scale=1.2, angle=45]&#123;lion-logo&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/f.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">The universe is immense and it seems to be homogeneous, </span><br><span class="line">in a large scale, everywhere we look at.</span><br><span class="line"> </span><br><span class="line">\includegraphics[width=\textwidth]&#123;universe&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/g.png" alt></p>
-<h2 id="图片与文字的组合"><a href="#图片与文字的组合" class="headerlink" title="图片与文字的组合"></a><strong>图片与文字的组合</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">In the next example the figure will be positioned </span><br><span class="line">right below this sentence.</span><br><span class="line"> </span><br><span class="line">\begin&#123;figure&#125;[h]</span><br><span class="line">\includegraphics[width=8cm]&#123;Plot&#125;</span><br><span class="line">\end&#123;figure&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/a.png" alt></p>
-<p>该<code>figure</code>环境用于将图片显示为文档中的浮动元素 ，LaTex会自动对图片进行定位</p>
-<table>
-<thead>
-<tr>
-<th>h</th>
-<th>正常位置</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>T</td>
-<td>位于页面顶部</td>
-</tr>
-<tr>
-<td>b</td>
-<td>位于页面底部</td>
-</tr>
-</tbody></table>
-<p>文本包裹图片，适合图片较小的情况下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;wrapfigure&#125;&#123;r&#125;&#123;0.25\textwidth&#125; %this figure will be at the right</span><br><span class="line">    \centering</span><br><span class="line">    \includegraphics[width=0.25\textwidth]&#123;mesh&#125;</span><br><span class="line">\end&#123;wrapfigure&#125;</span><br><span class="line"> </span><br><span class="line">There are several ways to plot a function of two variables, </span><br><span class="line">depending on the information you are interested in. For </span><br><span class="line">instance, if you want to see the mesh of a function so it </span><br><span class="line">easier to see the derivative you can use a plot like the </span><br><span class="line">one on the left.</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">\begin&#123;wrapfigure&#125;&#123;l&#125;&#123;0.25\textwidth&#125;</span><br><span class="line">    \centering</span><br><span class="line">    \includegraphics[width=0.25\textwidth]&#123;contour&#125;</span><br><span class="line">\end&#123;wrapfigure&#125;</span><br><span class="line"> </span><br><span class="line">On the other side, if you are only interested on</span><br><span class="line">certain values you can use the contour plot, you </span><br><span class="line">can use the contour plot, you can use the contour </span><br><span class="line">plot, you can use the contour plot, you can use </span><br><span class="line">the contour plot, you can use the contour plot, </span><br><span class="line">you can use the contour plot, like the one on the left.</span><br><span class="line"> </span><br><span class="line">On the other side, if you are only interested on </span><br><span class="line">certain values you can use the contour plot, you </span><br><span class="line">can use the contour plot, you can use the contour </span><br><span class="line">plot, you can use the contour plot, you can use the </span><br><span class="line">contour plot, you can use the contour plot, </span><br><span class="line">you can use the contour plot, </span><br><span class="line">like the one on the left.</span><br></pre></td></tr></table></figure>
-
-<p>要实现如下图效果，需要先导入包wrapfig，即 \usepackage{wrapfig} </p>
-<p>通过命令定义<em>wrapfigure</em>环境<code>\begin{wrapfigure}{l}{0.25\textwidth} \end{wrapfigure}</code> </p>
-<p>\centering 将使图片居中</p>
-<p>{l}：定义图片的对齐方式</p>
-<p>{0.25\textwidth}：图片相对于文本的宽度</p>
-<p>效果图</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/c.png" alt></p>
-<h1 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h1><p>数学表达式的写入模式有2种：<strong>inline</strong> mode ，<strong>display</strong> mode 。第一个用于编写作为文本一部分的公式。第二个用于编写不属于文本或段落的表达式 。</p>
-<p><strong>inline</strong> mode(行内模式)：用这些分隔符之一：<code>\( \)</code>，<code>$ $</code>或<code>\begin{math} \end{math}</code></p>
-<p><strong>display</strong> mode (行内模式）：<code>\[ \]</code>, <code>$$ $$</code>, <code>\begin{displaymath} \end{displaymath}</code> or <code>\begin{equation} \end{equation}</code> </p>
-<ul>
-<li><p>有编号 \begin{equation}  \end{equation} (没试过)</p>
-</li>
-<li><p>无编号</p>
-</li>
-</ul>
-<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\section&#123;Introduction&#125;</span><br><span class="line"> </span><br><span class="line">This is the first section.</span><br><span class="line"> </span><br><span class="line">Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  </span><br><span class="line">elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et </span><br><span class="line">neque pharetra sollicitudin.  Praesent imperdietmi nec ante. </span><br><span class="line">Donec ullamcorper, felis non sodales...</span><br><span class="line"> </span><br><span class="line">\section&#123;Second Section&#125;</span><br><span class="line"> </span><br><span class="line">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  </span><br><span class="line">Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra </span><br><span class="line">sollicitudin.  Praesent imperdiet mi necante...</span><br></pre></td></tr></table></figure>
-
-<p>​                                                                    </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png" alt></p>
-<h1 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h1><p>同时有很多样式，这里用本人喜欢的风格</p>
-<p>\usepackage{fancyhdr} 导入包</p>
-<p>\fancyhf 清除页眉和页脚，否则将出现默认“普通”页面样式的元素。 </p>
-<p>\rhead{ } 右上角页眉</p>
-<p>\lhead{ } 左上角页眉</p>
-<p>\rfoot{ }  页脚</p>
-<p>{ }内推荐写 \thepage这样可以自动写入页数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage&#123;fancyhdr&#125;</span><br><span class="line"></span><br><span class="line">\pagestyle&#123;fancy&#125;</span><br><span class="line">\fancyhf&#123;&#125;</span><br><span class="line">\rhead&#123;Overleaf&#125;</span><br><span class="line">\lhead&#123;\LaTeX&#123;&#125; tutorials&#125;</span><br><span class="line">\rfoot&#123; \thepage&#125;</span><br><span class="line"></span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line"></span><br><span class="line">\section&#123;First Section&#125;</span><br><span class="line"></span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png" alt></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>overleaf上有多种参考文献格式，这里使用常见的方式，详细步骤如下：</p>
-<ol>
-<li>新建.bib文件，里面存放引用文献的信息</li>
-<li>在谷歌学术或百度学术中找到相应文献的  “ 引用 ”功能，然后在导入链接那点击 “ BibTex ”。复制其中的内容至新建立的.bib文件</li>
-<li>相关命令</li>
+<h3 id="序列化操作"><a href="#序列化操作" class="headerlink" title="序列化操作"></a>序列化操作</h3><ol>
+<li>一个对象要想序列化，必须满足两个条件:</li>
 </ol>
 <ul>
-<li><p><code>\usepackage{biblatex}</code></p>
-<p>导入包<strong>biblatex</strong>。</p>
-</li>
-<li><p><code>\addbibresource{sample.bib}</code></p>
-<p>导入bibtex数据文件<em>sample.bib</em>，此文件包含有关每个引用的书籍，文章等信息。 </p>
-</li>
-<li><p><code>\cite{einstein}</code></p>
-<p>此命令在文档中插入引用[1]，在这种情况下，对应于参考书目中的元素，“einstein”是对应于<em>sample.bib中</em>的条目的关键字。</p>
-</li>
-<li><p>\printbibliography`</p>
-<p>打印引用的参考文献列表，默认标题是文章文档类的“参考文献”和书籍和报告的“参考书目”。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line"> </span><br><span class="line">\usepackage&#123;biblatex&#125;</span><br><span class="line">\addbibresource&#123;sample.bib&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">Let&apos;s cite! The Einstein&apos;s journal paper \cite&#123;einstein&#125; and the Dirac&apos;s </span><br><span class="line">book \cite&#123;dirac&#125; are physics related items. </span><br><span class="line"> </span><br><span class="line">\printbibliography</span><br><span class="line"> </span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>该类必须实现<code>java.io.Serializable</code> 接口，<code>Serializable</code> 是一个标记接口，不实现此接口的类将不会使任何状态序列化或反序列化，会抛出<code>NotSerializableException</code> 。</li>
 </ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/i.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Person&#123;"</span> +</span><br><span class="line">                <span class="string">"name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", age="</span> + age +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.写出对象方法</p>
+<ul>
+<li><code>public final void writeObject (Object obj)</code> : 将指定的对象写出。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xuliehua1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Person person=<span class="keyword">new</span> Person(<span class="string">"小李"</span>,<span class="number">18</span>);</span><br><span class="line">        ObjectOutputStream objectOutputStream=<span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"F:\\test\\test1\\a.txt"</span>));</span><br><span class="line">        objectOutputStream.writeObject(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ObjectInputStream类"><a href="#ObjectInputStream类" class="headerlink" title="ObjectInputStream类"></a>ObjectInputStream类</h2><p>ObjectInputStream反序列化流，将之前使用ObjectOutputStream序列化的原始数据恢复为对象。 </p>
+<h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
+<li><code>public ObjectInputStream(InputStream in)</code>： 创建一个指定InputStream的ObjectInputStream。</li>
+</ul>
+<p>如果能找到一个对象的class文件，我们可以进行反序列化操作，调用<code>ObjectInputStream</code>读取对象的方法：</p>
+<ul>
+<li><code>public final Object readObject ()</code> : 读取一个对象。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xuliehua2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">         ObjectInputStream objectInputStream=<span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"F:\\test\\test1\\a.txt"</span>));</span><br><span class="line">         Object o=objectInputStream.readObject();</span><br><span class="line">         System.out.println(o);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>对于JVM可以反序列化对象，它必须是能够找到class文件的类。如果找不到该类的class文件，则抛出一个 <code>ClassNotFoundException</code> 异常。</strong>  </p>
+<h2 id="transient关键字"><a href="#transient关键字" class="headerlink" title="transient关键字"></a>transient关键字</h2><p>transient关键字叫瞬态关键字，被该关键字修饰的变量无法被序列化</p>
+<h2 id="SerialVersionUID"><a href="#SerialVersionUID" class="headerlink" title="SerialVersionUID"></a>SerialVersionUID</h2><p><strong>另外，当JVM反序列化对象时，能找到class文件，但是class文件在序列化对象之后发生了修改，那么反序列化操作也会失败，抛出一个<code>InvalidClassException</code>异常。</strong>发生这个异常的原因如下：</p>
+<ul>
+<li>该类的序列版本号与从流中读取的类描述符的版本号不匹配 </li>
+<li>该类包含未知数据类型 </li>
+<li>该类没有可访问的无参数构造方法 </li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%812.png" alt></p>
+<p><code>Serializable</code> 接口给需要序列化的类，提供了一个序列版本号。<code>serialVersionUID</code> 该版本号的目的在于验证序列化的对象和对应类是否版本匹配。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">     <span class="comment">// 手动加入序列版本号，声明为常量</span></span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line">     <span class="keyword">public</span> String name;</span><br><span class="line">     <span class="keyword">public</span> String address;</span><br><span class="line">     <span class="comment">// 添加新的属性 ,重新编译, 可以反序列化,该属性赋为默认值.</span></span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">int</span> eid; </span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addressCheck</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         System.out.println(<span class="string">"Address  check : "</span> + name + <span class="string">" -- "</span> + address);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -709,7 +600,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/LaTex/" rel="tag"># LaTex</a>
+            <a href="/tags/java基础/" rel="tag"># java基础</a>
           
         </div>
       
@@ -722,8 +613,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/17/docker1/" rel="next" title="docker学习（1）">
-                <i class="fa fa-chevron-left"></i> docker学习（1）
+              <a href="/2019/11/16/mysql优化-索引/" rel="next" title="mysql优化-索引">
+                <i class="fa fa-chevron-left"></i> mysql优化-索引
               </a>
             
           </div>
@@ -731,10 +622,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/05/java装箱与拆箱/" rel="prev" title="java装箱与拆箱">
-                java装箱与拆箱 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -977,7 +864,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LaTex"><span class="nav-number">1.</span> <span class="nav-text">LaTex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LaTex预备知识"><span class="nav-number">2.</span> <span class="nav-text">LaTex预备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一个LaTex文档"><span class="nav-number">2.1.</span> <span class="nav-text">第一个LaTex文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序言"><span class="nav-number">2.2.</span> <span class="nav-text">序言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#斜体-粗体-下划线"><span class="nav-number">2.3.</span> <span class="nav-text">斜体 粗体 下划线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#换行-分页-水平空格-垂直空格"><span class="nav-number">2.4.</span> <span class="nav-text">换行 分页 水平空格 垂直空格</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#段落"><span class="nav-number">3.</span> <span class="nav-text">段落</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新段落"><span class="nav-number">3.1.</span> <span class="nav-text">新段落</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#居中-左对齐-右对齐"><span class="nav-number">3.2.</span> <span class="nav-text">居中 左对齐 右对齐</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图片"><span class="nav-number">4.</span> <span class="nav-text">图片</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#插入图片"><span class="nav-number">4.1.</span> <span class="nav-text">插入图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片大小和旋转"><span class="nav-number">4.2.</span> <span class="nav-text">图片大小和旋转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片与文字的组合"><span class="nav-number">4.3.</span> <span class="nav-text">图片与文字的组合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数学表达式"><span class="nav-number">5.</span> <span class="nav-text">数学表达式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#章节"><span class="nav-number">6.</span> <span class="nav-text">章节</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#页眉和页脚"><span class="nav-number">7.</span> <span class="nav-text">页眉和页脚</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ObjectOutputStream类"><span class="nav-number">2.</span> <span class="nav-text">ObjectOutputStream类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法"><span class="nav-number">2.1.</span> <span class="nav-text">构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化操作"><span class="nav-number">2.2.</span> <span class="nav-text">序列化操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ObjectInputStream类"><span class="nav-number">3.</span> <span class="nav-text">ObjectInputStream类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法-1"><span class="nav-number">3.1.</span> <span class="nav-text">构造方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transient关键字"><span class="nav-number">4.</span> <span class="nav-text">transient关键字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SerialVersionUID"><span class="nav-number">5.</span> <span class="nav-text">SerialVersionUID</span></a></li></ol></div>
             
 
           </div>
