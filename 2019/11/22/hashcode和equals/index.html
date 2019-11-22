@@ -112,20 +112,23 @@
   </script>
 
 
-  <meta name="description" content="使用XML配置文件实现IOC使用配置文件实现IOC,要将托管给spring的类写进bean.xml配置文件中. 简单实例 创建maven项目,配置其pom.xml 12345678&amp;lt;dependencies&amp;gt;   	&amp;lt;!-- 引入--&amp;gt;       &amp;lt;dependency&amp;gt;           &amp;lt;groupId&amp;gt;org.springframework">
-<meta name="keywords" content="spring">
+  <meta name="description" content="一道常问面试题你重写过hashcode方法吗？答：没有 你在用hashMap的时候，key的部分用过自定义对象吗？答：有 这其实就自相矛盾了 hash算法回顾 hash在查找上效率很高，通过设计合适的hash函数，很多时候一下就能找到，例如6在如下hash表中直接定位到1的位置  就算发生冲突，也可用链地址法加以解决  重写hashcode以及equals的必要性2个基础知识：  HashMap在">
+<meta name="keywords" content="面试常问">
 <meta property="og:type" content="article">
-<meta property="og:title" content="xml实现IOC">
-<meta property="og:url" content="http://yoursite.com/2019/09/16/xml实现IOC/index.html">
+<meta property="og:title" content="hashcode和equals">
+<meta property="og:url" content="http://yoursite.com/2019/11/22/hashcode和equals/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="使用XML配置文件实现IOC使用配置文件实现IOC,要将托管给spring的类写进bean.xml配置文件中. 简单实例 创建maven项目,配置其pom.xml 12345678&amp;lt;dependencies&amp;gt;   	&amp;lt;!-- 引入--&amp;gt;       &amp;lt;dependency&amp;gt;           &amp;lt;groupId&amp;gt;org.springframework">
+<meta property="og:description" content="一道常问面试题你重写过hashcode方法吗？答：没有 你在用hashMap的时候，key的部分用过自定义对象吗？答：有 这其实就自相矛盾了 hash算法回顾 hash在查找上效率很高，通过设计合适的hash函数，很多时候一下就能找到，例如6在如下hash表中直接定位到1的位置  就算发生冲突，也可用链地址法加以解决  重写hashcode以及equals的必要性2个基础知识：  HashMap在">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC03.png">
-<meta property="og:updated_time" content="2019-10-04T06:14:35.643Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash1.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash2.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash3.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash4.png">
+<meta property="og:updated_time" content="2019-11-22T04:43:03.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="xml实现IOC">
-<meta name="twitter:description" content="使用XML配置文件实现IOC使用配置文件实现IOC,要将托管给spring的类写进bean.xml配置文件中. 简单实例 创建maven项目,配置其pom.xml 12345678&amp;lt;dependencies&amp;gt;   	&amp;lt;!-- 引入--&amp;gt;       &amp;lt;dependency&amp;gt;           &amp;lt;groupId&amp;gt;org.springframework">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC03.png">
+<meta name="twitter:title" content="hashcode和equals">
+<meta name="twitter:description" content="一道常问面试题你重写过hashcode方法吗？答：没有 你在用hashMap的时候，key的部分用过自定义对象吗？答：有 这其实就自相矛盾了 hash算法回顾 hash在查找上效率很高，通过设计合适的hash函数，很多时候一下就能找到，例如6在如下hash表中直接定位到1的位置  就算发生冲突，也可用链地址法加以解决  重写hashcode以及equals的必要性2个基础知识：  HashMap在">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash1.png">
 
 
 
@@ -133,7 +136,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/09/16/xml实现IOC/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/22/hashcode和equals/">
 
 
 
@@ -143,7 +146,7 @@
   };
 </script>
 
-  <title>xml实现IOC | 万乔少女的梦QAQ</title>
+  <title>hashcode和equals | 万乔少女的梦QAQ</title>
   
 
 
@@ -383,7 +386,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/xml实现IOC/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/22/hashcode和equals/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -400,7 +403,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">xml实现IOC
+          <h1 class="post-title" itemprop="name headline">hashcode和equals
 
               
             
@@ -426,7 +429,7 @@
                 
               
 
-              <time title="创建时间：2019-09-16 20:25:32" itemprop="dateCreated datePublished" datetime="2019-09-16T20:25:32+08:00">2019-09-16</time>
+              <time title="创建时间：2019-11-22 10:02:20" itemprop="dateCreated datePublished" datetime="2019-11-22T10:02:20+08:00">2019-11-22</time>
             </span>
           
 
@@ -441,7 +444,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试常问/" itemprop="url" rel="index"><span itemprop="name">面试常问</span></a></span>
 
                 
                 
@@ -481,89 +484,30 @@
       
 
       
-        <h2 id="使用XML配置文件实现IOC"><a href="#使用XML配置文件实现IOC" class="headerlink" title="使用XML配置文件实现IOC"></a>使用XML配置文件实现IOC</h2><p>使用配置文件实现IOC,要将托管给spring的类写进bean.xml配置文件中.</p>
-<h2 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h2><ol>
-<li><p>创建maven项目,配置其<code>pom.xml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">   	&lt;!-- 引入--&gt;</span><br><span class="line">       &lt;dependency&gt;</span><br><span class="line">           &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">           &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">           &lt;version&gt;5.0.2.RELEASE&lt;/version&gt;</span><br><span class="line">       &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置<code>bean</code>: 在类的根路径下的<code>resource</code>目录下创建<code>bean.xml</code>文件,把对象的创建交给spring来管理.每个<code>&lt;bean&gt;</code>标签对应一个类,其<code>class</code>属性为该类的全类名,<code>id</code>属性为该类的id,在spring配置中,通过<code>id</code>获取类的对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--把对象的创建交给spring来管理--&gt;</span><br><span class="line">    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;        &lt;/bean&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;&lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li><p>在表现层文件<code>Client.java</code>中通过<code>容器</code>创建对象.通过核心容器的<code>getBean()</code>方法获取具体对象.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        // 获取核心容器对象</span><br><span class="line">        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        // 根据id获取Bean对象</span><br><span class="line">        IAccountService as  = (IAccountService)ac.getBean(&quot;accountService&quot;);</span><br><span class="line">        </span><br><span class="line">        // 执行as的具体方法</span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>我们常用的容器有三种: </p>
-<ol>
-<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
-<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
-<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
-</ol>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC03.png" alt></p>
-<h2 id="bean标签"><a href="#bean标签" class="headerlink" title="bean标签"></a>bean标签</h2><ul>
-<li>作用: 配置托管给spring的对象,默认情况下调用类的无参构造函数,若果没有无参构造函数则不能创建成功</li>
-<li>属性：<ol>
-<li><code>id</code>: 指定对象在容器中的标识,将其作为参数传入<code>getBean()</code>方法可以获取获取对应对象.</li>
-<li><code>class</code>: 指定类的全类名,默认情况下调用无参构造函数</li>
-<li><code>scope</code>: 指定对象的作用范围,可选值如下</li>
-<li><code>init-method</code>：指定类中的初始化方法名称,在对象创建成功之后执行</li>
-<li><code>destroy-method</code>：指定类中销毁方法名称</li>
-</ol>
-</li>
+        <h2 id="一道常问面试题"><a href="#一道常问面试题" class="headerlink" title="一道常问面试题"></a>一道常问面试题</h2><p>你重写过hashcode方法吗？答：没有</p>
+<p>你在用hashMap的时候，key的部分用过自定义对象吗？答：有</p>
+<p>这其实就自相矛盾了</p>
+<p>hash算法回顾</p>
+<p>hash在查找上效率很高，通过设计合适的hash函数，很多时候一下就能找到，例如6在如下hash表中直接定位到1的位置</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash1.png" alt></p>
+<p>就算发生冲突，也可用链地址法加以解决</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash2.png" alt></p>
+<h2 id="重写hashcode以及equals的必要性"><a href="#重写hashcode以及equals的必要性" class="headerlink" title="重写hashcode以及equals的必要性"></a>重写hashcode以及equals的必要性</h2><p><strong>2个基础知识</strong>：</p>
+<ul>
+<li>HashMap在存数据时，要先计算key类的hashcode方法返回hash值，默认使用Object的hashcode方法，返回对象地址</li>
+<li>如果自定义类不重写equals方法，默认会调用Object的equals方法，通过对象地址进行比较</li>
 </ul>
-<h2 id="bean的作用范围和生命周期"><a href="#bean的作用范围和生命周期" class="headerlink" title="bean的作用范围和生命周期"></a>bean的作用范围和生命周期</h2><ul>
-<li><p>单例对象: scope=”singleton”</p>
-<pre><code>作用范围: 每个应用只有一个该对象的实例,它的作用范围就是整个应用
-生命周期: 单例对象的创建与销毁 和 容器的创建与销毁时机一致
-对象出生: 当应用加载,创建容器时,对象就被创建
-对象活着: 只要容器存在,对象一直活着
-对象死亡: 当应用卸载,销毁容器时,对象就被销毁</code></pre></li>
-<li><p>多例对象: <code>scope=&quot;prototype&quot;</code></p>
-<p>​          作用范围: 每次访问对象时,都会重新创建对象实例.</p>
-<p>​          生命周期: 多例对象的创建与销毁时机不受容器控制</p>
-<p>​          对象出生: 当使用对象时,创建新的对象实例</p>
-<p>​          对象活着: 只要对象在使用中,就一直活着</p>
-<p>​          对象死亡: 当对象长时间不用时,被 java 的垃圾回收器回收了</p>
-</li>
-</ul>
-<h2 id="实例化bean的三种方式"><a href="#实例化bean的三种方式" class="headerlink" title="实例化bean的三种方式"></a>实例化bean的三种方式</h2><ol>
-<li><p>使用默认无参构造函数创建对象: 默认情况下会根据默认无参构造函数来创建类对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用静态工厂的方法创建对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	class=&quot;cn.maoritian.factory.StaticFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用实例工厂的方法创建对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;instancFactory&quot; class=&quot;cn.maoritian.factory.InstanceFactory&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	factory-bean=&quot;instancFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>看下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public class Key &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    public Integer getKey()&#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Key(Integer id)&#123;</span><br><span class="line">        this.id=id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">/*    public int hashCode()&#123;</span><br><span class="line">        return id.hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean equals(Object o)&#123;</span><br><span class="line">        if (o==null)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            return this.getKey().equals(((Key)o).getKey());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;*/</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Judge &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Key key1 = new Key(1);</span><br><span class="line">        Key key2 = new Key(1);</span><br><span class="line"></span><br><span class="line">        HashMap&lt;Key, String&gt; hashMap = new HashMap&lt;&gt;();</span><br><span class="line">        hashMap.put(key1, &quot;我的id是1&quot;);</span><br><span class="line">        String value = hashMap.get(key2);</span><br><span class="line">        System.out.println(value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</li>
-</ol>
+<p>在注释掉hashcode和equals方法后输出为null，即取不出key2的值，为啥呢？</p>
+<p>在put时，会调用key1的默认hashcode方法，返回的是key1的地址，get的时候也会调用key2的hashcode方法，按照key2的地址进行查询，可能key1的地址1000，key2的地址为2000，也就自然查不到了</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash3.png" alt></p>
+<p>那接下来把hashcode的注释取消掉，结果还是null，为啥呢？</p>
+<p>现在重写了之后，get的时候都是按照id的hashcode来查，都是一样的，但是只是按照相同的hash值来找，找到对应位置后可能有很多对象在一条链上，毕竟是会有冲突的可能，get（key2），可事实上key2并没有存入map，只有key1，<strong>我们的本意是key1和key2的value值是一样的，通过key2也能拿到value值</strong>，现在的问题出在了key1和key2默认的equals的比较的是对象地址，并不一样。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash4.png" alt></p>
+<p>所以我们重写equals方法，只要id值一样，我们就算他们一样，这样key1和key2对象实际上就是相等的，通过hash值找到对应位置，再通过key2对象，就拿到了我们需要的值</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>参考了羊哥的博客，欢迎关注codesheep公众号，一个很nice的b站up主</p>
 
       
     </div>
@@ -637,7 +581,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/spring/" rel="tag"># spring</a>
+            <a href="/tags/面试常问/" rel="tag"># 面试常问</a>
           
         </div>
       
@@ -650,8 +594,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/16/spring概念/" rel="next" title="spring概念">
-                <i class="fa fa-chevron-left"></i> spring概念
+              <a href="/2019/11/17/序列化流/" rel="next" title="序列化流">
+                <i class="fa fa-chevron-left"></i> 序列化流
               </a>
             
           </div>
@@ -659,10 +603,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/16/依赖注入/" rel="prev" title="依赖注入">
-                依赖注入 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -909,7 +849,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用XML配置文件实现IOC"><span class="nav-number">1.</span> <span class="nav-text">使用XML配置文件实现IOC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单实例"><span class="nav-number">2.</span> <span class="nav-text">简单实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bean标签"><span class="nav-number">3.</span> <span class="nav-text">bean标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bean的作用范围和生命周期"><span class="nav-number">4.</span> <span class="nav-text">bean的作用范围和生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例化bean的三种方式"><span class="nav-number">5.</span> <span class="nav-text">实例化bean的三种方式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一道常问面试题"><span class="nav-number">1.</span> <span class="nav-text">一道常问面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重写hashcode以及equals的必要性"><span class="nav-number">2.</span> <span class="nav-text">重写hashcode以及equals的必要性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
 
           </div>
