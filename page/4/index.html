@@ -380,6 +380,253 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/xml实现IOC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/16/xml实现IOC/" class="post-title-link" itemprop="url">xml实现IOC</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-16 20:25:32" itemprop="dateCreated datePublished" datetime="2019-09-16T20:25:32+08:00">2019-09-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="使用XML配置文件实现IOC"><a href="#使用XML配置文件实现IOC" class="headerlink" title="使用XML配置文件实现IOC"></a>使用XML配置文件实现IOC</h2><p>使用配置文件实现IOC,要将托管给spring的类写进bean.xml配置文件中.</p>
+<h2 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h2><ol>
+<li><p>创建maven项目,配置其<code>pom.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">   	&lt;!-- 引入--&gt;</span><br><span class="line">       &lt;dependency&gt;</span><br><span class="line">           &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">           &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">           &lt;version&gt;5.0.2.RELEASE&lt;/version&gt;</span><br><span class="line">       &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置<code>bean</code>: 在类的根路径下的<code>resource</code>目录下创建<code>bean.xml</code>文件,把对象的创建交给spring来管理.每个<code>&lt;bean&gt;</code>标签对应一个类,其<code>class</code>属性为该类的全类名,<code>id</code>属性为该类的id,在spring配置中,通过<code>id</code>获取类的对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--把对象的创建交给spring来管理--&gt;</span><br><span class="line">    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;        &lt;/bean&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;&lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="3">
+<li><p>在表现层文件<code>Client.java</code>中通过<code>容器</code>创建对象.通过核心容器的<code>getBean()</code>方法获取具体对象.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        // 获取核心容器对象</span><br><span class="line">        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        // 根据id获取Bean对象</span><br><span class="line">        IAccountService as  = (IAccountService)ac.getBean(&quot;accountService&quot;);</span><br><span class="line">        </span><br><span class="line">        // 执行as的具体方法</span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>我们常用的容器有三种: </p>
+<ol>
+<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
+<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
+<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
+</ol>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC03.png" alt></p>
+<h2 id="bean标签"><a href="#bean标签" class="headerlink" title="bean标签"></a>bean标签</h2><ul>
+<li>作用: 配置托管给spring的对象,默认情况下调用类的无参构造函数,若果没有无参构造函数则不能创建成功</li>
+<li>属性：<ol>
+<li><code>id</code>: 指定对象在容器中的标识,将其作为参数传入<code>getBean()</code>方法可以获取获取对应对象.</li>
+<li><code>class</code>: 指定类的全类名,默认情况下调用无参构造函数</li>
+<li><code>scope</code>: 指定对象的作用范围,可选值如下</li>
+<li><code>init-method</code>：指定类中的初始化方法名称,在对象创建成功之后执行</li>
+<li><code>destroy-method</code>：指定类中销毁方法名称</li>
+</ol>
+</li>
+</ul>
+<h2 id="bean的作用范围和生命周期"><a href="#bean的作用范围和生命周期" class="headerlink" title="bean的作用范围和生命周期"></a>bean的作用范围和生命周期</h2><ul>
+<li><p>单例对象: scope=”singleton”</p>
+<pre><code>作用范围: 每个应用只有一个该对象的实例,它的作用范围就是整个应用
+生命周期: 单例对象的创建与销毁 和 容器的创建与销毁时机一致
+对象出生: 当应用加载,创建容器时,对象就被创建
+对象活着: 只要容器存在,对象一直活着
+对象死亡: 当应用卸载,销毁容器时,对象就被销毁</code></pre></li>
+<li><p>多例对象: <code>scope=&quot;prototype&quot;</code></p>
+<p>​          作用范围: 每次访问对象时,都会重新创建对象实例.</p>
+<p>​          生命周期: 多例对象的创建与销毁时机不受容器控制</p>
+<p>​          对象出生: 当使用对象时,创建新的对象实例</p>
+<p>​          对象活着: 只要对象在使用中,就一直活着</p>
+<p>​          对象死亡: 当对象长时间不用时,被 java 的垃圾回收器回收了</p>
+</li>
+</ul>
+<h2 id="实例化bean的三种方式"><a href="#实例化bean的三种方式" class="headerlink" title="实例化bean的三种方式"></a>实例化bean的三种方式</h2><ol>
+<li><p>使用默认无参构造函数创建对象: 默认情况下会根据默认无参构造函数来创建类对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用静态工厂的方法创建对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	class=&quot;cn.maoritian.factory.StaticFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用实例工厂的方法创建对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;instancFactory&quot; class=&quot;cn.maoritian.factory.InstanceFactory&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	factory-bean=&quot;instancFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/spring概念/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1717,253 +1964,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/session和Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
-<p>识别返回用户包括三个步骤：</p>
-<ul>
-<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
-<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
-<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
-</ul>
-<p>cookie设置过程：</p>
-<ul>
-<li><strong>客户端发送一个http请求到服务器端</strong> </li>
-<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
-<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
-<li><strong>服务器端发送一个http响应到客户端</strong></li>
-</ul>
-<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
-<p>这里给一个Cookie响应头例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
-
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
-<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png" alt></p>
-<p>使用：</p>
-<ol>
-<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置最大生命周期（以秒为单位）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发送Cookie到HTTP响应头</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
-
-<p> 特点：</p>
-<ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
-<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
-<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
-<p>解决：Session</p>
-<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
-
-<p>特点：</p>
-<ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<p>使用：</p>
-<ol>
-<li><p>创建session对象/获取session对象         </p>
-</li>
-<li><p>HttpSession hs=request.getSession()</p>
-<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-<p>如果没有创建，那么新建一个</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ol>
-<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
-<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
-<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
-<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Cookie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2148,6 +2148,253 @@
 <p>​          一次会话（即可以多次请求，主要session没失效）</p>
 <p>代码示例</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">    //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/session和Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
+<p>识别返回用户包括三个步骤：</p>
+<ul>
+<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
+<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
+<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
+</ul>
+<p>cookie设置过程：</p>
+<ul>
+<li><strong>客户端发送一个http请求到服务器端</strong> </li>
+<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
+<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
+<li><strong>服务器端发送一个http响应到客户端</strong></li>
+</ul>
+<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
+<p>这里给一个Cookie响应头例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
+
+<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
+<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png" alt></p>
+<p>使用：</p>
+<ol>
+<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置最大生命周期（以秒为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送Cookie到HTTP响应头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
+
+<p> 特点：</p>
+<ol>
+<li><p>这是浏览器端的数据存储技术</p>
+</li>
+<li><p>数据声明是在服务器</p>
+</li>
+<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
+<p>​                定时存储：到期之后才会没得</p>
+</li>
+</ol>
+<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
+<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
+<p>解决：Session</p>
+<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
+
+<p>特点：</p>
+<ol>
+<li>存储在服务器</li>
+<li>服务器进行创建</li>
+<li>依赖Cookie技术</li>
+<li>一次会话</li>
+<li>默认存储时间30分钟</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建session对象/获取session对象         </p>
+</li>
+<li><p>HttpSession hs=request.getSession()</p>
+<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
+<p>如果没有创建，那么新建一个</p>
+</li>
+<li><p>设置session存储时间 hs.invalidate( )</p>
+</li>
+<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
+<p>获取数据 hs.getAttribute(String name)</p>
+</li>
+</ol>
+<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
+<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
+<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
+<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
 
@@ -2464,316 +2711,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/04/LaTex/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/04/LaTex/" class="post-title-link" itemprop="url">LaTex</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-04 09:19:42" itemprop="dateCreated datePublished" datetime="2019-09-04T09:19:42+08:00">2019-09-04</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LaTex/" itemprop="url" rel="index"><span itemprop="name">LaTex</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="LaTex"><a href="#LaTex" class="headerlink" title="LaTex"></a>LaTex</h1><p>[TOC]</p>
-<h1 id="LaTex预备知识"><a href="#LaTex预备知识" class="headerlink" title="LaTex预备知识"></a>LaTex预备知识</h1><h2 id="第一个LaTex文档"><a href="#第一个LaTex文档" class="headerlink" title="第一个LaTex文档"></a><strong>第一个LaTex文档</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">First document. This is a simple example, with no </span><br><span class="line">extra parameters or packages included.</span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-<p> 第一行说明文档类型，在<code>\begin{document} \end{document}</code>标签之间编写文档的文本。 </p>
-<p>article 排版科技期刊、短报告、程序文档、邀请函等。</p>
-<p>report 排版多章节的长报告、短篇的书籍、博士论文等。</p>
-<p>book 排版书籍。</p>
-<p>slides 排版幻灯片。</p>
-<h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a><strong>序言</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass[12pt, letterpaper]&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line"> </span><br><span class="line">\title&#123;First document&#125;</span><br><span class="line">\author&#123;Hubert Farnsworth \thanks&#123;funded by the ShareLaTeX team&#125;&#125;</span><br><span class="line">\date&#123;February 2014&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在<code>\begin{document}</code>命令之前输入的文本称为<strong>前导码</strong>。在序言中，您可以定义要编写的文档类型和语言，加载您需要的额外包，并设置几个参数 。</p>
-<p>下面对各部分进行说明：</p>
-<p>\documentclass[12pt, letterpaper]{article} ：在示例中，额外参数设置字体大小（12pt）和纸张大小（letterpaper）。默认大小为10pt。纸张尺寸默认为A4</p>
-<p>\usepackage[utf8]{inputenc} ：如果不是特别需要其他编码，将此行添加到前导码中  </p>
-<p>接下来的三行是自我描述的 。如果要让标题显示，可以通过\maketitle来达到</p>
-<h2 id="斜体-粗体-下划线"><a href="#斜体-粗体-下划线" class="headerlink" title="斜体 粗体 下划线"></a><strong>斜体 粗体 下划线</strong></h2><p>斜体：\textit{ }</p>
-<p>粗体：\textbf{ }</p>
-<p>下划线：\underline{ }</p>
-<h2 id="换行-分页-水平空格-垂直空格"><a href="#换行-分页-水平空格-垂直空格" class="headerlink" title="换行 分页 水平空格 垂直空格"></a><strong>换行 分页 水平空格 垂直空格</strong></h2><p>换行(新的一行会顶格开始)</p>
-<ul>
-<li>\\</li>
-<li>\newline</li>
-<li>\hfile \break</li>
-</ul>
-<p>分页</p>
-<ul>
-<li>\newpage：在图片插入后换页，即图片依然可以正常显示，文本换页</li>
-<li>\clearpage：在图片显示前换页，即图片和文本也会换页</li>
-</ul>
-<p>水平空格</p>
-<ul>
-<li>\hspace{ }：填指定长度空白</li>
-<li>\hfill：填空白到行最后</li>
-</ul>
-<p>垂直空格</p>
-<ul>
-<li>\vspace{ }：填指定长度空白</li>
-<li>\vfill：填空白到页面底部</li>
-</ul>
-<h1 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h1><h2 id="新段落"><a href="#新段落" class="headerlink" title="新段落"></a><strong>新段落</strong></h2><ul>
-<li><p>空一行</p>
-</li>
-<li><p>段末 \par</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">This is the text in first paragraph. This is the text in first </span><br><span class="line">paragraph. This is the text in first paragraph. \par</span><br><span class="line">This is the text in second paragraph. This is the text in second </span><br><span class="line">paragraph. This is the text in second paragraph.</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/d.png" alt></p>
-<h2 id="居中-左对齐-右对齐"><a href="#居中-左对齐-右对齐" class="headerlink" title="居中 左对齐 右对齐"></a><strong>居中 左对齐 右对齐</strong></h2><p>左对齐示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;flushleft&#125;</span><br><span class="line">``LaTeX is a document preparation system and document markup </span><br><span class="line">language. LaTeX uses the TeX typesetting program for formatting </span><br><span class="line">its output, and is itself written in the TeX macro language. </span><br><span class="line">LaTeX is not the name of a particular editing program, but refers </span><br><span class="line">to the encoding or tagging conventions that are used in LaTeX documents&quot;.</span><br><span class="line">\end&#123;flushleft&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/e.png" alt></p>
-<h1 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h1><h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a><strong>插入图片</strong></h2><p> Latex无法自行管理图像，因此我们需要使用<strong>graphicx</strong>包 </p>
-<p>\usepackage{graphicx} </p>
-<p>\graphicspath{ {./images/} }</p>
-<p>\includegraphics{universe}  universe为图片名</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/pic.png" alt></p>
-<h2 id="图片大小和旋转"><a href="#图片大小和旋转" class="headerlink" title="图片大小和旋转"></a><strong>图片大小和旋转</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = 3cm，height = 4cm ] &#123;lion-logo &#125;                     长宽</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = \ textwidth ] &#123;universe &#125;                            图片和文本等宽</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ scale = 1.2，angle = 45 ] &#123;lion-logo &#125;                       缩放并旋转</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">Overleaf is a great professional tool to edit online, </span><br><span class="line">share and backup your \LaTeX&#123;&#125; projects. Also offers a </span><br><span class="line">rather large help documentation.</span><br><span class="line"> </span><br><span class="line">\includegraphics[scale=1.2, angle=45]&#123;lion-logo&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/f.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">The universe is immense and it seems to be homogeneous, </span><br><span class="line">in a large scale, everywhere we look at.</span><br><span class="line"> </span><br><span class="line">\includegraphics[width=\textwidth]&#123;universe&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/g.png" alt></p>
-<h2 id="图片与文字的组合"><a href="#图片与文字的组合" class="headerlink" title="图片与文字的组合"></a><strong>图片与文字的组合</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">In the next example the figure will be positioned </span><br><span class="line">right below this sentence.</span><br><span class="line"> </span><br><span class="line">\begin&#123;figure&#125;[h]</span><br><span class="line">\includegraphics[width=8cm]&#123;Plot&#125;</span><br><span class="line">\end&#123;figure&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/a.png" alt></p>
-<p>该<code>figure</code>环境用于将图片显示为文档中的浮动元素 ，LaTex会自动对图片进行定位</p>
-<table>
-<thead>
-<tr>
-<th>h</th>
-<th>正常位置</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>T</td>
-<td>位于页面顶部</td>
-</tr>
-<tr>
-<td>b</td>
-<td>位于页面底部</td>
-</tr>
-</tbody></table>
-<p>文本包裹图片，适合图片较小的情况下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;wrapfigure&#125;&#123;r&#125;&#123;0.25\textwidth&#125; %this figure will be at the right</span><br><span class="line">    \centering</span><br><span class="line">    \includegraphics[width=0.25\textwidth]&#123;mesh&#125;</span><br><span class="line">\end&#123;wrapfigure&#125;</span><br><span class="line"> </span><br><span class="line">There are several ways to plot a function of two variables, </span><br><span class="line">depending on the information you are interested in. For </span><br><span class="line">instance, if you want to see the mesh of a function so it </span><br><span class="line">easier to see the derivative you can use a plot like the </span><br><span class="line">one on the left.</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">\begin&#123;wrapfigure&#125;&#123;l&#125;&#123;0.25\textwidth&#125;</span><br><span class="line">    \centering</span><br><span class="line">    \includegraphics[width=0.25\textwidth]&#123;contour&#125;</span><br><span class="line">\end&#123;wrapfigure&#125;</span><br><span class="line"> </span><br><span class="line">On the other side, if you are only interested on</span><br><span class="line">certain values you can use the contour plot, you </span><br><span class="line">can use the contour plot, you can use the contour </span><br><span class="line">plot, you can use the contour plot, you can use </span><br><span class="line">the contour plot, you can use the contour plot, </span><br><span class="line">you can use the contour plot, like the one on the left.</span><br><span class="line"> </span><br><span class="line">On the other side, if you are only interested on </span><br><span class="line">certain values you can use the contour plot, you </span><br><span class="line">can use the contour plot, you can use the contour </span><br><span class="line">plot, you can use the contour plot, you can use the </span><br><span class="line">contour plot, you can use the contour plot, </span><br><span class="line">you can use the contour plot, </span><br><span class="line">like the one on the left.</span><br></pre></td></tr></table></figure>
-
-<p>要实现如下图效果，需要先导入包wrapfig，即 \usepackage{wrapfig} </p>
-<p>通过命令定义<em>wrapfigure</em>环境<code>\begin{wrapfigure}{l}{0.25\textwidth} \end{wrapfigure}</code> </p>
-<p>\centering 将使图片居中</p>
-<p>{l}：定义图片的对齐方式</p>
-<p>{0.25\textwidth}：图片相对于文本的宽度</p>
-<p>效果图</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/c.png" alt></p>
-<h1 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h1><p>数学表达式的写入模式有2种：<strong>inline</strong> mode ，<strong>display</strong> mode 。第一个用于编写作为文本一部分的公式。第二个用于编写不属于文本或段落的表达式 。</p>
-<p><strong>inline</strong> mode(行内模式)：用这些分隔符之一：<code>\( \)</code>，<code>$ $</code>或<code>\begin{math} \end{math}</code></p>
-<p><strong>display</strong> mode (行内模式）：<code>\[ \]</code>, <code>$$ $$</code>, <code>\begin{displaymath} \end{displaymath}</code> or <code>\begin{equation} \end{equation}</code> </p>
-<ul>
-<li><p>有编号 \begin{equation}  \end{equation} (没试过)</p>
-</li>
-<li><p>无编号</p>
-</li>
-</ul>
-<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\section&#123;Introduction&#125;</span><br><span class="line"> </span><br><span class="line">This is the first section.</span><br><span class="line"> </span><br><span class="line">Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  </span><br><span class="line">elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et </span><br><span class="line">neque pharetra sollicitudin.  Praesent imperdietmi nec ante. </span><br><span class="line">Donec ullamcorper, felis non sodales...</span><br><span class="line"> </span><br><span class="line">\section&#123;Second Section&#125;</span><br><span class="line"> </span><br><span class="line">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  </span><br><span class="line">Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra </span><br><span class="line">sollicitudin.  Praesent imperdiet mi necante...</span><br></pre></td></tr></table></figure>
-
-<p>​                                                                    </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png" alt></p>
-<h1 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h1><p>同时有很多样式，这里用本人喜欢的风格</p>
-<p>\usepackage{fancyhdr} 导入包</p>
-<p>\fancyhf 清除页眉和页脚，否则将出现默认“普通”页面样式的元素。 </p>
-<p>\rhead{ } 右上角页眉</p>
-<p>\lhead{ } 左上角页眉</p>
-<p>\rfoot{ }  页脚</p>
-<p>{ }内推荐写 \thepage这样可以自动写入页数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage&#123;fancyhdr&#125;</span><br><span class="line"></span><br><span class="line">\pagestyle&#123;fancy&#125;</span><br><span class="line">\fancyhf&#123;&#125;</span><br><span class="line">\rhead&#123;Overleaf&#125;</span><br><span class="line">\lhead&#123;\LaTeX&#123;&#125; tutorials&#125;</span><br><span class="line">\rfoot&#123; \thepage&#125;</span><br><span class="line"></span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line"></span><br><span class="line">\section&#123;First Section&#125;</span><br><span class="line"></span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png" alt></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>overleaf上有多种参考文献格式，这里使用常见的方式，详细步骤如下：</p>
-<ol>
-<li>新建.bib文件，里面存放引用文献的信息</li>
-<li>在谷歌学术或百度学术中找到相应文献的  “ 引用 ”功能，然后在导入链接那点击 “ BibTex ”。复制其中的内容至新建立的.bib文件</li>
-<li>相关命令</li>
-</ol>
-<ul>
-<li><p><code>\usepackage{biblatex}</code></p>
-<p>导入包<strong>biblatex</strong>。</p>
-</li>
-<li><p><code>\addbibresource{sample.bib}</code></p>
-<p>导入bibtex数据文件<em>sample.bib</em>，此文件包含有关每个引用的书籍，文章等信息。 </p>
-</li>
-<li><p><code>\cite{einstein}</code></p>
-<p>此命令在文档中插入引用[1]，在这种情况下，对应于参考书目中的元素，“einstein”是对应于<em>sample.bib中</em>的条目的关键字。</p>
-</li>
-<li><p>\printbibliography`</p>
-<p>打印引用的参考文献列表，默认标题是文章文档类的“参考文献”和书籍和报告的“参考书目”。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line"> </span><br><span class="line">\usepackage&#123;biblatex&#125;</span><br><span class="line">\addbibresource&#123;sample.bib&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">Let&apos;s cite! The Einstein&apos;s journal paper \cite&#123;einstein&#125; and the Dirac&apos;s </span><br><span class="line">book \cite&#123;dirac&#125; are physics related items. </span><br><span class="line"> </span><br><span class="line">\printbibliography</span><br><span class="line"> </span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/i.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2822,7 +2759,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">44</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
