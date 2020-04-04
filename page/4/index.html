@@ -380,6 +380,451 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/动态代理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/22/动态代理/" class="post-title-link" itemprop="url">动态代理</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 11:34:26" itemprop="dateCreated datePublished" datetime="2019-09-22T11:34:26+08:00">2019-09-22</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接）</p>
+<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><ol>
+<li><p>为现有每个类编写一个对应的代理类，并且实现相同的接口</p>
+</li>
+<li><p>在代理对象中通过构造器塞入目标对象，实现相同方法并进行增强。这样，我们只需要代理对象，原对象可以不用了</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili1.png" alt></p>
+</li>
+</ol>
+<p> 缺点：每个类都需要一个代理，如果是成百上千的类，岂不是得要一堆代理类，系统臃肿。</p>
+<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><h3 id="对象创建原理"><a href="#对象创建原理" class="headerlink" title="对象创建原理"></a>对象创建原理</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dontaidaili2.jpg" alt></p>
+<p>在创建实例对象之前会创建一个Class对象，而Class对象是Class类的实例，Class类是描述所有类的</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/Java%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.bmp" alt></p>
+<p>所以如果我们能拿到代理Class对象，从而通过反射创建对象实例，不就可以不写代理类吗</p>
+<p>Class对象 包含有类的全部信息，构造器，方法等，那我们怎么才能获取这些信息？</p>
+<p>接口，因为代理类和目标对象都实现了相同的接口，从接口那我们可以获取要的全部信息。问题又来了，接口不能 </p>
+<p>实例化，那怎么办？这就进入正题了</p>
+<h3 id="动态代理-1"><a href="#动态代理-1" class="headerlink" title="动态代理"></a>动态代理</h3><p>jdk提供了 java.lang.reflect.Proxy类和 java.lang.reflect.InnovationHandler接口来帮助我们</p>
+<ol>
+<li><p>Proxy有个静态方法，proxy.getProxyClass(ClassLoader,interfaces)，通过传入<strong>类加载器和接口</strong>，返回Class对象</p>
+<p>这个方法会从传入的接口Class，复制一份，并且<strong>加了个构造器</strong>，这样这个新的Class对象可以创建对象了。</p>
+<p>一句话，proProxyClass()方法以<strong>Class对象造Class对象</strong></p>
+<p>下图为第一阶段方案，后面会越来越简单</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili3.png" alt></p>
+</li>
+</ol>
+<ol start="2">
+<li><p>在获得构造器后，通过反射创造代理实例</p>
+</li>
+<li><p>在创建Class对象时，需要传入InnocationHandler。在调用代理对象的方法时，会自动调用InnocationHandler的invoke方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object invoke(Object proxy,Method method,Object[] args)</span><br><span class="line">          在代理实例上处理方法调用并返回结果</span><br></pre></td></tr></table></figure>
+
+<p>怎么调用呢？</p>
+<p>原理：如下图，每个代理对象内部都由一个 InvocationHandler，且在执行内部方法时都会调用handler.invoke()方法</p>
+<p> inInvocationHandler接收三个参数</p>
+<ul>
+<li>proxy，代理后的实例对象。</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>method，当前执行的方法。</p>
+<ul>
+<li><p>args，当前方法的参数。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/domgtaidaili4.jpg" alt></p>
+<p>仔细看上图，inInvocationHandler的invoke()方法并没有写入目标对象，所以需要我们每次都new一个目标对象。</p>
+<p>但是我们每次都是先new一个目标对象，然后去执行目标对象的方法，这样会带来一个问题：来一个目标对象就要new一个，这谁顶得住，所以有了下面的优化1(也就是把类的实例化过程提取出来，便利了一点，本质没变)</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/daili2.png" alt></p>
+<p>优化2，不用getProxyClass()，用Proxy.newProxyInstance，直接把中间得到代理class对象给隐藏了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public IAccountService getAccountService() &#123;</span><br><span class="line">        return (IAccountService)Proxy.newProxyInstance(accountService.getClass().getClassLoader(),</span><br><span class="line">                accountService.getClass().getInterfaces(),</span><br><span class="line">                new InvocationHandler() &#123;</span><br><span class="line">                    /**</span><br><span class="line">                     * 添加事务的支持</span><br><span class="line">                     *</span><br><span class="line">                     * @param proxy</span><br><span class="line">                     * @param method</span><br><span class="line">                     * @param args</span><br><span class="line">                     * @return</span><br><span class="line">               * @throws Throwable</span><br><span class="line">                     */</span><br><span class="line">                 @Override</span><br><span class="line">                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line"></span><br><span class="line">                        if(&quot;test&quot;.equals(method.getName()))&#123;</span><br><span class="line">                            return method.invoke(accountService,args);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        Object rtValue = null;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            //1.开启事务</span><br><span class="line">                            txManager.beginTransaction();</span><br><span class="line">                            //2.执行操作</span><br><span class="line">                            rtValue = method.invoke(accountService, args);</span><br><span class="line">                            //3.提交事务</span><br><span class="line">                            txManager.commit();</span><br><span class="line">                            //4.返回结果</span><br><span class="line">                            return rtValue;</span><br><span class="line">                        &#125; catch (Exception e) &#123;</span><br><span class="line">                            //5.回滚操作</span><br><span class="line">                            txManager.rollback();</span><br><span class="line">                            throw new RuntimeException(e);</span><br><span class="line">                        &#125; finally &#123;</span><br><span class="line">                            //6.释放连接</span><br><span class="line">                            txManager.release();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<p>   说白了一个返回代理class对象，一个返回代理对象</p>
+<p>   <strong>总的流程</strong></p>
+<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili5.jpg" alt></p>
+<p>​         </p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p> <a href="https://www.zhihu.com/question/20794107/answer/658139129" target="_blank" rel="noopener">https://www.zhihu.com/question/20794107/answer/658139129</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/依赖注入/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/16/依赖注入/" class="post-title-link" itemprop="url">依赖注入</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-16 21:05:57" itemprop="dateCreated datePublished" datetime="2019-09-16T21:05:57+08:00">2019-09-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>依赖注入(Dependency Injection)是spring框架核心ioc的具体实现.</p>
+<p>通过控制反转,我们把创建对象托管给了spring,但是代码中不可能消除所有依赖,例如:业务层仍然会调用持久层的方法,因此业务层类中应包含持久化层的实现类对象.<br>我们等待框架通过配置的方式将持久层对象传入业务层,而不是直接在代码中new某个具体的持久化层实现类,这种方式称为依赖注入.</p>
+<h2 id="注入方法"><a href="#注入方法" class="headerlink" title="注入方法"></a>注入方法</h2><h3 id="使用构造函数注入"><a href="#使用构造函数注入" class="headerlink" title="使用构造函数注入"></a>使用构造函数注入</h3><p><code>&lt;constructor-arg&gt;</code>用来定义构造函数的参数,其属性可大致分为两类</p>
+<ol>
+<li>寻找要赋值的字段<ol>
+<li>index：指定参数在构造函数参数列表的索引位置</li>
+<li>name：指定参数在构造函数中的数据类型</li>
+<li>type：指定参数在构造函数中的变量名,最常用的属性</li>
+</ol>
+</li>
+<li>给字段赋值<ol>
+<li>value：给基本数据类型和String类型赋值</li>
+<li>ref：给其它Bean类型的字段赋值</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line"></span><br><span class="line">    //如果是经常变化的数据,并不适用于注入的方式</span><br><span class="line">    private String name;</span><br><span class="line">    private Integer age;</span><br><span class="line">    private Date birthday;</span><br><span class="line"></span><br><span class="line">    public AccountServiceImpl(String name, Integer age, Date birthday) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.age = age;</span><br><span class="line">        this.birthday = birthday;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void saveAccount() &#123;</span><br><span class="line">		System.out.println(name+&quot;,&quot;+age+&quot;,&quot;+birthday);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用Date类的无参构造函数创建Date对象 --&gt;</span><br><span class="line">&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;name&quot; value=&quot;myname&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;age&quot; value=&quot;18&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">	&lt;!-- birthday字段为已经注册的bean对象,其id为now --&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用set注入"><a href="#使用set注入" class="headerlink" title="使用set注入"></a>使用set注入</h3><p>在类中提供需要注入成员属性的set方法,创建对象只调用要赋值属性的set方法</p>
+<p><code>&lt;property&gt;</code>,用来定义要调用set方法的成员. 其主要属性可大致分为两类:</p>
+<ol>
+<li><p>指定要调用set方法赋值的成员字段</p>
+<p>name：要调用set方法赋值的成员字段</p>
+</li>
+<li><p>指定赋给字段的值</p>
+<p>value：给基本数据类型和String类型赋值</p>
+<p>ref：给其它Bean类型的字段赋值</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line"></span><br><span class="line">	private String name;</span><br><span class="line">	private Integer age;</span><br><span class="line">	private Date birthday;</span><br><span class="line"></span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setAge(Integer age) &#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setBirthday(Date birthday) &#123;</span><br><span class="line">		this.birthday = birthday;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void saveAccount() &#123;</span><br><span class="line">		System.out.println(name+&quot;,&quot;+age+&quot;,&quot;+birthday);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用Date类的无参构造函数创建Date对象 --&gt;</span><br><span class="line">&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;name&quot; value=&quot;myname&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;property name=&quot;age&quot; value=&quot;21&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;!-- birthday字段为已经注册的bean对象,其id为now --&gt;</span><br><span class="line">	&lt;property name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="集合注入"><a href="#集合注入" class="headerlink" title="集合注入"></a>集合注入</h3><p>集合字段及其对应的标签按照<strong>集合的结构</strong>分为两类：</p>
+<ol>
+<li><p>只有键的结构:</p>
+<ol>
+<li>数组字段：<code>&lt;array&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
+<li>List字段：<code>&lt;list&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
+<li>Set字段：<code>&lt;set&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
+</ol>
+<p>其中<code>&lt;array&gt;</code>,<code>&lt;list&gt;</code>,<code>&lt;set&gt;</code>标签之间可以互相替换使用.</p>
+</li>
+<li><p>键值对的结构:</p>
+<ol>
+<li>Map字段： <code>&lt;map&gt;</code>标签表示集合,<code>&lt;entry&gt;</code>标签表示集合内的键值对,其<code>key</code>属性表示键,<code>value</code>属性表示值</li>
+<li>Properties字段：<code>&lt;props&gt;</code>标签表示集合,<code>&lt;prop&gt;</code>标签表示键值对,其<code>key</code>属性表示键,标签内的内容表示值.</li>
+</ol>
+</li>
+</ol>
+<p>下面使用set方法注入各种集合字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line">	// 集合字段</span><br><span class="line">	private String[] myArray;</span><br><span class="line">	private List&lt;String&gt; myList;</span><br><span class="line">	private Set&lt;String&gt; mySet;</span><br><span class="line">	private Map&lt;String,String&gt; myMap;</span><br><span class="line">	private Properties myProps;</span><br><span class="line"></span><br><span class="line">	// 集合字段的set方法</span><br><span class="line">	public void setMyStrs(String[] myArray) &#123;</span><br><span class="line">		this.myArray = myArray;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyList(List&lt;String&gt; myList) &#123;</span><br><span class="line">		this.myList = myList;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMySet(Set&lt;String&gt; mySet) &#123;</span><br><span class="line">		this.mySet = mySet;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyMap(Map&lt;String, String&gt; myMap) &#123;</span><br><span class="line">		this.myMap = myMap;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyProps(Properties myProps) &#123;</span><br><span class="line">		this.myProps = myProps;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	public void saveAccount() &#123;</span><br><span class="line">		System.out.println(Arrays.toString(myArray));</span><br><span class="line">		System.out.println(myList);</span><br><span class="line">		System.out.println(mySet);</span><br><span class="line">		System.out.println(myMap);</span><br><span class="line">		System.out.println(myProps);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl3&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;myStrs&quot;&gt;</span><br><span class="line">		&lt;array&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/array&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myList&quot;&gt;</span><br><span class="line">		&lt;list&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/list&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;mySet&quot;&gt;</span><br><span class="line">		&lt;set&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/set&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myMap&quot;&gt;</span><br><span class="line">		&lt;map&gt;</span><br><span class="line">			&lt;entry key=&quot;key1&quot; value=&quot;value1&quot;&gt;&lt;/entry&gt;</span><br><span class="line">			&lt;entry key=&quot;key2&quot;&gt;</span><br><span class="line">				&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;/entry&gt;</span><br><span class="line">			</span><br><span class="line">		&lt;/map&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myProps&quot;&gt;</span><br><span class="line">		&lt;props&gt;</span><br><span class="line">			&lt;prop key=&quot;key1&quot;&gt;value1&lt;/prop&gt;</span><br><span class="line">			&lt;prop key=&quot;key2&quot;&gt;value2&lt;/prop&gt;</span><br><span class="line">		&lt;/props&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/xml实现IOC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -919,14 +1364,16 @@
 </ol>
 <p>点进Serializable接口看一下</p>
 <h2 id="一个问题"><a href="#一个问题" class="headerlink" title="一个问题"></a>一个问题</h2><p>点进Serializable接口看一下</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/xuliehuaone.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public interface Serializable &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>里面啥都没有，它是一个空接口，仅仅是一个标识，用来告诉jvm进行序列化，真正的序列化操作不是由他来完成的</p>
-<h2 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class person implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = 1L；</span><br><span class="line">    private String name;</span><br><span class="line">    private String age;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getAge() &#123;</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAge(String age) &#123;</span><br><span class="line">        this.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="类-ObjectInputStream-ObjectOutputStream"><a href="#类-ObjectInputStream-ObjectOutputStream" class="headerlink" title="类 ObjectInputStream  ObjectOutputStream"></a>类 ObjectInputStream  ObjectOutputStream</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final void writeObject(Object x) throws IOException 序列化一个对象，并将它发送到输出流</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Serialization();</span><br><span class="line">        person per3=DestroySerialization();</span><br><span class="line">        System.out.println(per3.toString());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    private static void Serialization() throws IOException &#123;</span><br><span class="line">        person per1=new person();</span><br><span class="line">        per1.setName(&quot;小李&quot;);</span><br><span class="line">        per1.setAge(&quot;19&quot;);</span><br><span class="line">        ObjectOutputStream os=new ObjectOutputStream(new FileOutputStream(new File(&quot;d:/flyPig.txt&quot;)));</span><br><span class="line">        os.writeObject(per1);</span><br><span class="line">        System.out.println(&quot;序列化成功&quot;);</span><br><span class="line">        os.close();</span><br><span class="line">    &#125;</span><br><span class="line">    private static person DestroySerialization() throws Exception&#123;</span><br><span class="line">        ObjectInputStream is=new ObjectInputStream(new FileInputStream(new File(&quot;d:/flyPig.txt&quot;)));</span><br><span class="line">        person per2=(person) is.readObject();</span><br><span class="line">        System.out.println(&quot;反序列化成功&quot;);</span><br><span class="line">        return per2;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public final Object readObject() throws IOException, ClassNotFoundException</span><br><span class="line">从流中取出下一个对象，并将对象反序列化。它的返回值为Object，因此，你需要将它转换成合适的数据类型</span><br></pre></td></tr></table></figure>
 
-<p>运行结果：</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/serialization.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class ObjectOut &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        byte[] a;</span><br><span class="line">        Phone phone1 = new Phone(&quot;小米&quot;);</span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);</span><br><span class="line">        objectOutputStream.writeObject(phone1);</span><br><span class="line">        a=byteArrayOutputStream.toByteArray();</span><br><span class="line">        objectOutputStream.flush();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(a));</span><br><span class="line">        try &#123;</span><br><span class="line">            Phone phone2=(Phone) objectInputStream.readObject();</span><br><span class="line">            System.out.printf(phone2.getName());</span><br><span class="line">        &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>作为构造函数可以是byteArrayOutputStream，也可以是fileOutPutStream，因为还没看源码，实际感觉ObjectOutputStream是借助于其他流来写入和读取</strong></p>
 <p><strong>transient和static修饰的变量不会被序列化</strong></p>
 <h2 id="关于serialversionUID变量"><a href="#关于serialversionUID变量" class="headerlink" title="关于serialversionUID变量"></a>关于<strong>serialversionUID变量</strong></h2><p>如果自己没有声明一个serialVersionUID变量，默认会自动生成一个serialVersionUID，但是推荐自己写一个，因为默认的serialVersinUID对于class的细节非常敏感，反序列化时可能会导致InvalidClassException这个异常。</p>
 <p>serialVersionUID作用：用来辅助对象的序列化与反序列化的，原则上序列化后的数据当中的serialVersionUID与当前类当中的serialVersionUID一致，那么该对象才能被反序列化成功。</p>
@@ -1334,7 +1781,7 @@
           
             <h2 id="request"><a href="#request" class="headerlink" title="request"></a>request</h2><p>Request 对象是一个专门用来存储HTTP 请求信息的对象 </p>
 <h3 id="request对象的由来"><a href="#request对象的由来" class="headerlink" title="request对象的由来"></a>request对象的由来</h3><ul>
-<li>浏览器发送的http请求纪要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储</li>
+<li>浏览器发送的http请求既要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储</li>
 <li>request对象中存储请求信息，服务器调用servlet时将request对象作为参数传给Servlet方法</li>
 </ul>
 <h3 id="request功能"><a href="#request功能" class="headerlink" title="request功能"></a>request功能</h3><ol>
@@ -1407,8 +1854,9 @@
 4. 4xx：客户端错误。代表：404 （请求路径不对）
 
    1. 404：路径没有对应资源</code></pre><ol start="2">
-<li><p>405：请求方式没有对应的doxx方法</p>
-<pre><code>5. 5xx：服务器错误</code></pre></li>
+<li>405：请求方式没有对应的doxx方法</li>
+</ol>
+<pre><code>5. 5xx：服务器错误</code></pre><ol start="2">
 <li><p>响应头</p>
 <ol>
 <li><p>格式：头名称：值</p>
@@ -2198,519 +2646,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/session和Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
-<p>识别返回用户包括三个步骤：</p>
-<ul>
-<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
-<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
-<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
-</ul>
-<p>cookie设置过程：</p>
-<ul>
-<li><strong>客户端发送一个http请求到服务器端</strong> </li>
-<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
-<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
-<li><strong>服务器端发送一个http响应到客户端</strong></li>
-</ul>
-<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
-<p>这里给一个Cookie响应头例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
-
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
-<p><img src="/2019/09/08/session和Cookie/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5Ccookie%E5%B1%9E%E6%80%A7.png" alt></p>
-<p>使用：</p>
-<ol>
-<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置最大生命周期（以秒为单位）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发送Cookie到HTTP响应头</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
-
-<p> 特点：</p>
-<ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
-<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
-<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
-<p>解决：Session</p>
-<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
-
-<p>特点：</p>
-<ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<p>使用：</p>
-<ol>
-<li><p>创建session对象/获取session对象         </p>
-</li>
-<li><p>HttpSession hs=request.getSession()</p>
-<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-<p>如果没有创建，那么新建一个</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ol>
-<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
-<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
-<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
-<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/05/java装箱与拆箱/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/05/java装箱与拆箱/" class="post-title-link" itemprop="url">java装箱与拆箱</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-05 10:38:53" itemprop="dateCreated datePublished" datetime="2019-09-05T10:38:53+08:00">2019-09-05</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>包装类</strong>：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类</p>
-<p>简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型</p>
-<p>对应关系如下</p>
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>包装类</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-</tbody></table>
-<h3 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h3><p><strong>静态方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//返回保存指定int的值的Integer对象</span><br><span class="line">Integer in1=Integer.valueof(1);</span><br><span class="line">//返回保存指定String的值的Integer对象</span><br><span class="line">Integer in2=Integer.valueof(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
-
-<p>看一下Interger.valueof源码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 public static Integer valueOf(int i) &#123;</span><br><span class="line">2 return  i &gt;= 128 || i &lt; -128 ? new Integer(i) : SMALL_VALUES[i + 128];</span><br><span class="line">3 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>它会首先判断i的大小：如果i小于-128或者大于等于128，就创建一个Integer对象，否则执行SMALL_VALUES[i + 128] 。注意这里i如果小于-128或者大于等于128，就会创建不同对象，而处于中间的都会创建同一个对象。</p>
-<p>总结来说装箱即valueof( )方法就是会返回Interger类型的对象</p>
-<p><strong>Interger构造函数</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Integer in1=new Integer(1);</span><br><span class="line">//这里只能是基本类型的字符串</span><br><span class="line">Integer in1=new Integer(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
-
-<p>源码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 private final int value;</span><br><span class="line">2 </span><br><span class="line">3 public Integer(int value) &#123;</span><br><span class="line">4     this.value = value;</span><br><span class="line">5 &#125;</span><br><span class="line">6 //这里的String必须是基本类型的字符串，100可以，a就不行</span><br><span class="line">7 public Integer(String string) throws NumberFormatException &#123;</span><br><span class="line">8     this(parseInt(string));</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>下面看看SMALL_VALUES[i + 128]是什么东西：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private static final Integer[] SMALL_VALUES = new Integer[256];</span><br></pre></td></tr></table></figure>
-
-<p> <strong>拆箱的intvalue( )源码</strong></p>
-<p>接着看看intValue函数,就是返回value值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @Override</span><br><span class="line">2 public int intValue() &#123;</span><br><span class="line">3     return value;</span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="自动装箱与拆箱"><a href="#自动装箱与拆箱" class="headerlink" title="自动装箱与拆箱"></a>自动装箱与拆箱</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 //自动装箱</span><br><span class="line">2 Integer total = 99;</span><br><span class="line">3 </span><br><span class="line">4 //自定拆箱</span><br><span class="line">5 int totalprim = total;</span><br></pre></td></tr></table></figure>
-
-<p>自动装箱：直接把int类型的整数赋值包装类</p>
-<p>自动拆箱：包装类无法直接参与运算，可以自动转换为基本数据类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Interger total=99实际上执行了Interger total =Interger.valueof(99);</span><br><span class="line"></span><br><span class="line">int totalprim = total 实际上执行了int totalprim =total.intvalue( );</span><br></pre></td></tr></table></figure>
-
-<h3 id="装箱拆箱作用"><a href="#装箱拆箱作用" class="headerlink" title="装箱拆箱作用"></a>装箱拆箱作用</h3><ul>
-<li><p>将基本数据类型放入集合类中 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.add(1);//自动装箱list.add(new Integer(1));</span><br><span class="line">list.get(1);//自动拆箱list.get(0).intvalue();</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li><p>包装类型和基本数据类型比较</p>
-</li>
-<li><p>包装类型运算</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i = 10;</span><br><span class="line">Integer j = 20;</span><br><span class="line"> </span><br><span class="line">System.out.println(i+j);</span><br></pre></td></tr></table></figure>
-
-<p>(i+j)即为(Interger.invalue(i)+interger.invalue(j))</p>
-<p>最后给出一道面试题</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void testAutoBox2() &#123;</span><br><span class="line">     //1</span><br><span class="line">     int a = 100;</span><br><span class="line">     Integer b = 100;</span><br><span class="line">     System.out.println(a == b);</span><br><span class="line">     </span><br><span class="line">     //2</span><br><span class="line">     Integer c = 100;</span><br><span class="line">     Integer d = 100;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">     </span><br><span class="line">     //3   </span><br><span class="line">     c = 200;</span><br><span class="line">     d = 200;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>结果为 True True false 原因就是100 200值的不同，见上所述。</p>
-<p>当需要进行自动装箱时，如果数字在-128至127之间时，会直接使用缓存中的对象，而不是重新创建一个对象 。</p>
-<p>（缓存部分就不详细说了，本人还没看，哈哈）</p>
-<h3 id="字符串和基本类型的相互转换"><a href="#字符串和基本类型的相互转换" class="headerlink" title="字符串和基本类型的相互转换"></a>字符串和基本类型的相互转换</h3><p>基本类型-&gt;字符串</p>
-<ul>
-<li>基本类型的值+” “</li>
-<li>包装类的静态方法toString(参数)，不是Object类的toString()</li>
-<li>String类的静态方法valueof(参数)</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i1=100;</span><br><span class="line">String s1=i1+&quot;&quot;;</span><br><span class="line">System.out.println(s1+200);//100200这里是字符串的加</span><br><span class="line"></span><br><span class="line">String s2=Integer.toString(100);</span><br><span class="line">System.out.println(s2+200);</span><br><span class="line"></span><br><span class="line">String s3=String.valueOf(100);</span><br><span class="line">System.out.println(s3+200);</span><br></pre></td></tr></table></figure>
-
-<p> 字符串-&gt;基本类型</p>
-<p>使用包装类的静态方法parsexxx(“字符串”)；</p>
-<p>​          Integer类：static int parseInt(String s)</p>
-<p>​          Double类：static double parseDouble(String s)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i=Integer.parseInt(s1);</span><br><span class="line">System.out.println(i);</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2759,7 +2694,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2941,7 +2876,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

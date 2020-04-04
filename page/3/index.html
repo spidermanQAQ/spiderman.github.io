@@ -380,6 +380,400 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/延迟加载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/延迟加载/" class="post-title-link" itemprop="url">延迟加载</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 18:38:54" itemprop="dateCreated datePublished" datetime="2019-10-14T18:38:54+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="延迟加载的概念"><a href="#延迟加载的概念" class="headerlink" title="延迟加载的概念"></a>延迟加载的概念</h2><p>就是在需要用到数据时才进行加载，不需要用到数据时就不加载数据。延迟加载也称懒加载. 好处：先从单表查询，需要时再从关联表去关联查询，大大提高数据库性能，因为查询单表要比关联查询多张表速 度要快。  </p>
+<p>坏处：   因为只有当需要用到数据时，才会进行数据库查询，这样在大批量数据查询时，因为查询工作也要消耗 时间，所以可能造成用户等待时间变长，造成用户体验下降。 </p>
+<p>一对多，多对多：通常情况下我们都是采用延迟加载。<br>多对一，一对一：通常情况下我们都是采用立即加载。</p>
+<h2 id="一对多案例"><a href="#一对多案例" class="headerlink" title="一对多案例"></a>一对多案例</h2><ol>
+<li><p>在SqlMapConfig.xml中配置setting标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings&gt;</span><br><span class="line">        &lt;!-- 配置全局缓存--&gt;</span><br><span class="line">        &lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;true&quot;/&gt;</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IUserDao.xml中配置collection标签</p>
+<p>property=”accList” :  关联查询的结果集存储在 User 对象的上哪个属性。 </p>
+<p>ofType=”account” ： 指定关联查询的结果集中的对象类型即List中的对象类型。此处可以使用别名，也可以使用全限定名</p>
+<p>单单1对多的查询，只需要上面两个属性，下面2个用于延迟加载</p>
+<p>1对多查询原理：代理对象通过findAll()的sql语句执行结果封装到rusultMap的嵌套结构中</p>
+<p>select 用于指定查询 account 列表的 sql 语句，所以填写的是该 sql 映射的 id </p>
+<p>column 用于指定 select 属性的 sql 语句的参数来源，上面的参数来自于 user 的 id 列，所以就写成 id 这一 个字段名了 （根据user的id查询账户）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace=&quot;com.itheima.dao.IUserDao&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 定义User的resultMap--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;userAccountMap&quot; type=&quot;user&quot;&gt;</span><br><span class="line">        &lt;id property=&quot;id&quot; column=&quot;id&quot;&gt;&lt;/id&gt;</span><br><span class="line">        &lt;result property=&quot;username&quot; column=&quot;username&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;address&quot; column=&quot;address&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;sex&quot; column=&quot;sex&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;birthday&quot; column=&quot;birthday&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;!-- 配置user对象中accounts集合的映射 --&gt;</span><br><span class="line">        &lt;collection property=&quot;accounts&quot; ofType=&quot;account&quot; select=&quot;com.itheima.dao.IAccountDao.findAccountByUid&quot; column=&quot;id&quot;&gt;&lt;/collection&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 查询所有 --&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultMap=&quot;userAccountMap&quot;&gt;</span><br><span class="line">        select * from user</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 根据id查询用户 --&gt;</span><br><span class="line">    &lt;select id=&quot;findById&quot; parameterType=&quot;INT&quot; resultType=&quot;user&quot;&gt;</span><br><span class="line">        select * from user where id = #&#123;uid&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 根据用户id查询账户列表 --&gt;</span><br><span class="line">    &lt;select id=&quot;findAccountByUid&quot; resultType=&quot;account&quot;&gt;</span><br><span class="line">        select * from account where uid = #&#123;uid&#125;</span><br><span class="line">    &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试类</p>
+<p>当注释了for循环输出，会发现只执行了一个findAll()的select语句，另一个select并没有执行，这就是延迟加载，你用不到我就我就不给你</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">   public void findAll()&#123;</span><br><span class="line">       List&lt;Account&gt; accounts = accoutDao.findAll();</span><br><span class="line">       for (Account account:accounts) &#123;</span><br><span class="line">           System.out.println(&quot;每一个account的信息&quot;);</span><br><span class="line">           System.out.println(account);</span><br><span class="line">           System.out.println(account.getUser());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ol>
+<li><p>什么是缓存</p>
+<p>存在于内存中的临时数据</p>
+</li>
+<li><p>为什么使用缓存</p>
+<p>减少与数据库的交互次数，提高执行效率</p>
+</li>
+<li><p>什么样的数据能使用缓存，什么样的数据不能使用</p>
+<p>适用于缓存：<br>　  经常查询并且不经常改变的。<br>　  数据的正确与否对最终结果影响不大的<br>不适用于缓存：<br>　  经常改变的数据。<br>　  数据的正确与否对最终结果影响很大的。如，商品库存，银行汇率，股市牌价。</p>
+</li>
+</ol>
+<h3 id="mybatis中的一级缓存和二级缓存"><a href="#mybatis中的一级缓存和二级缓存" class="headerlink" title="mybatis中的一级缓存和二级缓存"></a>mybatis中的一级缓存和二级缓存</h3><p><strong>一级缓存</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/yijihauncun.png" alt></p>
+<p>它指的是mybatis中SqlSession对象的缓存。<br>　　当我们执行查询的时候，查询的结果会同时存入到SqlSession为我们提供的一块区域中。<br>　　每个SqlSession中持有了Executor，每个Executor中有一个LocalCache。当用户发起查询时，MyBatis根据当前执行的语句生成MappedStatement，在Local Cache进行查询，如果缓存命中的话，直接返回结果给用户，如果缓存没有命中的话，查询数据库，结果写入Local Cache，最后返回结果给用户。<br>　　当SqlSession对象消失时，mybatis的一级缓存也就消失了。</p>
+<p>测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void getStudentById() throws Exception &#123;</span><br><span class="line">        SqlSession sqlSession = factory.openSession(true); // 自动提交事务</span><br><span class="line">        StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);</span><br><span class="line">        System.out.println(studentMapper.getStudentById(1));</span><br><span class="line">        System.out.println(studentMapper.getStudentById(1));</span><br><span class="line">        System.out.println(studentMapper.getStudentById(1));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/yijihuancunjieguo.png" alt></p>
+<p><strong>二级缓存</strong></p>
+<p>它指的是mybatis中SqlSessionFactory对象的缓存。由同一个SqlSessionFactory对象创建的SqlSession共享其缓存。</p>
+<p>二级缓存的使用步骤：<br>　　　　　　　　第一步：让mybatis框架支持二级缓存（在SqlMapConfig.xml中配置）<br>　　　　　　　　第二步：让当前的映射文件支持二级缓存（在IUserDao.xml中配置）<br>　　　　　　　　第三步：让当前的操作支持二级缓存（在select标签中配置）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line"> public void testFirstLevelCache()&#123;</span><br><span class="line">     SqlSession sqlSession1 = factory.openSession();</span><br><span class="line">     IUserDao dao1 = sqlSession1.getMapper(IUserDao.class);</span><br><span class="line">     User user1 = dao1.findById(41);</span><br><span class="line">     System.out.println(user1);</span><br><span class="line">     sqlSession1.close();//一级缓存消失</span><br><span class="line"></span><br><span class="line">     SqlSession sqlSession2 = factory.openSession();</span><br><span class="line">     IUserDao dao2 = sqlSession2.getMapper(IUserDao.class);</span><br><span class="line">     User user2 = dao2.findById(41);</span><br><span class="line">     System.out.println(user2);</span><br><span class="line">     sqlSession2.close();</span><br><span class="line"></span><br><span class="line">     System.out.println(user1 == user2);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/erjihuancun3.png" alt></p>
+<p>这里要注意最后一个结果为false，图片没截好，原因如下</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/erjihauncun2.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis多表查询/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/mybatis多表查询/" class="post-title-link" itemprop="url">多表查询</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 16:15:13" itemprop="dateCreated datePublished" datetime="2019-10-14T16:15:13+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1对1"><a href="#1对1" class="headerlink" title="1对1"></a>1对1</h2><ol>
+<li><p>account类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//从表实体应该包含一个主表实体的对象引用</span><br><span class="line">    private User user;</span><br><span class="line"></span><br><span class="line">    public User getUser() &#123;</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUser(User user) &#123;</span><br><span class="line">        this.user = user;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IAccountDao接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public interface IAccountDao &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询所有账户</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    List&lt;Account&gt; findAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AccountDao的mapper</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace=&quot;top.zoick.dao.IAccountDao&quot;&gt;</span><br><span class="line">    &lt;!--定义封装account和user的resultMap--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;accountUserMap&quot; type=&quot;account&quot;&gt;</span><br><span class="line">        &lt;id property=&quot;id&quot; column=&quot;aid&quot; /&gt;</span><br><span class="line">        &lt;result property=&quot;uid&quot; column=&quot;uid&quot; /&gt;</span><br><span class="line">        &lt;result property=&quot;money&quot; column=&quot;money&quot; /&gt;</span><br><span class="line">        &lt;!--一对一的关系映射，配置封装user的内容 column中指名从表的外键 property=&quot;user&quot;指的是单个实体类的引用--&gt;</span><br><span class="line">        &lt;association property=&quot;user&quot; column=&quot;uid&quot; javaType=&quot;User&quot;&gt;</span><br><span class="line">            &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;username&quot; column=&quot;username&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;address&quot; column=&quot;address&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;sex&quot; column=&quot;sex&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;birthday&quot; column=&quot;birthday&quot;/&gt;</span><br><span class="line">        &lt;/association&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AccountDao的测试类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void findAll()&#123;</span><br><span class="line">    List&lt;Account&gt; accounts = accoutDao.findAll();</span><br><span class="line">    for (Account account:accounts) &#123;</span><br><span class="line">       System.out.println(&quot;每一个account的信息&quot;);</span><br><span class="line">       System.out.println(account);</span><br><span class="line">       System.out.println(account.getUser());</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="1对多"><a href="#1对多" class="headerlink" title="1对多"></a>1对多</h2><p>示例：一个用户可以有多个账户</p>
+<h2 id="多对多"><a href="#多对多" class="headerlink" title="多对多"></a>多对多</h2>
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis连接池-动态SQL/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2249,451 +2643,6 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/动态代理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/22/动态代理/" class="post-title-link" itemprop="url">动态代理</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-22 11:34:26" itemprop="dateCreated datePublished" datetime="2019-09-22T11:34:26+08:00">2019-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接）</p>
-<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><ol>
-<li><p>为现有每个类编写一个对应的代理类，并且实现相同的接口</p>
-</li>
-<li><p>在代理对象中通过构造器塞入目标对象，实现相同方法并进行增强。这样，我们只需要代理对象，原对象可以不用了</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili1.png" alt></p>
-</li>
-</ol>
-<p> 缺点：每个类都需要一个代理，如果是成百上千的类，岂不是得要一堆代理类，系统臃肿。</p>
-<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><h3 id="对象创建原理"><a href="#对象创建原理" class="headerlink" title="对象创建原理"></a>对象创建原理</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dontaidaili2.jpg" alt></p>
-<p>在创建实例对象之前会创建一个Class对象，而Class对象是Class类的实例，Class类是描述所有类的</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/Java%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.bmp" alt></p>
-<p>所以如果我们能拿到代理Class对象，从而通过反射创建对象实例，不就可以不写代理类吗</p>
-<p>Class对象 包含有类的全部信息，构造器，方法等，那我们怎么才能获取这些信息？</p>
-<p>接口，因为代理类和目标对象都实现了相同的接口，从接口那我们可以获取要的全部信息。问题又来了，接口不能 </p>
-<p>实例化，那怎么办？这就进入正题了</p>
-<h3 id="动态代理-1"><a href="#动态代理-1" class="headerlink" title="动态代理"></a>动态代理</h3><p>jdk提供了 java.lang.reflect.Proxy类和 java.lang.reflect.InnovationHandler接口来帮助我们</p>
-<ol>
-<li><p>Proxy有个静态方法，proxy.getProxyClass(ClassLoader,interfaces)，通过传入<strong>类加载器和接口</strong>，返回Class对象</p>
-<p>这个方法会从传入的接口Class，复制一份，并且<strong>加了个构造器</strong>，这样这个新的Class对象可以创建对象了。</p>
-<p>一句话，proProxyClass()方法以<strong>Class对象造Class对象</strong></p>
-<p>下图为第一阶段方案，后面会越来越简单</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili3.png" alt></p>
-</li>
-</ol>
-<ol start="2">
-<li><p>在获得构造器后，通过反射创造代理实例</p>
-</li>
-<li><p>在创建Class对象时，需要传入InnocationHandler。在调用代理对象的方法时，会自动调用InnocationHandler的invoke方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object invoke(Object proxy,Method method,Object[] args)</span><br><span class="line">          在代理实例上处理方法调用并返回结果</span><br></pre></td></tr></table></figure>
-
-<p>怎么调用呢？</p>
-<p>原理：如下图，每个代理对象内部都由一个 InvocationHandler，且在执行内部方法时都会调用handler.invoke()方法</p>
-<p> inInvocationHandler接收三个参数</p>
-<ul>
-<li>proxy，代理后的实例对象。</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>method，当前执行的方法。</p>
-<ul>
-<li><p>args，当前方法的参数。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/domgtaidaili4.jpg" alt></p>
-<p>仔细看上图，inInvocationHandler的invoke()方法并没有写入目标对象，所以需要我们每次都new一个目标对象。</p>
-<p>但是我们每次都是先new一个目标对象，然后去执行目标对象的方法，这样会带来一个问题：来一个目标对象就要new一个，这谁顶得住，所以有了下面的优化1(也就是把类的实例化过程提取出来，便利了一点，本质没变)</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/daili2.png" alt></p>
-<p>优化2，不用getProxyClass()，用Proxy.newProxyInstance，直接把中间得到代理class对象给隐藏了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public IAccountService getAccountService() &#123;</span><br><span class="line">        return (IAccountService)Proxy.newProxyInstance(accountService.getClass().getClassLoader(),</span><br><span class="line">                accountService.getClass().getInterfaces(),</span><br><span class="line">                new InvocationHandler() &#123;</span><br><span class="line">                    /**</span><br><span class="line">                     * 添加事务的支持</span><br><span class="line">                     *</span><br><span class="line">                     * @param proxy</span><br><span class="line">                     * @param method</span><br><span class="line">                     * @param args</span><br><span class="line">                     * @return</span><br><span class="line">               * @throws Throwable</span><br><span class="line">                     */</span><br><span class="line">                 @Override</span><br><span class="line">                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line"></span><br><span class="line">                        if(&quot;test&quot;.equals(method.getName()))&#123;</span><br><span class="line">                            return method.invoke(accountService,args);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        Object rtValue = null;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            //1.开启事务</span><br><span class="line">                            txManager.beginTransaction();</span><br><span class="line">                            //2.执行操作</span><br><span class="line">                            rtValue = method.invoke(accountService, args);</span><br><span class="line">                            //3.提交事务</span><br><span class="line">                            txManager.commit();</span><br><span class="line">                            //4.返回结果</span><br><span class="line">                            return rtValue;</span><br><span class="line">                        &#125; catch (Exception e) &#123;</span><br><span class="line">                            //5.回滚操作</span><br><span class="line">                            txManager.rollback();</span><br><span class="line">                            throw new RuntimeException(e);</span><br><span class="line">                        &#125; finally &#123;</span><br><span class="line">                            //6.释放连接</span><br><span class="line">                            txManager.release();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-</li>
-</ul>
-<p>   说白了一个返回代理class对象，一个返回代理对象</p>
-<p>   <strong>总的流程</strong></p>
-<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili5.jpg" alt></p>
-<p>​         </p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p> <a href="https://www.zhihu.com/question/20794107/answer/658139129" target="_blank" rel="noopener">https://www.zhihu.com/question/20794107/answer/658139129</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/依赖注入/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/16/依赖注入/" class="post-title-link" itemprop="url">依赖注入</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-16 21:05:57" itemprop="dateCreated datePublished" datetime="2019-09-16T21:05:57+08:00">2019-09-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>依赖注入(Dependency Injection)是spring框架核心ioc的具体实现.</p>
-<p>通过控制反转,我们把创建对象托管给了spring,但是代码中不可能消除所有依赖,例如:业务层仍然会调用持久层的方法,因此业务层类中应包含持久化层的实现类对象.<br>我们等待框架通过配置的方式将持久层对象传入业务层,而不是直接在代码中new某个具体的持久化层实现类,这种方式称为依赖注入.</p>
-<h2 id="注入方法"><a href="#注入方法" class="headerlink" title="注入方法"></a>注入方法</h2><h3 id="使用构造函数注入"><a href="#使用构造函数注入" class="headerlink" title="使用构造函数注入"></a>使用构造函数注入</h3><p><code>&lt;constructor-arg&gt;</code>用来定义构造函数的参数,其属性可大致分为两类</p>
-<ol>
-<li>寻找要赋值的字段<ol>
-<li>index：指定参数在构造函数参数列表的索引位置</li>
-<li>name：指定参数在构造函数中的数据类型</li>
-<li>type：指定参数在构造函数中的变量名,最常用的属性</li>
-</ol>
-</li>
-<li>给字段赋值<ol>
-<li>value：给基本数据类型和String类型赋值</li>
-<li>ref：给其它Bean类型的字段赋值</li>
-</ol>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line"></span><br><span class="line">    //如果是经常变化的数据,并不适用于注入的方式</span><br><span class="line">    private String name;</span><br><span class="line">    private Integer age;</span><br><span class="line">    private Date birthday;</span><br><span class="line"></span><br><span class="line">    public AccountServiceImpl(String name, Integer age, Date birthday) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.age = age;</span><br><span class="line">        this.birthday = birthday;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void saveAccount() &#123;</span><br><span class="line">		System.out.println(name+&quot;,&quot;+age+&quot;,&quot;+birthday);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用Date类的无参构造函数创建Date对象 --&gt;</span><br><span class="line">&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;name&quot; value=&quot;myname&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;age&quot; value=&quot;18&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">	&lt;!-- birthday字段为已经注册的bean对象,其id为now --&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用set注入"><a href="#使用set注入" class="headerlink" title="使用set注入"></a>使用set注入</h3><p>在类中提供需要注入成员属性的set方法,创建对象只调用要赋值属性的set方法</p>
-<p><code>&lt;property&gt;</code>,用来定义要调用set方法的成员. 其主要属性可大致分为两类:</p>
-<ol>
-<li><p>指定要调用set方法赋值的成员字段</p>
-<p>name：要调用set方法赋值的成员字段</p>
-</li>
-<li><p>指定赋给字段的值</p>
-<p>value：给基本数据类型和String类型赋值</p>
-<p>ref：给其它Bean类型的字段赋值</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line"></span><br><span class="line">	private String name;</span><br><span class="line">	private Integer age;</span><br><span class="line">	private Date birthday;</span><br><span class="line"></span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setAge(Integer age) &#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setBirthday(Date birthday) &#123;</span><br><span class="line">		this.birthday = birthday;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void saveAccount() &#123;</span><br><span class="line">		System.out.println(name+&quot;,&quot;+age+&quot;,&quot;+birthday);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用Date类的无参构造函数创建Date对象 --&gt;</span><br><span class="line">&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;name&quot; value=&quot;myname&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;property name=&quot;age&quot; value=&quot;21&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;!-- birthday字段为已经注册的bean对象,其id为now --&gt;</span><br><span class="line">	&lt;property name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="集合注入"><a href="#集合注入" class="headerlink" title="集合注入"></a>集合注入</h3><p>集合字段及其对应的标签按照<strong>集合的结构</strong>分为两类：</p>
-<ol>
-<li><p>只有键的结构:</p>
-<ol>
-<li>数组字段：<code>&lt;array&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
-<li>List字段：<code>&lt;list&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
-<li>Set字段：<code>&lt;set&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
-</ol>
-<p>其中<code>&lt;array&gt;</code>,<code>&lt;list&gt;</code>,<code>&lt;set&gt;</code>标签之间可以互相替换使用.</p>
-</li>
-<li><p>键值对的结构:</p>
-<ol>
-<li>Map字段： <code>&lt;map&gt;</code>标签表示集合,<code>&lt;entry&gt;</code>标签表示集合内的键值对,其<code>key</code>属性表示键,<code>value</code>属性表示值</li>
-<li>Properties字段：<code>&lt;props&gt;</code>标签表示集合,<code>&lt;prop&gt;</code>标签表示键值对,其<code>key</code>属性表示键,标签内的内容表示值.</li>
-</ol>
-</li>
-</ol>
-<p>下面使用set方法注入各种集合字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line">	// 集合字段</span><br><span class="line">	private String[] myArray;</span><br><span class="line">	private List&lt;String&gt; myList;</span><br><span class="line">	private Set&lt;String&gt; mySet;</span><br><span class="line">	private Map&lt;String,String&gt; myMap;</span><br><span class="line">	private Properties myProps;</span><br><span class="line"></span><br><span class="line">	// 集合字段的set方法</span><br><span class="line">	public void setMyStrs(String[] myArray) &#123;</span><br><span class="line">		this.myArray = myArray;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyList(List&lt;String&gt; myList) &#123;</span><br><span class="line">		this.myList = myList;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMySet(Set&lt;String&gt; mySet) &#123;</span><br><span class="line">		this.mySet = mySet;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyMap(Map&lt;String, String&gt; myMap) &#123;</span><br><span class="line">		this.myMap = myMap;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyProps(Properties myProps) &#123;</span><br><span class="line">		this.myProps = myProps;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	public void saveAccount() &#123;</span><br><span class="line">		System.out.println(Arrays.toString(myArray));</span><br><span class="line">		System.out.println(myList);</span><br><span class="line">		System.out.println(mySet);</span><br><span class="line">		System.out.println(myMap);</span><br><span class="line">		System.out.println(myProps);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl3&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;myStrs&quot;&gt;</span><br><span class="line">		&lt;array&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/array&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myList&quot;&gt;</span><br><span class="line">		&lt;list&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/list&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;mySet&quot;&gt;</span><br><span class="line">		&lt;set&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/set&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myMap&quot;&gt;</span><br><span class="line">		&lt;map&gt;</span><br><span class="line">			&lt;entry key=&quot;key1&quot; value=&quot;value1&quot;&gt;&lt;/entry&gt;</span><br><span class="line">			&lt;entry key=&quot;key2&quot;&gt;</span><br><span class="line">				&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;/entry&gt;</span><br><span class="line">			</span><br><span class="line">		&lt;/map&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myProps&quot;&gt;</span><br><span class="line">		&lt;props&gt;</span><br><span class="line">			&lt;prop key=&quot;key1&quot;&gt;value1&lt;/prop&gt;</span><br><span class="line">			&lt;prop key=&quot;key2&quot;&gt;value2&lt;/prop&gt;</span><br><span class="line">		&lt;/props&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2742,7 +2691,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2924,7 +2873,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
