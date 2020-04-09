@@ -112,22 +112,22 @@
   </script>
 
 
-  <meta name="description" content="springboot 的自动配置主要靠的是应用启动类的 *@SpringBootApplication *注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@Enable">
+  <meta name="description" content="springboot 的自动配置主要靠的是应用启动类的@SpringBootApplication注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@EnableAuto">
 <meta name="keywords" content="spring boot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="springboot自动配置">
 <meta property="og:url" content="http://yoursite.com/2020/04/08/springboot自动配置/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="springboot 的自动配置主要靠的是应用启动类的 *@SpringBootApplication *注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@Enable">
+<meta property="og:description" content="springboot 的自动配置主要靠的是应用启动类的@SpringBootApplication注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@EnableAuto">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE2.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE3.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE3.png">
-<meta property="og:updated_time" content="2020-04-09T06:42:56.725Z">
+<meta property="og:updated_time" content="2020-04-09T06:48:03.673Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="springboot自动配置">
-<meta name="twitter:description" content="springboot 的自动配置主要靠的是应用启动类的 *@SpringBootApplication *注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@Enable">
+<meta name="twitter:description" content="springboot 的自动配置主要靠的是应用启动类的@SpringBootApplication注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@EnableAuto">
 <meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE.png">
 
 
@@ -484,7 +484,7 @@
       
 
       
-        <p>springboot 的自动配置主要靠的是应用启动类的 *<em>@SpringBootApplication *</em>注解，今天我们就来探秘这个注解的背后都是些啥!</p>
+        <p>springboot 的自动配置主要靠的是应用启动类的<strong>@SpringBootApplication</strong>注解，今天我们就来探秘这个注解的背后都是些啥!</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@SpringBootConfiguration</span></span><br><span class="line"><span class="meta">@EnableAutoConfiguration</span></span><br><span class="line"><span class="meta">@ComponentScan</span>(excludeFilters = &#123; <span class="meta">@Filter</span>(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),</span><br><span class="line">		<span class="meta">@Filter</span>(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootApplication &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到最为重要的是 <code>@SpringBootConfiguration</code>、<code>@EnableAutoConfiguration</code>、<code>@ComponentScan</code>这三个注解，下面依次来看看其中的作用</p>
@@ -495,8 +495,7 @@
 <h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><p>继续看代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@AutoConfigurationPackage</span></span><br><span class="line"><span class="meta">@Import</span>(AutoConfigurationImportSelector.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>@Import(AutoConfigurationImportSelector.class)</code>，import 有三种注入方式，可以看下   </p>
-<p>这篇博客，这里用的是<code>ImportSelector</code>接口这种方式</p>
+<p><code>@Import(AutoConfigurationImportSelector.class)</code>，import 有三种注入方式，可以看下<a href="[https://spidermanqaq.github.io/2020/04/09/import%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C/](https://spidermanqaq.github.io/2020/04/09/import组件注册/)">import组件注册</a>篇博客，这里用的是<code>ImportSelector</code>接口这种方式</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String[] selectImports(AnnotationMetadata annotationMetadata) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!isEnabled(annotationMetadata)) &#123;</span><br><span class="line">			<span class="keyword">return</span> NO_IMPORTS;</span><br><span class="line">		&#125;</span><br><span class="line">		AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader</span><br><span class="line">				.loadMetadata(<span class="keyword">this</span>.beanClassLoader);</span><br><span class="line">		AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(autoConfigurationMetadata,</span><br><span class="line">				annotationMetadata);</span><br><span class="line">		<span class="keyword">return</span> StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>发现通过实现selectImports方法可以将Configuration导出，我们来看看其中的 getAutoConfigurationEntry 方法</p>
