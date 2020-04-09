@@ -124,7 +124,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE2.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE3.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE3.png">
-<meta property="og:updated_time" content="2020-04-08T12:41:15.736Z">
+<meta property="og:updated_time" content="2020-04-09T02:39:19.684Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="springboot自动配置">
 <meta name="twitter:description" content="springboot 的自动配置主要靠的是应用启动类的 *@SpringBootApplication *注解，今天我们就来探秘这个注解的背后都是些啥! 12345678910@Target(ElementType.TYPE)@Retention(RetentionPolicy.RUNTIME)@Documented@Inherited@SpringBootConfiguration@Enable">
@@ -495,7 +495,7 @@
 <h2 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h2><p>继续看代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@AutoConfigurationPackage</span></span><br><span class="line"><span class="meta">@Import</span>(AutoConfigurationImportSelector.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAutoConfiguration &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>@Import(AutoConfigurationImportSelector.class)</code>，我们点进去看看</p>
+<p><code>@Import(AutoConfigurationImportSelector.class)</code>，import 有三种注入方式，可以看下import注解三种注入方式这篇博客，这里用的是<code>ImportSelector</code>接口这种方式</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String[] selectImports(AnnotationMetadata annotationMetadata) &#123;</span><br><span class="line">		<span class="keyword">if</span> (!isEnabled(annotationMetadata)) &#123;</span><br><span class="line">			<span class="keyword">return</span> NO_IMPORTS;</span><br><span class="line">		&#125;</span><br><span class="line">		AutoConfigurationMetadata autoConfigurationMetadata = AutoConfigurationMetadataLoader</span><br><span class="line">				.loadMetadata(<span class="keyword">this</span>.beanClassLoader);</span><br><span class="line">		AutoConfigurationEntry autoConfigurationEntry = getAutoConfigurationEntry(autoConfigurationMetadata,</span><br><span class="line">				annotationMetadata);</span><br><span class="line">		<span class="keyword">return</span> StringUtils.toStringArray(autoConfigurationEntry.getConfigurations());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>发现通过实现selectImports方法可以将Configuration导出，我们来看看其中的 getAutoConfigurationEntry 方法</p>
@@ -506,16 +506,7 @@
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE3.png" alt></p>
 <p>再来看看 spring.factories 文件，其实里面的配置以键值对的形式存在</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE3.png" alt></p>
-<p>最后来看下如何把配置类实例化的，依靠的自然还是 SpringFactoriesLoadersha 类，我们已经知道了获取配置类名称，其实整个 SpringFactoriesLoader 有三个静态方法，上面只是其中一个</p>
-<ul>
-<li>loadFactories：加载指定的 factoryClass 并进行实例化 </li>
-<li>loadFactoryNames：加载指定的 factoryClass的名称集合</li>
-<li>instantiateFactory：对指定的 factoryClass 进行实例化  </li>
-</ul>
-<p>上源码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;T&gt; List&lt;T&gt; loadFactories(Class&lt;T&gt; factoryType, @Nullable ClassLoader classLoader) &#123;</span><br><span class="line">    Assert.notNull(factoryType, &quot;&apos;factoryType&apos; must not be null&quot;);</span><br><span class="line">    ClassLoader classLoaderToUse = classLoader;</span><br><span class="line">    if (classLoader == null) &#123;</span><br><span class="line">        classLoaderToUse = SpringFactoriesLoader.class.getClassLoader();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; factoryImplementationNames = loadFactoryNames(factoryType, classLoaderToUse);</span><br><span class="line">    if (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(&quot;Loaded [&quot; + factoryType.getName() + &quot;] names: &quot; + factoryImplementationNames);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;T&gt; result = new ArrayList(factoryImplementationNames.size());</span><br><span class="line">    Iterator var5 = factoryImplementationNames.iterator();</span><br><span class="line"></span><br><span class="line">    while(var5.hasNext()) &#123;</span><br><span class="line">        String factoryImplementationName = (String)var5.next();</span><br><span class="line">        result.add(instantiateFactory(factoryImplementationName, factoryType, classLoaderToUse));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    AnnotationAwareOrderComparator.sort(result);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>总结</strong>来说就是从 ClassPath 下扫描所有的 META-INF/spring.factories 配置文件，并将 spring.factories 文件中的 EnableAutoConfiguration 对应的配置项通过反射机制实例化为对应标注了 @Configuration 的形式的 IoC 容器配置类，然后注入 IoC 容器。 </p>
+<p><strong>总结</strong>来说就是从 ClassPath 下扫描所有的 META-INF/spring.factories 配置文件，并将 spring.factories 文件中的 EnableAutoConfiguration 对应的配置项通过<strong>反射机制实例化</strong>为对应标注了 @Configuration 的形式的 IoC 容器配置类，然后注入 IoC 容器。 </p>
 <h2 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h2><p>@ComponentScan 可以将带有指定注解的类自动装配到bean容器里。会被自动装配的注解包括@Controller、@Service、@Component、@Repository等等 </p>
 
       
@@ -613,6 +604,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2020/04/09/import组件注册/" rel="prev" title="@import组件注册">
+                @import组件注册 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -682,7 +677,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">48</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

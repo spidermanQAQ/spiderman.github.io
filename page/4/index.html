@@ -380,6 +380,230 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/AOP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/22/AOP/" class="post-title-link" itemprop="url">AOP</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 15:36:36" itemprop="dateCreated datePublished" datetime="2019-09-22T15:36:36+08:00">2019-09-22</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="AOP相关概念"><a href="#AOP相关概念" class="headerlink" title="AOP相关概念"></a>AOP相关概念</h2><p>Joinpoint(连接点): 被拦截到的方法.</p>
+<p>Pointcut(切入点): 我们对其进行增强的方法.</p>
+<p>Advice(通知/增强): 对切入点进行的增强操作</p>
+<p>​       包括前置通知,后置通知,异常通知,最终通知,环绕通知</p>
+<p>Weaving(织入): 是指把增强应用到目标对象来创建新的代理对象的过程。</p>
+<p>Aspect(切面): 是切入点和通知的结合</p>
+<h2 id="使用XML配置AOP"><a href="#使用XML配置AOP" class="headerlink" title="使用XML配置AOP"></a>使用XML配置AOP</h2><ol>
+<li><p>在<code>bean.xml中引入约束</code>并将通知类注入Spring容器中</p>
+</li>
+<li><p>使用<code>&lt;aop:config&gt;</code>标签声明AOP配置,所有关于AOP配置的代码都写在<code>&lt;aop:config&gt;</code>标签内</p>
+</li>
+<li><p>使用<code>&lt;aop:aspect&gt;</code>标签配置切面,其属性如下</p>
+<ul>
+<li><code>id</code>: 指定切面的<code>id</code></li>
+<li><code>ref</code>: 引用通知类的<code>id</code></li>
+</ul>
+</li>
+<li><p>使用<code>&lt;aop:pointcut&gt;</code>标签配置切入点表达式,指定对哪些方法进行增强,其属性如下</p>
+</li>
+<li><p>使用<code>&lt;aop:xxx&gt;</code>标签配置对应类型的通知方法</p>
+<p>其属性如下:</p>
+<p>method: 指定通知类中的增强方法名.<br>ponitcut-ref: 指定切入点的表达式的id<br>poinitcut: 指定切入点表达式<br>其中pointcut-ref和pointref属性只能有其中一个</p>
+<p>具体的通知类型:</p>
+<p>aop:before：配置前置通知,指定的增强方法在切入点方法之前执行.<br>aop:after-returning：配置后置通知,指定的增强方法在切入点方法正常执行之后执行.<br>aop:afetr-throwing：配置异常通知,指定的增强方法在切入点方法产生异常后执行.<br>aop:after：配置最终通知,无论切入点方法执行时是否发生异常,指定的增强方法都会最后执行.<br>aop:around： 配置环绕通知,可以在代码中手动控制增强代码的执行时机.</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 配置Logger类，以后相当于事务控制类 --&gt;</span><br><span class="line">&lt;bean id=&quot;logger&quot; class=&quot;com.itheima.utils.Logger&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置AOP--&gt;</span><br><span class="line">&lt;aop:config&gt;</span><br><span class="line">    &lt;!-- 配置切入点表达式 id属性用于指定表达式的唯一标识。expression属性用于指定表达式内容</span><br><span class="line">          此标签写在aop:aspect标签内部只能当前切面使用。</span><br><span class="line">          它还可以写在aop:aspect外面，此时就变成了所有切面可用</span><br><span class="line">      --&gt;</span><br><span class="line">    &lt;aop:pointcut id=&quot;pt1&quot; expression=&quot;execution(* com.itheima.service.impl.*.*(..))&quot;&gt;&lt;/aop:pointcut&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!--配置切面 --&gt;</span><br><span class="line">    &lt;aop:aspect id=&quot;logAdvice&quot; ref=&quot;logger&quot;&gt;</span><br><span class="line">        &lt;!-- 配置前置通知：在切入点方法执行之前执行</span><br><span class="line">        &lt;aop:before method=&quot;beforePrintLog&quot; pointcut-ref=&quot;pt1&quot; &gt;&lt;/aop:before&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置后置通知：在切入点方法正常执行之后值。它和异常通知永远只能执行一个</span><br><span class="line">        &lt;aop:after-returning method=&quot;afterReturningPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after-returning&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置异常通知：在切入点方法执行产生异常之后执行。它和后置通知永远只能执行一个</span><br><span class="line">        &lt;aop:after-throwing method=&quot;afterThrowingPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after-throwing&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置最终通知：无论切入点方法是否正常执行它都会在其后面执行</span><br><span class="line">        &lt;aop:after method=&quot;afterPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置环绕通知 详细的注释请看Logger类中--&gt;</span><br><span class="line">        &lt;aop:around method=&quot;aroundPringLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:around&gt;</span><br><span class="line">    &lt;/aop:aspect&gt;</span><br><span class="line">&lt;/aop:config&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="环绕通知"><a href="#环绕通知" class="headerlink" title="环绕通知"></a>环绕通知</h2><ol>
+<li><p><code>前置通知</code>,<code>后置通知</code>,<code>异常通知</code>,<code>最终通知</code>的执行顺序</p>
+<p>Spring是基于动态代理对方法进行增强的,<code>前置通知</code>,<code>后置通知</code>,<code>异常通知</code>,<code>最终通知</code>在增强方法中的执行时机如下:</p>
+<p><strong>类似于动态代理</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 增强方法</span><br><span class="line">@Override</span><br><span class="line">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable&#123;</span><br><span class="line">    Object rtValue = null;</span><br><span class="line">    try &#123;</span><br><span class="line">        // 执行前置通知</span><br><span class="line">        </span><br><span class="line">        // 执行原方法</span><br><span class="line">        rtValue = method.invoke(accountService, args); </span><br><span class="line">        </span><br><span class="line">        // 执行后置通知</span><br><span class="line">        return rtValue;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        // 执行异常通知</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        // 执行最终通知</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>环绕通知允许我们更自由地控制增强代码执行的时机</p>
+<p>Spring框架为我们提供一个接口ProceedingJoinPoint,它的实例对象可以作为环绕通知方法的参数,通过参数控制被增强方法的执行时机.</p>
+<p>ProceedingJoinPoint对象的getArgs()方法返回被拦截的参数<br>ProceedingJoinPoint对象的proceed()方法执行被拦截的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 环绕通知方法,返回Object类型</span><br><span class="line">public Object printLogAround(ProceedingJoinPoint pjp) &#123;</span><br><span class="line">    Object rtValue = null;</span><br><span class="line">    try &#123;</span><br><span class="line">        Object[] args = pjp.getArgs();        </span><br><span class="line">        printLogBefore();			// 执行前置通知</span><br><span class="line">    	rtValue = pjp.proceed(args);// 执行被拦截方法</span><br><span class="line">        printLogAfterReturn();		// 执行后置通知</span><br><span class="line">    &#125;catch(Throwable e) &#123;</span><br><span class="line">        printLogAfterThrowing();	// 执行异常通知</span><br><span class="line">    &#125;finally &#123;</span><br><span class="line">        printLogAfter();			// 执行最终通知</span><br><span class="line">    &#125;</span><br><span class="line">    return rtValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="spring中对AOP的注解"><a href="#spring中对AOP的注解" class="headerlink" title="spring中对AOP的注解"></a>spring中对AOP的注解</h2><p><strong>用于声明切面的注解</strong></p>
+<p><code>@Aspect</code>: 声明当前类为通知类,该类定义了一个切面.相当于xml配置中的<code>&lt;aop:aspect&gt;</code>标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect</span><br><span class="line">public class Logger &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用于声明通知的注解</strong><br>@Before: 声明该方法为前置通知.相当于xml配置中的<a href="aop:before" target="_blank" rel="noopener">aop:before</a>标签<br>@AfterReturning: 声明该方法为后置通知.相当于xml配置中的<a href="aop:after-returning" target="_blank" rel="noopener">aop:after-returning</a>标签<br>@AfterThrowing: 声明该方法为异常通知.相当于xml配置中的<a href="aop:after-throwing" target="_blank" rel="noopener">aop:after-throwing</a>标签<br>@After: 声明该方法为最终通知.相当于xml配置中的<a href="aop:after" target="_blank" rel="noopener">aop:after</a>标签<br>@Around: 声明该方法为环绕通知.相当于xml配置中的<a href="aop:around" target="_blank" rel="noopener">aop:around</a>标签<br>属性:</p>
+<p>​      value: 用于指定切入点表达式或切入点表达式的引用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect	//表示当前类是一个通知类</span><br><span class="line">public class Logger &#123;</span><br><span class="line"></span><br><span class="line">    // 配置前置通知</span><br><span class="line">	@Before(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogBefore()&#123;</span><br><span class="line">        System.out.println(&quot;前置通知Logger类中的printLogBefore方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置后置通知</span><br><span class="line">    @AfterReturning(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;后置通知Logger类中的printLogAfterReturning方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 配置异常通知</span><br><span class="line">	@AfterThrowing(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;异常通知Logger类中的printLogAfterThrowing方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置最终通知</span><br><span class="line">    @After(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfter()&#123;</span><br><span class="line">        System.out.println(&quot;最终通知Logger类中的printLogAfter方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置环绕通知</span><br><span class="line">    @Around(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public Object aroundPringLog(ProceedingJoinPoint pjp)&#123;</span><br><span class="line">        Object rtValue = null;</span><br><span class="line">        try&#123;</span><br><span class="line">            Object[] args = pjp.getArgs();	</span><br><span class="line">			printLogBefore();				// 执行前置通知</span><br><span class="line">            rtValue = pjp.proceed(args);	// 执行切入点方法</span><br><span class="line">			printLogAfterReturning();		// 执行后置通知</span><br><span class="line">            return rtValue;</span><br><span class="line">        &#125;catch (Throwable t)&#123;</span><br><span class="line">            printLogAfterThrowing();		// 执行异常通知</span><br><span class="line">            throw new RuntimeException(t);</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            printLogAfter();				// 执行最终通知</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用于指定切入点表达式的注解</strong></p>
+<p><code>@Pointcut</code>: 指定切入点表达式,其属性如下:</p>
+<ul>
+<li><code>value</code>: 指定表达式的内容</li>
+</ul>
+<p><code>@Pointcut</code>注解没有<code>id</code>属性,通过调用被注解的方法获取切入点表达式.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect	//表示当前类是一个通知类</span><br><span class="line">public class Logger &#123;</span><br><span class="line"></span><br><span class="line">    // 配置切入点表达式</span><br><span class="line">    @Pointcut(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    private void pt1()&#123;&#125; </span><br><span class="line">    </span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">	@Before(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogBefore()&#123;</span><br><span class="line">        System.out.println(&quot;前置通知Logger类中的printLogBefore方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">    @AfterReturning(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogAfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;后置通知Logger类中的printLogAfterReturning方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">	@AfterThrowing(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogAfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;异常通知Logger类中的printLogAfterThrowing方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="纯注解配置AOP"><a href="#纯注解配置AOP" class="headerlink" title="纯注解配置AOP"></a>纯注解配置AOP</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@ComponentScan(basePackages=&quot;cn.maoritian&quot;)</span><br><span class="line">@EnableAspectJAutoProxy			// 允许AOP</span><br><span class="line">public class SpringConfiguration &#123;</span><br><span class="line">    // 具体配置</span><br><span class="line">    //...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/ncepu_Chen/article/details/94510298#SpringAOP_159" target="_blank" rel="noopener">https://blog.csdn.net/ncepu_Chen/article/details/94510298#SpringAOP_159</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/泛型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2483,206 +2707,6 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Session/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/Session/" class="post-title-link" itemprop="url">Session</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:37:43" itemprop="dateCreated datePublished" datetime="2019-09-08T15:37:43+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
-<p>问题：一个用户的不同请求处理的数据共享怎么办</p>
-<p>解决：Session</p>
-<p>原理：用户第一次访问服务器，服务器会创建一个Session对象给用户，并将该session对象的JESSIONID使用Cookie技术存储到浏览器中，保证用户的其他请求能够获取到同一个session对象，也保证不同请求能够共享数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Request URL: http://localhost:8089/login</span><br><span class="line">Request Method: POST</span><br><span class="line">Status Code: 200 </span><br><span class="line">Remote Address: [::1]:8089</span><br><span class="line">Referrer Policy: no-referrer-when-downgrade</span><br><span class="line">Content-Length: 57</span><br><span class="line">Content-Type: text/html;charset=UTF-8</span><br><span class="line">Date: Mon, 26 Nov 2018 01:11:19 GMT</span><br><span class="line">Set-Cookie: UserName=3444444444444444</span><br><span class="line">Set-Cookie: UserPassword=23423424</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8</span><br><span class="line">Accept-Encoding: gzip, deflate, br</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9,en;q=0.8</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Length: 40</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Cookie: Webstorm-66e715af=5d7e1fa0-a9e9-4c01-9c16-aaff75cf10f7; JSESSIONID=2AF4A84C2F8FC452F54C77D3092B2E1B; </span><br><span class="line">UserName=3444444444444444; UserPassword=23423424</span><br><span class="line">Host: localhost:8089</span><br><span class="line">Origin: http://localhost:8089</span><br><span class="line">Referer: http://localhost:8089/Login.jsp</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)</span><br><span class="line">Chrome/69.0.3497.100 Safari/537.36</span><br></pre></td></tr></table></figure>
-
-<p>特点：</p>
-<ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<p>使用：</p>
-<ol>
-<li><p>创建session对象/获取session对象         HttpSession hs=request.getSession()</p>
-<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-<p>如果没有创建，那么新建一个</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ol>
-<p>使用情景：用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
-<p>注意：*JESSIONID是在浏览器中，关闭浏览器就没得了</p>
-<p>​            *存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
-<p>作用域：一次会话（即可以多次请求，主要session没失效）</p>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">      //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
-
-<p>session1存数据，session2读数据，但是是一个用户</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2731,7 +2755,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">48</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
