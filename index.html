@@ -380,6 +380,385 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/hashmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/04/28/hashmap/" class="post-title-link" itemprop="url">hashmap</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-28 12:58:48" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:48+08:00">2020-04-28</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/网络层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/04/28/网络层/" class="post-title-link" itemprop="url">网络层</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-28 12:58:28" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:28+08:00">2020-04-28</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%821.png" alt></p>
+<p>版本：IPv4/IPv6</p>
+<p>首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B）</p>
+<p>总长度：首部+数据(链路层有最小和最大长度)</p>
+<p>标识：同一个数据报分片用同一个标识   </p>
+<p>标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片</p>
+<p>片偏移：某片在原分组的位置</p>
+<p>生存时间：每经过一个路由器TTL-1</p>
+<p>首部检验和：只检验首部，因为首部中的标志，片偏移等是会变的</p>
+<h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p>像每个人都有身份证，IP地址可以唯一标识一个路由器，主机的接口</p>
+<p>分类的IP地址</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%822.png" alt></p>
+<p>A，B，C类地址网络号中依次有1位，2位，3位用来标识，网络号依次占8，16，24位</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%823.png" alt></p>
+<h2 id="网络地址转换NAT"><a href="#网络地址转换NAT" class="headerlink" title="网络地址转换NAT"></a>网络地址转换NAT</h2><p>路由器对目的地址是私有IP地址的数据报一律不转发</p>
+<p>网络地址转换NAT在专用网连接到因特网的路由器上安装NAT软件，安装了NAT软件的路由器叫做NAT路由器</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%824.png" alt></p>
+<h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><p>分类的IP地址存在问题：比如一个单位申请了一个B类IP，但是实际在用的并不多，会造成资源浪费问题。划分子网还能提高灵活性，比如一个单位要新开一个部门，没划分子网的话得重新去申请一个IP</p>
+<h3 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%827.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%825.png" alt></p>
+<p>划分子网后对外仍表现为一个网络</p>
+<h3 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h3><p>路由器需要根据收到的IP找到相应子网</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%826.png" alt></p>
+<p>除了主机号其余为0，通过IP地址与子网掩码进行与操作，就能得到子网网络地址</p>
+<h2 id="无分类编址CIDR"><a href="#无分类编址CIDR" class="headerlink" title="无分类编址CIDR"></a>无分类编址CIDR</h2><p>以前的一个子网的子网掩码是一样的，如果子网掩码不固定长度，那子网下的主机数更灵活（比如如果部门人比较多，那就可以让子网掩码短一点，这样主机数可以更多）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%828.png" alt></p>
+<p>网络前缀相同的组成一个网络块</p>
+<p>128.14.35.7/20一个地址块的IP地址</p>
+<p>最小IP地址10000000 00001110 00100000 00000000</p>
+<p>最大IP地址10000000 00001110 00101111 11111111</p>
+<p>子网掩码   11111111 11111111 11110000 00000000</p>
+<h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址</p>
+<p>ARP协议可以完成主机或路由器IP地址到mac地址的映射</p>
+<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），每有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
+<p>例子</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png" alt></p>
+<p>应用层发送一个pdf文件，传输层分成123，对123分为加首部（如果123长度过大，还要分片）</p>
+<p>主机1发送文件到主机5，首先在1所在局域网广播一个ARP请求分组，因为5不在同一个局域网，对应的mac地址为mac6，在数据链路层传输后到达路由器，解封装，再封装（路由器只有3层，最高到网络层），封装后源mac地址为mac7，目标mac为mac8，同理到mac9直至最高的主机5IP.</p>
+<h2 id="ICMP协议（网际控制报文协议）"><a href="#ICMP协议（网际控制报文协议）" class="headerlink" title="ICMP协议（网际控制报文协议）"></a>ICMP协议（网际控制报文协议）</h2><p>目的：进行差错报告</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8210.png" alt></p>
+<p>类型：ICMP报文有不同类型</p>
+<p>检验和：检查发过来的IP数据报的首部和<strong>数据部分，区别于IP地址的首部检验和</strong></p>
+<p>ICMP报文是作为返回的IP数据报的数据部分</p>
+<p>ICMP差错报告报文的数据部分由收到的IP数据报的首部+IP数据报数据部分前8个字节组成</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
+<h2 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h2><h3 id="IPv6格式"><a href="#IPv6格式" class="headerlink" title="IPv6格式"></a>IPv6格式</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png" alt></p>
+<h3 id="与IPv4区别"><a href="#与IPv4区别" class="headerlink" title="与IPv4区别"></a>与IPv4区别</h3><ul>
+<li>IPv4 32位，IPv6 128位</li>
+<li>IPv4总长度取消，改为有效载荷长度</li>
+<li>IPv4生存时间取消，改为下一个首部</li>
+<li>IPv4首部长度是4B倍数，IPv6基本单位必须是40B</li>
+<li>IPv4路由器和主机均可分片，IPv6只能主机分片</li>
+</ul>
+<h2 id="RIP协议"><a href="#RIP协议" class="headerlink" title="RIP协议"></a>RIP协议</h2><p>RIP是一种基于距离向量的协议，每一个路由器都维护到每一个目的网络的最短距离</p>
+<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
+<li>只和相邻路由器交换信息</li>
+<li>交换的信息是自己的路由表</li>
+<li>每30秒交换一次路由表</li>
+<li>一条路由最多包含15个路由器，距离为16代表不可达，所以适合小型网络</li>
+</ul>
+<h3 id="基本过程："><a href="#基本过程：" class="headerlink" title="基本过程："></a>基本过程：</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
+<ul>
+<li>对相邻路由器x发来的RIP报文，修改报文每一项，把下一跳地址改为x，距离+1</li>
+<li>如果R1没有目标为net3的表项，则把修改完的表项插入</li>
+<li>有net3，如果下一跳为x，则进行更新（毕竟30秒交换一次，保持最新的）；如果下一跳不为x，则比较距离，挑小的</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/数据链路层/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -506,18 +885,18 @@
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%825.png" alt></p>
 <p>链路层如图所示，如果出错没有控制，那从路由器中一直传，资源浪费严重</p>
-<h2 id="检错控制"><a href="#检错控制" class="headerlink" title="检错控制"></a>检错控制</h2><h3 id="奇偶校验码"><a href="#奇偶校验码" class="headerlink" title="奇偶校验码"></a>奇偶校验码</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%826.png" alt></p>
+<h3 id="检错控制"><a href="#检错控制" class="headerlink" title="检错控制"></a>检错控制</h3><h4 id="奇偶校验码"><a href="#奇偶校验码" class="headerlink" title="奇偶校验码"></a>奇偶校验码</h4><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%826.png" alt></p>
 <p>但是存在问题</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%827.png" alt></p>
 <p>这一题，1100101采用奇校验，则需要前面加个1，5个1，A，B，C都是4个1，说明出错了，D5个1就看不出来，不一定出错。<strong>缺陷：只能检验出一半错误</strong></p>
-<h3 id="CRC循环冗余码"><a href="#CRC循环冗余码" class="headerlink" title="CRC循环冗余码"></a>CRC循环冗余码</h3><p>最终发送的数据=要发送的数据+冗余码</p>
+<h4 id="CRC循环冗余码"><a href="#CRC循环冗余码" class="headerlink" title="CRC循环冗余码"></a>CRC循环冗余码</h4><p>最终发送的数据=要发送的数据+冗余码</p>
 <ul>
 <li>加0，生成多项式的阶数</li>
 <li>求余</li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%828.png" alt></p>
 <p>接收端同样需要除以多项式，余数为0，则正确，不为0，则错误</p>
-<h2 id="纠错控制"><a href="#纠错控制" class="headerlink" title="纠错控制"></a>纠错控制</h2><p>海明码（太牛批了）</p>
+<h3 id="纠错控制"><a href="#纠错控制" class="headerlink" title="纠错控制"></a>纠错控制</h3><p>海明码（太牛批了）</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%829.png" alt></p>
 <p>1.确定校验码位数</p>
 <p>假设要发送的数据101101，数据位数6，对应校验位4位</p>
@@ -1914,567 +2293,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/16/mysql优化-索引/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/16/mysql优化-索引/" class="post-title-link" itemprop="url">mysql优化-索引</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-16 21:15:11" itemprop="dateCreated datePublished" datetime="2019-11-16T21:15:11+08:00">2019-11-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="单表优化"><a href="#单表优化" class="headerlink" title="单表优化"></a>单表优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE book</span><br><span class="line">(</span><br><span class="line">	bid INT(4) PRIMARY KEY,</span><br><span class="line">	NAME VARCHAR(20) NOT NULL,</span><br><span class="line">	authorid INT(4) NOT NULL,</span><br><span class="line">	publicid INT(4) NOT NULL,</span><br><span class="line">	typeid INT(4) NOT NULL </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO book VALUES(1,&apos;tjava&apos;,1,1,2) ;</span><br><span class="line">INSERT INTO book VALUES(2,&apos;tc&apos;,2,1,2) ;</span><br><span class="line">INSERT INTO book VALUES(3,&apos;wx&apos;,3,2,1) ;</span><br><span class="line">INSERT INTO book VALUES(4,&apos;math&apos;,4,2,3) ;</span><br></pre></td></tr></table></figure>
-
-<p>查询authorid=1且 typeid为2或3的bid</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT bid FROM book WHERE typeid IN(2,3) AND authorid=1  ORDER BY typeid</span><br></pre></td></tr></table></figure>
-
-<p> <strong>优化：加索引</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE book ADD INDEX idx_bta (bid,typeid,authorid)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%957.png" alt></p>
-<p><strong>索引一旦进行 升级优化，需要将之前废弃的索引删掉，防止干扰。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX idx_bta ON book</span><br></pre></td></tr></table></figure>
-
-<p><strong>根据SQL实际解析的顺序，调整索引的顺序</strong><br>alter table book add index idx_tab (typeid,authorid,bid); –虽然可以回表查询bid，但是将bid放到索引中可以提升使用using index ;</p>
-<p><strong>总结</strong></p>
-<p>a.最佳做前缀，保持索引的定义和使用的顺序一致性  </p>
-<p>b.索引需要逐步优化  </p>
-<p>c.将含In的范围查询 放到where条件的最后，防止失效。</p>
-<pre><code>本例中同时出现了Using where（需要回原表）; Using index（不需要回原表）：原因，where  authorid=1 and  typeid in(2,3)中authorid在索引(authorid,typeid,bid)中，因此不需要回原表（直接在索引表中能查到）；而typeid虽然也在索引(authorid,typeid,bid)中，但是含in的范围查询已经使该typeid索引失效，因此相当于没有typeid这个索引，所以需要回原表（using where）；
-例如以下没有了In，则不会出现using where
-explain select bid from book where  authorid=1 and  typeid =3 order by typeid desc ;
-
-还可以通过key_len证明In可以使索引失效。</code></pre><h2 id="两表优化"><a href="#两表优化" class="headerlink" title="两表优化"></a>两表优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE teacher2</span><br><span class="line">(</span><br><span class="line">	tid INT(4) PRIMARY KEY,</span><br><span class="line">	cid INT(4) NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO teacher2 VALUES(1,2);</span><br><span class="line">INSERT INTO teacher2 VALUES(2,1);</span><br><span class="line">INSERT INTO teacher2 VALUES(3,3);</span><br><span class="line"></span><br><span class="line">CREATE TABLE course2</span><br><span class="line">(</span><br><span class="line">	cid INT(4) ,</span><br><span class="line">	cname VARCHAR(20)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO course2 VALUES(1,&apos;java&apos;);</span><br><span class="line">INSERT INTO course2 VALUES(2,&apos;python&apos;);</span><br><span class="line">INSERT INTO course2 VALUES(3,&apos;kotlin&apos;);</span><br></pre></td></tr></table></figure>
-
-<p>左连接：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT *FROM teacher2 t LEFT OUTER JOIN course2 c ON t.cid=c.cid WHERE c.cname=&apos;java&apos;;</span><br></pre></td></tr></table></figure>
-
-<p>索引往哪张表加？  </p>
-<ul>
-<li><p>小表驱动大表</p>
-</li>
-<li><p>索引建立经常使用的字段上  本题 t.cid=c.cid可知，t.cid字段使用频繁，因此给该字段加索引</p>
-<p>[一般情况对于左外连接，给左表加索引；右外连接，给右表加索引]</p>
-</li>
-</ul>
-<pre><code>select ...where 小表.x10=大表.x300 ;
-for(int i=0;i&lt;小表.length10;i++)
-{
-    for(int j=0;j&lt;大表.length300;j++)
-    {
-        ...
-    }
-}
-
-
-select ...where 大表.x300=小表.x10 ;
-for(int i=0;i&lt;大表.length300;i++)
-{
-    for(int j=0;j&lt;小表.length10;j++)
-    {
-        ...
-    }
-}</code></pre><p>–以上2个FOR循环，最终都会循环3000次；但是 对于双层循环来说：一般建议 将数据小的循环 放外层；数据大的循环放内存。</p>
-<pre><code>--当编写 ..on t.cid=c.cid 时，将数据量小的表 放左边（假设此时t表数据量小）
-
-alter table teacher2 add index index_teacher2_cid(cid) ;
-alter table course2 add index index_course2_cname(cname);
-
-
-Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接缓存。</code></pre><h2 id="三张表优化A-B-C"><a href="#三张表优化A-B-C" class="headerlink" title="三张表优化A B C"></a>三张表优化A B C</h2><p>a.小表驱动大表  </p>
-<p>b.索引建立在经常查询的字段上</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test03</span><br><span class="line">(</span><br><span class="line">  a1 INT(4) NOT NULL,</span><br><span class="line">  a2 INT(4) NOT NULL,</span><br><span class="line">  a3 INT(4) NOT NULL,</span><br><span class="line">  a4 INT(4) NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">ALTER TABLE test03 ADD INDEX idx_a1_a2_a3_4(a1,a2,a3,a4)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a2=2 and a3=3 and a4 =4 ; --推荐写法，因为 索引的使用顺序（where后面的顺序） 和 复合索引的顺序一致</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96%E2%80%94%E7%B4%A2%E5%BC%953.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a4=1 and a3=2 and a2=3 and a1 =4 ; --虽然编写的顺序 和索引顺序不一致，但是 sql在真正执行前 经过了SQL优化器的调整，结果与上条SQL是一致的。</span><br><span class="line">--以上 2个SQL，使用了 全部的复合索引</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%954.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a2=2 and a4=4 order by a3; </span><br><span class="line">--以上SQL用到了a1 a2两个索引，该两个字段 不需要回表查询using index ;而a4因为跨列使用，造成了该索引失效，需要回表查询 因此是using where</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%955.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a4=4 order by a3; </span><br><span class="line">--以上SQL出现了 using filesort(文件内排序，“多了一次额外的查找/排序”) ：不要跨列使用( where和order by 拼起来，不要跨列使用)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%956.png" alt></p>
-<pre><code>explain select a1,a2,a3,a4 from test03 where a1=1 and a4=4 order by a2 , a3; --不会using filesort</code></pre><p>总结</p>
-<ul>
-<li>如果 (a,b,c,d)复合索引  和使用的顺序全部一致(且不跨列使用)，则复合索引全部使用。如果部分一致(且不跨列使用)，则使用部分索引</li>
-<li>where和order by 拼起来，不要跨列使用 </li>
-</ul>
-<h2 id="避免索引失效的一些原则"><a href="#避免索引失效的一些原则" class="headerlink" title="避免索引失效的一些原则"></a>避免索引失效的一些原则</h2><ul>
-<li><p>复合索引<br>复合索引，不要跨列或无序使用（最佳左前缀原则）<br>复合索引，尽量使用全索引匹配</p>
-</li>
-<li><p>不要在索引上进行任何操作（计算、函数、类型转换），否则索引失效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE book</span><br><span class="line">  (</span><br><span class="line">  	bid INT(4) PRIMARY KEY,</span><br><span class="line">  	NAME VARCHAR(20) NOT NULL,</span><br><span class="line">  	authorid INT(4) NOT NULL,</span><br><span class="line">  	publicid INT(4) NOT NULL,</span><br><span class="line">  	typeid INT(4) NOT NULL </span><br><span class="line">  );</span><br><span class="line">  </span><br><span class="line">  INSERT INTO book VALUES(1,&apos;tjava&apos;,1,1,2) ;</span><br><span class="line">  INSERT INTO book VALUES(2,&apos;tc&apos;,2,1,2) ;</span><br><span class="line">  INSERT INTO book VALUES(3,&apos;wx&apos;,3,2,1) ;</span><br><span class="line">  INSERT INTO book VALUES(4,&apos;math&apos;,4,2,3) ;</span><br><span class="line">  SELECT *FROM book</span><br><span class="line">  ALTER TABLE book ADD INDEX index_fuhe(authorid,typeid)</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid=1 AND typeid=2 --用到了2个索引</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid=1 AND typeid*2=2--用到了a1个索引</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid*2=1 AND typeid*2=2--到了0个索引,原因：对于复合索引，如果左边失效，右侧全部失效。(a,b,c)，例如如果 b失效，则b c同时失效</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%951.png" alt></p>
-<p>  <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%952.png" alt></p>
-<ul>
-<li><p>复合索引不能使用不等于（!=  &lt;&gt;）或is null (is not null)，否则自身以及右侧所有全部失效。<br>复合索引中如果有&gt;，则自身和右侧索引全部失效。</p>
-</li>
-<li><p>尽量使用索引覆盖（using index）</p>
-<p>select a,b,c from xx..where a=  .. and b =.. ;</p>
-</li>
-<li><p>like尽量以“常量”开头，不要以’%’开头，否则索引失效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from xx where name like &apos;%x%&apos; ; --name索引失效</span><br><span class="line"></span><br><span class="line">explain select * from teacher  where tname like &apos;%x%&apos;; --tname索引失效</span><br><span class="line"></span><br><span class="line">explain select * from teacher  where tname like &apos;x%&apos;;</span><br><span class="line"> </span><br><span class="line">explain select tname from teacher  where tname like &apos;%x%&apos;; --如果必须使用like &apos;%x%&apos;进行模糊查询，可以使用索引覆盖 挽救一部分。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>尽量不要使用类型转换（显示、隐式），否则索引失效</p>
-<p>explain select * from teacher where tname =’’ or tcid &gt;1 ; –将or左侧的tname 失效</p>
-</li>
-<li><p>尽量不要使用or，否则索引失效</p>
-<p>explain select * from teacher where tname =’’ or tcid &gt;1 ; –将or左侧的tname 失效</p>
-<p>  explain select * from book where authorid = 1 and typeid =2 ;</p>
-<p>  – SQL优化，是一种概率层面的优化。至于是否实际使用了我们的优化，需要通过explain进行推测。</p>
-<p>  explain select * from book where authorid != 1 and typeid =2 ;<br>  explain select * from book where authorid != 1 and typeid !=2 ;<br>  体验概率情况(&lt; &gt; =)：原因是服务层中有SQL优化器，可能会影响我们的优化。<br>  drop index idx_typeid on book;<br>  drop index idx_authroid on book;<br>  alter table book add index idx_book_at (authorid,typeid);<br>  explain select * from book where authorid = 1 and typeid =2 ;–复合索引at全部使用<br>  explain select * from book where authorid &gt; 1 and typeid =2 ; –复合索引中如果有&gt;，则自身和右侧索引全部失效。<br>  explain select * from book where authorid = 1 and typeid &gt;2 ;–复合索引at全部使用<br>  —-明显的概率问题—<br>  explain select * from book where authorid &lt; 1 and typeid =2 ;–复合索引at只用到了1个索引<br>  explain select * from book where authorid &lt; 4 and typeid =2 ;–复合索引全部失效</p>
-<p>  –我们学习索引优化 ，是一个大部分情况适用的结论，但由于SQL优化器等原因  该结论不是100%正确。<br>  –一般而言， 范围查询（&gt; &lt;  in），之后的索引失效。</p>
-</li>
-</ul>
-<h2 id="一些其他的优化方法"><a href="#一些其他的优化方法" class="headerlink" title="一些其他的优化方法"></a>一些其他的优化方法</h2><ul>
-<li><p>exist和in</p>
-<p>select ..from table where 字段 exist (子查询) ;<br>select ..from table where 字段 in  (子查询) ;</p>
-<p>如果主查询的数据集大，则使用in   ,效率高。如果子查询的数据集大，则使用exist,效率高。</p>
-<p>exist语法： 将主查询的结果，放到子查需结果中进行条件校验（看子查询是否有数据，如果有数据 则校验成功)，如果复合校验，则保留数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select tname from teacher where exists (select * from teacher) ; </span><br><span class="line">--等价于select tname from teacher</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>order by 优化</p>
-<p>使用oder by过程中会出现using filesort（额外依次排序） 底层有两种算法：双路排序、单路排序 （根据IO的次数）</p>
-<ol>
-<li><p>MySQL4.1之前 默认使用 双路排序；双路：扫描2次磁盘（1：从磁盘读取<strong>排序字段</strong> ,对排序字段进行排序（在buffer中进行的排序）   2：扫描<strong>其他</strong>字段  也就是一次扫要排序的字段，一次扫要找的字段</p>
-</li>
-<li><p>MySQL4.1之后 默认使用 单路排序  ： 只读取一次（将所有字段放入buffer扫描）</p>
-<p>存在隐患：如果数据量很大，buffer中可能放不下，此时会进行分片读取，分多次读取</p>
-</li>
-</ol>
-<p><strong>单路排序比双路排序会占用更多的buffer</strong></p>
-<p>set max_length_for_sort_data可设置buffer大小，如果max_length_for_sort_data值太低，则mysql会自动从 单路-&gt;双路   （太低：需要排序的列的总大小超过了max_length_for_sort_data定义的字节数）</p>
-<p>提高order by策略：</p>
-<p>a.选择使用单路、双路 ；调整buffer的容量大小；<br>b.避免select * …<br>c.复合索引不要跨列使用 ，避免using filesort<br>d.保证全部的排序字段 排序的一致性（都是升序 或 降序）</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/15/mysql优化-锁/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/15/mysql优化-锁/" class="post-title-link" itemprop="url">mysql优化-锁</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-15 14:55:11" itemprop="dateCreated datePublished" datetime="2019-11-15T14:55:11+08:00">2019-11-15</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>解决因资源共享 而造成的并发问题。</p>
-<p>示例</p>
-<p>买最后一件衣服X<br>    A:      X    买 ：  X加锁 -&gt;试衣服…下单..付款..打包 -&gt;X解锁<br>    B:      X    买：发现X已被加锁，等待X解锁，   X已售空</p>
-<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="操作类型"><a href="#操作类型" class="headerlink" title="操作类型"></a>操作类型</h3><ul>
-<li>读锁（共享锁）： 对同一个数据（衣服），多个读操作可以同时进行，互不干扰</li>
-<li>写锁（互斥锁）： 如果当前写操作没有完毕（买衣服的一系列操作），则无法进行其他的读操作、写操作</li>
-</ul>
-<h3 id="操作范围"><a href="#操作范围" class="headerlink" title="操作范围"></a>操作范围</h3><ul>
-<li><p>表锁</p>
-<p>一次性对一张表整体加锁。如MyISAM存储引擎使用表锁，开销小、加锁快；无死锁；但锁的范围大，容易发生锁冲突、并发度低</p>
-</li>
-<li><p>行锁</p>
-<p>一次性对一条数据加锁。如InnoDB存储引擎使用行锁，开销大，加锁慢；容易出现死锁；锁的范围较小，不易发生锁冲突，并发度高（很小概率 发生高并发问题：脏读、幻读、不可重复度、丢失更新等问题）</p>
-</li>
-<li><p>页锁        </p>
-</li>
-</ul>
-<h3 id="示例（表锁）"><a href="#示例（表锁）" class="headerlink" title="示例（表锁）"></a>示例（表锁）</h3><p>表锁 ：  –自增操作 MYSQL/SQLSERVER 支持；oracle需要借助于序列来实现自增</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE tablelock</span><br><span class="line">(</span><br><span class="line">id INT PRIMARY KEY AUTO_INCREMENT ,</span><br><span class="line">NAME VARCHAR(20)</span><br><span class="line">);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&quot;a1&quot;)</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a2&apos;);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a3&apos;);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a4&apos;);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a5&apos;);</span><br></pre></td></tr></table></figure>
-
-<h4 id="加读锁"><a href="#加读锁" class="headerlink" title="加读锁"></a>加读锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LOCK TABLE tablelock READ</span><br><span class="line">SELECT *FROM tablelock --读（查），可以</span><br><span class="line">UPDATE tablelock SET NAME=&quot;a6&quot; WHERE id=1 --写（增删改），不可以</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E9%94%811.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT *FROM USER</span><br><span class="line">DELETE FROM USER WHERE id=1</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E9%94%812.png" alt></p>
-<p><strong>结论1</strong>：</p>
-<ul>
-<li><p>如果某一个会话 对A表加了read锁，则 该会话 可以对A表进行读操作、不能进行写操作； 且 该会话不能对其他表进行读、写操作。</p>
-</li>
-<li><p>即如果给A表加了读锁，则当前会话只能对A表进行读操作</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">会话1</span><br><span class="line">select * from tablelock  --读（查），可以</span><br><span class="line">delete from tablelock where id =1 --写，会“等待”会话0将锁释放</span><br><span class="line">SELECT *FROM USER  --读（查），可以</span><br><span class="line">DELETE FROM USER WHERE id=1  --写，可以</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论2</strong></p>
-<p>会话0给A表加了锁；其他会话的操作</p>
-<ul>
-<li>可以对其他表（A表以外的表）进行读、写操作</li>
-<li>对A表：读-可以；  写-需要等待释放锁</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">释放锁: unlock tables</span><br></pre></td></tr></table></figure>
-
-<h4 id="加写锁"><a href="#加写锁" class="headerlink" title="加写锁"></a>加写锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">会话0：</span><br><span class="line">		lock table tablelock write ;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong></p>
-<p>当前会话（会话0） 可以对加了写锁的表  进行任何操作（增删改查）；但是不能 操作（增删改查）其他表</p>
-<p>其他会话   对会话0中加写锁的表 可以进行增删改查的前提是：等待会话0释放写锁</p>
-<h4 id="MySQL表级锁的锁模式"><a href="#MySQL表级锁的锁模式" class="headerlink" title="MySQL表级锁的锁模式"></a>MySQL表级锁的锁模式</h4><p>MyISAM在执行查询语句（SELECT）前，会自动给涉及的所有表加读锁，在执行更新操作（DML）前，会自动给涉及的表加写锁。</p>
-<p>所以对MyISAM表进行操作，会有以下情况：</p>
-<ul>
-<li>对MyISAM表的读操作（加读锁），不会阻塞其他进程（会话）对同一表的读请求，但会阻塞对同一表的写请求。只有当读锁释放后，才会执行其它进程的写操作。 </li>
-<li>对MyISAM表的写操作（加写锁），会阻塞其他进程（会话）对同一表的读和写操作，只有当写锁释放后，才会执行其它进程的读写操作。</li>
-</ul>
-<h4 id="分析表锁定："><a href="#分析表锁定：" class="headerlink" title="分析表锁定："></a>分析表锁定：</h4><p>查看哪些表加了锁：   show open tables     1代表被加了锁<br>分析表锁定的严重程度： show status like ‘table%’ </p>
-<ul>
-<li>Table_locks_immediate :即可能获取到的锁数</li>
-<li>Table_locks_waited：需要等待的表锁数(如果该值越大，说明存在越大的锁竞争）</li>
-</ul>
-<p>一般建议：<br>        Table_locks_immediate/Table_locks_waited &gt; 5000， 建议采用InnoDB引擎，否则MyISAM引擎</p>
-<h3 id="示例（行锁）"><a href="#示例（行锁）" class="headerlink" title="示例（行锁）"></a>示例（行锁）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE linelock(</span><br><span class="line">id INT(5) PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">NAME VARCHAR(20)</span><br><span class="line">)ENGINE=INNODB ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;1&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;2&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;3&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;4&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;5&apos;)  ;</span><br></pre></td></tr></table></figure>
-
-<p>*<em>mysql默认自动commit;    oracle默认不会自动commit *</em></p>
-<p>为了研究行锁，暂时将自动commit关闭;  set autocommit =0 ; 以后需要通过commit</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">会话0： 写操作</span><br><span class="line">	insert into linelock values(&apos;a6&apos;) ;</span><br><span class="line">   </span><br><span class="line">会话1： 写操作 同样的数据</span><br><span class="line">	update linelock set name=&apos;ax&apos; where id = 6;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论1</strong></p>
-<ul>
-<li>如果会话x对某条数据a进行 DML操作（研究时：关闭了自动commit的情况下），则其他会话必须等待会话x结束事务(commit/rollback)后  才能对数据a进行操作</li>
-</ul>
-<p>补充：表锁 是通过unlock tables，也可以通过事务解锁 ; 行锁 是通过事务解锁</p>
-<pre><code>行锁，操作不同数据：
-会话0： 写操作
-    insert into linelock values(8,&apos;a8&apos;) ;
-会话1： 写操作， 不同的数据
-    update linelock set name=&apos;ax&apos; where id = 5;</code></pre><p><strong>结论2</strong></p>
-<ul>
-<li>行锁，一次锁一行数据；因此 如果操作的是不同数据，则不干扰</li>
-</ul>
-<p><strong>行锁的注意事项</strong>：</p>
-<ul>
-<li><p>如果没有索引，则行锁会转为表锁</p>
-<p>这里第二次会话使用了3，4，发生类型转换，会使索引失效，行锁转成表锁</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">会话0： 写操作</span><br><span class="line">	update linelock set name = &apos;ai&apos; where name = &apos;3&apos; ;</span><br><span class="line">		</span><br><span class="line">会话1： 写操作， 不同的数据</span><br><span class="line">	update linelock set name = &apos;aiX&apos; where name = &apos;4&apos; ;</span><br><span class="line"></span><br><span class="line">会话0： 写操作</span><br><span class="line">	update linelock set name = &apos;ai&apos; where name = 3 ;</span><br><span class="line">	</span><br><span class="line">会话1： 写操作， 不同的数据</span><br><span class="line">	update linelock set name = &apos;aiX&apos; where name = 4 ;</span><br><span class="line">--可以发现，数据被阻塞了（加锁）</span><br><span class="line">-- 原因：如果索引类 发生了类型转换，则索引失效。 因此 此次操作，会从行锁 转为表锁。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>行锁的一种特殊情况：间隙锁：值在范围内，但却不存在</p>
-<p>此时linelock表中 没有id=7的数据<br>update linelock set name =’x’ where id &gt;1 and id&lt;9 ;   –即在此where范围中，没有id=7的数据，则id=7的数据成为间隙。<br>间隙：Mysql会自动给 间隙 加索 -&gt;间隙锁。即 本题 会自动给id=7的数据加 间隙锁（行锁）。<br>行锁：如果有where，则实际加锁的范围 就是where后面的范围（不是实际的值）</p>
-</li>
-</ul>
-<p>行锁：InnoDB默认采用行锁；</p>
-<ul>
-<li>缺点： 比表锁性能损耗大。</li>
-<li>优点：并发能力强，效率高。<br>因此建议，高并发用InnoDB，否则用MyISAM。</li>
-</ul>
-<p>​    </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2518,7 +2341,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">49</span>
+                    <span class="site-state-item-count">51</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

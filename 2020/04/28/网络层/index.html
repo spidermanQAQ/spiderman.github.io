@@ -112,17 +112,32 @@
   </script>
 
 
-  <meta name="description" content="研狗一枚">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index-1.html">
+  <meta name="description" content="IP数据报格式 版本：IPv4/IPv6 首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B） 总长度：首部+数据(链路层有最小和最大长度) 标识：同一个数据报分片用同一个标识    标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片 片偏移：某片在原分组的位置 生存时间：每经过一个路由器TTL-1 首部检验和：只检验首部，因">
+<meta name="keywords" content="计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络层">
+<meta property="og:url" content="http://yoursite.com/2020/04/28/网络层/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="研狗一枚">
+<meta property="og:description" content="IP数据报格式 版本：IPv4/IPv6 首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B） 总长度：首部+数据(链路层有最小和最大长度) 标识：同一个数据报分片用同一个标识    标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片 片偏移：某片在原分组的位置 生存时间：每经过一个路由器TTL-1 首部检验和：只检验首部，因">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-14T13:36:33.680Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%821.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%822.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%823.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%824.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%827.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%825.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%826.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%828.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8210.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png">
+<meta property="og:updated_time" content="2020-04-28T07:49:32.146Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
-<meta name="twitter:description" content="研狗一枚">
+<meta name="twitter:title" content="网络层">
+<meta name="twitter:description" content="IP数据报格式 版本：IPv4/IPv6 首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B） 总长度：首部+数据(链路层有最小和最大长度) 标识：同一个数据报分片用同一个标识    标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片 片偏移：某片在原分组的位置 生存时间：每经过一个路由器TTL-1 首部检验和：只检验首部，因">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%821.png">
 
 
 
@@ -130,7 +145,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/categories/index-1">
+  <link rel="canonical" href="http://yoursite.com/2020/04/28/网络层/">
 
 
 
@@ -140,7 +155,7 @@
   };
 </script>
 
-  <title>categories | 万乔少女的梦QAQ</title>
+  <title>网络层 | 万乔少女的梦QAQ</title>
   
 
 
@@ -278,7 +293,7 @@
         
         
           
-          <li class="menu-item menu-item-categories menu-item-active">
+          <li class="menu-item menu-item-categories">
 
     
     
@@ -360,130 +375,304 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/网络层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">categories
-
-</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
+          <h1 class="post-title" itemprop="name headline">网络层
+
               
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-              目前共计 12 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/LaTex/">LaTex</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Servlet/">Servlet</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java基础/">java基础</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm虚拟机/">jvm虚拟机</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-boot/">spring boot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springmvc/">springmvc</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试常问/">面试常问</a><span class="category-list-count">1</span></li></ul>
-            </div>
-          </div>
+            
+          </h1>
         
-      </div>
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-28 12:58:28" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:28+08:00">2020-04-28</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%821.png" alt></p>
+<p>版本：IPv4/IPv6</p>
+<p>首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B）</p>
+<p>总长度：首部+数据(链路层有最小和最大长度)</p>
+<p>标识：同一个数据报分片用同一个标识   </p>
+<p>标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片</p>
+<p>片偏移：某片在原分组的位置</p>
+<p>生存时间：每经过一个路由器TTL-1</p>
+<p>首部检验和：只检验首部，因为首部中的标志，片偏移等是会变的</p>
+<h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p>像每个人都有身份证，IP地址可以唯一标识一个路由器，主机的接口</p>
+<p>分类的IP地址</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%822.png" alt></p>
+<p>A，B，C类地址网络号中依次有1位，2位，3位用来标识，网络号依次占8，16，24位</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%823.png" alt></p>
+<h2 id="网络地址转换NAT"><a href="#网络地址转换NAT" class="headerlink" title="网络地址转换NAT"></a>网络地址转换NAT</h2><p>路由器对目的地址是私有IP地址的数据报一律不转发</p>
+<p>网络地址转换NAT在专用网连接到因特网的路由器上安装NAT软件，安装了NAT软件的路由器叫做NAT路由器</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%824.png" alt></p>
+<h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><p>分类的IP地址存在问题：比如一个单位申请了一个B类IP，但是实际在用的并不多，会造成资源浪费问题。划分子网还能提高灵活性，比如一个单位要新开一个部门，没划分子网的话得重新去申请一个IP</p>
+<h3 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%827.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%825.png" alt></p>
+<p>划分子网后对外仍表现为一个网络</p>
+<h3 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h3><p>路由器需要根据收到的IP找到相应子网</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%826.png" alt></p>
+<p>除了主机号其余为0，通过IP地址与子网掩码进行与操作，就能得到子网网络地址</p>
+<h2 id="无分类编址CIDR"><a href="#无分类编址CIDR" class="headerlink" title="无分类编址CIDR"></a>无分类编址CIDR</h2><p>以前的一个子网的子网掩码是一样的，如果子网掩码不固定长度，那子网下的主机数更灵活（比如如果部门人比较多，那就可以让子网掩码短一点，这样主机数可以更多）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%828.png" alt></p>
+<p>网络前缀相同的组成一个网络块</p>
+<p>128.14.35.7/20一个地址块的IP地址</p>
+<p>最小IP地址10000000 00001110 00100000 00000000</p>
+<p>最大IP地址10000000 00001110 00101111 11111111</p>
+<p>子网掩码   11111111 11111111 11110000 00000000</p>
+<h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址</p>
+<p>ARP协议可以完成主机或路由器IP地址到mac地址的映射</p>
+<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），每有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
+<p>例子</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png" alt></p>
+<p>应用层发送一个pdf文件，传输层分成123，对123分为加首部（如果123长度过大，还要分片）</p>
+<p>主机1发送文件到主机5，首先在1所在局域网广播一个ARP请求分组，因为5不在同一个局域网，对应的mac地址为mac6，在数据链路层传输后到达路由器，解封装，再封装（路由器只有3层，最高到网络层），封装后源mac地址为mac7，目标mac为mac8，同理到mac9直至最高的主机5IP.</p>
+<h2 id="ICMP协议（网际控制报文协议）"><a href="#ICMP协议（网际控制报文协议）" class="headerlink" title="ICMP协议（网际控制报文协议）"></a>ICMP协议（网际控制报文协议）</h2><p>目的：进行差错报告</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8210.png" alt></p>
+<p>类型：ICMP报文有不同类型</p>
+<p>检验和：检查发过来的IP数据报的首部和<strong>数据部分，区别于IP地址的首部检验和</strong></p>
+<p>ICMP报文是作为返回的IP数据报的数据部分</p>
+<p>ICMP差错报告报文的数据部分由收到的IP数据报的首部+IP数据报数据部分前8个字节组成</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
+<h2 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h2><h3 id="IPv6格式"><a href="#IPv6格式" class="headerlink" title="IPv6格式"></a>IPv6格式</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png" alt></p>
+<h3 id="与IPv4区别"><a href="#与IPv4区别" class="headerlink" title="与IPv4区别"></a>与IPv4区别</h3><ul>
+<li>IPv4 32位，IPv6 128位</li>
+<li>IPv4总长度取消，改为有效载荷长度</li>
+<li>IPv4生存时间取消，改为下一个首部</li>
+<li>IPv4首部长度是4B倍数，IPv6基本单位必须是40B</li>
+<li>IPv4路由器和主机均可分片，IPv6只能主机分片</li>
+</ul>
+<h2 id="RIP协议"><a href="#RIP协议" class="headerlink" title="RIP协议"></a>RIP协议</h2><p>RIP是一种基于距离向量的协议，每一个路由器都维护到每一个目的网络的最短距离</p>
+<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
+<li>只和相邻路由器交换信息</li>
+<li>交换的信息是自己的路由表</li>
+<li>每30秒交换一次路由表</li>
+<li>一条路由最多包含15个路由器，距离为16代表不可达，所以适合小型网络</li>
+</ul>
+<h3 id="基本过程："><a href="#基本过程：" class="headerlink" title="基本过程："></a>基本过程：</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
+<ul>
+<li>对相邻路由器x发来的RIP报文，修改报文每一项，把下一跳地址改为x，距离+1</li>
+<li>如果R1没有目标为net3的表项，则把修改完的表项插入</li>
+<li>有net3，如果下一跳为x，则进行更新（毕竟30秒交换一次，保持最新的）；如果下一跳不为x，则比较距离，挑小的</li>
+</ul>
+
       
     </div>
-    
-
-
 
     
+
+    
+      
+    
+
     
     
+    
+
+<div>
+  
+    ﻿<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+    
+</div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>求大佬赏饭.</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="spiderman 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="spiderman 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/24/数据链路层/" rel="next" title="数据链路层">
+                <i class="fa fa-chevron-left"></i> 数据链路层
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/28/hashmap/" rel="prev" title="hashmap">
+                hashmap <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
   </div>
 
 
@@ -512,8 +701,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -703,6 +901,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IP数据报格式"><span class="nav-number">1.</span> <span class="nav-text">IP数据报格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv4"><span class="nav-number">2.</span> <span class="nav-text">IPv4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络地址转换NAT"><span class="nav-number">3.</span> <span class="nav-text">网络地址转换NAT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子网划分和子网掩码"><span class="nav-number">4.</span> <span class="nav-text">子网划分和子网掩码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#子网划分"><span class="nav-number">4.1.</span> <span class="nav-text">子网划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子网掩码"><span class="nav-number">4.2.</span> <span class="nav-text">子网掩码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#无分类编址CIDR"><span class="nav-number">5.</span> <span class="nav-text">无分类编址CIDR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARP协议"><span class="nav-number">6.</span> <span class="nav-text">ARP协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ICMP协议（网际控制报文协议）"><span class="nav-number">7.</span> <span class="nav-text">ICMP协议（网际控制报文协议）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv6"><span class="nav-number">8.</span> <span class="nav-text">IPv6</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IPv6格式"><span class="nav-number">8.1.</span> <span class="nav-text">IPv6格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与IPv4区别"><span class="nav-number">8.2.</span> <span class="nav-text">与IPv4区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RIP协议"><span class="nav-number">9.</span> <span class="nav-text">RIP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特点："><span class="nav-number">9.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本过程："><span class="nav-number">9.2.</span> <span class="nav-text">基本过程：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
