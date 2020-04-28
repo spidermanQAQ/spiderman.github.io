@@ -380,6 +380,395 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/数据链路层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/04/24/数据链路层/" class="post-title-link" itemprop="url">数据链路层</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-24 16:24:23" itemprop="dateCreated datePublished" datetime="2020-04-24T16:24:23+08:00">2020-04-24</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="数据链路层作用"><a href="#数据链路层作用" class="headerlink" title="数据链路层作用"></a>数据链路层作用</h2><p>将网络层的IP数据包封装成帧，可靠的传输到相邻结点的目标机网络层。用 MAC 地址访问媒介，并进行错误检测与修正 </p>
+<h2 id="封装成帧与透明传输"><a href="#封装成帧与透明传输" class="headerlink" title="封装成帧与透明传输"></a>封装成帧与透明传输</h2><p>封装成帧就是在IP数据报前后添加首部和尾部，构成一个帧。首部和尾部往往包含多个控制信息，它们有一个很重要的作用：帧定界</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%821.png" alt></p>
+<p>透明传输：不管传输的数据是怎么样的比特组合，都应当可以在链路上传输。</p>
+<p>问题来了：当所传数据中的比特组合和控制信息完全一样时，必须采取措施，使接收方不会以为这就是控制信息，保证透明传输。</p>
+<h3 id="字符计数法"><a href="#字符计数法" class="headerlink" title="字符计数法"></a>字符计数法</h3><p>帧首部使用一个计数字段（第一个字符）来表明帧内字符数</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%822.png" alt></p>
+<p>缺陷：例如第一个字符5出错了变成了4，那后面到3结束，第二个帧从4开始，即一步错步步错，一锅端了</p>
+<h3 id="字符填充法"><a href="#字符填充法" class="headerlink" title="字符填充法"></a>字符填充法</h3><p>这里开始的SOH和结尾的EOT为帧的首尾。发送时添加转义字符ESC，接受时再去掉ESC即可。<strong>注意这里的SOH，EOT和ESC均为8位的二进制数，例如10010010等</strong>。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%823.png" alt></p>
+<h3 id="零比特填充法"><a href="#零比特填充法" class="headerlink" title="零比特填充法"></a>零比特填充法</h3><p>这里的首部和尾部是一样的，字符填充不一定一样。</p>
+<p>发送时如果有连续5个1，就在后面加一个0，这样就保证首尾（因为有6个1）不会和数据报中有一样的</p>
+<p>接受时遇到5个连续的1再去掉后面的0</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%824.png" alt></p>
+<h3 id="违规编码法"><a href="#违规编码法" class="headerlink" title="违规编码法"></a>违规编码法</h3><p>曼彻斯特法只会出现”高-低”，”低-高“，因而可以用”高-高“，”低-低“来作为帧的开始或结尾</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8218.png" alt></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>计数填充计数字段脆弱（容易出现灾难性后果），字符填充复杂和不兼容性，普遍使用的是零比特填充和曼彻斯特编码</p>
+<h2 id="差错控制"><a href="#差错控制" class="headerlink" title="差错控制"></a>差错控制</h2><p>差错是由传输过程中的噪声产生的</p>
+<ul>
+<li>全局性：线路电气特性产生的随机噪声</li>
+<li>局部性：外界造成的短暂噪声</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%825.png" alt></p>
+<p>链路层如图所示，如果出错没有控制，那从路由器中一直传，资源浪费严重</p>
+<h2 id="检错控制"><a href="#检错控制" class="headerlink" title="检错控制"></a>检错控制</h2><h3 id="奇偶校验码"><a href="#奇偶校验码" class="headerlink" title="奇偶校验码"></a>奇偶校验码</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%826.png" alt></p>
+<p>但是存在问题</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%827.png" alt></p>
+<p>这一题，1100101采用奇校验，则需要前面加个1，5个1，A，B，C都是4个1，说明出错了，D5个1就看不出来，不一定出错。<strong>缺陷：只能检验出一半错误</strong></p>
+<h3 id="CRC循环冗余码"><a href="#CRC循环冗余码" class="headerlink" title="CRC循环冗余码"></a>CRC循环冗余码</h3><p>最终发送的数据=要发送的数据+冗余码</p>
+<ul>
+<li>加0，生成多项式的阶数</li>
+<li>求余</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%828.png" alt></p>
+<p>接收端同样需要除以多项式，余数为0，则正确，不为0，则错误</p>
+<h2 id="纠错控制"><a href="#纠错控制" class="headerlink" title="纠错控制"></a>纠错控制</h2><p>海明码（太牛批了）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%829.png" alt></p>
+<p>1.确定校验码位数</p>
+<p>假设要发送的数据101101，数据位数6，对应校验位4位</p>
+<p>2.确定校验码位置</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8210.png" alt></p>
+<p>3.求出校验码的值</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8211.png" alt></p>
+<p>例如P1⊕D1⊕D2⊕D4⊕D5=0，得到P1=0，规则：就是看位，P1看第一位为1，对应的D1,D2,D4,D5第一位为1；P2看第二位，对应有D1,D3,D4,D6</p>
+<p>最终101101的海明码0010011101</p>
+<p>4.检错并纠错</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8212.png" alt></p>
+<p>D2出错，接收方进行异或操作，例如P1⊕D1⊕D2⊕D4⊕D5=0，得到二进制序列0101为5，得到错误的位数</p>
+<h2 id="链路层设备"><a href="#链路层设备" class="headerlink" title="链路层设备"></a>链路层设备</h2><h3 id="mac地址"><a href="#mac地址" class="headerlink" title="mac地址"></a>mac地址</h3><p>计算机与外界局域网的连接是通过通信适配器，适配器上有处理器和存储器（ROM,RAM）,RAM上有mac地址（物理地址）</p>
+<h3 id="帧格式"><a href="#帧格式" class="headerlink" title="帧格式"></a>帧格式</h3><p><strong>数据46-1500字节</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8213.png" alt></p>
+<h3 id="物理层扩展以太网"><a href="#物理层扩展以太网" class="headerlink" title="物理层扩展以太网"></a>物理层扩展以太网</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8214.png" alt></p>
+<h3 id="链路层扩展以太网"><a href="#链路层扩展以太网" class="headerlink" title="链路层扩展以太网"></a>链路层扩展以太网</h3><p>主要是网桥和交换机</p>
+<p>网桥</p>
+<p>网桥根据mac帧的目标地址进行转发，当网桥收到帧时，并不向所有接口转发，而是根据目标mac地址确定转发到哪个接口（转发表）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8215.png" alt></p>
+<p>交换机–多接口网桥<br><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8216.png" alt></p>
+<h3 id="冲突域和广播域"><a href="#冲突域和广播域" class="headerlink" title="冲突域和广播域"></a>冲突域和广播域</h3><p>冲突域：域内每一个结点都能收到发送的帧，冲突域内相互交互会引起冲突，比如ab打电话同时讲话不就听不清了。</p>
+<p>广播域：发一个消息大家伙都能听见（老师在教室讲话所有人都能听见），交换机可以隔离冲突域</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8217.png" alt></p>
+<p>交换机每一个端口就是一个冲突域</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/19/虚拟机类加载机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/04/19/虚拟机类加载机制/" class="post-title-link" itemprop="url">虚拟机类加载机制</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-19 18:25:15" itemprop="dateCreated datePublished" datetime="2020-04-19T18:25:15+08:00">2020-04-19</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">jvm虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/09/import组件注册/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -881,155 +1270,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[小明, 小红, 小王]</span><br></pre></td></tr></table></figure>
 
 
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/25/page/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/02/25/page/" class="post-title-link" itemprop="url">page</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-02-25 14:36:41" itemprop="dateCreated datePublished" datetime="2020-02-25T14:36:41+08:00">2020-02-25</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
           
         
       
@@ -2230,206 +2470,6 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/转换流/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/14/转换流/" class="post-title-link" itemprop="url">转换流</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-14 19:18:35" itemprop="dateCreated datePublished" datetime="2019-11-14T19:18:35+08:00">2019-11-14</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="编码引出的问题"><a href="#编码引出的问题" class="headerlink" title="编码引出的问题"></a>编码引出的问题</h2><p><strong>GBK 一个字符 2个字节</strong></p>
-<p><strong>UTF-8 一个字符 3个字节</strong></p>
-<p>在IDEA中，使用<code>FileReader</code> 读取项目中的文本文件。由于IDEA的设置，都是默认的<code>UTF-8</code>编码，所以没有任何问题。但是，当读取Windows系统中创建的文本文件时，由于Windows系统的默认是GBK编码，就会出现乱码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReaderDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        FileReader fileReader = <span class="keyword">new</span> FileReader(<span class="string">"E:\\File_GBK.txt"</span>);</span><br><span class="line">        <span class="keyword">int</span> read;</span><br><span class="line">        <span class="keyword">while</span> ((read = fileReader.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            System.out.print((<span class="keyword">char</span>)read);</span><br><span class="line">        &#125;</span><br><span class="line">        fileReader.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">输出结果：</span><br><span class="line">���</span><br></pre></td></tr></table></figure>
-
-<p>那么如何读取GBK编码的文件呢？ </p>
-<h2 id="转换流原理图"><a href="#转换流原理图" class="headerlink" title="转换流原理图"></a>转换流原理图</h2><p><strong>知识点：字符流本质上也是用的字节流，只是在读取字节后把字节转换成字符</strong></p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%BD%AC%E6%8D%A2%E6%B5%81.png" alt></p>
-<h2 id="InputStreamReader类"><a href="#InputStreamReader类" class="headerlink" title="InputStreamReader类"></a>InputStreamReader类</h2><p>转换流<code>java.io.InputStreamReader</code>，是Reader的子类，是从字节流到字符流的桥梁。它读取字节，并使用指定的字符集将其解码为字符。它的字符集可以由名称指定，也可以接受平台的默认字符集。 </p>
-<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
-<li><code>InputStreamReader(InputStream in)</code>: 创建一个使用默认字符集的字符流。 </li>
-<li><code>InputStreamReader(InputStream in, String charsetName)</code>: 创建一个指定字符集的字符流。</li>
-</ul>
-<p>构造举例，代码如下： </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">"in.txt"</span>));</span><br><span class="line">InputStreamReader isr2 = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">"in.txt"</span>) , <span class="string">"GBK"</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="指定编码读取"><a href="#指定编码读取" class="headerlink" title="指定编码读取"></a>指定编码读取</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReaderDemo2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      	<span class="comment">// 定义文件路径,文件为gbk编码</span></span><br><span class="line">        String FileName = <span class="string">"E:\\file_gbk.txt"</span>;</span><br><span class="line">      	<span class="comment">// 创建流对象,默认UTF8编码</span></span><br><span class="line">        InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(FileName));</span><br><span class="line">      	<span class="comment">// 创建流对象,指定GBK编码</span></span><br><span class="line">        InputStreamReader isr2 = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(FileName) , <span class="string">"GBK"</span>);</span><br><span class="line">		<span class="comment">// 定义变量,保存字符</span></span><br><span class="line">        <span class="keyword">int</span> read;</span><br><span class="line">      	<span class="comment">// 使用默认编码字符流读取,乱码</span></span><br><span class="line">        <span class="keyword">while</span> ((read = isr.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            System.out.print((<span class="keyword">char</span>)read); <span class="comment">// ��Һ�</span></span><br><span class="line">        &#125;</span><br><span class="line">        isr.close();</span><br><span class="line">      </span><br><span class="line">      	<span class="comment">// 使用指定编码字符流读取,正常解析</span></span><br><span class="line">        <span class="keyword">while</span> ((read = isr2.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            System.out.print((<span class="keyword">char</span>)read);<span class="comment">// 大家好</span></span><br><span class="line">        &#125;</span><br><span class="line">        isr2.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="OutputStreamWriter类"><a href="#OutputStreamWriter类" class="headerlink" title="OutputStreamWriter类"></a>OutputStreamWriter类</h2><p>转换流<code>java.io.OutputStreamWriter</code> ，是Writer的子类，是从字符流到字节流的桥梁。使用指定的字符集将字符编码为字节。它的字符集可以由名称指定，也可以接受平台的默认字符集。 </p>
-<h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
-<li><code>OutputStreamWriter(OutputStream in)</code>: 创建一个使用默认字符集的字符流。 </li>
-<li><code>OutputStreamWriter(OutputStream in, String charsetName)</code>: 创建一个指定字符集的字符流。</li>
-</ul>
-<p>构造举例，代码如下： </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OutputStreamWriter isr = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(<span class="string">"out.txt"</span>));</span><br><span class="line">OutputStreamWriter isr2 = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(<span class="string">"out.txt"</span>) , <span class="string">"GBK"</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="指定编码写出"><a href="#指定编码写出" class="headerlink" title="指定编码写出"></a>指定编码写出</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OutputDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      	<span class="comment">// 定义文件路径</span></span><br><span class="line">        String FileName = <span class="string">"E:\\out.txt"</span>;</span><br><span class="line">      	<span class="comment">// 创建流对象,默认UTF8编码</span></span><br><span class="line">        OutputStreamWriter osw = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(FileName));</span><br><span class="line">        <span class="comment">// 写出数据</span></span><br><span class="line">      	osw.write(<span class="string">"你好"</span>); <span class="comment">// 保存为6个字节</span></span><br><span class="line">        osw.close();</span><br><span class="line">      	</span><br><span class="line">		<span class="comment">// 定义文件路径</span></span><br><span class="line">		String FileName2 = <span class="string">"E:\\out2.txt"</span>;</span><br><span class="line">     	<span class="comment">// 创建流对象,指定GBK编码</span></span><br><span class="line">        OutputStreamWriter osw2 = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(FileName2),<span class="string">"GBK"</span>);</span><br><span class="line">        <span class="comment">// 写出数据</span></span><br><span class="line">      	osw2.write(<span class="string">"你好"</span>);<span class="comment">// 保存为4个字节</span></span><br><span class="line">        osw2.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="转换流理解图解"><a href="#转换流理解图解" class="headerlink" title="转换流理解图解"></a>转换流理解图解</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%BD%AC%E6%8D%A2%E6%B5%81.png" alt></p>
-<h2 id="练习：转换文件编码"><a href="#练习：转换文件编码" class="headerlink" title="练习：转换文件编码"></a>练习：转换文件编码</h2><p>将GBK编码的文本文件，转换为UTF-8编码的文本文件。</p>
-<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><ol>
-<li>指定GBK编码的转换流，读取文本文件。</li>
-<li>使用UTF-8编码的转换流，写出文本文件。</li>
-</ol>
-<h3 id="案例实现"><a href="#案例实现" class="headerlink" title="案例实现"></a>案例实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransDemo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;      </span><br><span class="line">    	<span class="comment">// 1.定义文件路径</span></span><br><span class="line">     	String srcFile = <span class="string">"file_gbk.txt"</span>;</span><br><span class="line">        String destFile = <span class="string">"file_utf8.txt"</span>;</span><br><span class="line">		<span class="comment">// 2.创建流对象</span></span><br><span class="line">    	<span class="comment">// 2.1 转换输入流,指定GBK编码</span></span><br><span class="line">        InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(srcFile) , <span class="string">"GBK"</span>);</span><br><span class="line">    	<span class="comment">// 2.2 转换输出流,默认utf8编码</span></span><br><span class="line">        OutputStreamWriter osw = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(destFile));</span><br><span class="line">		<span class="comment">// 3.读写数据</span></span><br><span class="line">    	<span class="comment">// 3.1 定义数组</span></span><br><span class="line">        <span class="keyword">char</span>[] cbuf = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">1024</span>];</span><br><span class="line">    	<span class="comment">// 3.2 定义长度</span></span><br><span class="line">        <span class="keyword">int</span> len;</span><br><span class="line">    	<span class="comment">// 3.3 循环读取</span></span><br><span class="line">        <span class="keyword">while</span> ((len = isr.read(cbuf))!=-<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 循环写出</span></span><br><span class="line">          	osw.write(cbuf,<span class="number">0</span>,len);</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 4.释放资源</span></span><br><span class="line">        osw.close();</span><br><span class="line">        isr.close();</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2478,7 +2518,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">48</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2515,7 +2555,11 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                    <span class="site-state-item-count">10</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2550,7 +2594,11 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

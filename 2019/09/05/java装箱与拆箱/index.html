@@ -120,7 +120,7 @@
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-06T02:58:32.056Z">
+<meta property="og:updated_time" content="2020-04-22T13:27:39.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java装箱与拆箱">
 <meta name="twitter:description" content="包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float">
@@ -564,9 +564,7 @@
 
 </li>
 </ul>
-<p>结果为 True True false 原因就是100 200值的不同，见上所述。</p>
-<p>当需要进行自动装箱时，如果数字在-128至127之间时，会直接使用缓存中的对象，而不是重新创建一个对象 。</p>
-<p>（缓存部分就不详细说了，本人还没看，哈哈）</p>
+<p>结果为 True True false  。在-127，127内的数据同基本数据类型一样存放在常量池，无论多少个值为100，100的地址都是一样的。200&gt;127,此时会在堆建对象，自然是2个对象，不一样。</p>
 <h3 id="字符串和基本类型的相互转换"><a href="#字符串和基本类型的相互转换" class="headerlink" title="字符串和基本类型的相互转换"></a>字符串和基本类型的相互转换</h3><p>基本类型-&gt;字符串</p>
 <ul>
 <li>基本类型的值+” “</li>
@@ -750,7 +748,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">48</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -787,7 +785,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">10</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -822,7 +824,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

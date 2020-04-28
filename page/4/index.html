@@ -380,6 +380,227 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/jdbcTemplate和事务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/23/jdbcTemplate和事务/" class="post-title-link" itemprop="url">jdbcTemplate和事务</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-23 20:32:00" itemprop="dateCreated datePublished" datetime="2019-09-23T20:32:00+08:00">2019-09-23</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="回顾对jdbc的优化历程"><a href="#回顾对jdbc的优化历程" class="headerlink" title="回顾对jdbc的优化历程"></a>回顾对jdbc的优化历程</h2><h3 id="原生的jdbc"><a href="#原生的jdbc" class="headerlink" title="原生的jdbc"></a>原生的jdbc</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    String sql = &quot;insert into t_dept(deptName) values(&apos;test&apos;);&quot;;</span><br><span class="line">    Connection con = null;</span><br><span class="line">    Statement stmt = null;</span><br><span class="line">    //注册驱动</span><br><span class="line">    Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</span><br><span class="line">    // 连接对象</span><br><span class="line">    con = DriverManager.getConnection(&quot;jdbc:mysql:///hib_demo&quot;, &quot;root&quot;, &quot;root&quot;);</span><br><span class="line">    // 执行命令对象</span><br><span class="line">    stmt =  con.createStatement();</span><br><span class="line">    // 执行</span><br><span class="line">    stmt.execute(sql);</span><br><span class="line">    // 关闭</span><br><span class="line">    stmt.close();</span><br><span class="line">    con.close();</span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="进化"><a href="#进化" class="headerlink" title="进化"></a>进化</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">  * 连接数据库的driver，url，username，password通过配置文件来配置，可以增加灵活性</span><br><span class="line">  * 当我们需要切换数据库的时候，只需要在配置文件中改以上的信息即可</span><br><span class="line">  *</span><br><span class="line">  * */</span><br><span class="line">  private static String  driver = null;</span><br><span class="line">  private static String  url = null;</span><br><span class="line">  private static String  username = null;</span><br><span class="line">  private static String password = null;</span><br><span class="line"></span><br><span class="line">  static &#123;</span><br><span class="line">      try &#123;</span><br><span class="line"></span><br><span class="line">          //获取配置文件的读入流</span><br><span class="line">          InputStream inputStream = UtilsDemo.class.getClassLoader().getResourceAsStream(&quot;db.properties&quot;);</span><br><span class="line"></span><br><span class="line">          Properties properties = new Properties();</span><br><span class="line">          properties.load(inputStream);</span><br><span class="line">          //获取配置文件的信息</span><br><span class="line">          driver = properties.getProperty(&quot;driver&quot;);</span><br><span class="line">          url = properties.getProperty(&quot;url&quot;);</span><br><span class="line">          username = properties.getProperty(&quot;username&quot;);</span><br><span class="line">          password = properties.getProperty(&quot;password&quot;);</span><br><span class="line"></span><br><span class="line">          //加载驱动类</span><br><span class="line">          Class.forName(driver);</span><br><span class="line"></span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">      &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public static Connection getConnection() throws SQLException &#123;</span><br><span class="line">      return DriverManager.getConnection(url,username,password);</span><br><span class="line">  &#125;</span><br><span class="line">  public static void release(Connection connection, Statement statement, ResultSet resultSet) &#123;</span><br><span class="line"></span><br><span class="line">      if (resultSet != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              resultSet.close();</span><br><span class="line">          &#125; catch (SQLException e) &#123;</span><br><span class="line">              e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (statement != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              statement.close();</span><br><span class="line">          &#125; catch (SQLException e) &#123;</span><br><span class="line">              e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (connection != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              connection.close();</span><br><span class="line">          &#125; catch (SQLException e) &#123;</span><br><span class="line">              e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过上面一层的封装，我们可以<strong>在使用的地方直接使用工具类来得到与数据库的连接…那么比原来就方便很多了！</strong>但是呢，<strong>每次还是需要使用Connection去创建一个Statement对象。并且无论是什么方法，其实就是SQL语句和传递进来的参数不同！</strong></p>
+<h2 id="spring的jdbcTemplate"><a href="#spring的jdbcTemplate" class="headerlink" title="spring的jdbcTemplate"></a>spring的jdbcTemplate</h2><p>首先还是看一下我们原生的JDBC代码：<strong>获取Connection是可以抽取出来的，直接使用dataSource来得到Connection就行了</strong>。</p>
+<p><code>JdbcTemplate</code>对象在执行sql语句时也需要一个数据源,这个数据源可以使用<code>C3P0</code>或者<code>DBCP</code>,也可以使用Spring的内置数据源<code>DriverManagerDataSource</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql:///hib_demo&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;initialPoolSize&quot; value=&quot;3&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;maxPoolSize&quot; value=&quot;10&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;maxStatements&quot; value=&quot;100&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;acquireIncrement&quot; value=&quot;2&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">// IOC容器注入</span><br><span class="line">private DataSource dataSource;</span><br><span class="line">public void setDataSource(DataSource dataSource) &#123;</span><br><span class="line">    this.dataSource = dataSource;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public void save() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        String sql = &quot;insert into t_dept(deptName) values(&apos;test&apos;);&quot;;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        Statement stmt = null;</span><br><span class="line">        // 连接对象</span><br><span class="line">        con = dataSource.getConnection();</span><br><span class="line">        // 执行命令对象</span><br><span class="line">        stmt =  con.createStatement();</span><br><span class="line">        // 执行</span><br><span class="line">        stmt.execute(sql);</span><br><span class="line"></span><br><span class="line">        // 关闭</span><br><span class="line">        stmt.close();</span><br><span class="line">        con.close();</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Spring来提供了JdbcTemplate这么一个类给我们使用！它封装了DataSource，也就是说我们可以在Dao中使用JdbcTemplate就行了。</strong></p>
+<ol>
+<li><p>配置c3p0数据源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/数据库名&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;user&quot; value=&quot;用户名&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;密码&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建<code>JdbcTemplate</code>对象，向<code>JdbcTemplate</code>的构造方法传入数据源创建对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用JdbcTemplate实现增删改</p>
+<p><code>JdbcTemplate</code>的增删改操作使用其<code>update(&quot;SQL语句&quot;, 参数...)</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //1.获取Spring容器</span><br><span class="line">    ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">    //2.根据id获取JdbcTemplate对象</span><br><span class="line">    JdbcTemplate jt = (JdbcTemplate) ac.getBean(&quot;jdbcTemplate&quot;);</span><br><span class="line">    //3.执行增加操作</span><br><span class="line">    jt.update(&quot;insert into account(name,money)values(?,?)&quot;,&quot;名字&quot;,5000);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //1.获取Spring容器</span><br><span class="line">    ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">    //2.根据id获取JdbcTemplate对象</span><br><span class="line">    JdbcTemplate jt = (JdbcTemplate) ac.getBean(&quot;jdbcTemplate&quot;);</span><br><span class="line">    //3.执行删除操作</span><br><span class="line">    jt.update(&quot;delete from account where id = ?&quot;,6);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="jdbcTemplate的query（）"><a href="#jdbcTemplate的query（）" class="headerlink" title="jdbcTemplate的query（）"></a>jdbcTemplate的query（）</h2><p><code>JdbcTemplate</code>的查询操作使用其<code>query()</code>方法,其参数如下：</p>
+<ul>
+<li><code>String sql</code>: SQL语句</li>
+<li><code>RowMapper&lt;T&gt; rowMapper</code>: 指定如何将查询结果<code>ResultSet</code>对象转换为<code>T</code>对象.</li>
+<li><code>@Nullable Object... args</code>: SQL语句的参数</li>
+</ul>
+<p>查询所有和一条记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public List&lt;Account&gt; findAllAccounts() &#123;</span><br><span class="line">    List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class));</span><br><span class="line">    return accounts;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public Account findAccountById(Integer accountId) &#123;</span><br><span class="line">    List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account where id = ?&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class), accountId);</span><br><span class="line">    return accounts.isEmpty() ? null : accounts.get(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在Dao层使用JdbcTemplate"><a href="#在Dao层使用JdbcTemplate" class="headerlink" title="在Dao层使用JdbcTemplate"></a>在Dao层使用JdbcTemplate</h2><p>在DAO层使用<code>JdbcTemplate</code>,需要给DAO注入<code>JdbcTemplate</code>对象.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class AccountDaoImpl implements IAccountDao &#123;</span><br><span class="line">    </span><br><span class="line">    private JdbcTemplate jdbcTemplate;	// JdbcTemplate对象</span><br><span class="line"></span><br><span class="line">    // JdbcTemplate对象的set方法</span><br><span class="line">    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        this.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // DAO层方法</span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountById(Integer id) &#123;</span><br><span class="line">        // 实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // DAO层方法</span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountByName(String name) &#123;</span><br><span class="line">        // 实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 其它DAO层方法...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Dao层中继承JdbcDaoSupport类"><a href="#Dao层中继承JdbcDaoSupport类" class="headerlink" title="Dao层中继承JdbcDaoSupport类"></a>Dao层中继承JdbcDaoSupport类</h2><p>在实际项目中,我们会创建许多DAO对象,若每个DAO对象都注入一个JdbcTemplate对象,会造成代码冗余.</p>
+<p>实际的项目中我们可以让DAO对象继承Spring内置的JdbcDaoSupport类.在JdbcDaoSupport类中定义了JdbcTemplate和DataSource成员属性,在实际编程中,只需要向其注入DataSource成员即可,DataSource的set方法中会注入JdbcTemplate对象.<br>DAO的实现类中调用父类的getJdbcTemplate()方法获得JdbcTemplate()对象.<br> <code>JdbcDaoSupport</code>类的源代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public abstract class JdbcDaoSupport extends DaoSupport &#123;</span><br><span class="line">    </span><br><span class="line">    @Nullable</span><br><span class="line">    private JdbcTemplate jdbcTemplate;	// 定义JdbcTemplate成员变量</span><br><span class="line"></span><br><span class="line">    public JdbcDaoSupport() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // DataSource的set方法,注入DataSource时调用createJdbcTemplate方法注入JdbcTemplate</span><br><span class="line">    public final void setDataSource(DataSource dataSource) &#123;</span><br><span class="line">        if (this.jdbcTemplate == null || dataSource != this.jdbcTemplate.getDataSource()) &#123;</span><br><span class="line">            this.jdbcTemplate = this.createJdbcTemplate(dataSource);</span><br><span class="line">            this.initTemplateConfig();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 创建JdbcTemplate,用来被setDataSource()调用注入JdbcTemplate</span><br><span class="line">    protected JdbcTemplate createJdbcTemplate(DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // JdbcTemplate的get方法,子类通过该方法获得JdbcTemplate对象</span><br><span class="line">    @Nullable</span><br><span class="line">    public final JdbcTemplate getJdbcTemplate() &#123;</span><br><span class="line">        return this.jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    public final DataSource getDataSource() &#123;</span><br><span class="line">        return this.jdbcTemplate != null ? this.jdbcTemplate.getDataSource() : null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public final void setJdbcTemplate(@Nullable JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        this.jdbcTemplate = jdbcTemplate;</span><br><span class="line">        this.initTemplateConfig();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>bean.xml</code>中,我们只要为DAO对象注入<code>DataSource</code>对象即可,让<code>JdbcDaoSupport</code>自动调用<code>JdbcTemplate</code>的set方法注入<code>JdbcTemplate</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 配置数据源--&gt;</span><br><span class="line">    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/数据库名&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;用户名&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;密码&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 配置账户的持久层--&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;</span><br><span class="line">        &lt;!--不用我们手动配置JdbcTemplate成员了--&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;jdbcTemplate&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在实现DAO接口时,我们通过<code>super.getJdbcTemplate()</code>方法获得<code>JdbcTemplate</code>对象.</p>
+<p>即JdbcDaoSupport的DataSource的set方法会子啊注入dataSource时调用createJDbcTemplate方法，最后通过getJdbcTemplate方法得到jdbcTemplate对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class AccountDaoImpl extends JdbcDaoSupport implements IAccountDao &#123;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountById(Integer id) &#123;</span><br><span class="line">		//调用继承自父类的getJdbcTemplate()方法获得JdbcTemplate对象</span><br><span class="line">        List&lt;Account&gt; list = getJdbcTemplate().query(&quot;select * from account whereid = ? &quot;, new AccountRowMapper(), id);</span><br><span class="line">        return list.isEmpty() ? null : list.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountByName(String name) &#123;</span><br><span class="line">        //调用继承自父类的getJdbcTemplate()方法获得JdbcTemplate对象</span><br><span class="line">        List&lt;Account&gt; accounts = getJdbcTemplate().query(&quot;select * from account wherename = ? &quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class), name);</span><br><span class="line">        if (accounts.isEmpty()) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125; else if (accounts.size() &gt; 1) &#123;</span><br><span class="line">            throw new RuntimeException(&quot;结果集不唯一，不是只有一个账户对象&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void updateAccount(Account account) &#123;</span><br><span class="line">		//调用继承自父类的getJdbcTemplate()方法获得JdbcTemplate对象</span><br><span class="line">        getJdbcTemplate().update(&quot;update account set money = ? where id = ? &quot;, account.getMoney(), account.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="spring事务"><a href="#spring事务" class="headerlink" title="spring事务"></a>spring事务</h2><p> bean.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--配置JdbcTemplate--&gt;</span><br><span class="line">&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置账户的持久层--&gt;</span><br><span class="line">&lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;jdbcTemplate&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;</span><br><span class="line"> &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置数据源--&gt;</span><br><span class="line">&lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/eesy&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;username&quot; value=&quot;root&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;19971025&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">//账户持久层实现类(这个版本适合xml配置)</span><br><span class="line">public class AccountDaoImpl extends JdbcDaoSupport implements IAccountDao &#123;</span><br><span class="line">    </span><br><span class="line">    public Account findAccountById(Integer accountId) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts=super.getJdbcTemplate().query(&quot;select *from account where id = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountId);</span><br><span class="line">        return accounts.isEmpty()?null:accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Account findAccountByName(String accountName) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts=super.getJdbcTemplate().query(&quot;select *from account where name = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountName);</span><br><span class="line">        if (accounts.isEmpty())&#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        if (accounts.size()&gt;1)&#123;</span><br><span class="line">            throw new RuntimeException(&quot;结果集不唯一&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void updateAccount(Account account) &#123;</span><br><span class="line">        super.getJdbcTemplate().update(&quot;update account set name=?,money=? where id=?&quot;,account.getName(),account.getMoney(),account.getId());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">//账户持久层实现类（这个版本适合注解配置版本）</span><br><span class="line">@Repository</span><br><span class="line">public class AccountDaoImpl2  implements IAccountDao &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        this.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Account findAccountById(Integer accountId) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts= jdbcTemplate.query(&quot;select *from account where id = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountId);</span><br><span class="line">        return accounts.isEmpty()?null:accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Account findAccountByName(String accountName) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts=jdbcTemplate.query(&quot;select *from account where name = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountName);</span><br><span class="line">        if (accounts.isEmpty())&#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        if (accounts.size()&gt;1)&#123;</span><br><span class="line">            throw new RuntimeException(&quot;结果集不唯一&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void updateAccount(Account account) &#123;</span><br><span class="line">        jdbcTemplate.update(&quot;update account set name=?,money=? where id=?&quot;,account.getName(),account.getMoney(),account.getId());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/AOP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2513,200 +2734,6 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/过滤器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/过滤器/" class="post-title-link" itemprop="url">过滤器</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:38:59" itemprop="dateCreated datePublished" datetime="2019-09-08T15:38:59+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><p>作用：</p>
-<ol>
-<li>对服务器接受的资源和响应给浏览器的资源进行管理</li>
-<li>保护servlet</li>
-</ol>
-<p>使用：</p>
-<ol>
-<li><p>创建一个实现Filter接口的普通java类</p>
-</li>
-<li><p>覆写接口的方法</p>
-<ol>
-<li>init方法：服务器启动即执行，资源初始化</li>
-<li>doFilter方法：拦截请求，在此方法中对资源实现管理 要手动对资源放行：chain.doFilter(request,response)</li>
-<li>destroy方法：服务器关闭</li>
-</ol>
-<p>在web.xml配置过滤器（是服务器在使用过滤器）  </p>
-<p>​              url-patten：/*表示拦截所有请求。</p>
-<p>​              url-patten：*.do 表示所有以.do结尾的请求。一般用来进行模块拦截。</p>
-<p>​              url-patten：/ts 表示拦截指定url的请求，针对某个servlet拦截，保护servlet</p>
-<p>过滤器生命周期：服务器启动到关闭。</p>
-<p>总结：过滤器程序员声明和配置，服务器根据请求中的url信息调用。</p>
-<p>执行机制：浏览器发起请求到服务器，服务器接到请求后，根据url在web.xml中找到对应的过滤器执行doFilter方法，该方法对此次请求进行处理后如果符合则放行，放行后还有其他符合要求的进行过滤，找到执行对应的servlet进行处理。servlet对请求处理完毕后，service方法结束。还需继续返回相应的doFilter检修执行</p>
-<p>案例：统一编码格式设置</p>
-<p>​            session管理</p>
-<p>​             权限管理</p>
-<p>​             资源管理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 在过滤器类前使用@WebFilter()注释</span><br><span class="line"> * filterName:名称</span><br><span class="line"> * urlPatterns:过滤器作用url地址</span><br><span class="line"> * initParams:初始化参数，以WebInitParam()形式存入</span><br><span class="line"> * */</span><br><span class="line">@WebFilter(filterName = &quot;filterusers&quot;,urlPatterns =&quot;/demo/*&quot;,</span><br><span class="line">        initParams =&#123;@WebInitParam(name=&quot;ip&quot;,value = &quot;192.168.*.*&quot;)&#125; )</span><br><span class="line">public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">    HttpServletRequest request = (HttpServletRequest) servletRequest;</span><br><span class="line">    HttpServletResponse response = (HttpServletResponse) servletResponse;</span><br><span class="line">    HttpSession session = request.getSession();</span><br><span class="line">    if (session.getAttribute(&quot;user&quot;)==null) &#123;</span><br><span class="line">        response.sendRedirect();</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">        //放行</span><br><span class="line">        filterChain.doFilter(request,response);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2755,7 +2782,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">48</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2792,7 +2819,11 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                    <span class="site-state-item-count">10</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2827,7 +2858,11 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
