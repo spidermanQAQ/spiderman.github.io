@@ -380,6 +380,323 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/19/异常/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/19/异常/" class="post-title-link" itemprop="url">异常</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-19 20:06:16" itemprop="dateCreated datePublished" datetime="2019-10-19T20:06:16+08:00">2019-10-19</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><h3 id="异常概念"><a href="#异常概念" class="headerlink" title="异常概念"></a>异常概念</h3><p>异常，就是不正常的意思。在生活中:医生说,你的身体某个部位有异常,该部位和正常相比有点不同,该部位的功能将受影响.在程序中的意思就是：</p>
+<ul>
+<li><strong>异常</strong> ：指的是程序在执行过程中，出现的非正常的情况，最终会导致JVM的非正常停止。</li>
+</ul>
+<p>在Java等面向对象的编程语言中，异常本身是一个类，产生异常就是创建异常对象并抛出了一个异常对象。Java处理异常的方式是中断处理。</p>
+<blockquote>
+<p>异常指的并不是语法错误,语法错了,编译不通过,不会产生字节码文件,根本不能运行.</p>
+</blockquote>
+<h3 id="异常体系"><a href="#异常体系" class="headerlink" title="异常体系"></a>异常体系</h3><p>异常机制其实是帮助我们<strong>找到</strong>程序中的问题，异常的根类是<code>java.lang.Throwable</code>，其下有两个子类：<code>java.lang.Error</code>与<code>java.lang.Exception</code>，平常所说的异常指<code>java.lang.Exception</code>。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.png" alt></p>
+<p><strong>Throwable体系</strong>：</p>
+<ul>
+<li><strong>Error</strong>:严重错误Error，无法通过处理的错误，只能事先避免，好比绝症。</li>
+<li><strong>Exception</strong>:表示异常，异常产生后程序员可以通过代码的方式纠正，使程序继续运行，是必须要处理的。好比感冒、阑尾炎。</li>
+</ul>
+<p><strong>Throwable中的常用方法：</strong></p>
+<ul>
+<li><p><code>public void printStackTrace()</code>:打印异常的详细信息。</p>
+<p><em>包含了异常的类型,异常的原因,还包括异常出现的位置,在开发和调试阶段,都得使用printStackTrace。</em></p>
+</li>
+<li><p><code>public String getMessage()</code>:获取发生异常的原因。</p>
+<p><em>提示给用户的时候,就提示错误原因。</em></p>
+</li>
+<li><p><code>public String toString()</code>:获取异常的类型和异常描述信息(不用)。</p>
+</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%AE%80%E5%8D%95%E7%9A%84%E5%BC%82%E5%B8%B8%E6%9F%A5%E7%9C%8B.bmp" alt></p>
+<h3 id="异常分类"><a href="#异常分类" class="headerlink" title="异常分类"></a>异常分类</h3><p>我们平常说的异常就是指Exception，因为这类异常一旦出现，我们就要对代码进行更正，修复程序。</p>
+<p><strong>异常(Exception)的分类</strong>:根据在编译时期还是运行时期去检查异常?</p>
+<ul>
+<li><strong>编译时期异常</strong>:checked异常。在编译时期,就会检查,如果没有处理异常,则编译失败。(如日期格式化异常)</li>
+<li><strong>运行时期异常</strong>:runtime异常。在运行时期,检查异常.在编译时期,运行异常不会编译器检测(不报错)。(如数学异常)</li>
+</ul>
+<p>​    <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BC%82%E5%B8%B8%E7%9A%84%E5%88%86%E7%B1%BB.png" alt></p>
+<h3 id="异常的产生过程解析"><a href="#异常的产生过程解析" class="headerlink" title="异常的产生过程解析"></a>异常的产生过程解析</h3><p>先运行下面的程序，程序会产生一个数组索引越界异常ArrayIndexOfBoundsException。我们通过图解来解析下异常产生的过程。</p>
+<p> 工具类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayTools</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 对给定的数组通过给定的角标获取元素。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getElement</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> element = arr[index];</span><br><span class="line">        <span class="keyword">return</span> element;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExceptionDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] arr = &#123; <span class="number">34</span>, <span class="number">12</span>, <span class="number">67</span> &#125;;</span><br><span class="line">        intnum = ArrayTools.getElement(arr, <span class="number">4</span>)</span><br><span class="line">        System.out.println(<span class="string">"num="</span> + num);</span><br><span class="line">        System.out.println(<span class="string">"over"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序执行过程图解：</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BC%82%E5%B8%B8%E4%BA%A7%E7%94%9F%E8%BF%87%E7%A8%8B.png" alt></p>
+<h2 id="异常的处理"><a href="#异常的处理" class="headerlink" title="异常的处理"></a>异常的处理</h2><p>Java异常处理的五个关键字：<strong>try、catch、finally、throw、throws</strong></p>
+<h3 id="抛出异常throw"><a href="#抛出异常throw" class="headerlink" title="抛出异常throw"></a>抛出异常throw</h3><p>在编写程序时，我们必须要考虑程序出现问题的情况。比如，在定义方法时，方法需要接受参数。那么，当调用方法使用接受到的参数时，首先需要先对参数数据进行合法的判断，数据若不合法，就应该告诉调用者，传递合法的数据进来。这时需要使用抛出异常的方式来告诉调用者。</p>
+<p>在java中，提供了一个<strong>throw</strong>关键字，它用来抛出一个指定的异常对象。那么，抛出一个异常具体如何操作呢？</p>
+<ol>
+<li><p>创建一个异常对象。封装一些提示信息(信息可以自己编写)。</p>
+</li>
+<li><p>需要将这个异常对象告知给调用者。怎么告知呢？怎么将这个异常对象传递到调用者处呢？通过关键字throw就可以完成。throw 异常对象。</p>
+<p>throw<strong>用在方法内</strong>，用来抛出一个异常对象，将这个异常对象传递到调用者处，并结束当前方法的执行。</p>
+</li>
+</ol>
+<p><strong>使用格式：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">throw new 异常类名(参数);</span><br></pre></td></tr></table></figure>
+
+<p> 例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"要访问的arr数组不存在"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(<span class="string">"该索引在数组中不存在，已超出范围"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>学习完抛出异常的格式后，我们通过下面程序演示下throw的使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThrowDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建一个数组 </span></span><br><span class="line">        <span class="keyword">int</span>[] arr = &#123;<span class="number">2</span>,<span class="number">4</span>,<span class="number">52</span>,<span class="number">2</span>&#125;;</span><br><span class="line">        <span class="comment">//根据索引找对应的元素 </span></span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">int</span> element = getElement(arr, index);</span><br><span class="line"></span><br><span class="line">        System.out.println(element);</span><br><span class="line">        System.out.println(<span class="string">"over"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 根据 索引找到数组中对应的元素</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getElement</span><span class="params">(<span class="keyword">int</span>[] arr,<span class="keyword">int</span> index)</span></span>&#123; </span><br><span class="line">       	<span class="comment">//判断  索引是否越界</span></span><br><span class="line">        <span class="keyword">if</span>(index&lt;<span class="number">0</span> || index&gt;arr.length-<span class="number">1</span>)&#123;</span><br><span class="line">             <span class="comment">/*</span></span><br><span class="line"><span class="comment">             判断条件如果满足，当执行完throw抛出异常对象后，方法已经无法继续运算。</span></span><br><span class="line"><span class="comment">             这时就会结束当前方法的执行，并将异常告知给调用者。这时就需要通过异常来解决。 </span></span><br><span class="line"><span class="comment">              */</span></span><br><span class="line">             <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(<span class="string">"哥们，角标越界了~~~"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> element = arr[index];</span><br><span class="line">        <span class="keyword">return</span> element;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：如果产生了问题，我们就会throw将问题描述类即异常进行抛出，也就是将问题返回给该方法的调用者。</p>
+<p>那么对于调用者来说，该怎么处理呢？一种是进行捕获处理，另一种就是继续讲问题声明出去，使用throws声明处理。</p>
+</blockquote>
+<h3 id="Objects非空判断"><a href="#Objects非空判断" class="headerlink" title="Objects非空判断"></a>Objects非空判断</h3><p>还记得我们学习过一个类Objects吗，曾经提到过它由一些静态的实用方法组成，这些方法是null-save（空指针安全的）或null-tolerant（容忍空指针的），那么在它的源码中，对对象为null的值进行了抛出异常操作。</p>
+<ul>
+<li><code>public static &lt;T&gt; T requireNonNull(T obj)</code>:查看指定引用对象不是null。</li>
+</ul>
+<p>查看源码发现这里对为null的进行了抛出异常操作：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">requireNonNull</span><span class="params">(T obj)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (obj == <span class="keyword">null</span>)</span><br><span class="line">      	<span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="声明异常throws"><a href="#声明异常throws" class="headerlink" title="声明异常throws"></a>声明异常throws</h3><p><strong>声明异常</strong>：将问题标识出来，报告给调用者。如果方法内通过throw抛出了编译时异常，而没有捕获处理（稍后讲解该方式），那么必须通过throws进行声明，让调用者去处理。</p>
+<p>关键字<strong>throws</strong>运用于方法声明之上,用于表示当前方法不处理异常,而是提醒该方法的调用者来处理异常(抛出异常).</p>
+<p><strong>声明异常格式：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">修饰符 返回值类型 方法名(参数) throws 异常类名1,异常类名2…&#123;   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>声明异常的代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThrowsDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">        read(<span class="string">"a.txt"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果定义功能时有问题发生需要报告给调用者。可以通过在方法上使用throws关键字进行声明</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">(String path)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!path.equals(<span class="string">"a.txt"</span>)) &#123;<span class="comment">//如果不是 a.txt这个文件 </span></span><br><span class="line">            <span class="comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(<span class="string">"文件不存在"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>throws用于进行异常类的声明，若该方法可能有多种异常情况产生，那么在throws后面可以写多个异常类，用逗号隔开。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThrowsDemo2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        read(<span class="string">"a.txt"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">(String path)</span><span class="keyword">throws</span> FileNotFoundException, IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!path.equals(<span class="string">"a.txt"</span>)) &#123;<span class="comment">//如果不是 a.txt这个文件 </span></span><br><span class="line">            <span class="comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(<span class="string">"文件不存在"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!path.equals(<span class="string">"b.txt"</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="捕获异常try…catch"><a href="#捕获异常try…catch" class="headerlink" title="捕获异常try…catch"></a>捕获异常try…catch</h3><p>如果异常出现的话,会立刻终止程序,所以我们得处理异常:</p>
+<ol>
+<li>该方法不处理,而是声明抛出,由该方法的调用者来处理(throws)。</li>
+<li>在方法中使用try-catch的语句块来处理异常。</li>
+</ol>
+<p><strong>try-catch</strong>的方式就是捕获异常。</p>
+<ul>
+<li><strong>捕获异常</strong>：Java中对异常有针对性的语句进行捕获，可以对出现的异常进行指定方式的处理。</li>
+</ul>
+<p>捕获异常语法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">     编写可能会出现异常的代码</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型  e)&#123;</span><br><span class="line">     处理异常的代码</span><br><span class="line">     <span class="comment">//记录日志/打印异常信息/继续抛出异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>try：</strong>该代码块中编写可能产生异常的代码。</p>
+<p><strong>catch：</strong>用来进行某种异常的捕获，实现对捕获到的异常进行处理。</p>
+<blockquote>
+<p>注意:try和catch都不能单独使用,必须连用。</p>
+</blockquote>
+<p>演示如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TryCatchDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;<span class="comment">// 当产生异常时，必须有处理方式。要么捕获，要么声明。</span></span><br><span class="line">            read(<span class="string">"b.txt"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;<span class="comment">// 括号中需要定义什么呢？</span></span><br><span class="line">          	<span class="comment">//try中抛出的是什么异常，在括号中就定义什么异常类型</span></span><br><span class="line">            System.out.println(e);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"over"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 我们 当前的这个方法中 有异常  有编译期异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">(String path)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!path.equals(<span class="string">"a.txt"</span>)) &#123;<span class="comment">//如果不是 a.txt这个文件 </span></span><br><span class="line">            <span class="comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(<span class="string">"文件不存在"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如何获取异常信息：</p>
+<p>Throwable类中定义了一些查看方法:</p>
+<ul>
+<li><code>public String getMessage()</code>:获取异常的描述信息,原因(提示给用户的时候,就提示错误原因。</li>
+</ul>
+<ul>
+<li><code>public String toString()</code>:获取异常的类型和异常描述信息(不用)。</li>
+<li><code>public void printStackTrace()</code>:打印异常的跟踪栈信息并输出到控制台。</li>
+</ul>
+<p>​            <em>包含了异常的类型,异常的原因,还包括异常出现的位置,在开发和调试阶段,都得使用printStackTrace。</em></p>
+<h3 id="finally-代码块"><a href="#finally-代码块" class="headerlink" title="finally 代码块"></a>finally 代码块</h3><p><strong>finally</strong>：有一些特定的代码无论异常是否发生，都需要执行。另外，因为异常会引发程序跳转，导致有些语句执行不到。而finally就是解决这个问题的，在finally代码块中存放的代码都是一定会被执行的。</p>
+<p>什么时候的代码必须最终执行？</p>
+<p>当我们在try语句块中打开了一些物理资源(磁盘文件/网络连接/数据库连接等),我们都得在使用完之后,最终关闭打开的资源。</p>
+<p>finally的语法:</p>
+<p> try…catch….finally:自身需要处理异常,最终还得关闭资源。</p>
+<blockquote>
+<p>注意:finally不能单独使用。</p>
+</blockquote>
+<p>比如在我们之后学习的IO流中，当打开了一个关联文件的资源，最后程序不管结果如何，都需要把这个资源关闭掉。</p>
+<p>finally代码参考如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TryCatchDemo4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            read(<span class="string">"a.txt"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            <span class="comment">//抓取到的是编译期异常  抛出去的是运行期 </span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"不管程序怎样，这里都将会被执行。"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"over"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 我们 当前的这个方法中 有异常  有编译期异常</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">(String path)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!path.equals(<span class="string">"a.txt"</span>)) &#123;<span class="comment">//如果不是 a.txt这个文件 </span></span><br><span class="line">            <span class="comment">// 我假设  如果不是 a.txt 认为 该文件不存在 是一个错误 也就是异常  throw</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(<span class="string">"文件不存在"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当只有在try或者catch中调用退出JVM的相关方法,此时finally才不会执行,否则finally永远会执行。</p>
+</blockquote>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%AD%BB%E4%BA%86%E9%83%BD%E8%A6%81try.bmp" alt></p>
+<h3 id="异常注意事项"><a href="#异常注意事项" class="headerlink" title="异常注意事项"></a>异常注意事项</h3><ul>
+<li><p>多个异常使用捕获又该如何处理呢？</p>
+<ol>
+<li>多个异常分别处理。</li>
+<li>多个异常一次捕获，多次处理。</li>
+<li>多个异常一次捕获一次处理。</li>
+</ol>
+<p>一般我们是使用一次捕获多次处理方式，格式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">     编写可能会出现异常的代码</span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型A  e)&#123;  当<span class="keyword">try</span>中出现A类型异常,就用该<span class="keyword">catch</span>来捕获.</span><br><span class="line">     处理异常的代码</span><br><span class="line">     <span class="comment">//记录日志/打印异常信息/继续抛出异常</span></span><br><span class="line">&#125;<span class="keyword">catch</span>(异常类型B  e)&#123;  当<span class="keyword">try</span>中出现B类型异常,就用该<span class="keyword">catch</span>来捕获.</span><br><span class="line">     处理异常的代码</span><br><span class="line">     <span class="comment">//记录日志/打印异常信息/继续抛出异常</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意:这种异常处理方式，要求多个catch中的异常不能相同，并且若catch中的多个异常之间有子父类异常的关系，那么子类异常要求在上面的catch处理，父类异常在下面的catch处理。</p>
+</blockquote>
+</li>
+<li><p>运行时异常被抛出可以不处理。即不捕获也不声明抛出。</p>
+</li>
+<li><p>如果finally有return语句,永远返回finally中的结果,避免该情况. </p>
+</li>
+<li><p>如果父类抛出了多个异常,子类重写父类方法时,抛出和父类相同的异常或者是父类异常的子类或者不抛出异常。</p>
+</li>
+<li><p>父类方法没有抛出异常，子类重写父类该方法时也不可抛出异常。此时子类产生该异常，只能捕获处理，不能声明抛出</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/spring boot入门/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2121,205 +2438,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/28/static-instanceof-转型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/28/static-instanceof-转型/" class="post-title-link" itemprop="url">static,instanceof,转型</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-28 14:21:20" itemprop="dateCreated datePublished" datetime="2019-09-28T14:21:20+08:00">2019-09-28</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="static关键字"><a href="#static关键字" class="headerlink" title="static关键字"></a>static关键字</h2><h3 id="静态变量和静态方法"><a href="#静态变量和静态方法" class="headerlink" title="静态变量和静态方法"></a>静态变量和静态方法</h3><p>static最基本的用法</p>
-<ol>
-<li>被static修饰的变量属于类变量，可以通过<strong>类名.变量名</strong>直接引用，而不需要new出一个类来</li>
-<li>被static修饰的方法属于类方法，可以通过<strong>类名.方法名</strong>直接引用，而不需要new出一个类来</li>
-</ol>
-<p>被static修饰的变量、被static修饰的方法统一属于类的<strong>静态资源，是类实例之间共享的，换言之，一处变、处处变</strong>。JDK把不同的静态资源放在了不同的类中而不把所有静态资源放在一个类里面，很多人可能想当然认为当然要这么做，但是是否想过为什么要这么做呢？个人认为主要有三个好处：</p>
-<p>1、不同的类有自己的静态资源，这可以实现静态资源分类。比如和数学相关的静态资源放在java.lang.Math中，和日历相关的静态资源放在java.util.Calendar中，这样就很清晰了</p>
-<p>2、避免重名。不同的类之间有重名的静态变量名、静态方法名也是很正常的，如果所有的都放在一起不可避免的一个问题就是名字重复，这时候怎么办？分类放置就好了。</p>
-<p>3、避免静态资源类无限膨胀，这很好理解。</p>
-<p>OK，再微微深入一下，也是有些人容易混淆的一个问题：静态方法能不能引用非静态资源？静态方法里面能不能引用静态资源？非静态方法里面能不能引用静态资源？比如就以这段代码为例，是否有错？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 public class A</span><br><span class="line">2 &#123;</span><br><span class="line">3     private int i = 1;</span><br><span class="line">4     </span><br><span class="line">5     public static void main(String[] args)</span><br><span class="line">6     &#123;</span><br><span class="line">7         i = 1;</span><br><span class="line">8     &#125;</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然有错，在第7行的地方。不妨这么思考这个问题：</p>
-<p>静态资源属于类，但是是独立于类存在的。从JVM的类加载机制的角度讲，<strong>静态资源是类初始化的时候加载的，而非静态资源是类new的时候加载的</strong>。类的初始化早于类的new，比如Class.forName(“xxx”)方法，就是初始化了一个类，但是并没有new它，只是加载这个类的静态资源罢了。所以对于静态资源来说，它是不可能知道一个类中有哪些非静态资源的；但是对于非静态资源来说就不一样了，由于它是new出来之后产生的，因此属于类的这些东西它都能认识。所以上面的几个问题答案就很明确了：</p>
-<p>1、静态方法能不能引用非静态资源？不能，new的时候才会产生的东西，对于初始化后就存在的静态资源来说，根本不认识它。</p>
-<p>2、静态方法里面能不能引用静态资源？可以，因为都是类初始化的时候加载的，大家相互都认识。</p>
-<p>3、非静态方法里面能不能引用静态资源？可以，非静态方法就是实例方法，那是new之后才产生的，那么属于类的内容它都认识。</p>
-<h3 id="静态块"><a href="#静态块" class="headerlink" title="静态块"></a>静态块</h3><p>静态块也是static的重要应用之一。也是用于初始化一个类的时候做操作用的，和静态变量、静态方法一样，<strong>静态块里面的代码只执行一次，且只在初始化类的时候执行</strong>。静态块很简单，不过提三个小细节：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     private static int a = B();</span><br><span class="line"> 4     </span><br><span class="line"> 5     static</span><br><span class="line"> 6     &#123;</span><br><span class="line"> 7         System.out.println(&quot;Enter A.static block&quot;);</span><br><span class="line"> 8     &#125;</span><br><span class="line"> 9     </span><br><span class="line">10     public static void main(String[] args)</span><br><span class="line">11     &#123;</span><br><span class="line">12         new A();</span><br><span class="line">13     &#125;</span><br><span class="line">14     </span><br><span class="line">15     public static int B()</span><br><span class="line">16     &#123;</span><br><span class="line">17         System.out.println(&quot;Enter A.B()&quot;);</span><br><span class="line">18         return 1;</span><br><span class="line">19     &#125;</span><br><span class="line">20 &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Enter A.B()</span><br><span class="line">Enter A.static block</span><br></pre></td></tr></table></figure>
-
-<p>出第一个结论：<strong>静态资源的加载顺序是严格按照静态资源的定义顺序来加载的</strong>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     static</span><br><span class="line"> 4     &#123;</span><br><span class="line"> 5         c = 3;</span><br><span class="line"> 6         System.out.println(c);</span><br><span class="line"> 7     &#125;</span><br><span class="line"> 8     </span><br><span class="line"> 9     private static int c;</span><br><span class="line">10 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码的第6行是有错误的“Cannot reference a field before it is defined”。从这个例子得出第二个结论：<strong>静态代码块对于定义在它之后的静态变量，可以赋值，但是不能访问</strong></p>
-<p>最后一个小例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     static</span><br><span class="line"> 4     &#123;</span><br><span class="line"> 5         System.out.println(&quot;A.static block&quot;);</span><br><span class="line"> 6     &#125;</span><br><span class="line"> 7     </span><br><span class="line"> 8     public A()</span><br><span class="line"> 9     &#123;</span><br><span class="line">10         System.out.println(&quot;A.constructor()&quot;);</span><br><span class="line">11     &#125;</span><br><span class="line">12 &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class B extends A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     static </span><br><span class="line"> 4     &#123;</span><br><span class="line"> 5         System.out.println(&quot;B.static block&quot;);</span><br><span class="line"> 6     &#125;</span><br><span class="line"> 7     </span><br><span class="line"> 8     public B()</span><br><span class="line"> 9     &#123;</span><br><span class="line">10         System.out.println(&quot;B.constructor()&quot;);</span><br><span class="line">11     &#125;</span><br><span class="line">12     </span><br><span class="line">13     public static void main(String[] args)</span><br><span class="line">14     &#123;</span><br><span class="line">15         new B();</span><br><span class="line">16         new B();</span><br><span class="line">17     &#125;</span><br><span class="line">18 &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">A.static block</span><br><span class="line">B.static block</span><br><span class="line">A.constructor()</span><br><span class="line">B.constructor()</span><br><span class="line">A.constructor()</span><br><span class="line">B.constructor()</span><br></pre></td></tr></table></figure>
-
-<p>这个例子得出第三个结论：<strong>静态代码块是严格按照父类静态代码块-&gt;子类静态代码块的顺序加载的，且只加载一次</strong></p>
-<p>这一部分转自<a href="https://www.cnblogs.com/swisszhang/p/9892992.html" target="_blank" rel="noopener">https://www.cnblogs.com/swisszhang/p/9892992.html</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2368,7 +2486,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-count">52</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
