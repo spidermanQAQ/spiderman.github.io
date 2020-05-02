@@ -1109,36 +1109,29 @@
       
         
           
-            <h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><p>作用：</p>
-<ol>
-<li>对服务器接受的资源和响应给浏览器的资源进行管理</li>
-<li>保护servlet</li>
-</ol>
-<p>使用：</p>
-<ol>
+            <h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ul>
+<li><p>对服务器接受的资源和响应给浏览器的资源进行管理</p>
+</li>
+<li><p>保护servlet</p>
+</li>
+</ul>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ul>
 <li><p>创建一个实现Filter接口的普通java类</p>
 </li>
 <li><p>覆写接口的方法</p>
-<ol>
-<li>init方法：服务器启动即执行，资源初始化</li>
-<li>doFilter方法：拦截请求，在此方法中对资源实现管理 要手动对资源放行：chain.doFilter(request,response)</li>
-<li>destroy方法：服务器关闭</li>
-</ol>
-<p>在web.xml配置过滤器（是服务器在使用过滤器）  </p>
-<p>​              url-patten：/*表示拦截所有请求。</p>
-<p>​              url-patten：*.do 表示所有以.do结尾的请求。一般用来进行模块拦截。</p>
-<p>​              url-patten：/ts 表示拦截指定url的请求，针对某个servlet拦截，保护servlet</p>
-<p>过滤器生命周期：服务器启动到关闭。</p>
-<p>总结：过滤器程序员声明和配置，服务器根据请求中的url信息调用。</p>
-<p>执行机制：浏览器发起请求到服务器，服务器接到请求后，根据url在web.xml中找到对应的过滤器执行doFilter方法，该方法对此次请求进行处理后如果符合则放行，放行后还有其他符合要求的进行过滤，找到执行对应的servlet进行处理。servlet对请求处理完毕后，service方法结束。还需继续返回相应的doFilter检修执行</p>
-<p>案例：统一编码格式设置</p>
-<p>​            session管理</p>
-<p>​             权限管理</p>
-<p>​             资源管理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 在过滤器类前使用@WebFilter()注释</span><br><span class="line"> * filterName:名称</span><br><span class="line"> * urlPatterns:过滤器作用url地址</span><br><span class="line"> * initParams:初始化参数，以WebInitParam()形式存入</span><br><span class="line"> * */</span><br><span class="line">@WebFilter(filterName = &quot;filterusers&quot;,urlPatterns =&quot;/demo/*&quot;,</span><br><span class="line">        initParams =&#123;@WebInitParam(name=&quot;ip&quot;,value = &quot;192.168.*.*&quot;)&#125; )</span><br><span class="line">public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">    HttpServletRequest request = (HttpServletRequest) servletRequest;</span><br><span class="line">    HttpServletResponse response = (HttpServletResponse) servletResponse;</span><br><span class="line">    HttpSession session = request.getSession();</span><br><span class="line">    if (session.getAttribute(&quot;user&quot;)==null) &#123;</span><br><span class="line">        response.sendRedirect();</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">        //放行</span><br><span class="line">        filterChain.doFilter(request,response);</span><br></pre></td></tr></table></figure>
-
+<p>init方法：服务器启动即执行，资源初始化</p>
+<p>doFilter方法：拦截请求，在此方法中对资源实现管理  要手动对资源放行：chain.doFilter(request,response)</p>
+<p>destroy方法：服务器关闭</p>
 </li>
-</ol>
+<li><p>在web.xml配置过滤器（是服务器在使用过滤器）  </p>
+<p>url-patten：/*表示拦截所有请求。</p>
+</li>
+</ul>
+<p>​       url-patten：*.do 表示所有以.do结尾的请求。一般用来进行模块拦截。</p>
+<p>​       url-patten：/ts 表示拦截指定url的请求，针对某个servlet拦截，保护servlet</p>
+<h3 id="过滤器生命周期：服务器启动到关闭。"><a href="#过滤器生命周期：服务器启动到关闭。" class="headerlink" title="过滤器生命周期：服务器启动到关闭。"></a>过滤器生命周期：服务器启动到关闭。</h3><h3 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a>执行机制</h3><p>浏览器发起请求到服务器，服务器接到请求后，根据url在web.xml中找到对应的过滤器执行doFilter方法，该方法对此次请求进行处理后如果符合则放行，放行后还有其他符合要求的进行过滤，找到执行对应的servlet进行处理。servlet对请求处理完毕后，service方法结束。还需继续返回相应的doFilter检修执行</p>
+<h3 id="验证码拦截器"><a href="#验证码拦截器" class="headerlink" title="验证码拦截器"></a>验证码拦截器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class LoginFilter extends GenericFilter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest req = (HttpServletRequest) servletRequest;</span><br><span class="line">        HttpServletResponse resp=(HttpServletResponse)servletResponse;</span><br><span class="line"></span><br><span class="line">        if (&quot;POST&quot;.equalsIgnoreCase(req.getMethod())&amp;&amp;&quot;/doLogin&quot;.equals(req.getServletPath()))&#123;</span><br><span class="line">            String code = req.getParameter(&quot;code&quot;);</span><br><span class="line">            String verify_code =(String) req.getSession().getAttribute(&quot;verify_code&quot;);</span><br><span class="line">            if (code==null||&quot;&quot;.equals(code)||!verify_code.toLowerCase().equals(code.toLowerCase()))&#123;</span><br><span class="line">                resp.setContentType(&quot;application/json;charset=utf-8&quot;);</span><br><span class="line">                PrintWriter out = resp.getWriter();</span><br><span class="line">                //RespBean.error(&quot;验证码错误&quot;))是一个对象，RestController=controller+responsebody把对象转换成json字符串输出</span><br><span class="line">                //ObjectMapper是jackson的李哥类，用来json和对象的相互转化</span><br><span class="line">                out.write(new ObjectMapper().writeValueAsString(RespBean.error(&quot;验证码错误&quot;)));</span><br><span class="line">                out.flush();</span><br><span class="line">                out.close();</span><br><span class="line">                return;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                filterChain.doFilter(req,resp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            filterChain.doFilter(req,resp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
           
         
