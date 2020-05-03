@@ -2298,7 +2298,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/xml实现IOC/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/ApplicationContext/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -2318,7 +2318,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/09/16/xml实现IOC/" class="post-title-link" itemprop="url">xml实现IOC</a>
+                <a href="/2019/09/16/ApplicationContext/" class="post-title-link" itemprop="url">spring bean</a>
               
             
           </h1>
@@ -2400,65 +2400,56 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
       
         
           
-            <h2 id="使用XML配置文件实现IOC"><a href="#使用XML配置文件实现IOC" class="headerlink" title="使用XML配置文件实现IOC"></a>使用XML配置文件实现IOC</h2><p>使用配置文件实现IOC,要将托管给spring的类写进bean.xml配置文件中.</p>
-<h2 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h2><ol>
-<li><p>创建maven项目,配置其<code>pom.xml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">   	&lt;!-- 引入--&gt;</span><br><span class="line">       &lt;dependency&gt;</span><br><span class="line">           &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">           &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">           &lt;version&gt;5.0.2.RELEASE&lt;/version&gt;</span><br><span class="line">       &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置<code>bean</code>: 在类的根路径下的<code>resource</code>目录下创建<code>bean.xml</code>文件,把对象的创建交给spring来管理.每个<code>&lt;bean&gt;</code>标签对应一个类,其<code>class</code>属性为该类的全类名,<code>id</code>属性为该类的id,在spring配置中,通过<code>id</code>获取类的对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--把对象的创建交给spring来管理--&gt;</span><br><span class="line">    &lt;bean id=&quot;accountService&quot; class=&quot;com.itheima.service.impl.AccountServiceImpl&quot;&gt;        &lt;/bean&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;&lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li><p>在表现层文件<code>Client.java</code>中通过<code>容器</code>创建对象.通过核心容器的<code>getBean()</code>方法获取具体对象.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        // 获取核心容器对象</span><br><span class="line">        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        // 根据id获取Bean对象</span><br><span class="line">        IAccountService as  = (IAccountService)ac.getBean(&quot;accountService&quot;);</span><br><span class="line">        </span><br><span class="line">        // 执行as的具体方法</span><br><span class="line">        // ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>我们常用的容器有三种: </p>
-<ol>
-<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
-<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
-<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
-</ol>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC03.png" alt></p>
-<h2 id="bean标签"><a href="#bean标签" class="headerlink" title="bean标签"></a>bean标签</h2><ul>
+            <h2 id="bean标签"><a href="#bean标签" class="headerlink" title="bean标签"></a>bean标签</h2><ul>
 <li>作用: 配置托管给spring的对象,默认情况下调用类的无参构造函数,若果没有无参构造函数则不能创建成功</li>
 <li>属性：<ol>
 <li><code>id</code>: 指定对象在容器中的标识,将其作为参数传入<code>getBean()</code>方法可以获取获取对应对象.</li>
 <li><code>class</code>: 指定类的全类名,默认情况下调用无参构造函数</li>
-<li><code>scope</code>: 指定对象的作用范围,可选值如下</li>
+<li><code>scope</code>: 指定对象的作用范围</li>
 <li><code>init-method</code>：指定类中的初始化方法名称,在对象创建成功之后执行</li>
 <li><code>destroy-method</code>：指定类中销毁方法名称</li>
 </ol>
 </li>
 </ul>
-<h2 id="bean的作用范围和生命周期"><a href="#bean的作用范围和生命周期" class="headerlink" title="bean的作用范围和生命周期"></a>bean的作用范围和生命周期</h2><ul>
-<li><p>单例对象: scope=”singleton”</p>
-<pre><code>作用范围: 每个应用只有一个该对象的实例,它的作用范围就是整个应用
-生命周期: 单例对象的创建与销毁 和 容器的创建与销毁时机一致
-对象出生: 当应用加载,创建容器时,对象就被创建
-对象活着: 只要容器存在,对象一直活着
-对象死亡: 当应用卸载,销毁容器时,对象就被销毁</code></pre></li>
-<li><p>多例对象: <code>scope=&quot;prototype&quot;</code></p>
-<p>​          作用范围: 每次访问对象时,都会重新创建对象实例.</p>
-<p>​          生命周期: 多例对象的创建与销毁时机不受容器控制</p>
-<p>​          对象出生: 当使用对象时,创建新的对象实例</p>
-<p>​          对象活着: 只要对象在使用中,就一直活着</p>
-<p>​          对象死亡: 当对象长时间不用时,被 java 的垃圾回收器回收了</p>
+<h2 id="bean的作用范围和生命周期"><a href="#bean的作用范围和生命周期" class="headerlink" title="bean的作用范围和生命周期"></a>bean的作用范围和生命周期</h2><h3 id="作用范围"><a href="#作用范围" class="headerlink" title="作用范围"></a>作用范围</h3><p>xml配置中通过scope属性声明，注解中通过@scope声明,常见作用范围是单例和多例</p>
+<ul>
+<li><p>singleton作用域：单例（一个类有只一个实例），也是默认的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;IAcountService&quot; class=&quot;service.IAcountService&quot; scope=&quot;singleton&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">public class client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext ac=new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        IAcountService acountService1=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">        IAcountService acountService2=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">        System.out.println(acountService1==acountService2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>prototype作用域：多例，每次创建bean都会创建一个新实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;IAcountService&quot; class=&quot;service.IAcountService&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">其余不变，输出：false</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>request</p>
+</li>
+<li><p>session</p>
+</li>
+<li><p>global session</p>
+</li>
+</ul>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>单例对象的生命周期: 单例对象的创建与销毁和容器的创建与销毁时机一致</p>
+<ul>
+<li><p>对象出生: 当应用加载,创建容器时,对象就被创建</p>
+</li>
+<li><p>对象活着: 只要容器存在,对象一直活着</p>
+</li>
+<li><p>对象死亡: 当应用卸载,销毁容器时,对象就被销毁</p>
+<p>多例对象的生命周期: 多例对象的创建与销毁时机不受容器控制</p>
+</li>
+<li><p>对象出生: 当使用对象时,创建新的对象实例</p>
+</li>
+<li><p>对象活着: 只要对象在使用中,就一直活着</p>
+</li>
+<li><p>对象死亡: 当对象长时间不用时,被 java 的垃圾回收器回收了</p>
 </li>
 </ul>
 <h2 id="实例化bean的三种方式"><a href="#实例化bean的三种方式" class="headerlink" title="实例化bean的三种方式"></a>实例化bean的三种方式</h2><ol>
 <li><p>使用默认无参构造函数创建对象: 默认情况下会根据默认无参构造函数来创建类对象</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>使用静态工厂的方法创建对象</p>
+<li><p>通过普通工厂的方法，方法内创建对象</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	class=&quot;cn.maoritian.factory.StaticFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>使用实例工厂的方法创建对象</p>
+<li><p>使用工厂类的静态方法，静态方法内会创建对象</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;instancFactory&quot; class=&quot;cn.maoritian.factory.InstanceFactory&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	factory-bean=&quot;instancFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
 
 
@@ -2565,7 +2556,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/09/16/spring概念/" class="post-title-link" itemprop="url">spring概念</a>
+                <a href="/2019/09/16/spring概念/" class="post-title-link" itemprop="url">ApplicationContext</a>
               
             
           </h1>
@@ -2647,16 +2638,29 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
       
         
           
-            <h1 id="spring学习"><a href="#spring学习" class="headerlink" title="spring学习"></a>spring学习</h1><h2 id="IOC的概念及作用"><a href="#IOC的概念及作用" class="headerlink" title="IOC的概念及作用"></a>IOC的概念及作用</h2><h3 id="程序的耦合和解耦"><a href="#程序的耦合和解耦" class="headerlink" title="程序的耦合和解耦"></a>程序的耦合和解耦</h3><p>耦合性：对模块间关联程度的度量。耦合的强弱取决于模块间接口的复杂性、调 用模块的方式以及通过界面传送数据的多少。模块间的耦合度是指模块之间的依赖关系，包括控制关系、调用关系、数据传递关系。模块间联系越多，其耦合性越强，同时表明其独立性越差。</p>
-<h3 id="解决程序耦合的思路"><a href="#解决程序耦合的思路" class="headerlink" title="解决程序耦合的思路"></a>解决程序耦合的思路</h3><p>以jdbc为例，是通过反射来注册驱动的，即Class.forName(“com.mysql.jdbc.Driver”）</p>
-<p>此时的好处是，我们的类中不再依赖具体的驱动类，此时就算删除 mysql 的驱动 jar包，依然可以编译。同时，也产生了一个新的问题，mysql 驱动的全限定类名字符串是在 java 类中写死的，一旦要改还是要修改源码。解决这个问题就要使用配置文件配置。</p>
-<h3 id="工厂模式解耦"><a href="#工厂模式解耦" class="headerlink" title="工厂模式解耦"></a>工厂模式解耦</h3><p>可以把三层的对象都使用配置文件配置起来，当启动服务器应用加载的时候，让一个类中的方法通过读取配置文件，把这些对象创建出来并存起来。在接下来的使用的时候，直接拿过来用就好了。那么，这个读取配置文件，创建和获取三层对象的类就是工厂。 </p>
-<h3 id="控制反转-Inversion-Of-Control"><a href="#控制反转-Inversion-Of-Control" class="headerlink" title="控制反转-Inversion Of Control"></a>控制反转-Inversion Of Control</h3><p>由于我们是很多对象，肯定要找个集合来存。在应用加载时，创建一个 Map，用于存放三层对象。 我们把这个 map 称之为容器。工厂就是负责给我们从容器中获取指定对象的类。</p>
-<p>我们在获取对象时，都是采用 new 的方式，是主动的，如下图</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC01.png" alt></p>
-<p>现在：我们获取对象时，同时跟工厂要，有工厂为我们查找或者创建对象，是被动的。 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/IOC02.png" alt></p>
-<p><strong>IOC：将创建对象的权力交给框架，可以削减代码间的依赖。</strong></p>
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p> ApplicationContext是spring的容器接口，通过idea我们来看一下其继承关系</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ApplicationContext1.png" alt></p>
+<h2 id="BeanFactory和ApplicatonContext区别"><a href="#BeanFactory和ApplicatonContext区别" class="headerlink" title="BeanFactory和ApplicatonContext区别"></a>BeanFactory和ApplicatonContext区别</h2><p>BeanFactory才是spring的顶层接口，ApplicatonContext是其子接口，主要区别</p>
+<ul>
+<li><p>ApplicationContext：只要一读取配置文件，默认情况下就会创建对象（立即加载）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService);</span><br><span class="line"></span><br><span class="line">结果：在执行完ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);就输出了“对象被加载了”，即读取完配置文件对象就被加载</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>BeanFactory什么时候要用对象才创建（延迟加载）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">IAcountService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  System.out.println(<span class="string">"对象加载了"</span>);</span><br><span class="line">&#125;        </span><br><span class="line"></span><br><span class="line">Resource resource = <span class="keyword">new</span> ClassPathResource(<span class="string">"bean.xml"</span>);</span><br><span class="line">BeanFactory beanFactory=<span class="keyword">new</span> XmlBeanFactory(resource);</span><br><span class="line">IAcountService acountService1=(IAcountService)beanFactory.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService1);</span><br><span class="line">结果：执行System.out.println(acountService1);才输出了“对象被加载了”</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="ApplicationContext接口3个实现类"><a href="#ApplicationContext接口3个实现类" class="headerlink" title="ApplicationContext接口3个实现类"></a>ApplicationContext接口3个实现类</h2><ul>
+<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
+<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
+<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
+</ul>
+<p>ClassPathXmlApplicationContext基本使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext ac=new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        IAcountService acountService1=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>AnnotationConfigApplicationContext基本使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration//相当于原来的bean.xml</span><br><span class="line">@ComponentScan(basePackages = &quot;com.xjh&quot;)//相当于&lt;context:component-scan&gt;&lt;/&gt;</span><br><span class="line">public class springConfig &#123;</span><br><span class="line">    @Bean(name = &quot;IAcountService&quot;)</span><br><span class="line">    public IAcountService getBean()&#123;</span><br><span class="line">        return new IAcountService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ApplicationContext ac=new AnnotationConfigApplicationContext(springConfig.class);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(&quot;IAcountService&quot;)</span><br><span class="line">System.out.println(acountService);</span><br></pre></td></tr></table></figure>
+
 
           
         
@@ -2708,7 +2712,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2752,7 +2756,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-count">49</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2791,9 +2795,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2830,9 +2832,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
