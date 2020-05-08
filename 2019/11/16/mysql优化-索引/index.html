@@ -127,7 +127,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%956.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%951.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%952.png">
-<meta property="og:updated_time" content="2019-11-17T07:00:26.104Z">
+<meta property="og:updated_time" content="2020-05-08T03:17:04.849Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql优化-索引">
 <meta name="twitter:description" content="单表优化12345678910111213CREATE TABLE book(	bid INT(4) PRIMARY KEY,	NAME VARCHAR(20) NOT NULL,	authorid INT(4) NOT NULL,	publicid INT(4) NOT NULL,	typeid INT(4) NOT NULL );INSERT INTO book VALUES(1,&amp;apos;">
@@ -501,7 +501,7 @@
 
 <p><strong>根据SQL实际解析的顺序，调整索引的顺序</strong><br>alter table book add index idx_tab (typeid,authorid,bid); –虽然可以回表查询bid，但是将bid放到索引中可以提升使用using index ;</p>
 <p><strong>总结</strong></p>
-<p>a.最佳做前缀，保持索引的定义和使用的顺序一致性  </p>
+<p>a.最佳左前缀，保持索引的定义和使用的顺序一致性  </p>
 <p>b.索引需要逐步优化  </p>
 <p>c.将含In的范围查询 放到where条件的最后，防止失效。</p>
 <pre><code>本例中同时出现了Using where（需要回原表）; Using index（不需要回原表）：原因，where  authorid=1 and  typeid in(2,3)中authorid在索引(authorid,typeid,bid)中，因此不需要回原表（直接在索引表中能查到）；而typeid虽然也在索引(authorid,typeid,bid)中，但是含in的范围查询已经使该typeid索引失效，因此相当于没有typeid这个索引，所以需要回原表（using where）；
@@ -828,7 +828,9 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -865,7 +867,9 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

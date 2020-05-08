@@ -112,13 +112,13 @@
   </script>
 
 
-  <meta name="description" content="UDP协议 传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议 TCP协议特点  面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部  序号（seq）：TCP连接中传">
+  <meta name="description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP协议特点 面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部 序号（seq）：TCP连接中传送的字节">
 <meta name="keywords" content="计算机网络">
 <meta property="og:type" content="article">
 <meta property="og:title" content="传输层">
 <meta property="og:url" content="http://yoursite.com/2020/04/30/传输层/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="UDP协议 传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议 TCP协议特点  面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部  序号（seq）：TCP连接中传">
+<meta property="og:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP协议特点 面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部 序号（seq）：TCP连接中传送的字节">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png">
@@ -131,10 +131,10 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-04-30T07:34:01.527Z">
+<meta property="og:updated_time" content="2020-05-07T14:13:02.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="传输层">
-<meta name="twitter:description" content="UDP协议 传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议 TCP协议特点  面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部  序号（seq）：TCP连接中传">
+<meta name="twitter:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP协议特点 面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部 序号（seq）：TCP连接中传送的字节">
 <meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png">
 
 
@@ -491,8 +491,7 @@
       
 
       
-        <p>UDP协议</p>
-<p>传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠</p>
+        <h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠</p>
 <p>UDP主要特点：</p>
 <ul>
 <li>无连接，减少发送数据前的时延</li>
@@ -501,17 +500,14 @@
 <li>无拥塞控制，适合实时应用，如网络开会</li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png" alt></p>
-<p>TCP协议</p>
-<p>TCP协议特点</p>
-<ul>
+<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
 <li>面向连接</li>
 <li>提供可靠交付服务</li>
 <li>全双工通信 发送方，接收方都有缓存来存放数据</li>
 <li>面向字节流</li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png" alt></p>
-<p>TCP报文首部</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%823.png" alt></p>
+<h3 id="TCP报文首部"><a href="#TCP报文首部" class="headerlink" title="TCP报文首部"></a>TCP报文首部</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%823.png" alt></p>
 <p>序号（seq）：TCP连接中传送的字节都有自己的编号，序号是本报文段发送数据的第一个字节的编号（发送端的）</p>
 <p>确认号（ack）：对应序号，指接收端希望获得的下个报文段的第一个字节的编号（接收端）</p>
 <p>六个控制位：</p>
@@ -522,8 +518,7 @@
 <li>FIN（中止位）：FIN=1表示发送端数据已经发送完，请求断开连接</li>
 </ul>
 <p>检验位：检验首部+数据</p>
-<p>TCP连接管理</p>
-<p>TCP连接传输分3个阶段：连接建立——发送数据——连接释放</p>
+<h3 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h3><p>TCP连接传输分3个阶段：连接建立——发送数据——连接释放</p>
 <p>TCP连接建立（3次握手）</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%824.png" alt></p>
 <p>round1：发送方发送连接请求报文段，SYN=1，seq=x（随机）</p>
@@ -535,17 +530,19 @@
 <p>round2：服务器端返回确认，ACK=1，seq=v，ack=u+1,此时处于半关闭状态</p>
 <p>round3：服务器端发送连接释放报文，关闭TCP连接，FIN=1，ACK=1，seq=w，ack=u+1</p>
 <p>round4：客户端返回确认报文段，结束</p>
-<p>TCP可靠传输</p>
-<p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
+<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>为了防止历史连接，2次就不能最后发送RST报文给服务端</p>
+<ul>
+<li>一个旧（不是需要的）的SYN报文先于最新的（需要的）SYN报文到达服务端</li>
+<li>服务端回一个报文给客户端</li>
+<li>客户端判断自身的上下文（序列号过期或超时），判断这是个历史连接，发送一个RST报文给我服务端</li>
+</ul>
+<h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
 <p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
-<p>序号</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
-<p>确认</p>
-<p>TCP默认使用累计重传</p>
+<h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
+<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>TCP默认使用累计重传</p>
 <p>这里123到达TCP缓存后，456因为网络问题尚未到达，78也已经到达，此时接收端的报文段首部确认号字段依然为4</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png" alt></p>
-<p>重传</p>
-<p>超时重传</p>
+<h3 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h3><p>超时重传</p>
 <p>TCP的发送端在规定时间内没有收到确认就要重传已发送的报文段</p>
 <p>冗余重传</p>
 <p>当收到比期望报文序号大的报文时，发送一个冗余ACK，指明下一个期待的序号</p>
@@ -555,12 +552,10 @@
 <p>接收端收到4，任然返回1的确认</p>
 <p>接收端收掉5，依旧返回1的确认</p>
 <p>发送方收到3次冗余，知道2号报文丢失，重传报文</p>
-<p>TCP流量控制</p>
-<p>流量控制：让发送方发送的慢点，好让接收方来得及接收</p>
+<h2 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h2><p>流量控制：让发送方发送的慢点，好让接收方来得及接收</p>
 <p>TCP利用滑动窗口实现流量控制，发送窗口取决于接收窗口和拥塞窗口</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%828.png" alt></p>
-<p>TCP拥塞控制</p>
-<p>拥塞原因：对资源的需求总和大于可用资源</p>
+<h2 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h2><p>拥塞原因：对资源的需求总和大于可用资源</p>
 <p>拥塞控制和流量控制的区别可用理解为目标停车场停不下了和路上堵车的区别</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png" alt></p>
 <p>解决办法：</p>
@@ -711,8 +706,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -768,7 +772,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -805,7 +811,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -898,6 +906,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP协议"><span class="nav-number">1.</span> <span class="nav-text">UDP协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.</span> <span class="nav-text">TCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP协议特点"><span class="nav-number">2.1.</span> <span class="nav-text">TCP协议特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP报文首部"><span class="nav-number">2.2.</span> <span class="nav-text">TCP报文首部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP连接管理"><span class="nav-number">2.3.</span> <span class="nav-text">TCP连接管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么建立连接要3次握手呢？"><span class="nav-number">2.4.</span> <span class="nav-text">为什么建立连接要3次握手呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP可靠传输"><span class="nav-number">3.</span> <span class="nav-text">TCP可靠传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序号"><span class="nav-number">3.1.</span> <span class="nav-text">序号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认"><span class="nav-number">3.2.</span> <span class="nav-text">确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重传"><span class="nav-number">3.3.</span> <span class="nav-text">重传</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP流量控制"><span class="nav-number">4.</span> <span class="nav-text">TCP流量控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP拥塞控制"><span class="nav-number">5.</span> <span class="nav-text">TCP拥塞控制</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

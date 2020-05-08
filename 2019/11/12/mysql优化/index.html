@@ -112,13 +112,13 @@
   </script>
 
 
-  <meta name="description" content="原理MYSQL逻辑分层 ：连接层 服务层 引擎层 存储层  引擎 InnoDB(默认) ：事务优先 （适合高并发操作；行锁）MyISAM ：性能优先  （表锁） 查询数据库引擎：   支持哪些引擎？ show engines ; 查看当前使用的引擎   show variables like ‘%storage_engine%’ ; 指定数据库对象的引擎： 1234567create table">
-<meta name="keywords" content="java基础">
+  <meta name="description" content="原理MYSQL逻辑分层   连接层 ： 提供与客户端连接的服务。当客户端发出一个请求后（如增删改查的SQL语句），首先到达该层，将服务器与客户端建立连接。  服务层 ：提供各种用户使用的接口并且对sql进行优化 引擎层 ：提供存储数据的方式 存储层：具体存储数据   引擎 InnoDB(默认) ：事务优先 （适合高并发操作；行锁：一次锁一行）MyISAM ：性能优先  （表锁：一次锁一张表） 查询">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql优化-基础">
 <meta property="og:url" content="http://yoursite.com/2019/11/12/mysql优化/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="原理MYSQL逻辑分层 ：连接层 服务层 引擎层 存储层  引擎 InnoDB(默认) ：事务优先 （适合高并发操作；行锁）MyISAM ：性能优先  （表锁） 查询数据库引擎：   支持哪些引擎？ show engines ; 查看当前使用的引擎   show variables like ‘%storage_engine%’ ; 指定数据库对象的引擎： 1234567create table">
+<meta property="og:description" content="原理MYSQL逻辑分层   连接层 ： 提供与客户端连接的服务。当客户端发出一个请求后（如增删改查的SQL语句），首先到达该层，将服务器与客户端建立连接。  服务层 ：提供各种用户使用的接口并且对sql进行优化 引擎层 ：提供存储数据的方式 存储层：具体存储数据   引擎 InnoDB(默认) ：事务优先 （适合高并发操作；行锁：一次锁一行）MyISAM ：性能优先  （表锁：一次锁一张表） 查询">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql1.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql2.png">
@@ -126,10 +126,10 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql4.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-1.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-2.png">
-<meta property="og:updated_time" content="2019-11-17T07:32:29.059Z">
+<meta property="og:updated_time" content="2020-05-08T03:14:05.694Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql优化-基础">
-<meta name="twitter:description" content="原理MYSQL逻辑分层 ：连接层 服务层 引擎层 存储层  引擎 InnoDB(默认) ：事务优先 （适合高并发操作；行锁）MyISAM ：性能优先  （表锁） 查询数据库引擎：   支持哪些引擎？ show engines ; 查看当前使用的引擎   show variables like ‘%storage_engine%’ ; 指定数据库对象的引擎： 1234567create table">
+<meta name="twitter:description" content="原理MYSQL逻辑分层   连接层 ： 提供与客户端连接的服务。当客户端发出一个请求后（如增删改查的SQL语句），首先到达该层，将服务器与客户端建立连接。  服务层 ：提供各种用户使用的接口并且对sql进行优化 引擎层 ：提供存储数据的方式 存储层：具体存储数据   引擎 InnoDB(默认) ：事务优先 （适合高并发操作；行锁：一次锁一行）MyISAM ：性能优先  （表锁：一次锁一张表） 查询">
 <meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql1.png">
 
 
@@ -446,7 +446,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a></span>
 
                 
                 
@@ -486,10 +486,16 @@
       
 
       
-        <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>MYSQL逻辑分层 ：连接层 服务层 引擎层 存储层</p>
+        <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>MYSQL逻辑分层 </p>
+<ul>
+<li>连接层 ： 提供与客户端连接的服务。当客户端发出一个请求后（如增删改查的SQL语句），首先到达该层，将服务器与客户端建立连接。 </li>
+<li>服务层 ：提供各种用户使用的接口并且对sql进行优化</li>
+<li>引擎层 ：提供存储数据的方式</li>
+<li>存储层：具体存储数据</li>
+</ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql1.png" alt></p>
 <p>引擎</p>
-<p>InnoDB(默认) ：事务优先 （适合高并发操作；行锁）<br>MyISAM ：性能优先  （表锁）</p>
+<p>InnoDB(默认) ：事务优先 （适合高并发操作；行锁：一次锁一行）<br>MyISAM ：性能优先  （表锁：一次锁一张表）</p>
 <p>查询数据库引擎：  </p>
 <p>支持哪些引擎？ show engines ;</p>
 <p>查看当前使用的引擎   show variables like ‘%storage_engine%’ ;</p>
@@ -497,23 +503,25 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">create table tb(</span><br><span class="line">	id int(4) auto_increment ,</span><br><span class="line">	name varchar(5),</span><br><span class="line">	dept varchar(5) ,</span><br><span class="line">	primary key(id)		</span><br><span class="line">)ENGINE=MyISAM AUTO_INCREMENT=1</span><br><span class="line"> DEFAULT CHARSET=utf8   ;</span><br></pre></td></tr></table></figure>
 
 <h2 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h2><p>原因：性能低、执行时间太长、等待时间太长、SQL语句欠佳（连接查询）、索引失效、服务器参数设置不合理（缓冲、线程数）</p>
-<p>a.SQL ：<br>    编写过程：<br>        select dinstinct  ..from  ..join ..on ..where ..group by …having ..order by ..limit ..</p>
+<p>SQL执行及解析过程<br>    编写过程：<br>        select dinstinct  ..from  ..join ..on ..where ..group by …having ..order by ..limit ..</p>
 <p>​    解析过程：<br>​        from .. on.. join ..where ..group by ….having …select dinstinct ..order by limit … </p>
-<p>b.SQL优化， 主要就是在优化索引</p>
+<p>SQL优化（主要就是在优化索引）</p>
 <p>​    索引： 相当于书的目录<br>​    索引： index是帮助MYSQL高效获取数据的数据结构。索引是数据结构（树：B树(默认)、Hash树…）</p>
-<p>索引的弊端：</p>
-<ol>
-<li>索引本身很大， 可以存放在内存/硬盘（通常为 硬盘）</li>
+<p>索引的弊端</p>
+<ul>
+<li>索引本身很大， 可以存放在内存/硬盘（通常为硬盘）</li>
 <li>索引不是所有情况均适用： a.少量数据  b.频繁更新的字段   c.很少使用的字段</li>
 <li>索引会降低增删改的效率（增删改  查）实际上查是最主要的，所以利大于弊 </li>
-</ol>
-<p>优势：</p>
-<ol>
-<li>提高查询效率（降低IO使用率）</li>
+</ul>
+<p>优势提高查询效率（降低IO使用率）</p>
+<ul>
+<li>降低IO使用率</li>
 <li>降低CPU使用率 （…order by age desc,因为 B树索引 本身就是一个 好排序的结构，因此在排序时  可以直接使用）</li>
-</ol>
-<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql2.png" alt></p>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种数据结构，通过索引可以提高查询效率</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql2.png" alt></p>
 <p>实际上b树并不是2叉，应该为多路平衡树，这里只是便于理解</p>
+<p>关于B树和B+树看这篇博客， <a href="https://zhuanlan.zhihu.com/p/54102723" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/54102723</a> </p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql3.png" alt></p>
 <p><strong>分类与使用</strong></p>
 <ul>
@@ -532,20 +540,19 @@
 <p><strong>查询索引</strong>：</p>
 <p>show index from 表名 ;</p>
 <p>show index from 表名 \G  </p>
-<h2 id="SQL性能问题"><a href="#SQL性能问题" class="headerlink" title="SQL性能问题"></a>SQL性能问题</h2><p>a.分析SQL的执行计划  : explain   ，可以模拟SQL优化器执行SQL语句，从而让开发人员 知道自己编写的SQL状况</p>
+<h2 id="SQL性能问题"><a href="#SQL性能问题" class="headerlink" title="SQL性能问题"></a>SQL性能问题</h2><h3 id="分析SQL的执行计划"><a href="#分析SQL的执行计划" class="headerlink" title="分析SQL的执行计划"></a>分析SQL的执行计划</h3><p>explain 可以模拟SQL优化器执行SQL语句，从而让开发人员 知道自己编写的SQL状况</p>
 <p>b.MySQL查询优化其会干扰我们的优化</p>
 <p>查询执行计划：  explain +SQL语句     explain  select  * from tb ;</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql4.png" alt></p>
-<ol>
-<li><p>id:</p>
-<p>id值相同，从上往下 顺序执行。</p>
-<p>id值不同：id值越大越优先查询 (本质：在嵌套子查询时，先查内层 再查外层)</p>
+<ul>
+<li><p>id:  id值相同，从上往下 顺序执行</p>
+<p>​      id值不同：id值越大越优先查询 (本质：在嵌套子查询时，先查内层 再查外层)</p>
 </li>
 <li><p>select_type:查询类型</p>
-<p>PRIMARY:包含子查询SQL中的主查询 （最外层）</p>
-<p>SUBQUERY：包含子查询SQL中的子查询 （非最外层）</p>
-<p>simple:简单查询（不包含子查询、union）</p>
-<p>derived:衍生查询(使用到了临时表)</p>
+<p>​      PRIMARY:包含子查询SQL中的主查询 （最外层）</p>
+<p>​      SUBQUERY：包含子查询SQL中的子查询 （非最外层）</p>
+<p>​      simple:简单查询（不包含子查询、union）</p>
+<p>​      derived:衍生查询(使用到了临时表)</p>
 </li>
 <li><p>type:索引类型</p>
 </li>
@@ -553,13 +560,15 @@
 </li>
 <li><p>key ：实际使用到的索引</p>
 </li>
-<li><p>key_len ：索引的长度           用于判断复合索引是否被完全使用 </p>
+<li><p>key_len ：索引的长度           用于判断复合索引是否被完全使用</p>
 </li>
-<li><p>ref : 注意与type中的ref值区分       指明当前表所 参照的 字段</p>
+<li><p>ref : 注意与type中的ref值区分       指明当前表所参照的字段 </p>
 </li>
-<li><p>rows: 被索引优化查询的 数据个数 (实际通过索引而查询到的 数据个数)</p>
+<li><p>rows: 被索引优化查询的 数据个数 (实际通过索引而查询到的数据个数)</p>
 </li>
 <li><p>Extra</p>
+</li>
+</ul>
 <p><strong>using filesort</strong> ： 性能消耗大；需要“额外”的一次排序（查询）  。常见于 order by 语句中。<strong>排序会先进行先查询</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT a1 FROM test02 WHERE a1 =&apos;&apos; ORDER BY a2</span><br></pre></td></tr></table></figure>
 
@@ -572,10 +581,6 @@
 <p><strong>using temporary</strong>:性能损耗大 ，用到了临时表。一般出现在group by 语句中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1 from test02 where a1 in (&apos;1&apos;,&apos;2&apos;,&apos;3&apos;) group by a1 </span><br><span class="line">explain select a1 from test02 where a1 in (&apos;1&apos;,&apos;2&apos;,&apos;3&apos;) group by a2 ; --using temporary a2</span><br></pre></td></tr></table></figure>
 
-
-
-</li>
-</ol>
 <ul>
 <li>using index :性能提升; 索引覆盖（覆盖索引）。原因：不读取原文件，只从索引文件中获取数据 （不需要回表查询）</li>
 <li>using where （需要回表查询）</li>
@@ -654,7 +659,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/java基础/" rel="tag"># java基础</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
         </div>
       
@@ -789,7 +794,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -826,7 +833,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -930,7 +939,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL优化"><span class="nav-number">2.</span> <span class="nav-text">SQL优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引"><span class="nav-number">3.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL性能问题"><span class="nav-number">4.</span> <span class="nav-text">SQL性能问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL优化"><span class="nav-number">2.</span> <span class="nav-text">SQL优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引"><span class="nav-number">3.</span> <span class="nav-text">索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL性能问题"><span class="nav-number">4.</span> <span class="nav-text">SQL性能问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析SQL的执行计划"><span class="nav-number">4.1.</span> <span class="nav-text">分析SQL的执行计划</span></a></li></ol></li></ol></div>
             
 
           </div>
