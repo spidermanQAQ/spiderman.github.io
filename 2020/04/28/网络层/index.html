@@ -133,7 +133,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-04-28T07:49:32.146Z">
+<meta property="og:updated_time" content="2020-05-24T02:33:17.452Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络层">
 <meta name="twitter:description" content="IP数据报格式 版本：IPv4/IPv6 首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B） 总长度：首部+数据(链路层有最小和最大长度) 标识：同一个数据报分片用同一个标识    标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片 片偏移：某片在原分组的位置 生存时间：每经过一个路由器TTL-1 首部检验和：只检验首部，因">
@@ -524,9 +524,9 @@
 <p>最小IP地址10000000 00001110 00100000 00000000</p>
 <p>最大IP地址10000000 00001110 00101111 11111111</p>
 <p>子网掩码   11111111 11111111 11110000 00000000</p>
-<h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址</p>
+<h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址，如下图的mac6，但是你可能不知道mac6是什么，这就需要arp了</p>
 <p>ARP协议可以完成主机或路由器IP地址到mac地址的映射</p>
-<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），每有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
+<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），没有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
 <p>例子</p>
 <p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png" alt></p>
 <p>应用层发送一个pdf文件，传输层分成123，对123分为加首部（如果123长度过大，还要分片）</p>
@@ -728,7 +728,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">49</span>
+                    <span class="site-state-item-count">50</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -769,7 +769,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -808,7 +810,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">13</span>
+                      
+                    
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
