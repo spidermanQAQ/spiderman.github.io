@@ -380,7 +380,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/13/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/05/java装箱与拆箱/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -400,7 +400,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/07/13/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+                <a href="/2019/09/05/java装箱与拆箱/" class="post-title-link" itemprop="url">java装箱与拆箱</a>
               
             
           </h1>
@@ -425,12 +425,27 @@
                 
               
 
-              <time title="创建时间：2019-07-13 16:39:34" itemprop="dateCreated datePublished" datetime="2019-07-13T16:39:34+08:00">2019-07-13</time>
+              <time title="创建时间：2019-09-05 10:38:53" itemprop="dateCreated datePublished" datetime="2019-09-05T10:38:53+08:00">2019-09-05</time>
             </span>
           
 
           
 
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -467,19 +482,589 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+            <p><strong>包装类</strong>：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类</p>
+<p>简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型</p>
+<p>对应关系如下</p>
+<table>
+<thead>
+<tr>
+<th>基本数据类型</th>
+<th>包装类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+</tbody></table>
+<h3 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h3><p><strong>静态方法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//返回保存指定int的值的Integer对象</span><br><span class="line">Integer in1=Integer.valueof(1);</span><br><span class="line">//返回保存指定String的值的Integer对象</span><br><span class="line">Integer in2=Integer.valueof(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>看一下Interger.valueof源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 public static Integer valueOf(int i) &#123;</span><br><span class="line">2 return  i &gt;= 128 || i &lt; -128 ? new Integer(i) : SMALL_VALUES[i + 128];</span><br><span class="line">3 &#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>它会首先判断i的大小：如果i小于-128或者大于等于128，就创建一个Integer对象，否则执行SMALL_VALUES[i + 128] 。注意这里i如果小于-128或者大于等于128，就会创建不同对象，而处于中间的都会创建同一个对象。</p>
+<p>总结来说装箱即valueof( )方法就是会返回Interger类型的对象</p>
+<p><strong>Interger构造函数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Integer in1=new Integer(1);</span><br><span class="line">//这里只能是基本类型的字符串</span><br><span class="line">Integer in1=new Integer(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 private final int value;</span><br><span class="line">2 </span><br><span class="line">3 public Integer(int value) &#123;</span><br><span class="line">4     this.value = value;</span><br><span class="line">5 &#125;</span><br><span class="line">6 //这里的String必须是基本类型的字符串，100可以，a就不行</span><br><span class="line">7 public Integer(String string) throws NumberFormatException &#123;</span><br><span class="line">8     this(parseInt(string));</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>下面看看SMALL_VALUES[i + 128]是什么东西：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private static final Integer[] SMALL_VALUES = new Integer[256];</span><br></pre></td></tr></table></figure>
+
+<p> <strong>拆箱的intvalue( )源码</strong></p>
+<p>接着看看intValue函数,就是返回value值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @Override</span><br><span class="line">2 public int intValue() &#123;</span><br><span class="line">3     return value;</span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自动装箱与拆箱"><a href="#自动装箱与拆箱" class="headerlink" title="自动装箱与拆箱"></a>自动装箱与拆箱</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 //自动装箱</span><br><span class="line">2 Integer total = 99;</span><br><span class="line">3 </span><br><span class="line">4 //自定拆箱</span><br><span class="line">5 int totalprim = total;</span><br></pre></td></tr></table></figure>
+
+<p>自动装箱：直接把int类型的整数赋值包装类</p>
+<p>自动拆箱：包装类无法直接参与运算，可以自动转换为基本数据类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Interger total=99实际上执行了Interger total =Interger.valueof(99);</span><br><span class="line"></span><br><span class="line">int totalprim = total 实际上执行了int totalprim =total.intvalue( );</span><br></pre></td></tr></table></figure>
+
+<h3 id="装箱拆箱作用"><a href="#装箱拆箱作用" class="headerlink" title="装箱拆箱作用"></a>装箱拆箱作用</h3><ul>
+<li><p>将基本数据类型放入集合类中 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.add(1);//自动装箱list.add(new Integer(1));</span><br><span class="line">list.get(1);//自动拆箱list.get(0).intvalue();</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>包装类型和基本数据类型比较</p>
+</li>
+<li><p>包装类型运算</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i = 10;</span><br><span class="line">Integer j = 20;</span><br><span class="line"> </span><br><span class="line">System.out.println(i+j);</span><br></pre></td></tr></table></figure>
+
+<p>(i+j)即为(Interger.invalue(i)+interger.invalue(j))</p>
+<p>最后给出一道面试题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void testAutoBox2() &#123;</span><br><span class="line">     //1</span><br><span class="line">     int a = 100;</span><br><span class="line">     Integer b = 100;</span><br><span class="line">     System.out.println(a == b);</span><br><span class="line">     </span><br><span class="line">     //2</span><br><span class="line">     Integer c = 100;</span><br><span class="line">     Integer d = 100;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">     </span><br><span class="line">     //3   </span><br><span class="line">     c = 200;</span><br><span class="line">     d = 200;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>结果为 True True false  。在-127，127内的数据同基本数据类型一样存放在常量池，无论多少个值为100，100的地址都是一样的。200&gt;127,此时会在堆建对象，自然是2个对象，不一样。</p>
+<h3 id="字符串和基本类型的相互转换"><a href="#字符串和基本类型的相互转换" class="headerlink" title="字符串和基本类型的相互转换"></a>字符串和基本类型的相互转换</h3><p>基本类型-&gt;字符串</p>
+<ul>
+<li>基本类型的值+” “</li>
+<li>包装类的静态方法toString(参数)，不是Object类的toString()</li>
+<li>String类的静态方法valueof(参数)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i1=100;</span><br><span class="line">String s1=i1+&quot;&quot;;</span><br><span class="line">System.out.println(s1+200);//100200这里是字符串的加</span><br><span class="line"></span><br><span class="line">String s2=Integer.toString(100);</span><br><span class="line">System.out.println(s2+200);</span><br><span class="line"></span><br><span class="line">String s3=String.valueOf(100);</span><br><span class="line">System.out.println(s3+200);</span><br></pre></td></tr></table></figure>
+
+<p> 字符串-&gt;基本类型</p>
+<p>使用包装类的静态方法parsexxx(“字符串”)；</p>
+<p>​          Integer类：static int parseInt(String s)</p>
+<p>​          Double类：static double parseDouble(String s)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i=Integer.parseInt(s1);</span><br><span class="line">System.out.println(i);</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/04/LaTex/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/04/LaTex/" class="post-title-link" itemprop="url">LaTex</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-04 09:19:42" itemprop="dateCreated datePublished" datetime="2019-09-04T09:19:42+08:00">2019-09-04</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/LaTex/" itemprop="url" rel="index"><span itemprop="name">LaTex</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="LaTex"><a href="#LaTex" class="headerlink" title="LaTex"></a>LaTex</h1><p>[TOC]</p>
+<h1 id="LaTex预备知识"><a href="#LaTex预备知识" class="headerlink" title="LaTex预备知识"></a>LaTex预备知识</h1><h2 id="第一个LaTex文档"><a href="#第一个LaTex文档" class="headerlink" title="第一个LaTex文档"></a><strong>第一个LaTex文档</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">First document. This is a simple example, with no </span><br><span class="line">extra parameters or packages included.</span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 第一行说明文档类型，在<code>\begin{document} \end{document}</code>标签之间编写文档的文本。 </p>
+<p>article 排版科技期刊、短报告、程序文档、邀请函等。</p>
+<p>report 排版多章节的长报告、短篇的书籍、博士论文等。</p>
+<p>book 排版书籍。</p>
+<p>slides 排版幻灯片。</p>
+<h2 id="序言"><a href="#序言" class="headerlink" title="序言"></a><strong>序言</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\documentclass[12pt, letterpaper]&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line"> </span><br><span class="line">\title&#123;First document&#125;</span><br><span class="line">\author&#123;Hubert Farnsworth \thanks&#123;funded by the ShareLaTeX team&#125;&#125;</span><br><span class="line">\date&#123;February 2014&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>\begin{document}</code>命令之前输入的文本称为<strong>前导码</strong>。在序言中，您可以定义要编写的文档类型和语言，加载您需要的额外包，并设置几个参数 。</p>
+<p>下面对各部分进行说明：</p>
+<p>\documentclass[12pt, letterpaper]{article} ：在示例中，额外参数设置字体大小（12pt）和纸张大小（letterpaper）。默认大小为10pt。纸张尺寸默认为A4</p>
+<p>\usepackage[utf8]{inputenc} ：如果不是特别需要其他编码，将此行添加到前导码中  </p>
+<p>接下来的三行是自我描述的 。如果要让标题显示，可以通过\maketitle来达到</p>
+<h2 id="斜体-粗体-下划线"><a href="#斜体-粗体-下划线" class="headerlink" title="斜体 粗体 下划线"></a><strong>斜体 粗体 下划线</strong></h2><p>斜体：\textit{ }</p>
+<p>粗体：\textbf{ }</p>
+<p>下划线：\underline{ }</p>
+<h2 id="换行-分页-水平空格-垂直空格"><a href="#换行-分页-水平空格-垂直空格" class="headerlink" title="换行 分页 水平空格 垂直空格"></a><strong>换行 分页 水平空格 垂直空格</strong></h2><p>换行(新的一行会顶格开始)</p>
+<ul>
+<li>\\</li>
+<li>\newline</li>
+<li>\hfile \break</li>
+</ul>
+<p>分页</p>
+<ul>
+<li>\newpage：在图片插入后换页，即图片依然可以正常显示，文本换页</li>
+<li>\clearpage：在图片显示前换页，即图片和文本也会换页</li>
+</ul>
+<p>水平空格</p>
+<ul>
+<li>\hspace{ }：填指定长度空白</li>
+<li>\hfill：填空白到行最后</li>
+</ul>
+<p>垂直空格</p>
+<ul>
+<li>\vspace{ }：填指定长度空白</li>
+<li>\vfill：填空白到页面底部</li>
+</ul>
+<h1 id="段落"><a href="#段落" class="headerlink" title="段落"></a><strong>段落</strong></h1><h2 id="新段落"><a href="#新段落" class="headerlink" title="新段落"></a><strong>新段落</strong></h2><ul>
+<li><p>空一行</p>
+</li>
+<li><p>段末 \par</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">This is the text in first paragraph. This is the text in first </span><br><span class="line">paragraph. This is the text in first paragraph. \par</span><br><span class="line">This is the text in second paragraph. This is the text in second </span><br><span class="line">paragraph. This is the text in second paragraph.</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/d.png" alt></p>
+<h2 id="居中-左对齐-右对齐"><a href="#居中-左对齐-右对齐" class="headerlink" title="居中 左对齐 右对齐"></a><strong>居中 左对齐 右对齐</strong></h2><p>左对齐示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;flushleft&#125;</span><br><span class="line">``LaTeX is a document preparation system and document markup </span><br><span class="line">language. LaTeX uses the TeX typesetting program for formatting </span><br><span class="line">its output, and is itself written in the TeX macro language. </span><br><span class="line">LaTeX is not the name of a particular editing program, but refers </span><br><span class="line">to the encoding or tagging conventions that are used in LaTeX documents&quot;.</span><br><span class="line">\end&#123;flushleft&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/e.png" alt></p>
+<h1 id="图片"><a href="#图片" class="headerlink" title="图片"></a><strong>图片</strong></h1><h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a><strong>插入图片</strong></h2><p> Latex无法自行管理图像，因此我们需要使用<strong>graphicx</strong>包 </p>
+<p>\usepackage{graphicx} </p>
+<p>\graphicspath{ {./images/} }</p>
+<p>\includegraphics{universe}  universe为图片名</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/pic.png" alt></p>
+<h2 id="图片大小和旋转"><a href="#图片大小和旋转" class="headerlink" title="图片大小和旋转"></a><strong>图片大小和旋转</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = 3cm，height = 4cm ] &#123;lion-logo &#125;                     长宽</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ width = \ textwidth ] &#123;universe &#125;                            图片和文本等宽</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\ includegraphics [ scale = 1.2，angle = 45 ] &#123;lion-logo &#125;                       缩放并旋转</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">Overleaf is a great professional tool to edit online, </span><br><span class="line">share and backup your \LaTeX&#123;&#125; projects. Also offers a </span><br><span class="line">rather large help documentation.</span><br><span class="line"> </span><br><span class="line">\includegraphics[scale=1.2, angle=45]&#123;lion-logo&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/f.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;document&#125;</span><br><span class="line"> </span><br><span class="line">The universe is immense and it seems to be homogeneous, </span><br><span class="line">in a large scale, everywhere we look at.</span><br><span class="line"> </span><br><span class="line">\includegraphics[width=\textwidth]&#123;universe&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/g.png" alt></p>
+<h2 id="图片与文字的组合"><a href="#图片与文字的组合" class="headerlink" title="图片与文字的组合"></a><strong>图片与文字的组合</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">In the next example the figure will be positioned </span><br><span class="line">right below this sentence.</span><br><span class="line"> </span><br><span class="line">\begin&#123;figure&#125;[h]</span><br><span class="line">\includegraphics[width=8cm]&#123;Plot&#125;</span><br><span class="line">\end&#123;figure&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/a.png" alt></p>
+<p>该<code>figure</code>环境用于将图片显示为文档中的浮动元素 ，LaTex会自动对图片进行定位</p>
+<table>
+<thead>
+<tr>
+<th>h</th>
+<th>正常位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T</td>
+<td>位于页面顶部</td>
+</tr>
+<tr>
+<td>b</td>
+<td>位于页面底部</td>
+</tr>
+</tbody></table>
+<p>文本包裹图片，适合图片较小的情况下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;wrapfigure&#125;&#123;r&#125;&#123;0.25\textwidth&#125; %this figure will be at the right</span><br><span class="line">    \centering</span><br><span class="line">    \includegraphics[width=0.25\textwidth]&#123;mesh&#125;</span><br><span class="line">\end&#123;wrapfigure&#125;</span><br><span class="line"> </span><br><span class="line">There are several ways to plot a function of two variables, </span><br><span class="line">depending on the information you are interested in. For </span><br><span class="line">instance, if you want to see the mesh of a function so it </span><br><span class="line">easier to see the derivative you can use a plot like the </span><br><span class="line">one on the left.</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">\begin&#123;wrapfigure&#125;&#123;l&#125;&#123;0.25\textwidth&#125;</span><br><span class="line">    \centering</span><br><span class="line">    \includegraphics[width=0.25\textwidth]&#123;contour&#125;</span><br><span class="line">\end&#123;wrapfigure&#125;</span><br><span class="line"> </span><br><span class="line">On the other side, if you are only interested on</span><br><span class="line">certain values you can use the contour plot, you </span><br><span class="line">can use the contour plot, you can use the contour </span><br><span class="line">plot, you can use the contour plot, you can use </span><br><span class="line">the contour plot, you can use the contour plot, </span><br><span class="line">you can use the contour plot, like the one on the left.</span><br><span class="line"> </span><br><span class="line">On the other side, if you are only interested on </span><br><span class="line">certain values you can use the contour plot, you </span><br><span class="line">can use the contour plot, you can use the contour </span><br><span class="line">plot, you can use the contour plot, you can use the </span><br><span class="line">contour plot, you can use the contour plot, </span><br><span class="line">you can use the contour plot, </span><br><span class="line">like the one on the left.</span><br></pre></td></tr></table></figure>
+
+<p>要实现如下图效果，需要先导入包wrapfig，即 \usepackage{wrapfig} </p>
+<p>通过命令定义<em>wrapfigure</em>环境<code>\begin{wrapfigure}{l}{0.25\textwidth} \end{wrapfigure}</code> </p>
+<p>\centering 将使图片居中</p>
+<p>{l}：定义图片的对齐方式</p>
+<p>{0.25\textwidth}：图片相对于文本的宽度</p>
+<p>效果图</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/c.png" alt></p>
+<h1 id="数学表达式"><a href="#数学表达式" class="headerlink" title="数学表达式"></a>数学表达式</h1><p>数学表达式的写入模式有2种：<strong>inline</strong> mode ，<strong>display</strong> mode 。第一个用于编写作为文本一部分的公式。第二个用于编写不属于文本或段落的表达式 。</p>
+<p><strong>inline</strong> mode(行内模式)：用这些分隔符之一：<code>\( \)</code>，<code>$ $</code>或<code>\begin{math} \end{math}</code></p>
+<p><strong>display</strong> mode (行内模式）：<code>\[ \]</code>, <code>$$ $$</code>, <code>\begin{displaymath} \end{displaymath}</code> or <code>\begin{equation} \end{equation}</code> </p>
+<ul>
+<li><p>有编号 \begin{equation}  \end{equation} (没试过)</p>
+</li>
+<li><p>无编号</p>
+</li>
+</ul>
+<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><p><code>\section{}</code>标记新部分的开头，在括号内设置标题，部分编号是自动的，可以禁用 。在左大括号前添加*即可去掉编号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\section&#123;Introduction&#125;</span><br><span class="line"> </span><br><span class="line">This is the first section.</span><br><span class="line"> </span><br><span class="line">Lorem  ipsum  dolor  sit  amet,  consectetuer  adipiscing  </span><br><span class="line">elit.   Etiam  lobortisfacilisis sem.  Nullam nec mi et </span><br><span class="line">neque pharetra sollicitudin.  Praesent imperdietmi nec ante. </span><br><span class="line">Donec ullamcorper, felis non sodales...</span><br><span class="line"> </span><br><span class="line">\section&#123;Second Section&#125;</span><br><span class="line"> </span><br><span class="line">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.  </span><br><span class="line">Etiam lobortis facilisissem.  Nullam nec mi et neque pharetra </span><br><span class="line">sollicitudin.  Praesent imperdiet mi necante...</span><br></pre></td></tr></table></figure>
+
+<p>​                                                                    </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/h.png" alt></p>
+<h1 id="页眉和页脚"><a href="#页眉和页脚" class="headerlink" title="页眉和页脚"></a>页眉和页脚</h1><p>同时有很多样式，这里用本人喜欢的风格</p>
+<p>\usepackage{fancyhdr} 导入包</p>
+<p>\fancyhf 清除页眉和页脚，否则将出现默认“普通”页面样式的元素。 </p>
+<p>\rhead{ } 右上角页眉</p>
+<p>\lhead{ } 左上角页眉</p>
+<p>\rfoot{ }  页脚</p>
+<p>{ }内推荐写 \thepage这样可以自动写入页数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage&#123;fancyhdr&#125;</span><br><span class="line"></span><br><span class="line">\pagestyle&#123;fancy&#125;</span><br><span class="line">\fancyhf&#123;&#125;</span><br><span class="line">\rhead&#123;Overleaf&#125;</span><br><span class="line">\lhead&#123;\LaTeX&#123;&#125; tutorials&#125;</span><br><span class="line">\rfoot&#123; \thepage&#125;</span><br><span class="line"></span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line"></span><br><span class="line">\section&#123;First Section&#125;</span><br><span class="line"></span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/j.png" alt></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>overleaf上有多种参考文献格式，这里使用常见的方式，详细步骤如下：</p>
+<ol>
+<li>新建.bib文件，里面存放引用文献的信息</li>
+<li>在谷歌学术或百度学术中找到相应文献的  “ 引用 ”功能，然后在导入链接那点击 “ BibTex ”。复制其中的内容至新建立的.bib文件</li>
+<li>相关命令</li>
+</ol>
+<ul>
+<li><p><code>\usepackage{biblatex}</code></p>
+<p>导入包<strong>biblatex</strong>。</p>
+</li>
+<li><p><code>\addbibresource{sample.bib}</code></p>
+<p>导入bibtex数据文件<em>sample.bib</em>，此文件包含有关每个引用的书籍，文章等信息。 </p>
+</li>
+<li><p><code>\cite{einstein}</code></p>
+<p>此命令在文档中插入引用[1]，在这种情况下，对应于参考书目中的元素，“einstein”是对应于<em>sample.bib中</em>的条目的关键字。</p>
+</li>
+<li><p>\printbibliography`</p>
+<p>打印引用的参考文献列表，默认标题是文章文档类的“参考文献”和书籍和报告的“参考书目”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">\documentclass&#123;article&#125;</span><br><span class="line">\usepackage[utf8]&#123;inputenc&#125;</span><br><span class="line">\usepackage[english]&#123;babel&#125;</span><br><span class="line"> </span><br><span class="line">\usepackage&#123;biblatex&#125;</span><br><span class="line">\addbibresource&#123;sample.bib&#125;</span><br><span class="line"> </span><br><span class="line">\begin&#123;document&#125;</span><br><span class="line">Let&apos;s cite! The Einstein&apos;s journal paper \cite&#123;einstein&#125; and the Dirac&apos;s </span><br><span class="line">book \cite&#123;dirac&#125; are physics related items. </span><br><span class="line"> </span><br><span class="line">\printbibliography</span><br><span class="line"> </span><br><span class="line">\end&#123;document&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/i.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/17/docker1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/17/docker1/" class="post-title-link" itemprop="url">docker学习（1）</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-17 09:29:46" itemprop="dateCreated datePublished" datetime="2019-07-17T09:29:46+08:00">2019-07-17</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="docker学习（1）"><a href="#docker学习（1）" class="headerlink" title="docker学习（1）"></a>docker学习（1）</h1><p>最近在学docker相关的东西，正好写几篇博客巩记录下。</p>
+<h2 id="docker背景"><a href="#docker背景" class="headerlink" title="docker背景"></a>docker背景</h2><p>一款产品从开发到上线，从操作系统，到运行环境，再到应用配置 。因而当从一台电脑部署到另一台电脑时，环境配置会很麻烦，什么都要重来一次，费力费时。很多人想到，能不能从根本上解决问题，软件可以带环境安装？也就是说，安装的时候，把原始环境一模一样地复制过来。开发人员利用 Docker 可以消除协作编码时“在我的机器上可正常工作”的问题。 </p>
+<h2 id="docker三要素"><a href="#docker三要素" class="headerlink" title="docker三要素"></a>docker三要素</h2><p>用一张总的架构图来有一个直观的了解。Docker 本身是一个容器运行载体或称之为管理引擎。我们把应用程序和配置依赖打包好形成一个可交付的运行环境，这个打包好的运行环境就似乎 image镜像文件。只有通过这个镜像文件才能生成 Docker 容器。image 文件可以看作是容器的模板。Docker 根据 image 文件生成容器的实例。同一个 image 文件，可以生成多个同时运行的容器实例。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/docker%E6%9E%B6%E6%9E%84.png" alt></p>
+<h3 id="镜像（docker-images）"><a href="#镜像（docker-images）" class="headerlink" title="镜像（docker images）"></a>镜像（docker images）</h3><p>Docker 镜像（Image）就是一个<strong>只读</strong>的模板。镜像可以用来创建 Docker 容器，一个镜像可以创建很多容器。 </p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%9B%BE.png" alt></p>
+<h3 id="容器（container）"><a href="#容器（container）" class="headerlink" title="容器（container）"></a>容器（container）</h3><p>Docker 利用容器（Container）独立运行的一个或一组应用。容器是用镜像创建的运行实例 。一个镜像可以创建多个容器。</p>
+<h3 id="仓库（registery）"><a href="#仓库（registery）" class="headerlink" title="仓库（registery）"></a>仓库（registery）</h3><p>仓库（Repository）是集中存放镜像文件的场所。 例如dockerhub就是最大的docker仓库。</p>
+<h2 id="docker优点"><a href="#docker优点" class="headerlink" title="docker优点"></a>docker优点</h2><p>docker优点简洁来说就是：“一次封装，多出运行”。用户只要配置好了环境，换到别的电脑上直接部署就完事了，很方便。</p>
 
           
         
@@ -575,7 +1160,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-count">53</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -616,7 +1201,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -655,7 +1246,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">13</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
