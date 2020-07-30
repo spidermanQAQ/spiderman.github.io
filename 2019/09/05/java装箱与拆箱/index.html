@@ -120,7 +120,7 @@
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-04-22T13:27:39.722Z">
+<meta property="og:updated_time" content="2020-07-02T09:19:41.855Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java装箱与拆箱">
 <meta name="twitter:description" content="包装类：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类 简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型 对应关系如下    基本数据类型 包装类    byte Byte   boolean Boolean   short Short   int Integer   float Float">
@@ -532,10 +532,11 @@
 <p>源码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 private final int value;</span><br><span class="line">2 </span><br><span class="line">3 public Integer(int value) &#123;</span><br><span class="line">4     this.value = value;</span><br><span class="line">5 &#125;</span><br><span class="line">6 //这里的String必须是基本类型的字符串，100可以，a就不行</span><br><span class="line">7 public Integer(String string) throws NumberFormatException &#123;</span><br><span class="line">8     this(parseInt(string));</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
 
-<p>下面看看SMALL_VALUES[i + 128]是什么东西：</p>
+<p><strong>下面看看SMALL_VALUES[i + 128]是什么东西</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private static final Integer[] SMALL_VALUES = new Integer[256];</span><br></pre></td></tr></table></figure>
 
-<p> <strong>拆箱的intvalue( )源码</strong></p>
+<p> 就是说-128-128之间256个数是提前就定义好的，存放256个Integer数在SMALL_VALUES数组中，需要的时候从里面拿，只不过都是同一个对象。</p>
+<p><strong>拆箱的intvalue( )源码</strong></p>
 <p>接着看看intValue函数,就是返回value值</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @Override</span><br><span class="line">2 public int intValue() &#123;</span><br><span class="line">3     return value;</span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
 
@@ -748,7 +749,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-count">56</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -795,7 +796,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -840,7 +847,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

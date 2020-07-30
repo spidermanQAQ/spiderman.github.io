@@ -380,6 +380,696 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/转换流/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/14/转换流/" class="post-title-link" itemprop="url">转换流</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-14 19:18:35" itemprop="dateCreated datePublished" datetime="2019-11-14T19:18:35+08:00">2019-11-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="编码引出的问题"><a href="#编码引出的问题" class="headerlink" title="编码引出的问题"></a>编码引出的问题</h2><p><strong>GBK 一个字符 2个字节</strong></p>
+<p><strong>UTF-8 一个字符 3个字节</strong></p>
+<p>在IDEA中，使用<code>FileReader</code> 读取项目中的文本文件。由于IDEA的设置，都是默认的<code>UTF-8</code>编码，所以没有任何问题。但是，当读取Windows系统中创建的文本文件时，由于Windows系统的默认是GBK编码，就会出现乱码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReaderDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        FileReader fileReader = <span class="keyword">new</span> FileReader(<span class="string">"E:\\File_GBK.txt"</span>);</span><br><span class="line">        <span class="keyword">int</span> read;</span><br><span class="line">        <span class="keyword">while</span> ((read = fileReader.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            System.out.print((<span class="keyword">char</span>)read);</span><br><span class="line">        &#125;</span><br><span class="line">        fileReader.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">输出结果：</span><br><span class="line">���</span><br></pre></td></tr></table></figure>
+
+<p>那么如何读取GBK编码的文件呢？ </p>
+<h2 id="转换流原理图"><a href="#转换流原理图" class="headerlink" title="转换流原理图"></a>转换流原理图</h2><p><strong>知识点：字符流本质上也是用的字节流，只是在读取字节后把字节转换成字符</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%BD%AC%E6%8D%A2%E6%B5%81.png" alt></p>
+<h2 id="InputStreamReader类"><a href="#InputStreamReader类" class="headerlink" title="InputStreamReader类"></a>InputStreamReader类</h2><p>转换流<code>java.io.InputStreamReader</code>，是Reader的子类，是从字节流到字符流的桥梁。它读取字节，并使用指定的字符集将其解码为字符。它的字符集可以由名称指定，也可以接受平台的默认字符集。 </p>
+<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
+<li><code>InputStreamReader(InputStream in)</code>: 创建一个使用默认字符集的字符流。 </li>
+<li><code>InputStreamReader(InputStream in, String charsetName)</code>: 创建一个指定字符集的字符流。</li>
+</ul>
+<p>构造举例，代码如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">"in.txt"</span>));</span><br><span class="line">InputStreamReader isr2 = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(<span class="string">"in.txt"</span>) , <span class="string">"GBK"</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定编码读取"><a href="#指定编码读取" class="headerlink" title="指定编码读取"></a>指定编码读取</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReaderDemo2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      	<span class="comment">// 定义文件路径,文件为gbk编码</span></span><br><span class="line">        String FileName = <span class="string">"E:\\file_gbk.txt"</span>;</span><br><span class="line">      	<span class="comment">// 创建流对象,默认UTF8编码</span></span><br><span class="line">        InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(FileName));</span><br><span class="line">      	<span class="comment">// 创建流对象,指定GBK编码</span></span><br><span class="line">        InputStreamReader isr2 = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(FileName) , <span class="string">"GBK"</span>);</span><br><span class="line">		<span class="comment">// 定义变量,保存字符</span></span><br><span class="line">        <span class="keyword">int</span> read;</span><br><span class="line">      	<span class="comment">// 使用默认编码字符流读取,乱码</span></span><br><span class="line">        <span class="keyword">while</span> ((read = isr.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            System.out.print((<span class="keyword">char</span>)read); <span class="comment">// ��Һ�</span></span><br><span class="line">        &#125;</span><br><span class="line">        isr.close();</span><br><span class="line">      </span><br><span class="line">      	<span class="comment">// 使用指定编码字符流读取,正常解析</span></span><br><span class="line">        <span class="keyword">while</span> ((read = isr2.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            System.out.print((<span class="keyword">char</span>)read);<span class="comment">// 大家好</span></span><br><span class="line">        &#125;</span><br><span class="line">        isr2.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="OutputStreamWriter类"><a href="#OutputStreamWriter类" class="headerlink" title="OutputStreamWriter类"></a>OutputStreamWriter类</h2><p>转换流<code>java.io.OutputStreamWriter</code> ，是Writer的子类，是从字符流到字节流的桥梁。使用指定的字符集将字符编码为字节。它的字符集可以由名称指定，也可以接受平台的默认字符集。 </p>
+<h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
+<li><code>OutputStreamWriter(OutputStream in)</code>: 创建一个使用默认字符集的字符流。 </li>
+<li><code>OutputStreamWriter(OutputStream in, String charsetName)</code>: 创建一个指定字符集的字符流。</li>
+</ul>
+<p>构造举例，代码如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OutputStreamWriter isr = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(<span class="string">"out.txt"</span>));</span><br><span class="line">OutputStreamWriter isr2 = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(<span class="string">"out.txt"</span>) , <span class="string">"GBK"</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定编码写出"><a href="#指定编码写出" class="headerlink" title="指定编码写出"></a>指定编码写出</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OutputDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      	<span class="comment">// 定义文件路径</span></span><br><span class="line">        String FileName = <span class="string">"E:\\out.txt"</span>;</span><br><span class="line">      	<span class="comment">// 创建流对象,默认UTF8编码</span></span><br><span class="line">        OutputStreamWriter osw = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(FileName));</span><br><span class="line">        <span class="comment">// 写出数据</span></span><br><span class="line">      	osw.write(<span class="string">"你好"</span>); <span class="comment">// 保存为6个字节</span></span><br><span class="line">        osw.close();</span><br><span class="line">      	</span><br><span class="line">		<span class="comment">// 定义文件路径</span></span><br><span class="line">		String FileName2 = <span class="string">"E:\\out2.txt"</span>;</span><br><span class="line">     	<span class="comment">// 创建流对象,指定GBK编码</span></span><br><span class="line">        OutputStreamWriter osw2 = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(FileName2),<span class="string">"GBK"</span>);</span><br><span class="line">        <span class="comment">// 写出数据</span></span><br><span class="line">      	osw2.write(<span class="string">"你好"</span>);<span class="comment">// 保存为4个字节</span></span><br><span class="line">        osw2.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="转换流理解图解"><a href="#转换流理解图解" class="headerlink" title="转换流理解图解"></a>转换流理解图解</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%BD%AC%E6%8D%A2%E6%B5%81.png" alt></p>
+<h2 id="练习：转换文件编码"><a href="#练习：转换文件编码" class="headerlink" title="练习：转换文件编码"></a>练习：转换文件编码</h2><p>将GBK编码的文本文件，转换为UTF-8编码的文本文件。</p>
+<h3 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h3><ol>
+<li>指定GBK编码的转换流，读取文本文件。</li>
+<li>使用UTF-8编码的转换流，写出文本文件。</li>
+</ol>
+<h3 id="案例实现"><a href="#案例实现" class="headerlink" title="案例实现"></a>案例实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransDemo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;      </span><br><span class="line">    	<span class="comment">// 1.定义文件路径</span></span><br><span class="line">     	String srcFile = <span class="string">"file_gbk.txt"</span>;</span><br><span class="line">        String destFile = <span class="string">"file_utf8.txt"</span>;</span><br><span class="line">		<span class="comment">// 2.创建流对象</span></span><br><span class="line">    	<span class="comment">// 2.1 转换输入流,指定GBK编码</span></span><br><span class="line">        InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(<span class="keyword">new</span> FileInputStream(srcFile) , <span class="string">"GBK"</span>);</span><br><span class="line">    	<span class="comment">// 2.2 转换输出流,默认utf8编码</span></span><br><span class="line">        OutputStreamWriter osw = <span class="keyword">new</span> OutputStreamWriter(<span class="keyword">new</span> FileOutputStream(destFile));</span><br><span class="line">		<span class="comment">// 3.读写数据</span></span><br><span class="line">    	<span class="comment">// 3.1 定义数组</span></span><br><span class="line">        <span class="keyword">char</span>[] cbuf = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">1024</span>];</span><br><span class="line">    	<span class="comment">// 3.2 定义长度</span></span><br><span class="line">        <span class="keyword">int</span> len;</span><br><span class="line">    	<span class="comment">// 3.3 循环读取</span></span><br><span class="line">        <span class="keyword">while</span> ((len = isr.read(cbuf))!=-<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 循环写出</span></span><br><span class="line">          	osw.write(cbuf,<span class="number">0</span>,len);</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 4.释放资源</span></span><br><span class="line">        osw.close();</span><br><span class="line">        isr.close();</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/缓冲流/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/14/缓冲流/" class="post-title-link" itemprop="url">缓冲流</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-14 12:48:02" itemprop="dateCreated datePublished" datetime="2019-11-14T12:48:02+08:00">2019-11-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="缓冲流"><a href="#缓冲流" class="headerlink" title="缓冲流"></a>缓冲流</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BC%93%E5%AD%98%E6%B5%81.png" alt></p>
+<p>缓冲流,也叫高效流，是对4个基本的<code>FileXxx</code> 流的增强，所以也是4个流，按照数据类型分类：</p>
+<ul>
+<li><strong>字节缓冲流</strong>：<code>BufferedInputStream</code>，<code>BufferedOutputStream</code> </li>
+<li><strong>字符缓冲流</strong>：<code>BufferedReader</code>，<code>BufferedWriter</code></li>
+</ul>
+<p>缓冲流的基本原理，是在创建流对象时，会创建一个内置的默认大小的缓冲区数组，通过缓冲区读写，减少系统IO次数，从而提高读写的效率。</p>
+<h3 id="字节缓冲流"><a href="#字节缓冲流" class="headerlink" title="字节缓冲流"></a>字节缓冲流</h3><h4 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h4><ul>
+<li><code>public BufferedInputStream(InputStream in)</code> ：创建一个新的缓冲输入流。 </li>
+<li><code>public BufferedOutputStream(OutputStream out)</code>： 创建一个新的缓冲输出流。</li>
+</ul>
+<p>构造举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建字节缓冲输入流</span></span><br><span class="line">BufferedInputStream bis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"bis.txt"</span>));</span><br><span class="line"><span class="comment">// 创建字节缓冲输出流</span></span><br><span class="line">BufferedOutputStream bos = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"bos.txt"</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="效率测试"><a href="#效率测试" class="headerlink" title="效率测试"></a>效率测试</h4><p><strong>这里说下，字节流读取字节可以一个一个，也可以读多个。</strong></p>
+<p><strong>缓冲流的效率体现在也就是2的情况，每次读取一个字节进入缓冲，缓冲满了，在反馈，相当于一车带一堆货，不用每次一车带一个货</strong></p>
+<p><strong>用数组的情况下使读取效率更高，一次可以读取多个字节</strong> </p>
+<p><strong>有个疑惑：字节流用数组不是和缓冲流用数组差不多嘛？</strong></p>
+<p>查询API，缓冲流读写方法与基本的流是一致的，我们通过复制大文件（375MB），测试它的效率。</p>
+<ol>
+<li>基本流，代码如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">// 记录开始时间</span></span><br><span class="line">      	<span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">		<span class="comment">// 创建流对象</span></span><br><span class="line">        <span class="keyword">try</span> (</span><br><span class="line">        	FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="string">"jdk9.exe"</span>);</span><br><span class="line">        	FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"copy.exe"</span>)</span><br><span class="line">        )&#123;</span><br><span class="line">        	<span class="comment">// 读写数据</span></span><br><span class="line">            <span class="keyword">int</span> b;</span><br><span class="line">            <span class="keyword">while</span> ((b = fis.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">                fos.write(b);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 记录结束时间</span></span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"普通流复制时间:"</span>+(end - start)+<span class="string">" 毫秒"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">十几分钟过去了...</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>缓冲流，代码如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">// 记录开始时间</span></span><br><span class="line">      	<span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">		<span class="comment">// 创建流对象</span></span><br><span class="line">        <span class="keyword">try</span> (</span><br><span class="line">        	BufferedInputStream bis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"jdk9.exe"</span>));</span><br><span class="line">	     BufferedOutputStream bos = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"copy.exe"</span>));</span><br><span class="line">        )&#123;</span><br><span class="line">        <span class="comment">// 读写数据</span></span><br><span class="line">            <span class="keyword">int</span> b;</span><br><span class="line">            <span class="keyword">while</span> ((b = bis.read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">                bos.write(b);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 记录结束时间</span></span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"缓冲流复制时间:"</span>+(end - start)+<span class="string">" 毫秒"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">缓冲流复制时间:<span class="number">8016</span> 毫秒</span><br></pre></td></tr></table></figure>
+
+<p>如何更快呢？</p>
+<p>使用数组的方式，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException </span>&#123;</span><br><span class="line">      	<span class="comment">// 记录开始时间</span></span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">		<span class="comment">// 创建流对象</span></span><br><span class="line">        <span class="keyword">try</span> (</span><br><span class="line">			BufferedInputStream bis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"jdk9.exe"</span>));</span><br><span class="line">		 BufferedOutputStream bos = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"copy.exe"</span>));</span><br><span class="line">        )&#123;</span><br><span class="line">          	<span class="comment">// 读写数据</span></span><br><span class="line">            <span class="keyword">int</span> len;</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">8</span>*<span class="number">1024</span>];</span><br><span class="line">            <span class="keyword">while</span> ((len = bis.read(bytes)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                bos.write(bytes, <span class="number">0</span> , len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 记录结束时间</span></span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"缓冲流使用数组复制时间:"</span>+(end - start)+<span class="string">" 毫秒"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">缓冲流使用数组复制时间:<span class="number">666</span> 毫秒</span><br></pre></td></tr></table></figure>
+
+<h3 id="字符缓冲流"><a href="#字符缓冲流" class="headerlink" title="字符缓冲流"></a>字符缓冲流</h3><h4 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h4><ul>
+<li><code>public BufferedReader(Reader in)</code> ：创建一个 新的缓冲输入流。 </li>
+<li><code>public BufferedWriter(Writer out)</code>： 创建一个新的缓冲输出流。</li>
+</ul>
+<p>构造举例，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建字符缓冲输入流</span></span><br><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(<span class="string">"br.txt"</span>));</span><br><span class="line"><span class="comment">// 创建字符缓冲输出流</span></span><br><span class="line">BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(<span class="string">"bw.txt"</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="特有方法"><a href="#特有方法" class="headerlink" title="特有方法"></a>特有方法</h4><p>字符缓冲流的基本方法与普通字符流调用方式一致，不再阐述，我们来看它们具备的特有方法。</p>
+<ul>
+<li>BufferedReader：<code>public String readLine()</code>: 读一行文字。 </li>
+<li>BufferedWriter：<code>public void newLine()</code>: 写一行行分隔符,由系统属性定义符号。 </li>
+</ul>
+<p><code>readLine</code>方法演示，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedReaderDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">      	 <span class="comment">// 创建流对象</span></span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(<span class="string">"in.txt"</span>));</span><br><span class="line">		<span class="comment">// 定义字符串,保存读取的一行文字</span></span><br><span class="line">        String line  = <span class="keyword">null</span>;</span><br><span class="line">      	<span class="comment">// 循环读取,读取到最后返回null</span></span><br><span class="line">        <span class="keyword">while</span> ((line = br.readLine())!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.print(line);</span><br><span class="line">            System.out.println(<span class="string">"------"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 释放资源</span></span><br><span class="line">        br.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>newLine</code>方法演示，代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedWriterDemo</span> <span class="title">throws</span> <span class="title">IOException</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException  </span>&#123;</span><br><span class="line">      	<span class="comment">// 创建流对象</span></span><br><span class="line">		BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(<span class="string">"out.txt"</span>));</span><br><span class="line">      	<span class="comment">// 写出数据</span></span><br><span class="line">        bw.write(<span class="string">"黑马"</span>);</span><br><span class="line">      	<span class="comment">// 写出换行</span></span><br><span class="line">        bw.newLine();</span><br><span class="line">        bw.write(<span class="string">"程序"</span>);</span><br><span class="line">        bw.newLine();</span><br><span class="line">        bw.write(<span class="string">"员"</span>);</span><br><span class="line">        bw.newLine();</span><br><span class="line">		<span class="comment">// 释放资源</span></span><br><span class="line">        bw.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">输出效果:</span><br><span class="line">黑马</span><br><span class="line">程序</span><br><span class="line">员</span><br></pre></td></tr></table></figure>
+
+<h3 id="练习-文本排序"><a href="#练习-文本排序" class="headerlink" title="练习:文本排序"></a>练习:文本排序</h3><p>请将文本信息恢复顺序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">3.侍中、侍郎郭攸之、费祎、董允等，此皆良实，志虑忠纯，是以先帝简拔以遗陛下。愚以为宫中之事，事无大小，悉以咨之，然后施行，必得裨补阙漏，有所广益。</span><br><span class="line">8.愿陛下托臣以讨贼兴复之效，不效，则治臣之罪，以告先帝之灵。若无兴德之言，则责攸之、祎、允等之慢，以彰其咎；陛下亦宜自谋，以咨诹善道，察纳雅言，深追先帝遗诏，臣不胜受恩感激。</span><br><span class="line">4.将军向宠，性行淑均，晓畅军事，试用之于昔日，先帝称之曰能，是以众议举宠为督。愚以为营中之事，悉以咨之，必能使行阵和睦，优劣得所。</span><br><span class="line">2.宫中府中，俱为一体，陟罚臧否，不宜异同。若有作奸犯科及为忠善者，宜付有司论其刑赏，以昭陛下平明之理，不宜偏私，使内外异法也。</span><br><span class="line">1.先帝创业未半而中道崩殂，今天下三分，益州疲弊，此诚危急存亡之秋也。然侍卫之臣不懈于内，忠志之士忘身于外者，盖追先帝之殊遇，欲报之于陛下也。诚宜开张圣听，以光先帝遗德，恢弘志士之气，不宜妄自菲薄，引喻失义，以塞忠谏之路也。</span><br><span class="line">9.今当远离，临表涕零，不知所言。</span><br><span class="line">6.臣本布衣，躬耕于南阳，苟全性命于乱世，不求闻达于诸侯。先帝不以臣卑鄙，猥自枉屈，三顾臣于草庐之中，咨臣以当世之事，由是感激，遂许先帝以驱驰。后值倾覆，受任于败军之际，奉命于危难之间，尔来二十有一年矣。</span><br><span class="line">7.先帝知臣谨慎，故临崩寄臣以大事也。受命以来，夙夜忧叹，恐付托不效，以伤先帝之明，故五月渡泸，深入不毛。今南方已定，兵甲已足，当奖率三军，北定中原，庶竭驽钝，攘除奸凶，兴复汉室，还于旧都。此臣所以报先帝而忠陛下之职分也。至于斟酌损益，进尽忠言，则攸之、祎、允之任也。</span><br><span class="line">5.亲贤臣，远小人，此先汉所以兴隆也；亲小人，远贤臣，此后汉所以倾颓也。先帝在时，每与臣论此事，未尝不叹息痛恨于桓、灵也。侍中、尚书、长史、参军，此悉贞良死节之臣，愿陛下亲之信之，则汉室之隆，可计日而待也。</span><br></pre></td></tr></table></figure>
+
+<h4 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h4><ol>
+<li>逐行读取文本信息。</li>
+<li>解析文本信息到集合中。</li>
+<li>遍历集合，按顺序，写出文本信息。</li>
+</ol>
+<h4 id="案例实现"><a href="#案例实现" class="headerlink" title="案例实现"></a>案例实现</h4><p>hashmap是有序的集合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">// 创建map集合,保存文本数据,键为序号,值为文字</span></span><br><span class="line">        HashMap&lt;String, String&gt; lineMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建流对象</span></span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(<span class="string">"in.txt"</span>));</span><br><span class="line">        BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(<span class="string">"out.txt"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 读取数据</span></span><br><span class="line">        String line  = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((line = br.readLine())!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 解析文本</span></span><br><span class="line">            String[] split = line.split(<span class="string">"\\."</span>);</span><br><span class="line">            <span class="comment">// 保存到集合</span></span><br><span class="line">            lineMap.put(split[<span class="number">0</span>],split[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 释放资源</span></span><br><span class="line">        br.close();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历map集合</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= lineMap.size(); i++) &#123;</span><br><span class="line">            String key = String.valueOf(i);</span><br><span class="line">            <span class="comment">// 获取map中文本</span></span><br><span class="line">            String value = lineMap.get(key);</span><br><span class="line">          	<span class="comment">// 写出拼接文本</span></span><br><span class="line">            bw.write(key+<span class="string">"."</span>+value);</span><br><span class="line">          	<span class="comment">// 写出换行</span></span><br><span class="line">            bw.newLine();</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 释放资源</span></span><br><span class="line">        bw.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/mysql优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/12/mysql优化/" class="post-title-link" itemprop="url">mysql优化-基础</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-12 15:24:39" itemprop="dateCreated datePublished" datetime="2019-11-12T15:24:39+08:00">2019-11-12</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>MYSQL逻辑分层 </p>
+<ul>
+<li>连接层 ： 提供与客户端连接的服务。当客户端发出一个请求后（如增删改查的SQL语句），首先到达该层，将服务器与客户端建立连接。 </li>
+<li>服务层 ：提供各种用户使用的接口并且对sql进行优化</li>
+<li>引擎层 ：提供存储数据的方式</li>
+<li>存储层：具体存储数据</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql1.png" alt></p>
+<p>引擎</p>
+<p>InnoDB(默认) ：事务优先 （适合高并发操作；行锁：一次锁一行）<br>MyISAM ：性能优先  （表锁：一次锁一张表）</p>
+<p>查询数据库引擎：  </p>
+<p>支持哪些引擎？ show engines ;</p>
+<p>查看当前使用的引擎   show variables like ‘%storage_engine%’ ;</p>
+<p>指定数据库对象的引擎：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">create table tb(</span><br><span class="line">	id int(4) auto_increment ,</span><br><span class="line">	name varchar(5),</span><br><span class="line">	dept varchar(5) ,</span><br><span class="line">	primary key(id)		</span><br><span class="line">)ENGINE=MyISAM AUTO_INCREMENT=1</span><br><span class="line"> DEFAULT CHARSET=utf8   ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h2><p>原因：性能低、执行时间太长、等待时间太长、SQL语句欠佳（连接查询）、索引失效、服务器参数设置不合理（缓冲、线程数）</p>
+<p>SQL执行及解析过程<br>    编写过程：<br>        select dinstinct  ..from  ..join ..on ..where ..group by …having ..order by ..limit ..</p>
+<p>​    解析过程：<br>​        from .. on.. join ..where ..group by ….having …select dinstinct ..order by limit … </p>
+<p>SQL优化（主要就是在优化索引）</p>
+<p>​    索引： 相当于书的目录<br>​    索引： index是帮助MYSQL高效获取数据的数据结构。索引是数据结构（树：B树(默认)、Hash树…）</p>
+<p>索引的弊端</p>
+<ul>
+<li>索引本身很大， 可以存放在内存/硬盘（通常为硬盘）</li>
+<li>索引不是所有情况均适用： a.少量数据  b.频繁更新的字段   c.很少使用的字段</li>
+<li>索引会降低增删改的效率（增删改  查）实际上查是最主要的，所以利大于弊 </li>
+</ul>
+<p>优势提高查询效率（降低IO使用率）</p>
+<ul>
+<li>降低IO使用率</li>
+<li>降低CPU使用率 （…order by age desc,因为 B树索引 本身就是一个 好排序的结构，因此在排序时  可以直接使用）</li>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种数据结构，通过索引可以提高查询效率</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql2.png" alt></p>
+<p>实际上b树并不是2叉，应该为多路平衡树，这里只是便于理解</p>
+<p>关于B树和B+树看这篇博客， <a href="https://zhuanlan.zhihu.com/p/54102723" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/54102723</a> </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql3.png" alt></p>
+<p><strong>分类与使用</strong></p>
+<ul>
+<li>主键索引：  不能重复。id    不能是null</li>
+<li>唯一索引  ：不能重复。id    可以是null</li>
+<li>单值索引  ： 单列， age ;一个表可以多个单值索引,name。</li>
+<li>复合索引  ：多个列构成的索引 （相当于 二级目录 ：  z: zhao）  (name,age)   (a,b,c,d）</li>
+</ul>
+<p><strong>创建索引</strong></p>
+<p> 方式一：<br>        create 索引类型  索引名  on 表(字段)<br>        单值索引：<br>        create index   dept_index on  tb(dept);<br>        唯一索引：<br>        create unique index  name_index on tb(name) ;<br>        复合索引<br>        create index dept_name_index on tb(dept,name);</p>
+<p>方式二：alter table 表名 索引类型  索引名（字段）</p>
+<p>​        单值：</p>
+<p>​        alter table tb add index dept_index(dept) ;<br>​        唯一：<br>​        alter table tb add unique index name_index(name);<br>​        复合索引<br>​        alter table tb add index dept_name_index(dept,name);<br>​        注意：如果一个字段是primary key，则改字段默认就是 主键索引</p>
+<p><strong>删除索引</strong>：    </p>
+<p>drop index 索引名 on 表名 ;<br>drop index name_index on tb ;</p>
+<p><strong>查询索引</strong>：</p>
+<p>show index from 表名 ;</p>
+<p>show index from 表名 \G  </p>
+<h2 id="SQL性能问题"><a href="#SQL性能问题" class="headerlink" title="SQL性能问题"></a>SQL性能问题</h2><h3 id="分析SQL的执行计划"><a href="#分析SQL的执行计划" class="headerlink" title="分析SQL的执行计划"></a>分析SQL的执行计划</h3><p>explain 可以模拟SQL优化器执行SQL语句，从而让开发人员 知道自己编写的SQL状况</p>
+<p>b.MySQL查询优化其会干扰我们的优化</p>
+<p>查询执行计划：  explain +SQL语句     explain  select  * from tb ;</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql4.png" alt></p>
+<ul>
+<li><p>id:  id值相同，从上往下 顺序执行</p>
+<p>​      id值不同：id值越大越优先查询 (本质：在嵌套子查询时，先查内层 再查外层)</p>
+</li>
+<li><p>select_type:查询类型</p>
+<p>​      PRIMARY:包含子查询SQL中的主查询 （最外层）</p>
+<p>​      SUBQUERY：包含子查询SQL中的子查询 （非最外层）</p>
+<p>​      simple:简单查询（不包含子查询、union）</p>
+<p>​      derived:衍生查询(使用到了临时表)</p>
+</li>
+<li><p>type:索引类型</p>
+</li>
+<li><p>possible_keys ：可能用到的索引，是一种预测，不准</p>
+</li>
+<li><p>key ：实际使用到的索引</p>
+</li>
+<li><p>key_len ：索引的长度           用于判断复合索引是否被完全使用</p>
+</li>
+<li><p>ref : 注意与type中的ref值区分       指明当前表所参照的字段 </p>
+</li>
+<li><p>rows: 被索引优化查询的 数据个数 (实际通过索引而查询到的数据个数)</p>
+</li>
+<li><p>Extra</p>
+</li>
+</ul>
+<p><strong>using filesort</strong> ： 性能消耗大；需要“额外”的一次排序（查询）  。常见于 order by 语句中。<strong>排序会先进行先查询</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT a1 FROM test02 WHERE a1 =&apos;&apos; ORDER BY a2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-1.png" alt></p>
+<p>where对a1进行了查询，order by需要先查询再排序，所以多了额外一次</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT a1 FROM test02 WHERE a1 =&apos;a&apos; ORDER BY a1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-2.png" alt></p>
+<p>where查a1，order by就不需要查</p>
+<p><strong>using temporary</strong>:性能损耗大 ，用到了临时表。一般出现在group by 语句中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1 from test02 where a1 in (&apos;1&apos;,&apos;2&apos;,&apos;3&apos;) group by a1 </span><br><span class="line">explain select a1 from test02 where a1 in (&apos;1&apos;,&apos;2&apos;,&apos;3&apos;) group by a2 ; --using temporary a2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>using index :性能提升; 索引覆盖（覆盖索引）。原因：不读取原文件，只从索引文件中获取数据 （不需要回表查询）</li>
+<li>using where （需要回表查询）</li>
+<li>impossible where ： where子句永远为false</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/31/Date/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2326,595 +3016,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/collection-迭代器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/16/collection-迭代器/" class="post-title-link" itemprop="url">collection,迭代器</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-16 10:26:44" itemprop="dateCreated datePublished" datetime="2019-10-16T10:26:44+08:00">2019-10-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Collection集合"><a href="#Collection集合" class="headerlink" title="Collection集合"></a>Collection集合</h1><h2 id="集合概述"><a href="#集合概述" class="headerlink" title="集合概述"></a>集合概述</h2><p>在前面基础班我们已经学习过并使用过集合ArrayList<e> ,那么集合到底是什么呢?</e></p>
-<ul>
-<li><strong>集合</strong>：集合是java中提供的一种容器，可以用来存储多个数据。</li>
-</ul>
-<p>集合和数组既然都是容器，它们有啥区别呢？</p>
-<ul>
-<li>数组的长度是固定的。集合的长度是可变的。</li>
-<li>数组中存储的是同一类型的元素，可以存储基本数据类型值。集合存储的都是对象。而且对象的类型可以不一致。在开发中一般当对象多的时候，使用集合进行存储。</li>
-</ul>
-<h2 id="集合框架"><a href="#集合框架" class="headerlink" title="集合框架"></a>集合框架</h2><p>JAVASE提供了满足各种需求的API，在使用这些API前，先了解其继承与接口操作架构，才能了解何时采用哪个类，以及类之间如何彼此合作，从而达到灵活应用。</p>
-<p>集合按照其存储结构可以分为两大类，分别是单列集合<code>java.util.Collection</code>和双列集合<code>java.util.Map</code> </p>
-<ul>
-<li><strong>Collection</strong>：单列集合类的根接口，用于存储一系列符合某种规则的元素，它有两个重要的子接口，分别是<code>java.util.List</code>和<code>java.util.Set</code>。其中，<code>List</code>的特点是元素有序、元素可重复。<code>Set</code>的特点是元素无序，而且不可重复。<code>List</code>接口的主要实现类有<code>java.util.ArrayList</code>和<code>java.util.LinkedList</code>，<code>Set</code>接口的主要实现类有<code>java.util.HashSet</code>和<code>java.util.TreeSet</code>。</li>
-</ul>
-<p>从上面的描述可以看出JDK中提供了丰富的集合类库，为了便于初学者进行系统地学习，接下来通过一张图来描述整个集合类的继承体系。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/01_%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D.bmp" alt></p>
-<p>集合本身是一个工具，它存放在java.util包中。在<code>Collection</code>接口定义着单列集合框架中最最共性的内容。</p>
-<h2 id="Collection-常用功能"><a href="#Collection-常用功能" class="headerlink" title="Collection 常用功能"></a>Collection 常用功能</h2><p>Collection是所有单列集合的父接口，因此在Collection中定义了单列集合(List和Set)通用的一些方法，这些方法可用于操作所有的单列集合。方法如下：</p>
-<ul>
-<li><code>public boolean add(E e)</code>：  把给定的对象添加到当前集合中 。</li>
-<li><code>public void clear()</code> :清空集合中所有的元素。</li>
-<li><code>public boolean remove(E e)</code>: 把给定的对象在当前集合中删除。</li>
-<li><code>public boolean contains(E e)</code>: 判断当前集合中是否包含给定的对象。</li>
-<li><code>public boolean isEmpty()</code>: 判断当前集合是否为空。</li>
-<li><code>public int size()</code>: 返回集合中元素的个数。</li>
-<li><code>public Object[] toArray()</code>: 把集合中的元素，存储到数组中。</li>
-</ul>
-<p>方法演示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo1Collection</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建集合对象 </span></span><br><span class="line">    	<span class="comment">// 使用多态形式</span></span><br><span class="line">    	Collection&lt;String&gt; coll = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    	<span class="comment">// 使用方法</span></span><br><span class="line">    	<span class="comment">// 添加功能  boolean  add(String s)</span></span><br><span class="line">    	coll.add(<span class="string">"小李广"</span>);</span><br><span class="line">    	coll.add(<span class="string">"扫地僧"</span>);</span><br><span class="line">    	coll.add(<span class="string">"石破天"</span>);</span><br><span class="line">    	System.out.println(coll);</span><br><span class="line"></span><br><span class="line">    	<span class="comment">// boolean contains(E e) 判断o是否在集合中存在</span></span><br><span class="line">    	System.out.println(<span class="string">"判断  扫地僧 是否在集合中"</span>+coll.contains(<span class="string">"扫地僧"</span>));</span><br><span class="line"></span><br><span class="line">    	<span class="comment">//boolean remove(E e) 删除在集合中的o元素</span></span><br><span class="line">    	System.out.println(<span class="string">"删除石破天："</span>+coll.remove(<span class="string">"石破天"</span>));</span><br><span class="line">    	System.out.println(<span class="string">"操作之后集合中元素:"</span>+coll);</span><br><span class="line">    	</span><br><span class="line">    	<span class="comment">// size() 集合中有几个元素</span></span><br><span class="line">		System.out.println(<span class="string">"集合中有"</span>+coll.size()+<span class="string">"个元素"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Object[] toArray()转换成一个Object数组</span></span><br><span class="line">    	Object[] objects = coll.toArray();</span><br><span class="line">    	<span class="comment">// 遍历数组</span></span><br><span class="line">    	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; objects.length; i++) &#123;</span><br><span class="line">			System.out.println(objects[i]);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// void  clear() 清空集合</span></span><br><span class="line">		coll.clear();</span><br><span class="line">		System.out.println(<span class="string">"集合中内容为："</span>+coll);</span><br><span class="line">		<span class="comment">// boolean  isEmpty()  判断是否为空</span></span><br><span class="line">		System.out.println(coll.isEmpty());  	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Iterator迭代器"><a href="#Iterator迭代器" class="headerlink" title="Iterator迭代器"></a>Iterator迭代器</h2><h2 id="Iterator接口"><a href="#Iterator接口" class="headerlink" title="Iterator接口"></a>Iterator接口</h2><p>在程序开发中，经常需要遍历集合中的所有元素。针对这种需求，JDK专门提供了一个接口<code>java.util.Iterator</code>。<code>Iterator</code>接口也是Java集合中的一员，但它与<code>Collection</code>、<code>Map</code>接口有所不同，<code>Collection</code>接口与<code>Map</code>接口主要用于存储元素，而<code>Iterator</code>主要用于迭代访问（即遍历）<code>Collection</code>中的元素，因此<code>Iterator</code>对象也被称为迭代器。</p>
-<p>想要遍历Collection集合，那么就要获取该集合迭代器完成迭代操作，下面介绍一下获取迭代器的方法：</p>
-<ul>
-<li><code>public Iterator iterator()</code>: 获取集合对应的迭代器，用来遍历集合中的元素的。</li>
-</ul>
-<p>下面介绍一下迭代的概念：</p>
-<ul>
-<li><strong>迭代</strong>：即Collection集合元素的通用获取方式。在取元素之前先要判断集合中有没有元素，如果有，就把这个元素取出来，继续在判断，如果还有就再取出出来。一直把集合中的所有元素全部取出。这种取出方式专业术语称为迭代。</li>
-</ul>
-<p>Iterator接口的常用方法如下：</p>
-<ul>
-<li><code>public E next()</code>:返回迭代的下一个元素。</li>
-<li><code>public boolean hasNext()</code>:如果仍有元素可以迭代，则返回 true。</li>
-</ul>
-<p>接下来我们通过案例学习如何使用Iterator迭代集合中元素：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IteratorDemo</span> </span>&#123;</span><br><span class="line">  	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 使用多态方式 创建对象</span></span><br><span class="line">        Collection&lt;String&gt; coll = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加元素到集合</span></span><br><span class="line">        coll.add(<span class="string">"串串星人"</span>);</span><br><span class="line">        coll.add(<span class="string">"吐槽星人"</span>);</span><br><span class="line">        coll.add(<span class="string">"汪星人"</span>);</span><br><span class="line">        <span class="comment">//遍历</span></span><br><span class="line">        <span class="comment">//使用迭代器 遍历   每个集合对象都有自己的迭代器</span></span><br><span class="line">        Iterator&lt;String&gt; it = coll.iterator();</span><br><span class="line">        <span class="comment">//  泛型指的是 迭代出 元素的数据类型</span></span><br><span class="line">        <span class="keyword">while</span>(it.hasNext())&#123; <span class="comment">//判断是否有迭代元素</span></span><br><span class="line">            String s = it.next();<span class="comment">//获取迭代出的元素</span></span><br><span class="line">            System.out.println(s);</span><br><span class="line">        &#125;</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>tips:：在进行集合元素取出时，如果集合中已经没有元素了，还继续使用迭代器的next方法，将会发生java.util.NoSuchElementException没有集合元素的错误。</p>
-</blockquote>
-<h2 id="迭代器的实现原理"><a href="#迭代器的实现原理" class="headerlink" title="迭代器的实现原理"></a>迭代器的实现原理</h2><p>我们在之前案例已经完成了Iterator遍历集合的整个过程。当遍历集合时，首先通过调用t集合的iterator()方法获得迭代器对象，然后使用hashNext()方法判断集合中是否存在下一个元素，如果存在，则调用next()方法将元素取出，否则说明已到达了集合末尾，停止遍历元素。</p>
-<p>Iterator迭代器对象在遍历集合时，内部采用指针的方式来跟踪集合中的元素，为了让初学者能更好地理解迭代器的工作原理，接下来通过一个图例来演示Iterator对象迭代元素的过程：</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/02_%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86(1).bmp" alt></p>
-<p>在调用Iterator的next方法之前，迭代器的索引位于第一个元素之前，不指向任何元素，当第一次调用迭代器的next方法后，迭代器的索引会向后移动一位，指向第一个元素并将该元素返回，当再次调用next方法时，迭代器的索引会指向第二个元素并将该元素返回，依此类推，直到hasNext方法返回false，表示到达了集合的末尾，终止对元素的遍历。</p>
-<h2 id="增强for"><a href="#增强for" class="headerlink" title="增强for"></a>增强for</h2><p>增强for循环(也称for each循环)是<strong>JDK1.5</strong>以后出来的一个高级for循环，专门用来遍历数组和集合的。它的内部原理其实是个Iterator迭代器，所以在遍历的过程中，不能对集合中的元素进行增删操作。</p>
-<p>格式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(元素的数据类型  变量 : Collection集合or数组)&#123; </span><br><span class="line">  	<span class="comment">//写操作代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>它用于遍历Collection和数组。通常只进行遍历元素，不要在遍历的过程中对集合元素进行增删操作。</p>
-<h4 id="练习1：遍历数组"><a href="#练习1：遍历数组" class="headerlink" title="练习1：遍历数组"></a>练习1：遍历数组</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NBForDemo1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span>[] arr = &#123;<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">87</span>&#125;;</span><br><span class="line">       	<span class="comment">//使用增强for遍历数组</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> a : arr)&#123;<span class="comment">//a代表数组中的每个元素</span></span><br><span class="line">			System.out.println(a);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="练习2-遍历集合"><a href="#练习2-遍历集合" class="headerlink" title="练习2:遍历集合"></a>练习2:遍历集合</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NBFor</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;        </span><br><span class="line">    	Collection&lt;String&gt; coll = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    	coll.add(<span class="string">"小河神"</span>);</span><br><span class="line">    	coll.add(<span class="string">"老河神"</span>);</span><br><span class="line">    	coll.add(<span class="string">"神婆"</span>);</span><br><span class="line">    	<span class="comment">//使用增强for遍历</span></span><br><span class="line">    	<span class="keyword">for</span>(String s :coll)&#123;<span class="comment">//接收变量s代表 代表被遍历到的集合元素</span></span><br><span class="line">    		System.out.println(s);</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>tips: 新for循环必须有被遍历的目标。目标只能是Collection或者是数组。新式for仅仅作为遍历操作出现。</p>
-</blockquote>
-<p> <strong>for循环与迭代器的对比:</strong></p>
-<p>　　***** 效率上各有各的优势:</p>
-<p>　　　　<strong>&gt;</strong> ArrayList对随机访问比较快，而for循环中使用的get()方法，采用的即是随机访问的方法，因此在ArrayList里for循环快。</p>
-<p>　　　　<strong>&gt;</strong> LinkedList则是顺序访问比较快，Iterator中的next()方法采用的是顺序访问方法，因此在LinkedList里使用Iterator较快。</p>
-<p>　　　　<strong>&gt;</strong> 主要还是要依据集合的数据结构不同的判断。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis原理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/14/mybatis原理/" class="post-title-link" itemprop="url">mybatis原理</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-14 20:36:22" itemprop="dateCreated datePublished" datetime="2019-10-14T20:36:22+08:00">2019-10-14</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>原理分为6块</p>
-<ol>
-<li>读取核心配置文件并返回<code>InputStream</code>流对象</li>
-<li>根据<code>InputStream</code>流对象解析出<code>Configuration</code>对象，然后创建<code>SqlSessionFactory</code>工厂对象</li>
-<li>根据一系列属性从<code>SqlSessionFactory</code>工厂中创建<code>SqlSession</code></li>
-<li>从<code>SqlSession</code>中调用<code>Executor</code>执行数据库操作&amp;&amp;生成具体SQL指令</li>
-<li>对执行结果进行二次封装</li>
-<li>提交与事务</li>
-</ol>
-<h2 id="根据配置文件生成SqlSessionFactory"><a href="#根据配置文件生成SqlSessionFactory" class="headerlink" title="根据配置文件生成SqlSessionFactory"></a>根据配置文件生成SqlSessionFactory</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static InputStream getResourceAsStream(String resource) throws IOException &#123;</span><br><span class="line">    return getResourceAsStream((ClassLoader)null, resource);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>getResourceAsStream调用下面的方法：</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis注解开发/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/14/mybatis注解开发/" class="post-title-link" itemprop="url">注解开发</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-14 20:22:55" itemprop="dateCreated datePublished" datetime="2019-10-14T20:22:55+08:00">2019-10-14</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="注解开发增删改查"><a href="#注解开发增删改查" class="headerlink" title="注解开发增删改查"></a>注解开发增删改查</h2><p>解释一下，原来mapper.xml里的namespace不用写，因为本身就在IUserDao接口，rusultType不用因为泛型内说明了返回类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">public interface IUserDao &#123;</span><br><span class="line">    /**</span><br><span class="line">    * 查询所有用户</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @Select(&quot;select * from user&quot;)</span><br><span class="line">   List&lt;User&gt; findAll();</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 保存用户</span><br><span class="line">    * @param user</span><br><span class="line">    */</span><br><span class="line">   @Insert(&quot;insert into user(username,address,sex,birthday)values(#&#123;username&#125;,#&#123;address&#125;,#&#123;sex&#125;,#&#123;birthday&#125;)&quot;)</span><br><span class="line">   void saveUser(User user);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 更新用户</span><br><span class="line">    * @param user</span><br><span class="line">    */</span><br><span class="line">   @Update(&quot;update user set username=#&#123;username&#125;,sex=#&#123;sex&#125;,birthday=#&#123;birthday&#125;,address=#&#123;address&#125; where id=#&#123;id&#125;&quot;)</span><br><span class="line">   void updateUser(User user);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 删除用户</span><br><span class="line">    * @param userId</span><br><span class="line">    */</span><br><span class="line">   @Delete(&quot;delete from user where id=#&#123;id&#125; &quot;)</span><br><span class="line">   void deleteUser(Integer userId);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 根据id查询用户</span><br><span class="line">    * @param userId</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @Select(&quot;select * from user  where id=#&#123;id&#125; &quot;)</span><br><span class="line">   User findById(Integer userId);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 根据用户名称模糊查询</span><br><span class="line">    * @param username</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @Select(&quot;select * from user where username like #&#123;username&#125; &quot;)</span><br><span class="line">   List&lt;User&gt; findUserByName(String username);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="注解开发多表查询"><a href="#注解开发多表查询" class="headerlink" title="注解开发多表查询"></a>注解开发多表查询</h2><p>一对一（多对一）</p>
-<p>@One 注解（一对一）  代替了<assocation>标签，是多表查询的关键，在注解中用来指定子查询返回单一对象</assocation></p>
-<p>select  指定用来多表查询的 sqlmapper  </p>
-<p>fetchType 会覆盖全局的配置参数 lazyLoadingEnabled</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public interface IAccountDao &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询所有账户，并且获取每个账户所属的用户信息</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from account&quot;)</span><br><span class="line">    @Results(id=&quot;accountMap&quot;,value = &#123;</span><br><span class="line">            @Result(id=true,column = &quot;id&quot;,property = &quot;id&quot;),</span><br><span class="line">            @Result(column = &quot;uid&quot;,property = &quot;uid&quot;),</span><br><span class="line">            @Result(column = &quot;money&quot;,property = &quot;money&quot;),</span><br><span class="line">            //这个注解是引入主表        FetchType(加载时机)  EAGER(立即加载)</span><br><span class="line">            @Result(property = &quot;user&quot;,column = &quot;uid&quot;,one=@One(select=&quot;com.itheima.dao.IUserDao.findById&quot;,fetchType= FetchType.EAGER))</span><br><span class="line">    &#125;)</span><br><span class="line">    List&lt;Account&gt; findAll();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据用户id查询账户信息</span><br><span class="line">     * @param userId</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from account where uid = #&#123;userId&#125;&quot;)</span><br><span class="line">    List&lt;Account&gt; findAccountByUid(Integer userId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>一对多</p>
-<p>@Many 注解（多对一）       代替了<collection>标签,是是多表查询的关键，在注解中用来指定子查询返回对象集合</collection></p>
-<p>fetchType = FetchType.LAZY延迟加载</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">public interface IUserDao &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询所有用户</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from user&quot;)</span><br><span class="line">    @Results(id=&quot;userMap&quot;,value=&#123;</span><br><span class="line">            @Result(id=true,column = &quot;id&quot;,property = &quot;userId&quot;),</span><br><span class="line">            @Result(column = &quot;username&quot;,property = &quot;userName&quot;),</span><br><span class="line">            @Result(column = &quot;address&quot;,property = &quot;userAddress&quot;),</span><br><span class="line">            @Result(column = &quot;sex&quot;,property = &quot;userSex&quot;),</span><br><span class="line">            @Result(column = &quot;birthday&quot;,property = &quot;userBirthday&quot;),</span><br><span class="line">            @Result(property = &quot;accounts&quot;,column = &quot;id&quot;,</span><br><span class="line">                    many = @Many(select = &quot;com.itheima.dao.IAccountDao.findAccountByUid&quot;,</span><br><span class="line">                                fetchType = FetchType.LAZY))</span><br><span class="line">    &#125;)</span><br><span class="line">    List&lt;User&gt; findAll();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据id查询用户</span><br><span class="line">     * @param userId</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from user  where id=#&#123;id&#125; &quot;)</span><br><span class="line">    @ResultMap(&quot;userMap&quot;)</span><br><span class="line">    User findById(Integer userId);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据用户名称模糊查询</span><br><span class="line">     * @param username</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from user where username like #&#123;username&#125; &quot;)</span><br><span class="line">    @ResultMap(&quot;userMap&quot;)</span><br><span class="line">    List&lt;User&gt; findUserByName(String username);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2963,7 +3064,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-count">56</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3010,7 +3111,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3055,7 +3162,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
