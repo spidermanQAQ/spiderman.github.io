@@ -380,6 +380,236 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/网络层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/04/28/网络层/" class="post-title-link" itemprop="url">网络层</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-28 12:58:28" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:28+08:00">2020-04-28</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%821.png" alt></p>
+<p>版本：IPv4/IPv6</p>
+<p>首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B）</p>
+<p>总长度：首部+数据(链路层有最小和最大长度)</p>
+<p>标识：同一个数据报分片用同一个标识   </p>
+<p>标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片</p>
+<p>片偏移：某片在原分组的位置</p>
+<p>生存时间：每经过一个路由器TTL-1</p>
+<p>首部检验和：只检验首部，因为首部中的标志，片偏移等是会变的</p>
+<h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p>像每个人都有身份证，IP地址可以唯一标识一个路由器，主机的接口</p>
+<p>分类的IP地址</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%822.png" alt></p>
+<p>A，B，C类地址网络号中依次有1位，2位，3位用来标识，网络号依次占8，16，24位</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%823.png" alt></p>
+<h2 id="网络地址转换NAT"><a href="#网络地址转换NAT" class="headerlink" title="网络地址转换NAT"></a>网络地址转换NAT</h2><p>路由器对目的地址是私有IP地址的数据报一律不转发</p>
+<p>网络地址转换NAT在专用网连接到因特网的路由器上安装NAT软件，安装了NAT软件的路由器叫做NAT路由器</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%824.png" alt></p>
+<h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><p>分类的IP地址存在问题：比如一个单位申请了一个B类IP，但是实际在用的并不多，会造成资源浪费问题。划分子网还能提高灵活性，比如一个单位要新开一个部门，没划分子网的话得重新去申请一个IP</p>
+<h3 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%827.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%825.png" alt></p>
+<p>划分子网后对外仍表现为一个网络</p>
+<h3 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h3><p>路由器需要根据收到的IP找到相应子网</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%826.png" alt></p>
+<p>除了主机号其余为0，通过IP地址与子网掩码进行与操作，就能得到子网网络地址</p>
+<h2 id="无分类编址CIDR"><a href="#无分类编址CIDR" class="headerlink" title="无分类编址CIDR"></a>无分类编址CIDR</h2><p>以前的一个子网的子网掩码是一样的，如果子网掩码不固定长度，那子网下的主机数更灵活（比如如果部门人比较多，那就可以让子网掩码短一点，这样主机数可以更多）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%828.png" alt></p>
+<p>网络前缀相同的组成一个网络块</p>
+<p>128.14.35.7/20一个地址块的IP地址</p>
+<p>最小IP地址10000000 00001110 00100000 00000000</p>
+<p>最大IP地址10000000 00001110 00101111 11111111</p>
+<p>子网掩码   11111111 11111111 11110000 00000000</p>
+<h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址，如下图的mac6，但是你可能不知道mac6是什么，这就需要arp了</p>
+<p>ARP协议可以完成主机或路由器IP地址到mac地址的映射</p>
+<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），没有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
+<p>例子</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png" alt></p>
+<p>应用层发送一个pdf文件，传输层分成123，对123分为加首部（如果123长度过大，还要分片）</p>
+<p>主机1发送文件到主机5，首先在1所在局域网广播一个ARP请求分组，因为5不在同一个局域网，对应的mac地址为mac6，在数据链路层传输后到达路由器，解封装，再封装（路由器只有3层，最高到网络层），封装后源mac地址为mac7，目标mac为mac8，同理到mac9直至最高的主机5IP.</p>
+<h2 id="ICMP协议（网际控制报文协议）"><a href="#ICMP协议（网际控制报文协议）" class="headerlink" title="ICMP协议（网际控制报文协议）"></a>ICMP协议（网际控制报文协议）</h2><p>目的：进行差错报告</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8210.png" alt></p>
+<p>类型：ICMP报文有不同类型</p>
+<p>检验和：检查发过来的IP数据报的首部和<strong>数据部分，区别于IP地址的首部检验和</strong></p>
+<p>ICMP报文是作为返回的IP数据报的数据部分</p>
+<p>ICMP差错报告报文的数据部分由收到的IP数据报的首部+IP数据报数据部分前8个字节组成</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
+<h2 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h2><h3 id="IPv6格式"><a href="#IPv6格式" class="headerlink" title="IPv6格式"></a>IPv6格式</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png" alt></p>
+<h3 id="与IPv4区别"><a href="#与IPv4区别" class="headerlink" title="与IPv4区别"></a>与IPv4区别</h3><ul>
+<li>IPv4 32位，IPv6 128位</li>
+<li>IPv4总长度取消，改为有效载荷长度</li>
+<li>IPv4生存时间取消，改为下一个首部</li>
+<li>IPv4首部长度是4B倍数，IPv6基本单位必须是40B</li>
+<li>IPv4路由器和主机均可分片，IPv6只能主机分片</li>
+</ul>
+<h2 id="RIP协议"><a href="#RIP协议" class="headerlink" title="RIP协议"></a>RIP协议</h2><p>RIP是一种基于距离向量的协议，每一个路由器都维护到每一个目的网络的最短距离</p>
+<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
+<li>只和相邻路由器交换信息</li>
+<li>交换的信息是自己的路由表</li>
+<li>每30秒交换一次路由表</li>
+<li>一条路由最多包含15个路由器，距离为16代表不可达，所以适合小型网络</li>
+</ul>
+<h3 id="基本过程："><a href="#基本过程：" class="headerlink" title="基本过程："></a>基本过程：</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
+<ul>
+<li>对相邻路由器x发来的RIP报文，修改报文每一项，把下一跳地址改为x，距离+1</li>
+<li>如果R1没有目标为net3的表项，则把修改完的表项插入</li>
+<li>有net3，如果下一跳为x，则进行更新（毕竟30秒交换一次，保持最新的）；如果下一跳不为x，则比较距离，挑小的</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/数据链路层/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2211,265 +2441,6 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/15/mysql优化-锁/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/15/mysql优化-锁/" class="post-title-link" itemprop="url">mysql优化-锁</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-15 14:55:11" itemprop="dateCreated datePublished" datetime="2019-11-15T14:55:11+08:00">2019-11-15</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>解决因资源共享 而造成的并发问题。</p>
-<p>示例</p>
-<p>买最后一件衣服X<br>    A:      X    买 ：  X加锁 -&gt;试衣服…下单..付款..打包 -&gt;X解锁<br>    B:      X    买：发现X已被加锁，等待X解锁，   X已售空</p>
-<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="操作类型"><a href="#操作类型" class="headerlink" title="操作类型"></a>操作类型</h3><ul>
-<li>读锁（共享锁）： 对同一个数据（衣服），多个读操作可以同时进行，互不干扰</li>
-<li>写锁（互斥锁）： 如果当前写操作没有完毕（买衣服的一系列操作），则无法进行其他的读操作、写操作</li>
-</ul>
-<h3 id="操作范围"><a href="#操作范围" class="headerlink" title="操作范围"></a>操作范围</h3><ul>
-<li><p>表锁</p>
-<p>一次性对一张表整体加锁。如MyISAM存储引擎使用表锁，开销小、加锁快；无死锁；但锁的范围大，容易发生锁冲突、并发度低</p>
-</li>
-<li><p>行锁</p>
-<p>一次性对一条数据加锁。如InnoDB存储引擎使用行锁，开销大，加锁慢；容易出现死锁；锁的范围较小，不易发生锁冲突，并发度高（很小概率 发生高并发问题：脏读、幻读、不可重复度、丢失更新等问题）</p>
-</li>
-<li><p>页锁        </p>
-</li>
-</ul>
-<h3 id="示例（表锁）"><a href="#示例（表锁）" class="headerlink" title="示例（表锁）"></a>示例（表锁）</h3><p>表锁 ：  –自增操作 MYSQL/SQLSERVER 支持；oracle需要借助于序列来实现自增</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE tablelock</span><br><span class="line">(</span><br><span class="line">id INT PRIMARY KEY AUTO_INCREMENT ,</span><br><span class="line">NAME VARCHAR(20)</span><br><span class="line">);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&quot;a1&quot;)</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a2&apos;);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a3&apos;);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a4&apos;);</span><br><span class="line">INSERT INTO tablelock(NAME) VALUES(&apos;a5&apos;);</span><br></pre></td></tr></table></figure>
-
-<h4 id="加读锁"><a href="#加读锁" class="headerlink" title="加读锁"></a>加读锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LOCK TABLE tablelock READ</span><br><span class="line">SELECT *FROM tablelock --读（查），可以</span><br><span class="line">UPDATE tablelock SET NAME=&quot;a6&quot; WHERE id=1 --写（增删改），不可以</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E9%94%811.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT *FROM USER</span><br><span class="line">DELETE FROM USER WHERE id=1</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E9%94%812.png" alt></p>
-<p><strong>结论1</strong>：</p>
-<ul>
-<li><p>如果某一个会话 对A表加了read锁，则 该会话 可以对A表进行读操作、不能进行写操作； 且 该会话不能对其他表进行读、写操作。</p>
-</li>
-<li><p>即如果给A表加了读锁，则当前会话只能对A表进行读操作</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">会话1</span><br><span class="line">select * from tablelock  --读（查），可以</span><br><span class="line">delete from tablelock where id =1 --写，会“等待”会话0将锁释放</span><br><span class="line">SELECT *FROM USER  --读（查），可以</span><br><span class="line">DELETE FROM USER WHERE id=1  --写，可以</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论2</strong></p>
-<p>会话0给A表加了锁；其他会话的操作</p>
-<ul>
-<li>可以对其他表（A表以外的表）进行读、写操作</li>
-<li>对A表：读-可以；  写-需要等待释放锁</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">释放锁: unlock tables</span><br></pre></td></tr></table></figure>
-
-<h4 id="加写锁"><a href="#加写锁" class="headerlink" title="加写锁"></a>加写锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">会话0：</span><br><span class="line">		lock table tablelock write ;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论</strong></p>
-<p>当前会话（会话0） 可以对加了写锁的表  进行任何操作（增删改查）；但是不能 操作（增删改查）其他表</p>
-<p>其他会话   对会话0中加写锁的表 可以进行增删改查的前提是：等待会话0释放写锁</p>
-<h4 id="MySQL表级锁的锁模式"><a href="#MySQL表级锁的锁模式" class="headerlink" title="MySQL表级锁的锁模式"></a>MySQL表级锁的锁模式</h4><p>MyISAM在执行查询语句（SELECT）前，会自动给涉及的所有表加读锁，在执行更新操作（DML）前，会自动给涉及的表加写锁。</p>
-<p>所以对MyISAM表进行操作，会有以下情况：</p>
-<ul>
-<li>对MyISAM表的读操作（加读锁），不会阻塞其他进程（会话）对同一表的读请求，但会阻塞对同一表的写请求。只有当读锁释放后，才会执行其它进程的写操作。 </li>
-<li>对MyISAM表的写操作（加写锁），会阻塞其他进程（会话）对同一表的读和写操作，只有当写锁释放后，才会执行其它进程的读写操作。</li>
-</ul>
-<h4 id="分析表锁定："><a href="#分析表锁定：" class="headerlink" title="分析表锁定："></a>分析表锁定：</h4><p>查看哪些表加了锁：   show open tables     1代表被加了锁<br>分析表锁定的严重程度： show status like ‘table%’ </p>
-<ul>
-<li>Table_locks_immediate :即可能获取到的锁数</li>
-<li>Table_locks_waited：需要等待的表锁数(如果该值越大，说明存在越大的锁竞争）</li>
-</ul>
-<p>一般建议：<br>        Table_locks_immediate/Table_locks_waited &gt; 5000， 建议采用InnoDB引擎，否则MyISAM引擎</p>
-<h3 id="示例（行锁）"><a href="#示例（行锁）" class="headerlink" title="示例（行锁）"></a>示例（行锁）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE linelock(</span><br><span class="line">id INT(5) PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">NAME VARCHAR(20)</span><br><span class="line">)ENGINE=INNODB ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;1&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;2&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;3&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;4&apos;)  ;</span><br><span class="line">INSERT INTO linelock(NAME) VALUES(&apos;5&apos;)  ;</span><br></pre></td></tr></table></figure>
-
-<p>*<em>mysql默认自动commit;    oracle默认不会自动commit *</em></p>
-<p>为了研究行锁，暂时将自动commit关闭;  set autocommit =0 ; 以后需要通过commit</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">会话0： 写操作</span><br><span class="line">	insert into linelock values(&apos;a6&apos;) ;</span><br><span class="line">   </span><br><span class="line">会话1： 写操作 同样的数据</span><br><span class="line">	update linelock set name=&apos;ax&apos; where id = 6;</span><br></pre></td></tr></table></figure>
-
-<p><strong>结论1</strong></p>
-<ul>
-<li>如果会话x对某条数据a进行 DML操作（研究时：关闭了自动commit的情况下），则其他会话必须等待会话x结束事务(commit/rollback)后  才能对数据a进行操作</li>
-</ul>
-<p>补充：表锁 是通过unlock tables，也可以通过事务解锁 ; 行锁 是通过事务解锁</p>
-<pre><code>行锁，操作不同数据：
-会话0： 写操作
-    insert into linelock values(8,&apos;a8&apos;) ;
-会话1： 写操作， 不同的数据
-    update linelock set name=&apos;ax&apos; where id = 5;</code></pre><p><strong>结论2</strong></p>
-<ul>
-<li>行锁，一次锁一行数据；因此 如果操作的是不同数据，则不干扰</li>
-</ul>
-<p><strong>行锁的注意事项</strong>：</p>
-<ul>
-<li><p>如果没有索引，则行锁会转为表锁</p>
-<p>这里第二次会话使用了3，4，发生类型转换，会使索引失效，行锁转成表锁</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">会话0： 写操作</span><br><span class="line">	update linelock set name = &apos;ai&apos; where name = &apos;3&apos; ;</span><br><span class="line">		</span><br><span class="line">会话1： 写操作， 不同的数据</span><br><span class="line">	update linelock set name = &apos;aiX&apos; where name = &apos;4&apos; ;</span><br><span class="line"></span><br><span class="line">会话0： 写操作</span><br><span class="line">	update linelock set name = &apos;ai&apos; where name = 3 ;</span><br><span class="line">	</span><br><span class="line">会话1： 写操作， 不同的数据</span><br><span class="line">	update linelock set name = &apos;aiX&apos; where name = 4 ;</span><br><span class="line">--可以发现，数据被阻塞了（加锁）</span><br><span class="line">-- 原因：如果索引类 发生了类型转换，则索引失效。 因此 此次操作，会从行锁 转为表锁。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>行锁的一种特殊情况：间隙锁：值在范围内，但却不存在</p>
-<p>此时linelock表中 没有id=7的数据<br>update linelock set name =’x’ where id &gt;1 and id&lt;9 ;   –即在此where范围中，没有id=7的数据，则id=7的数据成为间隙。<br>间隙：Mysql会自动给 间隙 加索 -&gt;间隙锁。即 本题 会自动给id=7的数据加 间隙锁（行锁）。<br>行锁：如果有where，则实际加锁的范围 就是where后面的范围（不是实际的值）</p>
-</li>
-</ul>
-<p>行锁：InnoDB默认采用行锁；</p>
-<ul>
-<li>缺点： 比表锁性能损耗大。</li>
-<li>优点：并发能力强，效率高。<br>因此建议，高并发用InnoDB，否则用MyISAM。</li>
-</ul>
-<p>​    </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2518,7 +2489,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-count">57</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
