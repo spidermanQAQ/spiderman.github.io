@@ -380,6 +380,179 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/09/新生代为啥要分三块区域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/09/新生代为啥要分三块区域/" class="post-title-link" itemprop="url">新生代为啥要分三块区域</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-09 16:50:20" itemprop="dateCreated datePublished" datetime="2020-09-09T16:50:20+08:00">2020-09-09</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>java虚拟机根据对象生命周期的不同把堆内存划分为几块，一般分为新生代、老年代和永久代（对HotSpot虚拟机而言） </p>
+<h2 id="为什么堆内存要分区呢"><a href="#为什么堆内存要分区呢" class="headerlink" title="为什么堆内存要分区呢"></a>为什么堆内存要分区呢</h2><p>给堆内存分代是为了提高对象内存分配和垃圾回收的效率。试想一下，如果堆内存没有区域划分，所有的新创建的对象和生命周期很长的对象放在一起，随着程序的执行，堆内存需要频繁进行垃圾收集，而每次回收都要遍历所有的对象，遍历这些对象所花费的时间代价是巨大的，会严重影响我们的GC效率，这简直太可怕了。</p>
+<p> 有了内存分代，情况就不同了，新创建的对象会在新生代中分配内存，经过多次回收仍然存活下来的对象存放在老年代中 ， 新生代中的对象存活时间短，只需要在新生代区域中频繁进行GC，老年代中对象生命周期长，内存回收的频率相对较低，不需要频繁进行回收 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E4%BB%A3.jpg" alt></p>
+<h2 id="为什么Survivor不是0块"><a href="#为什么Survivor不是0块" class="headerlink" title="为什么Survivor不是0块"></a>为什么Survivor不是0块</h2><p>Survivor如果是0的话，那在eden中垃圾回收之后存活的对象都会进入老生代，这样老生代的内存空间很快就被占满了，从而触发最耗时的 Full GC </p>
+<h2 id="为什么Survivor不是1块"><a href="#为什么Survivor不是1块" class="headerlink" title="为什么Survivor不是1块"></a>为什么Survivor不是1块</h2><p>如果 Survivor 分区是 1 个的话，假设我们把两个区域分为 1:1，那么任何时候都有一半的内存空间是闲置的，显然空间利用率太低 </p>
+<p>但如果设置内存空间的比例是 8:2 ，只是看起来似乎“很好”，假设新生代的内存为 100 MB（ Survivor 大小为 20 MB ），现在有 70 MB 对象进行垃圾回收之后，剩余活跃的对象为 15 MB 进入 Survivor 区，这个时候新生代可用的内存空间只剩了 5 MB，这样很快又要进行垃圾回收操作 </p>
+<h2 id="堆内存分3块有什么好处"><a href="#堆内存分3块有什么好处" class="headerlink" title="堆内存分3块有什么好处"></a>堆内存分3块有什么好处</h2><p>HotSpot将新生代划分为三块，一块较大的Eden空间和两块较小的Survivor空间，默认比例为8：1：1。划分的目的是因为HotSpot采用复制算法来回收新生代，设置这个比例是为了充分利用内存空间，减少浪费。新生成的对象在Eden区分配（大对象除外，大对象直接进入老年代），当Eden区没有足够的空间进行分配时，虚拟机将发起一次Minor GC。 </p>
+<p>GC开始时，对象只会存在于Eden区和From Survivor区，To Survivor区是空的（作为保留区域）。GC进行时，Eden区中所有存活的对象都会被复制到To Survivor区，而在From Survivor区中，仍存活的对象会根据它们的年龄值决定去向，年龄值达到年龄阀值（默认为15，新生代中的对象每熬过一轮垃圾回收，年龄值就加1，GC分代年龄存储在对象的header中）的对象会被移到老年代中，没有达到阀值的对象会被复制到To Survivor区。接着清空Eden区和From Survivor区，新生代中存活的对象都在To Survivor区。接着， From Survivor区和To Survivor区会交换它们的角色，也就是新的To Survivor区就是上次GC清空的From Survivor区，新的From Survivor区就是上次GC的To Survivor区，总之，不管怎样都会保证To Survivor区在一轮GC后是空的 </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/30/回溯法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -821,7 +994,8 @@
       
         
           
-            <h2 id="异或等位运算"><a href="#异或等位运算" class="headerlink" title="异或等位运算"></a>异或等位运算</h2><h3 id="65-不用加减乘除做加法"><a href="#65-不用加减乘除做加法" class="headerlink" title="65.不用加减乘除做加法"></a>65.不用加减乘除做加法</h3><p>写一个函数，求两个整数之和，要求在函数体内不得使用 “+”、“-”、“*”、“/” 四则运算符号。 </p>
+            <p>[TOC]</p>
+<h2 id="异或等位运算"><a href="#异或等位运算" class="headerlink" title="异或等位运算"></a>异或等位运算</h2><h3 id="65-不用加减乘除做加法"><a href="#65-不用加减乘除做加法" class="headerlink" title="65.不用加减乘除做加法"></a>65.不用加减乘除做加法</h3><p>写一个函数，求两个整数之和，要求在函数体内不得使用 “+”、“-”、“*”、“/” 四则运算符号。 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: a = 1, b = 1</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
 
 <p><strong>思路</strong></p>
@@ -839,6 +1013,21 @@
 <p>只有2个不一样的值，对所有数据进行异或操作，最后的结果就是这两个不一样数字异或的结果。所以考虑通过这个结果将3个不一样的数字分开到2组，实际上异或的结果值中肯定有1位是1，我们选择最低位的1（因为容易找），除了这个1其余为0，将数组所有数字和结果进行与操作，相同数字我们很容易放到一边，因为2个不同数字进行异或结果的那个1意味着在这一位上2个数字是不一样的，那进行与操作分类是也会被分到2组</p>
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] singleNumbers(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> x=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="comment">//找到最近的一个1的位数</span></span><br><span class="line">            x=x^i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> flag=x&amp;(-x);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>((flag&amp;i)==<span class="number">0</span>)&#123;</span><br><span class="line">                res[<span class="number">0</span>]^=i;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                res[<span class="number">1</span>]^=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="56-2数组中数字出现的字数II"><a href="#56-2数组中数字出现的字数II" class="headerlink" title="56-2数组中数字出现的字数II"></a>56-2数组中数字出现的字数II</h3><p>在一个数组 <code>nums</code> 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [3,4,3,3]</span><br><span class="line">输出：4</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li><p>通过<strong>与运算</strong>可以获得每个数字最后一位的值，然后<strong>无符号右移</strong>看第二位数字</p>
+</li>
+<li><p>最终将所有数字每位之和放在一个32位的数组里面，将数组中每一个数字<strong>%3</strong>的结果就是只出现一次的数字</p>
+</li>
+<li><p>最后将counts数组中的数进行<strong>或操作</strong>得到结果res</p>
+<p><strong>代码</strong></p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int singleNumber(int[] nums) &#123;</span><br><span class="line">        int[] counts=new int[32];</span><br><span class="line">        for(int num:nums)&#123;</span><br><span class="line">            for(int j=0;j&lt;counts.length;j++)&#123;</span><br><span class="line">                //通过与操作判断每一个数字的每一位，1就是1，0还是0</span><br><span class="line">                //int 4个字节，每个字节8位</span><br><span class="line">                //32位数字来保存所有数字每位之和，出现3次的最后%3结果是0</span><br><span class="line">                counts[j]+=num&amp;1;</span><br><span class="line">                //无符号右移</span><br><span class="line">                num&gt;&gt;&gt;=1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        for(int i=0;i&lt;32;i++)&#123;</span><br><span class="line">            counts[i]%=3;</span><br><span class="line">        &#125;</span><br><span class="line">        int res=0;</span><br><span class="line">        for(int m=0;m&lt;32;m++)&#123;</span><br><span class="line">            res&lt;&lt;=1;</span><br><span class="line">            res|=counts[31-m];</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="用到栈的题目"><a href="#用到栈的题目" class="headerlink" title="用到栈的题目"></a>用到栈的题目</h2><p><strong>操作</strong></p>
 <ul>
@@ -986,6 +1175,18 @@
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">translateNum</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">        String s=String.valueOf(num);</span><br><span class="line">        <span class="comment">//数字第一位对应着dp[1]，所以还有个dp[0]</span></span><br><span class="line">        <span class="keyword">int</span>[]dp=<span class="keyword">new</span> <span class="keyword">int</span>[s.length()+<span class="number">1</span>]; </span><br><span class="line">        <span class="comment">//dp[0]由dp[2]求得，因为2位树肯定是在10-25之间，所以dp[2]=2,dp[0]=1</span></span><br><span class="line">        dp[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">        dp[<span class="number">1</span>]=<span class="number">1</span>; </span><br><span class="line">        <span class="comment">//字符串下表为0-length-1,而转移方程是i-1，i-2位，所以i需要从2到length</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=s.length();i++)&#123;</span><br><span class="line">            String a=s.substring(i-<span class="number">2</span>,i);</span><br><span class="line">            <span class="keyword">if</span>(a.compareTo(<span class="string">"10"</span>)&gt;=<span class="number">0</span>&amp;&amp;a.compareTo(<span class="string">"25"</span>)&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">                dp[i]=dp[i-<span class="number">1</span>]+dp[i-<span class="number">2</span>];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                dp[i]=dp[i-<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//dp数组是从0-length</span></span><br><span class="line">        <span class="keyword">return</span> dp[s.length()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="14-I-剪绳子I"><a href="#14-I-剪绳子I" class="headerlink" title="14-I 剪绳子I"></a>14-I 剪绳子I</h3><p>给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m-1] 。请问 k[0]<em>k[1]</em>…*k[m-1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2</span><br><span class="line">输出: 1</span><br><span class="line">解释: 2 = 1 + 1, 1 × 1 = 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>状态定义 dp[i] 长度为i的绳子最大乘积</li>
+<li>初始状态 dp[1]=1 dp[2]=1</li>
+<li>状态转移 dp[i]=Math.max(dp[i],Math.max(dp[i-j]<em>j,(i-j)</em>j));</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cuttingRope</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dp=<span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">        dp[<span class="number">2</span>]=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;i;j++)&#123;</span><br><span class="line">                <span class="comment">//Math.max只能比较两个，所以后面才要再使用一次max</span></span><br><span class="line">                <span class="comment">//这里的dp[i]起到一个保存相同总长,不同切法,乘积最大值的作用.确保把内循环不同切法得到的乘积的最大值保存下来.</span></span><br><span class="line">                dp[i]=Math.max(dp[i],Math.max(dp[i-j]*j,(i-j)*j));</span><br><span class="line">            &#125;     </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="回溯法"><a href="#回溯法" class="headerlink" title="回溯法"></a>回溯法</h2><h3 id="12-矩阵中的路径"><a href="#12-矩阵中的路径" class="headerlink" title="12.矩阵中的路径"></a>12.矩阵中的路径</h3><p>请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一格开始，每一步可以在矩阵中向左、右、上、下移动一格。如果一条路径经过了矩阵的某一格，那么该路径不能再次进入该格子。例如，在下面的3×4的矩阵中包含一条字符串“bfce”的路径（路径中的字母用加粗标出）。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot;</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
 
@@ -1005,6 +1206,67 @@
 </ul>
 <p><strong>代码</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public boolean exist(char[][] board, String word) &#123;</span><br><span class="line">        char[] a=word.toCharArray();</span><br><span class="line">        //每个结点开始试过去</span><br><span class="line">        for(int i=0;i&lt;board.length;i++)&#123;</span><br><span class="line">            for(int j=0;j&lt;board[0].length;j++)&#123;</span><br><span class="line">                if(DFS(board,a,i,j,0))</span><br><span class="line">                  return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    boolean DFS(char[][]b,char[]s,int i,int j,int k)&#123;</span><br><span class="line">        //终止条件</span><br><span class="line">        if(i&gt;=b.length||i&lt;0||j&gt;=b[0].length||j&lt;0||b[i][j]!=s[k])</span><br><span class="line">          return false;</span><br><span class="line">        if(k==s.length-1)</span><br><span class="line">          return true;</span><br><span class="line">        //标记访问过的元素</span><br><span class="line">        char temp=b[i][j];</span><br><span class="line">        b[i][j]=&apos;/&apos;;</span><br><span class="line">        boolean res=DFS(b,s,i+1,j,k+1)||DFS(b,s,i,j+1,k+1)||DFS(b,s,i-1,j,k+1)||DFS(b,s,i,j-1,k+1);</span><br><span class="line">        b[i][j]=temp;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="深度（广度遍历）"><a href="#深度（广度遍历）" class="headerlink" title="深度（广度遍历）"></a>深度（广度遍历）</h2><h3 id="13-机器人的运动范围"><a href="#13-机器人的运动范围" class="headerlink" title="13.机器人的运动范围"></a>13.机器人的运动范围</h3><p>地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。一个机器人从坐标 [0, 0] 的格子开始移动，它每次可以向左、右、上、下移动一格（不能移动到方格外），也不能进入行坐标和列坐标的数位之和大于k的格子。例如，当k为18时，机器人能够进入方格 [35, 37] ，因为3+5+3+7=18。但它不能进入方格 [35, 38]，因为3+5+3+8=19。请问该机器人能够到达多少个格子？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：m = 2, n = 3, k = 1</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>递归参数：i为横坐标，j为纵坐标，si为横坐标数位和，sj为纵坐标数位和</p>
+<p>采用广度遍历需要借助visited[]数组，哪些结点需要跳过，i&gt;m，j&gt;n，si+sj&gt;k，以及已经访问过的数组</p>
+<p>linkedlist是一个双向链表，add在链尾加元素，poll在链头取元素</p>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int movingCount(int m, int n, int k) &#123;</span><br><span class="line">        boolean[][] visited = new boolean[m][n];</span><br><span class="line">        int res = 0;</span><br><span class="line">        Queue&lt;int[]&gt; queue= new LinkedList&lt;int[]&gt;();</span><br><span class="line">        queue.add(new int[] &#123; 0, 0, 0, 0 &#125;);</span><br><span class="line">        while(queue.size() &gt; 0) &#123;</span><br><span class="line">            int[] x = queue.poll();</span><br><span class="line">            int i = x[0], j = x[1], si = x[2], sj = x[3];</span><br><span class="line">            if(i &gt;= m|| j &gt;= n || k &lt; si + sj || visited[i][j]) continue;</span><br><span class="line">            visited[i][j] = true;</span><br><span class="line">            res ++;</span><br><span class="line">            queue.add(new int[] &#123; i + 1, j, (i + 1) % 10 != 0 ? si + 1 : si - 8, sj &#125;);</span><br><span class="line">            queue.add(new int[] &#123; i, j + 1, si, (j + 1) % 10 != 0 ? sj + 1 : sj - 8 &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="贪心法"><a href="#贪心法" class="headerlink" title="贪心法"></a>贪心法</h2><h3 id="14-II-剪绳子"><a href="#14-II-剪绳子" class="headerlink" title="14-II 剪绳子"></a>14-II 剪绳子</h3><p>给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m - 1] 。请问 k[0]<em>k[1]</em>…*k[m - 1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<p>答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2</span><br><span class="line">输出: 1</span><br><span class="line">解释: 2 = 1 + 1, 1 × 1 = 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>若切分方案合理，绳子段切分的越多，乘积越大 </li>
+<li>为使乘积最大，只有长度为 22 和 33 的绳子不应再切分，且 3比 2 更优 </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>绳子切分方案</strong></th>
+<th><strong>乘积</strong></th>
+<th><strong>结论</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2=1+1</td>
+<td>1×1=1</td>
+<td>2 不应切分</td>
+</tr>
+<tr>
+<td>3=1+2</td>
+<td>1×2=2</td>
+<td>3 不应切分</td>
+</tr>
+<tr>
+<td>4=2+2=1+3</td>
+<td>2×2=4&gt;1×3=3</td>
+<td>4 和 2 等价，且 2+2 比 1+3 更优</td>
+</tr>
+<tr>
+<td>5=2+3=1+4</td>
+<td>2×3=6&gt;1×4=4</td>
+<td>5 应切分为 2+3</td>
+</tr>
+<tr>
+<td>6=3+3=2+2+2</td>
+<td>3×3=9&gt;2×2×2=8</td>
+<td>6 应切分为 3+3，进而<strong>推出 3 比 2 更优</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cuttingRope</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">3</span>) <span class="keyword">return</span> n - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">long</span> res=<span class="number">1L</span>;</span><br><span class="line">        <span class="keyword">int</span> p=(<span class="keyword">int</span>)<span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line">        <span class="comment">//贪心算法，优先切三，其次切二</span></span><br><span class="line">        <span class="keyword">while</span>(n&gt;<span class="number">4</span>)&#123;</span><br><span class="line">            res=res*<span class="number">3</span>%p;</span><br><span class="line">            n-=<span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出来循环只有三种情况，分别是n=2、3、4</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)(res*n%p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
           
@@ -2319,155 +2581,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/hashmap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/28/hashmap/" class="post-title-link" itemprop="url">hashmap</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-28 12:58:48" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:48+08:00">2020-04-28</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2516,7 +2629,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-count">58</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

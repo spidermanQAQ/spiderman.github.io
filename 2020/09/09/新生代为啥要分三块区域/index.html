@@ -112,21 +112,20 @@
   </script>
 
 
-  <meta name="description" content="CookieCookie 是存储在客户端计算机上的文本文件（本地的），并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。（用户登陆信息） 识别返回用户包括三个步骤  服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。 浏览器将这些信息存储在本地计算机上，以备将来使用。 当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务">
-<meta name="keywords" content="servlet">
+  <meta name="description" content="java虚拟机根据对象生命周期的不同把堆内存划分为几块，一般分为新生代、老年代和永久代（对HotSpot虚拟机而言）  为什么堆内存要分区呢给堆内存分代是为了提高对象内存分配和垃圾回收的效率。试想一下，如果堆内存没有区域划分，所有的新创建的对象和生命周期很长的对象放在一起，随着程序的执行，堆内存需要频繁进行垃圾收集，而每次回收都要遍历所有的对象，遍历这些对象所花费的时间代价是巨大的，会严重影响我们">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Cookie和session">
-<meta property="og:url" content="http://yoursite.com/2019/09/08/session和Cookie/index.html">
+<meta property="og:title" content="新生代为啥要分三块区域">
+<meta property="og:url" content="http://yoursite.com/2020/09/09/新生代为啥要分三块区域/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="CookieCookie 是存储在客户端计算机上的文本文件（本地的），并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。（用户登陆信息） 识别返回用户包括三个步骤  服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。 浏览器将这些信息存储在本地计算机上，以备将来使用。 当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务">
+<meta property="og:description" content="java虚拟机根据对象生命周期的不同把堆内存划分为几块，一般分为新生代、老年代和永久代（对HotSpot虚拟机而言）  为什么堆内存要分区呢给堆内存分代是为了提高对象内存分配和垃圾回收的效率。试想一下，如果堆内存没有区域划分，所有的新创建的对象和生命周期很长的对象放在一起，随着程序的执行，堆内存需要频繁进行垃圾收集，而每次回收都要遍历所有的对象，遍历这些对象所花费的时间代价是巨大的，会严重影响我们">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E5%B1%9E%E6%80%A7.png">
-<meta property="og:updated_time" content="2020-05-02T02:37:20.132Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E4%BB%A3.jpg">
+<meta property="og:updated_time" content="2020-09-10T00:59:50.247Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cookie和session">
-<meta name="twitter:description" content="CookieCookie 是存储在客户端计算机上的文本文件（本地的），并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。（用户登陆信息） 识别返回用户包括三个步骤  服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。 浏览器将这些信息存储在本地计算机上，以备将来使用。 当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg">
+<meta name="twitter:title" content="新生代为啥要分三块区域">
+<meta name="twitter:description" content="java虚拟机根据对象生命周期的不同把堆内存划分为几块，一般分为新生代、老年代和永久代（对HotSpot虚拟机而言）  为什么堆内存要分区呢给堆内存分代是为了提高对象内存分配和垃圾回收的效率。试想一下，如果堆内存没有区域划分，所有的新创建的对象和生命周期很长的对象放在一起，随着程序的执行，堆内存需要频繁进行垃圾收集，而每次回收都要遍历所有的对象，遍历这些对象所花费的时间代价是巨大的，会严重影响我们">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E4%BB%A3.jpg">
 
 
 
@@ -134,7 +133,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/09/08/session和Cookie/">
+  <link rel="canonical" href="http://yoursite.com/2020/09/09/新生代为啥要分三块区域/">
 
 
 
@@ -144,7 +143,7 @@
   };
 </script>
 
-  <title>Cookie和session | 万乔少女的梦QAQ</title>
+  <title>新生代为啥要分三块区域 | 万乔少女的梦QAQ</title>
   
 
 
@@ -384,7 +383,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/09/新生代为啥要分三块区域/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -401,7 +400,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Cookie和session
+          <h1 class="post-title" itemprop="name headline">新生代为啥要分三块区域
 
               
             
@@ -427,7 +426,7 @@
                 
               
 
-              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
+              <time title="创建时间：2020-09-09 16:50:20" itemprop="dateCreated datePublished" datetime="2020-09-09T16:50:20+08:00">2020-09-09</time>
             </span>
           
 
@@ -442,7 +441,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
 
                 
                 
@@ -482,75 +481,15 @@
       
 
       
-        <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件（<strong>本地的</strong>），并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。（<strong>用户登陆信息</strong>）</p>
-<p><strong>识别返回用户包括三个步骤</strong></p>
-<ul>
-<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
-<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
-<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
-</ul>
-<p><strong>cookie设置过程</strong></p>
-<ul>
-<li><strong>客户端发送一个http请求到服务器端</strong> </li>
-<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
-<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
-<li><strong>服务器端发送一个http响应到客户端</strong></li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
-<p><strong>这里给一个Cookie响应头例子</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
-
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E5%B1%9E%E6%80%A7.png" alt></p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ol>
-<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置最大生命周期（以秒为单位）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发送Cookie到HTTP响应头</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
-
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
-<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把<strong>用户的信息</strong>，以某种形式记录在服务器，这就是Session</p>
-<p><strong>简单例子：购物的时候不用登陆是cookie，购物车里的信息是session，因为购物车的东西都是保存在服务器的</strong> </p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>用户第一次访问服务器，<strong>服务器会创建</strong>一个Session对象给用户，并将该session对象的JESSIONID（<strong>一个标识，可以理解为session id</strong>）使用Cookie技术存储到浏览器中，利用该标识用户服务器就可以鉴别客户端请求（购物车）</p>
-<h3 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h3><ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<h3 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h3><ul>
-<li><p>创建session对象/获取session对象         HttpSession hs=request.getSession()这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ul>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
-<li>JESSIONID是在浏览器中，关闭浏览器就没得了</li>
-<li>存储和获取是在不同请求，但存储要先于获取</li>
-</ul>
-<p>作用域：一次会话（即可以多次请求，主要session没失效），<strong>购物车你换台电脑应该保存着，但登陆信息则没有了</strong></p>
-<h3 id="验证码部分代码示例"><a href="#验证码部分代码示例" class="headerlink" title="验证码部分代码示例"></a>验证码部分代码示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/verify&quot;)</span><br><span class="line">  public void verification(HttpServletRequest req, HttpServletResponse resp) throws IOException &#123;</span><br><span class="line">      VerificationCode code = new VerificationCode();</span><br><span class="line">      BufferedImage image = code.getImage();</span><br><span class="line">      String text = code.getText();</span><br><span class="line">      HttpSession session = req.getSession();</span><br><span class="line">      session.setAttribute(&quot;verify_code&quot;,text);</span><br><span class="line">      //以流的方式将验证码发送到前端</span><br><span class="line">      VerificationCode.output(image,resp.getOutputStream());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
+        <p>java虚拟机根据对象生命周期的不同把堆内存划分为几块，一般分为新生代、老年代和永久代（对HotSpot虚拟机而言） </p>
+<h2 id="为什么堆内存要分区呢"><a href="#为什么堆内存要分区呢" class="headerlink" title="为什么堆内存要分区呢"></a>为什么堆内存要分区呢</h2><p>给堆内存分代是为了提高对象内存分配和垃圾回收的效率。试想一下，如果堆内存没有区域划分，所有的新创建的对象和生命周期很长的对象放在一起，随着程序的执行，堆内存需要频繁进行垃圾收集，而每次回收都要遍历所有的对象，遍历这些对象所花费的时间代价是巨大的，会严重影响我们的GC效率，这简直太可怕了。</p>
+<p> 有了内存分代，情况就不同了，新创建的对象会在新生代中分配内存，经过多次回收仍然存活下来的对象存放在老年代中 ， 新生代中的对象存活时间短，只需要在新生代区域中频繁进行GC，老年代中对象生命周期长，内存回收的频率相对较低，不需要频繁进行回收 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E4%BB%A3.jpg" alt></p>
+<h2 id="为什么Survivor不是0块"><a href="#为什么Survivor不是0块" class="headerlink" title="为什么Survivor不是0块"></a>为什么Survivor不是0块</h2><p>Survivor如果是0的话，那在eden中垃圾回收之后存活的对象都会进入老生代，这样老生代的内存空间很快就被占满了，从而触发最耗时的 Full GC </p>
+<h2 id="为什么Survivor不是1块"><a href="#为什么Survivor不是1块" class="headerlink" title="为什么Survivor不是1块"></a>为什么Survivor不是1块</h2><p>如果 Survivor 分区是 1 个的话，假设我们把两个区域分为 1:1，那么任何时候都有一半的内存空间是闲置的，显然空间利用率太低 </p>
+<p>但如果设置内存空间的比例是 8:2 ，只是看起来似乎“很好”，假设新生代的内存为 100 MB（ Survivor 大小为 20 MB ），现在有 70 MB 对象进行垃圾回收之后，剩余活跃的对象为 15 MB 进入 Survivor 区，这个时候新生代可用的内存空间只剩了 5 MB，这样很快又要进行垃圾回收操作 </p>
+<h2 id="堆内存分3块有什么好处"><a href="#堆内存分3块有什么好处" class="headerlink" title="堆内存分3块有什么好处"></a>堆内存分3块有什么好处</h2><p>HotSpot将新生代划分为三块，一块较大的Eden空间和两块较小的Survivor空间，默认比例为8：1：1。划分的目的是因为HotSpot采用复制算法来回收新生代，设置这个比例是为了充分利用内存空间，减少浪费。新生成的对象在Eden区分配（大对象除外，大对象直接进入老年代），当Eden区没有足够的空间进行分配时，虚拟机将发起一次Minor GC。 </p>
+<p>GC开始时，对象只会存在于Eden区和From Survivor区，To Survivor区是空的（作为保留区域）。GC进行时，Eden区中所有存活的对象都会被复制到To Survivor区，而在From Survivor区中，仍存活的对象会根据它们的年龄值决定去向，年龄值达到年龄阀值（默认为15，新生代中的对象每熬过一轮垃圾回收，年龄值就加1，GC分代年龄存储在对象的header中）的对象会被移到老年代中，没有达到阀值的对象会被复制到To Survivor区。接着清空Eden区和From Survivor区，新生代中存活的对象都在To Survivor区。接着， From Survivor区和To Survivor区会交换它们的角色，也就是新的To Survivor区就是上次GC清空的From Survivor区，新的From Survivor区就是上次GC的To Survivor区，总之，不管怎样都会保证To Survivor区在一轮GC后是空的 </p>
 
       
     </div>
@@ -624,7 +563,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/servlet/" rel="tag"># servlet</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -637,8 +576,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/05/java装箱与拆箱/" rel="next" title="java装箱与拆箱">
-                <i class="fa fa-chevron-left"></i> java装箱与拆箱
+              <a href="/2020/08/30/回溯法/" rel="next" title="回溯法">
+                <i class="fa fa-chevron-left"></i> 回溯法
               </a>
             
           </div>
@@ -646,10 +585,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/08/Cookie/" rel="prev" title="Cookie和session">
-                Cookie和session <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -928,7 +863,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Cookie"><span class="nav-number">1.</span> <span class="nav-text">Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">1.0.1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码示例"><span class="nav-number">1.0.2.</span> <span class="nav-text">代码示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特点"><span class="nav-number">1.0.3.</span> <span class="nav-text">特点</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#Session"><span class="nav-number">2.</span> <span class="nav-text">Session</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">2.0.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特点-1"><span class="nav-number">2.0.2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-1"><span class="nav-number">2.0.3.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.0.4.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证码部分代码示例"><span class="nav-number">2.0.5.</span> <span class="nav-text">验证码部分代码示例</span></a></li></ol></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么堆内存要分区呢"><span class="nav-number">1.</span> <span class="nav-text">为什么堆内存要分区呢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么Survivor不是0块"><span class="nav-number">2.</span> <span class="nav-text">为什么Survivor不是0块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么Survivor不是1块"><span class="nav-number">3.</span> <span class="nav-text">为什么Survivor不是1块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆内存分3块有什么好处"><span class="nav-number">4.</span> <span class="nav-text">堆内存分3块有什么好处</span></a></li></ol></div>
             
 
           </div>
