@@ -380,6 +380,465 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/意向锁/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/15/意向锁/" class="post-title-link" itemprop="url">意向锁</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-15 15:00:09" itemprop="dateCreated datePublished" datetime="2020-09-15T15:00:09+08:00">2020-09-15</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/mysql锁及mvcc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/15/mysql锁及mvcc/" class="post-title-link" itemprop="url">mysql锁及mvcc</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-15 13:09:07" itemprop="dateCreated datePublished" datetime="2020-09-15T13:09:07+08:00">2020-09-15</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="锁的分类"><a href="#锁的分类" class="headerlink" title="锁的分类"></a>锁的分类</h2><ul>
+<li><p>无锁</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 明确指定主键，但不存在该主键的值(没有数据，当然不会有锁)</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="number">-1</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>表锁</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 主键不明确</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">name</span>=<span class="string">'Mouse'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&lt;&gt;<span class="string">'3'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span> <span class="keyword">LIKE</span> <span class="string">'3'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>行锁</p>
+<p>加锁的方式：<strong>自动加锁</strong>。对于UPDATE、DELETE和INSERT语句，InnoDB会自动给涉及数据集加排他锁；对于<strong>普通SELECT</strong>语句，InnoDB<strong>不会加</strong>任何锁；当然我们也可以显示的加锁 </p>
+<p>假设有个表 products ，字段id、name、type，<strong>id</strong>是主键。 <strong>只有「明确」指定主键，才会执行锁，否则将会执行表锁</strong> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 明确指定主键</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="number">3</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="number">3</span> <span class="keyword">AND</span> <span class="keyword">type</span>=<span class="number">1</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="行锁算法（机制）"><a href="#行锁算法（机制）" class="headerlink" title="行锁算法（机制）"></a>行锁算法（机制）</h2><ul>
+<li><p>普通行锁：对于键值在条件范围内，且存在的记录，使用” Record Lock “，即普通的行锁机制</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">'3'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>间隙锁：对于键值在条件范围内但并<strong>不存在</strong>的记录，叫做” 间隙（GAP) “，InnoDB会对这个“间隙”加锁，这种锁机制就是所谓的” Gap Lock “(间隙锁)；</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#products表内并没有id=10，假如有一个9，会将9之后的锁住</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&gt;<span class="string">'10'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>（行&amp;间隙） 对于<strong>存在于不存在</strong>的数据同时加锁，则称为” Next-Key Lock “ </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#假设有一个id=7，7就是存在的，(5,7),(7,10)不存在，7存在</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&gt;<span class="string">'5'</span> <span class="keyword">and</span> <span class="keyword">id</span>&lt;<span class="string">'10'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="行表锁具体应用"><a href="#行表锁具体应用" class="headerlink" title="行表锁具体应用"></a>行表锁具体应用</h2><p>共享锁&amp;排他锁</p>
+<p><strong>行锁和表锁是锁粒度的概念，共享锁和排它锁是他们的具体实现</strong> </p>
+<p>共享锁：读锁</p>
+<p>只能读，不能写</p>
+<p>表锁：写锁</p>
+<p>连读都不行</p>
+<h2 id="表锁算法"><a href="#表锁算法" class="headerlink" title="表锁算法"></a>表锁算法</h2><p>意向锁</p>
+<ul>
+<li>当一个事务在需要获取资源的锁定时，如果该资源已经被排他锁占用，则数据库会自动给该事务申请一个该表的意向锁  </li>
+</ul>
+<p>详细看这篇博客</p>
+<p>自增锁</p>
+<ul>
+<li>事务插入自增类型的列时获取自增锁 </li>
+</ul>
+<h2 id="锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><a href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果" class="headerlink" title="锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"></a>锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</h2><ul>
+<li><p><strong>读未提交</strong>(Read Uncommitted) ： 此时select语句不加任何锁。此时并发最高，但会产生<strong>脏读</strong> </p>
+<p><strong>脏读</strong>：读取到尚未提交的数据</p>
+</li>
+<li><p><strong>读提交</strong>(Read Committed, RC) ：会出现<strong>不可重复读</strong>问题</p>
+<p>普通select语句是<strong>快照读</strong>（MVCC的内容，所以是搭配使用）</p>
+<p>update语句、delete语句、显示加锁的select语句（select … in share mode 或者 select … for update），使用<strong>当前读</strong>， 毕竟这些操作都要读取当前数据最新版本嘛 </p>
+<p><strong>不可重复读</strong>： 事务A首先读取了一条数据，然后执行逻辑的时候，事务B将这条数据改变了，然后事务A再次读取的时候，发现数据不匹配了，就是所谓的不可重复读了 </p>
+</li>
+<li><p><strong>可重复读</strong>(Repeated Read, RR) ：会出现<strong>幻读</strong>问题</p>
+<p>普通select语句也是<strong>快照读</strong> （和RC有区别的）</p>
+<p>update语句、delete语句、显示加锁的select语句（select … in share mode 或者 select … for update），使用<strong>当前读</strong></p>
+<p><strong>幻读</strong>： 事务A首先根据条件索引得到N条数据，然后事务B改变了这N条数据之外的M条或者增添了M条符合事务A搜索条件的数据，导致事务A再次搜索发现有N+M条数据了，就产生了幻读</p>
+<p><strong>不可重复读和幻读区别</strong>：一个是修改（update），一个是增加（insert）数据</p>
+</li>
+<li><p><strong>串行化</strong>(Serializable) : 此时所有select语句都会被<strong>隐式加锁</strong>：select … in share mode. </p>
+</li>
+</ul>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MVCC多版本并发控制，是现代数据库（包括 <code>MySQL</code>、<code>Oracle</code>、<code>PostgreSQL</code> 等）引擎实现中常用的处理<strong>读写冲突</strong>的手段 </p>
+<p>可以认为MVCC是行级锁的一个变种，但是它在很多情况下避免了加锁操作，因此开销更低。大多数的MVCC都实现了<strong>非阻塞的读操作，写操作也只锁定必要的行</strong> </p>
+<p><strong>对数据库的任何修改的提交都不会直接覆盖之前的数据，而是产生一个新的版本与老版本共存，使得读取时可以完全不加锁</strong>。这样读某一个数据时，事务可以根据隔离级别选择要读取哪个版本的数据。过程中完全不需要加锁。<br>这样，实现两个隔离级别就非常容易： </p>
+<ul>
+<li>Read Committed - 一个事务读取数据时总是读这个数据最近一次被commit的版本 </li>
+<li>Repeatable Read - 一个事务读取数据时总是读取当前事务开始之前最后一次被commit的版本 </li>
+</ul>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>对于使用<code>InnoDB</code>存储引擎的表来说，它的聚簇索引记录中都包含两个必要的隐藏列 </p>
+<ul>
+<li><p>trx_id ：事务ID</p>
+</li>
+<li><p>roll_pointer ：回滚指针</p>
+<p>每次对某条聚簇索引记录进行改动时，都会把旧的版本写入到<code>undo日志</code>中，然后这个隐藏列就相当于一个指针，可以通过它来找到该记录修改前的信息 </p>
+</li>
+</ul>
+<h4 id="3个概念"><a href="#3个概念" class="headerlink" title="3个概念"></a><strong>3个概念</strong></h4><ul>
+<li><p>快照读</p>
+<p><strong>select</strong>时的读就是快照读，对于RC，RR是有区别的，因而产生ReadView的时机也不一样</p>
+</li>
+<li><p>当前读</p>
+<p><strong>更新数据</strong>时，都是先读后写，而这个读，就是当前读。读取数据时，读取该条数据的<strong>已经提交的</strong>最新的事务，生成的 readView </p>
+</li>
+<li><p>ReadView</p>
+<p>Read View就是事务进行<strong>快照读</strong>操作的时候生产的<strong>读视图</strong>(Read View)，在该事务执行的快照读的那一刻，会生成数据库系统当前的一个快照，记录并维护系统当前活跃事务的ID </p>
+<ul>
+<li>m_ids：表示在生成ReadView时当前系统中活跃的读写事务的事务id列表。</li>
+<li>min_trx_id：表示在生成ReadView时当前系统中活跃的读写事务中最小的事务id，也就是m_ids中的最小值。</li>
+<li>max_trx_id：表示生成ReadView时系统中应该分配给下一个事务的id值。</li>
+<li>creator_trx_id：表示生成该ReadView的事务的事务id</li>
+</ul>
+</li>
+</ul>
+<h4 id="RC情况下"><a href="#RC情况下" class="headerlink" title="RC情况下"></a>RC情况下</h4><p>假设数据库内一张表t包含一条记录，插入该记录的事务id为80</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Transaction 100</span><br><span class="line">BEGIN;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;关羽&apos; WHERE id = 1;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;张飞&apos; WHERE id = 1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Transaction 200</span><br><span class="line">BEGIN;</span><br><span class="line"> </span><br><span class="line"># 更新了一些别的表的记录</span><br></pre></td></tr></table></figure>
+
+<p>此时id为1的记录的版本链</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%811.png" alt></p>
+<p> 假设现在有一个使用<code>READ COMMITTED</code>隔离级别的事务开始执行，<strong>注意100没提交</strong> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用READ COMMITTED隔离级别的事务</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment"># SELECT1：Transaction 100、200未提交</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>; <span class="comment"># 得到的列c的值为'刘备'</span></span><br></pre></td></tr></table></figure>
+
+<p> 这个<code>SELECT1</code>的执行过程如下 </p>
+<ul>
+<li><p>在执行<code>SELECT</code>语句时会先生成一个<code>ReadView</code>，<code>ReadView</code>的<code>m_ids</code>列表的内容就是<code>[100, 200]</code>。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;关羽&#39;</code>，该版本的<code>trx_id</code>值也为<code>100</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;刘备&#39;</code>，该版本的<code>trx_id</code>值为<code>80</code>，小于<code>m_ids</code>列表中最小的事务id<code>100</code>，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;刘备&#39;</code>的记录</p>
+<p>之后，我们把事务id为<code>100</code>的事务提交一下 </p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Transaction 100</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'关羽'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'张飞'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<p>再到事务id为<code>200</code>的事务中更新一下表<code>t</code>中<code>id</code>为1的记录 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Transaction 200</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 更新了一些别的表的记录</span></span><br><span class="line">...</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'赵云'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'诸葛亮'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>此刻，表<code>t</code>中<code>id</code>为<code>1</code>的记录的版本链 ，<strong>100提交，200未提交</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%812.png" alt></p>
+<p> 再到刚才使用<code>READ COMMITTED</code>隔离级别的事务中继续查找这个id为<code>1</code>的记录 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SELECT2：Transaction 100提交，Transaction 200未提交</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>; <span class="comment"># 得到的列c的值为'张飞</span></span><br></pre></td></tr></table></figure>
+
+<p> 这个<code>SELECT2</code>的执行过程如下 </p>
+<ul>
+<li><p>在执行<code>SELECT</code>语句时会先生成一个<code>ReadView</code>，<code>ReadView</code>的<code>m_ids</code>列表的内容就是<code>[200]</code>（事务id为<code>100</code>的那个事务已经提交了，所以生成快照时就没有它了）。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;诸葛亮&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;赵云&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，比<code>m_ids</code>列表中最小的事务id<code>200</code>还要小，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;张飞&#39;</code>的记录。</p>
+<p><strong>总结一下就是：使用READ COMMITTED隔离级别的事务在每次查询开始时都会生成一个独立的ReadView</strong> </p>
+</li>
+</ul>
+<h4 id="RR情况下（-在第一次读取数据时生成一个ReadView-）"><a href="#RR情况下（-在第一次读取数据时生成一个ReadView-）" class="headerlink" title="RR情况下（ 在第一次读取数据时生成一个ReadView ）"></a>RR情况下（ <strong>在第一次读取数据时生成一个ReadView</strong> ）</h4><p>还是之前的情况</p>
+<p>这个<code>SELECT1</code>的执行过程如下（<strong>100未提交</strong>） </p>
+<ul>
+<li><p>在执行<code>SELECT</code>语句时会先生成一个<code>ReadView</code>，<code>ReadView</code>的<code>m_ids</code>列表的内容就是<code>[100, 200]</code>。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;关羽&#39;</code>，该版本的<code>trx_id</code>值也为<code>100</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;刘备&#39;</code>，该版本的<code>trx_id</code>值为<code>80</code>，小于<code>m_ids</code>列表中最小的事务id<code>100</code>，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;刘备&#39;</code>的记录</p>
+<p>这个<code>SELECT2</code>的执行过程如下 <strong>（100提交，200提交）</strong></p>
+</li>
+<li><p>因为之前已经生成过<code>ReadView</code>了，所以此时直接复用之前的<code>ReadView</code>，之前的<code>ReadView</code>中的<code>m_ids</code>列表就是<code>[100, 200]</code>。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;诸葛亮&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;赵云&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，而<code>m_ids</code>列表中是包含值为<code>100</code>的事务id的，所以该版本也不符合要求，同理下一个列<code>c</code>的内容是<code>&#39;关羽&#39;</code>的版本也不符合要求。继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;刘备&#39;</code>，该版本的<code>trx_id</code>值为<code>80</code>，<code>80</code>小于<code>m_ids</code>列表中最小的事务id<code>100</code>，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;刘备&#39;</code>的记录</p>
+<p><strong>也就是说两次<code>SELECT</code>查询得到的结果是重复的，记录的列<code>c</code>值都是<code>&#39;刘备&#39;</code>，这就是<code>可重复读</code>的含义</strong> </p>
+</li>
+</ul>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p> <a href="https://blog.csdn.net/qq_24313635/article/details/102888242" target="_blank" rel="noopener">https://blog.csdn.net/qq_24313635/article/details/102888242</a> </p>
+<p> <a href="https://blog.csdn.net/zcl_love_wx/article/details/83305645" target="_blank" rel="noopener">https://blog.csdn.net/zcl_love_wx/article/details/83305645</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/09/新生代为啥要分三块区域/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2211,396 +2670,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/30/传输层/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/30/传输层/" class="post-title-link" itemprop="url">传输层</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-30 13:56:34" itemprop="dateCreated datePublished" datetime="2020-04-30T13:56:34+08:00">2020-04-30</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠</p>
-<p>UDP主要特点：</p>
-<ul>
-<li>无连接，减少发送数据前的时延</li>
-<li>使用最大努力交付，不可靠</li>
-<li>面向报文，适合一次传送少量数据的应用</li>
-<li>无拥塞控制，适合实时应用，如网络开会</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png" alt></p>
-<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
-<li>面向连接</li>
-<li>提供可靠交付服务</li>
-<li>全双工通信 发送方，接收方都有缓存来存放数据</li>
-<li>面向字节流</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png" alt></p>
-<h3 id="TCP报文首部"><a href="#TCP报文首部" class="headerlink" title="TCP报文首部"></a>TCP报文首部</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%823.png" alt></p>
-<p>序号（seq）：TCP连接中传送的字节都有自己的编号，序号是本报文段发送数据的第一个字节的编号（发送端的）</p>
-<p>确认号（ack）：对应序号，指接收端希望获得的下个报文段的第一个字节的编号（接收端）</p>
-<p>六个控制位：</p>
-<ul>
-<li>URG（紧急位）：URG=1代表有紧急数据，不需要通过缓存，直接发送</li>
-<li>ACK（确认位）：ACK=1代表确认位有效，和ack一般一起出场</li>
-<li>SYN（同步位）：SYN=1表明这是一个请求/连接接收报文</li>
-<li>FIN（中止位）：FIN=1表示发送端数据已经发送完，请求断开连接</li>
-</ul>
-<p>检验位：检验首部+数据</p>
-<h3 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h3><p>TCP连接传输分3个阶段：连接建立——发送数据——连接释放</p>
-<p>TCP连接建立（3次握手）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%824.png" alt></p>
-<p>round1：发送方发送连接请求报文段，SYN=1，seq=x（随机）</p>
-<p>round2：接收方返回确认报文段，SYN=1，ACK=1，seq=y(随机)，ack=x+1</p>
-<p>round3：服务器返回确认的确认，ACK=1，seq=x+1，ack=y+1</p>
-<p>TCP连接释放（4次握手）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%825.png" alt></p>
-<p>round1：客户端发送连接释放报文，关闭TCP连接，FIN=1，seq=u</p>
-<p>round2：服务器端返回确认，ACK=1，seq=v，ack=u+1,此时处于半关闭状态</p>
-<p>round3：服务器端发送连接释放报文，关闭TCP连接，FIN=1，ACK=1，seq=w，ack=u+1</p>
-<p>round4：客户端返回确认报文段，结束</p>
-<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>为了防止历史连接，2次就不能最后发送RST报文给服务端</p>
-<ul>
-<li>一个旧（不是需要的）的SYN报文先于最新的（需要的）SYN报文到达服务端</li>
-<li>服务端回一个报文给客户端</li>
-<li>客户端判断自身的上下文（序列号过期或超时），判断这是个历史连接，发送一个RST报文给我服务端</li>
-</ul>
-<h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
-<p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
-<h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
-<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>TCP默认使用累计重传</p>
-<p>这里123到达TCP缓存后，456因为网络问题尚未到达，78也已经到达，此时接收端的报文段首部确认号字段依然为4</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png" alt></p>
-<h3 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h3><p>超时重传</p>
-<p>TCP的发送端在规定时间内没有收到确认就要重传已发送的报文段</p>
-<p>冗余重传</p>
-<p>当收到比期望报文序号大的报文时，发送一个冗余ACK，指明下一个期待的序号</p>
-<p>例如发送端已经发送12345报文</p>
-<p>接收端收到1，返回1的确认</p>
-<p>接收端收到3，返回1的确认</p>
-<p>接收端收到4，任然返回1的确认</p>
-<p>接收端收掉5，依旧返回1的确认</p>
-<p>发送方收到3次冗余，知道2号报文丢失，重传报文</p>
-<h2 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h2><p>流量控制：让发送方发送的慢点，好让接收方来得及接收</p>
-<p>TCP利用滑动窗口实现流量控制，发送窗口取决于接收窗口和拥塞窗口</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%828.png" alt></p>
-<h2 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h2><p>拥塞原因：对资源的需求总和大于可用资源</p>
-<p>拥塞控制和流量控制的区别可用理解为目标停车场停不下了和路上堵车的区别</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png" alt></p>
-<p>解决办法：</p>
-<ul>
-<li>慢开始 拥塞避免</li>
-<li>快重传 快恢复</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png" alt></p>
-<p> 一个传输轮次就是一个往返时间，可以理解为一个回来可以传输的字节有多少个。一开始一个来回1个，然会2个，4个…知道16这个阈值开始拥塞避免增长的慢点，毕竟按前面的指数增长越来越夸张，到达24后出现拥塞，此时立刻返回到1这个状态，再来一遍，不过阈值会有所减少</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png" alt></p>
-<p>快重传就是冗余重传，收到3个冗余确认重传</p>
-<p>快恢复指的是出现拥塞后不用回到开始的状态，直接从新的阈值开始</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/hashmap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/28/hashmap/" class="post-title-link" itemprop="url">hashmap</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-28 12:58:48" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:48+08:00">2020-04-28</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2649,7 +2718,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-count">59</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
