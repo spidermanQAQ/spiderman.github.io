@@ -380,6 +380,597 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis多表查询/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/mybatis多表查询/" class="post-title-link" itemprop="url">多表查询</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 16:15:13" itemprop="dateCreated datePublished" datetime="2019-10-14T16:15:13+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1对1"><a href="#1对1" class="headerlink" title="1对1"></a>1对1</h2><ol>
+<li><p>account类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//从表实体应该包含一个主表实体的对象引用</span><br><span class="line">    private User user;</span><br><span class="line"></span><br><span class="line">    public User getUser() &#123;</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUser(User user) &#123;</span><br><span class="line">        this.user = user;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IAccountDao接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public interface IAccountDao &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询所有账户</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    List&lt;Account&gt; findAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AccountDao的mapper</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace=&quot;top.zoick.dao.IAccountDao&quot;&gt;</span><br><span class="line">    &lt;!--定义封装account和user的resultMap--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;accountUserMap&quot; type=&quot;account&quot;&gt;</span><br><span class="line">        &lt;id property=&quot;id&quot; column=&quot;aid&quot; /&gt;</span><br><span class="line">        &lt;result property=&quot;uid&quot; column=&quot;uid&quot; /&gt;</span><br><span class="line">        &lt;result property=&quot;money&quot; column=&quot;money&quot; /&gt;</span><br><span class="line">        &lt;!--一对一的关系映射，配置封装user的内容 column中指名从表的外键 property=&quot;user&quot;指的是单个实体类的引用--&gt;</span><br><span class="line">        &lt;association property=&quot;user&quot; column=&quot;uid&quot; javaType=&quot;User&quot;&gt;</span><br><span class="line">            &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;username&quot; column=&quot;username&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;address&quot; column=&quot;address&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;sex&quot; column=&quot;sex&quot;/&gt;</span><br><span class="line">            &lt;result property=&quot;birthday&quot; column=&quot;birthday&quot;/&gt;</span><br><span class="line">        &lt;/association&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AccountDao的测试类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void findAll()&#123;</span><br><span class="line">    List&lt;Account&gt; accounts = accoutDao.findAll();</span><br><span class="line">    for (Account account:accounts) &#123;</span><br><span class="line">       System.out.println(&quot;每一个account的信息&quot;);</span><br><span class="line">       System.out.println(account);</span><br><span class="line">       System.out.println(account.getUser());</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="1对多"><a href="#1对多" class="headerlink" title="1对多"></a>1对多</h2><p>示例：一个用户可以有多个账户</p>
+<h2 id="多对多"><a href="#多对多" class="headerlink" title="多对多"></a>多对多</h2>
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis连接池-动态SQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/mybatis连接池-动态SQL/" class="post-title-link" itemprop="url">mybatis连接池 动态SQL</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 14:42:48" itemprop="dateCreated datePublished" datetime="2019-10-14T14:42:48+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a>连接池</h2><p>连接池：存储连接的一个容器</p>
+<p>容器：就是一个集合，必须保证线程安全，不能2个线程拿到同一个连接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;   </span><br><span class="line">   &lt;!--配置环境--&gt;</span><br><span class="line">   &lt;environments default=&quot;mysql&quot;&gt;</span><br><span class="line">       &lt;!-- 配置mysql的环境--&gt;</span><br><span class="line">       &lt;environment id=&quot;mysql&quot;&gt;</span><br><span class="line">           &lt;!-- 配置事务 --&gt;</span><br><span class="line">           &lt;transactionManager type=&quot;JDBC&quot;&gt;&lt;/transactionManager&gt;</span><br><span class="line"></span><br><span class="line">           &lt;!--配置连接池--&gt;</span><br><span class="line">           &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">               &lt;property name=&quot;driver&quot; value=&quot;$&#123;jdbc.driver&#125;&quot;&gt;&lt;/property&gt;</span><br><span class="line">               &lt;property name=&quot;url&quot; value=&quot;$&#123;jdbc.url&#125;&quot;&gt;&lt;/property&gt;</span><br><span class="line">               &lt;property name=&quot;username&quot; value=&quot;$&#123;jdbc.username&#125;&quot;&gt;&lt;/property&gt;</span><br><span class="line">               &lt;property name=&quot;password&quot; value=&quot;$&#123;jdbc.password&#125;&quot;&gt;&lt;/property&gt;</span><br><span class="line">           &lt;/dataSource&gt;</span><br><span class="line">       &lt;/environment&gt;</span><br><span class="line">   &lt;/environments&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据源DataSource分类"><a href="#数据源DataSource分类" class="headerlink" title="数据源DataSource分类"></a>数据源DataSource分类</h3><p>mybatis连接池提供了3种配置方式：<br>　 配置的位置：主配置文件SqlMapConfig.xml中的dataSource标签，type属性就是表示采用何种连接池方式。<br>   type属性的值：<br>　  <strong><em>POOLED</em></strong>　　采用传统的javax.sql.DataSource规范中的连接池，mybatis中有针对规范的实现</p>
+<p>​      <strong><em>UNPOOLED</em></strong>   采用传统的获取连接的方式，虽然也实现javax.sql.DataSource接口，但是并没有使用池的思想</p>
+<p>​       <strong><em>JNDI</em></strong>　　　   采用服务器提供的JNDI技术实现，来获取DataSource对象，不同的服务器所能拿到DataSource是不一样的</p>
+<h3 id="数据源的创建过程"><a href="#数据源的创建过程" class="headerlink" title="数据源的创建过程"></a>数据源的创建过程</h3><p>在mybatis的XML配置文件中，使用<datasource>元素来配置数据源</datasource></p>
+<ol>
+<li><p>MyBatis在初始化时，解析此文件，根据<datasource>的type属性来创建相应类型的的数据源DataSource</datasource></p>
+<ol>
+<li>type=”POOLED”  ：MyBatis会创建PooledDataSource实例</li>
+<li>type=”UNPOOLED” ：MyBatis会创建UnpooledDataSource实例</li>
+<li>type=”JNDI”：MyBatis会从JNDI服务上查找DataSource实例，然后返回使用</li>
+</ol>
+</li>
+<li><p>MyBatis是通过工厂模式来创建数据源DataSource对象的，MyBatis定义了抽象的工厂接</p>
+<p>口<em>:org.apache.ibatis.datasource.DataSourceFactory</em>,通过其getDataSource()方法返回数据源DataSource</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/lianjiechi1.png" alt></p>
+</li>
+<li><p>MyBatis创建了DataSource实例后，会将其放到Configuration对象内的Environment对象中， 供以后使用</p>
+</li>
+</ol>
+<h3 id="DataSource什么时候创建Connection对象"><a href="#DataSource什么时候创建Connection对象" class="headerlink" title="DataSource什么时候创建Connection对象"></a>DataSource什么时候创建Connection对象</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String resource = &quot;mybatis-config.xml&quot;;  </span><br><span class="line">InputStream inputStream = Resources.getResourceAsStream(resource);  </span><br><span class="line">SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);  </span><br><span class="line">SqlSession sqlSession = sqlSessionFactory.openSession();  </span><br><span class="line">sqlSession.selectList(&quot;SELECT * FROM STUDENTS&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>前4句都不会导致java.sql.Connection对象的创建，只有当第5句sqlSession.selectList(“SELECT * FROM STUDENTS”)，才会触发MyBatis在底层执行下面这个方法来创建java.sql.Connection对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">protected void openConnection() throws SQLException &#123;  </span><br><span class="line">    if (log.isDebugEnabled()) &#123;  </span><br><span class="line">      log.debug(&quot;Opening JDBC Connection&quot;);  </span><br><span class="line">    &#125;  </span><br><span class="line">    connection = dataSource.getConnection();  </span><br><span class="line">    if (level != null) &#123;  </span><br><span class="line">      connection.setTransactionIsolation(level.getLevel());  </span><br><span class="line">    &#125;  </span><br><span class="line">    setDesiredAutoCommit(autoCommmit);  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态sql"><a href="#动态sql" class="headerlink" title="动态sql"></a>动态sql</h2><p><strong><if>标签</if></strong></p>
+<p>我们根据实体类的不同取值，使用不同的 SQL 语句来进行查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; findByCondition(User user);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;findUserByCondition&quot; resultMap=&quot;userMap&quot; parameterType=&quot;user&quot;&gt;</span><br><span class="line">    select * from user</span><br><span class="line">    &lt;where&gt;</span><br><span class="line">        &lt;if test=&quot;userName != null&quot;&gt;</span><br><span class="line">            and username = #&#123;userName&#125;</span><br><span class="line">        &lt;/if&gt;</span><br><span class="line">        &lt;if test=&quot;userSex != null&quot;&gt;</span><br><span class="line">            and sex = #&#123;userSex&#125;</span><br><span class="line">        &lt;/if&gt;</span><br><span class="line">    &lt;/where&gt;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">    public void testFindByCondiion() throws Exception &#123;</span><br><span class="line">        User u = new User();</span><br><span class="line">        u.setUserName(&quot;aa&quot;);</span><br><span class="line">//      u.setUserSex(&quot;女&quot;);</span><br><span class="line">        init();</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        List&lt;User&gt; users = userDao.findByCondition(u);</span><br><span class="line">        for (User user : users) &#123;</span><br><span class="line">            System.out.println(user);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><foreach>标签</foreach></strong></p>
+<p>传入多个 id 查询用户信息，用下边两个 sql 实现： </p>
+<p>SELECT * FROM USERS WHERE username LIKE ‘%张%’ AND (id =10 OR id =89 OR id=16) </p>
+<p>SELECT * FROM USERS WHERE username LIKE ‘%张%’ AND id IN (10,89,16) </p>
+<p>这样我们在进行范围查询时，就要将一个集合中的值，作为参数动态添加进来。 这样我们将如何进行参数的传递？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class QueryVo implements Serializable &#123; </span><br><span class="line"> </span><br><span class="line"> private List&lt;Integer&gt; ids; </span><br><span class="line"> public List&lt;Integer&gt; getIds() &#123;   </span><br><span class="line">     return ids;  </span><br><span class="line"> &#125; </span><br><span class="line"> </span><br><span class="line"> public void setIds(List&lt;Integer&gt; ids) &#123;   </span><br><span class="line">     this.ids = ids;  </span><br><span class="line"> &#125;     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> dao接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; findInIds(QueryVo vo);</span><br></pre></td></tr></table></figure>
+
+<p>dao映射配置</p>
+<p><foreach>标签用于遍历集合，它的属性：  </foreach></p>
+<p>​    collection:代表要遍历的集合元素，注意编写时不要写#{}  </p>
+<p>​    open:代表语句的开始部分  </p>
+<p>​    close:代表结束部分  </p>
+<p>​    item:代表遍历集合的每个元素，生成的变量名  </p>
+<p>​    sperator:代表分隔符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 查询所有用户在 id 的集合之中 --&gt;  </span><br><span class="line">&lt;select id=&quot;findInIds&quot; resultType=&quot;user&quot; parameterType=&quot;queryvo&quot;&gt;  </span><br><span class="line">&lt;!--  select * from user where id in (1,2,3,4,5); --&gt; </span><br><span class="line">   &lt;include refid=&quot;defaultSql&quot;&gt;&lt;/include&gt;   </span><br><span class="line">   &lt;where&gt; </span><br><span class="line">      &lt;if test=&quot;ids != null and ids.size() &gt; 0&quot;&gt;     </span><br><span class="line">           &lt;foreach collection=&quot;ids&quot; open=&quot;id in ( &quot; close=&quot;)&quot; item=&quot;uid&quot;  separator=&quot;,&quot;&gt;     </span><br><span class="line">              &lt;!--item要和下面的#&#123;uid&#125;保持一致，应该是传过来一个ids集合，#获取到里面的值，与item对应，在放入collection集合中--&gt;</span><br><span class="line">              #&#123;uid&#125;     </span><br><span class="line">           &lt;/foreach&gt;    </span><br><span class="line">      &lt;/if&gt;   </span><br><span class="line">  &lt;/where&gt; </span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Test  </span><br><span class="line">public void testFindInIds()  &#123;    </span><br><span class="line">   QueryVo vo = new QueryVo();   </span><br><span class="line">   List&lt;Integer&gt; ids = new ArrayList&lt;Integer&gt;();   </span><br><span class="line">   ids.add(41);   </span><br><span class="line">   ids.add(42);   </span><br><span class="line">   ids.add(43);   </span><br><span class="line">   ids.add(46);   </span><br><span class="line">   ids.add(57);   </span><br><span class="line">   vo.setIds(ids); </span><br><span class="line">  //6.执行操作   </span><br><span class="line">  List&lt;User&gt; users = userDao.findInIds(vo);   </span><br><span class="line">  for(User user : users) &#123;    </span><br><span class="line">  System.out.println(user);   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>抽取重复sql</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--抽取重复的sql语句--&gt;</span><br><span class="line">&lt;sql id=&quot;defaultUser&quot;&gt;</span><br><span class="line">    select * from user</span><br><span class="line">&lt;/sql&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置查询所有  其中id不能乱写必须是dao接口中的方法  resultType写的是实体类的全路径--&gt;</span><br><span class="line">&lt;select id=&quot;findAll&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">    &lt;include refid=&quot;defaultUser&quot;/&gt;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatisCRUD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/mybatisCRUD/" class="post-title-link" itemprop="url">mybatisCRUD</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 13:04:30" itemprop="dateCreated datePublished" datetime="2019-10-14T13:04:30+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="基本的CRUD"><a href="#基本的CRUD" class="headerlink" title="基本的CRUD"></a>基本的CRUD</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><strong>接口类代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//用户持久层接口</span><br><span class="line">public interface IUserDao &#123;</span><br><span class="line"></span><br><span class="line">    //查询所有</span><br><span class="line">    List&lt;User&gt; findAll();</span><br><span class="line"></span><br><span class="line">    //保存用户</span><br><span class="line">    void saveUser(User user);</span><br><span class="line"></span><br><span class="line">    //更新</span><br><span class="line">    void updateUser(User user);</span><br><span class="line"></span><br><span class="line">    //删除</span><br><span class="line">    void deleteUser(Integer userId);</span><br><span class="line"></span><br><span class="line">    User findById(Integer userId);</span><br><span class="line"></span><br><span class="line">    //模糊查询</span><br><span class="line">    List&lt;User&gt;findByName(String username);</span><br><span class="line"></span><br><span class="line">    //查询总用户数</span><br><span class="line">    int findTotal();</span><br><span class="line"></span><br><span class="line">    //根据queryvo中的条件查询用火狐</span><br><span class="line">    List&lt;User&gt; findUserByVo(QueryVo vo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>mapper代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">        PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;mapper namespace=&quot;top.zoick.dao.IUserDao&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--配置查询结果的列名和实体类的属性名的对应关系--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;userMap&quot; type=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--主键字段的对应--&gt;</span><br><span class="line">        &lt;id property=&quot;userId&quot; column=&quot;id&quot;&gt;&lt;/id&gt;</span><br><span class="line">        &lt;!--非主键字段的对应--&gt;</span><br><span class="line">        &lt;result property=&quot;userName&quot; column=&quot;username&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userAddress&quot; column=&quot;address&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userSex&quot; column=&quot;sex&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userBirthday&quot; column=&quot;birthday&quot;&gt;&lt;/result&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    &lt;!--配置查询所有  其中id不能乱写必须是dao接口中的方法  resultType写的是实体类的全路径--&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        &lt;!--实体类中的属性名和数据库表中元素名字匹配不上时，使用别名即可匹配。id为数据库中表的列名，userId为实体类中属性名--&gt;</span><br><span class="line">        &lt;!--select id as userId,username as userName,address as userAddress ,sex as userSex, birthday as userBirthday from user--&gt;</span><br><span class="line">        select * from user</span><br><span class="line">&lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--保存用户--&gt;</span><br><span class="line">    &lt;insert id=&quot;saveUser&quot; parameterType=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--配置插入操作后，获取插入数据的id--&gt;</span><br><span class="line">            &lt;!--keyProperty对应实体类属性名:id，keyColumn对应于数据库:id resultType为数据类型，order为在这条insert sql语句执行前还是执行后做--&gt;</span><br><span class="line">        &lt;selectKey keyProperty=&quot;userId&quot; keyColumn=&quot;id&quot; resultType=&quot;int&quot; order=&quot;AFTER&quot;&gt;</span><br><span class="line">            select last_insert_id();</span><br><span class="line">        &lt;/selectKey&gt;</span><br><span class="line">        insert into user (username,address,sex,birthday) values (#&#123;userName&#125;,#&#123;userAddress&#125;,#&#123;userSex&#125;,#&#123;userBirthday&#125;)</span><br><span class="line">    &lt;/insert&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--更新用户--&gt;</span><br><span class="line">    &lt;update id=&quot;updateUser&quot; parameterType=&quot;usER&quot;&gt;</span><br><span class="line">        update user set username=#&#123;userName&#125;,address=#&#123;userAddress&#125;,sex=#&#123;userSex&#125;,birthday=#&#123;userBirthday&#125; where id=#&#123;userId&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--删除用户--&gt;</span><br><span class="line">    &lt;!--当参数值为基本类型或者基本类型包装类时，SQL语句中的占位符可以随意写--&gt;</span><br><span class="line">    &lt;delete id=&quot;deleteUser&quot; parameterType=&quot;Integer&quot;&gt;</span><br><span class="line">        delete from user where id = #&#123;anyzhanweifu&#125;</span><br><span class="line">    &lt;/delete&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--根据id查询用户--&gt;</span><br><span class="line">    &lt;select id=&quot;findByID&quot; parameterType=&quot;INT&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user where id = #&#123;uuuuuuid&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--根据名称模糊查询--&gt;</span><br><span class="line">    &lt;select id=&quot;findByName&quot; parameterType=&quot;String&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user where username like #&#123;namenamenamename&#125;</span><br><span class="line">        &lt;!--select * from user where username like &apos;%$&#123;value&#125;%&apos;--&gt;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--查询记录的总用户条数--&gt;</span><br><span class="line">    &lt;select id=&quot;findTotal&quot; resultType=&quot;Integer&quot;&gt;</span><br><span class="line">        select count(id) from user</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--根据QueryVo的条件查询用户--&gt;</span><br><span class="line">    &lt;select id=&quot;findUserByVo&quot; parameterType=&quot;top.zoick.domain.QueryVo&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user where username like #&#123;user.username&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试类代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line">public class MybatisTest &#123;</span><br><span class="line"></span><br><span class="line">    private InputStream in;</span><br><span class="line">    private SqlSession sqlSession;</span><br><span class="line">    private IUserDao userDao;</span><br><span class="line"></span><br><span class="line">    @Before//用于在测试方法执行之前执行</span><br><span class="line">    public void init() throws Exception &#123;</span><br><span class="line">        //1.读取配置文件</span><br><span class="line">        in = Resources.getResourceAsStream(&quot;SqlMapConfig.xml&quot;);</span><br><span class="line">        //2.创建SqlSessionFactory工厂</span><br><span class="line">        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);</span><br><span class="line">        //3.使用工厂生产SqlSession对象</span><br><span class="line">        sqlSession = factory.openSession();</span><br><span class="line">        //4.使用SqlSession创建Dao接口的代理对象</span><br><span class="line">        userDao = sqlSession.getMapper(IUserDao.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @After//用于在测试方法执行之后执行</span><br><span class="line">    public void destory() throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        //提交事务</span><br><span class="line">        sqlSession.commit();</span><br><span class="line"></span><br><span class="line">        //6.释放资源</span><br><span class="line">        sqlSession.close();</span><br><span class="line">        in.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试查询所有</span><br><span class="line">     *</span><br><span class="line">     * @throws IOException</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindALl() throws Exception &#123;</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        List&lt;User&gt; users = userDao.findAll();</span><br><span class="line">        for (User user : users) &#123;</span><br><span class="line">            System.out.println(user);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试保存操作</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testSave() throws Exception &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUserName(&quot;modify user&quot;);</span><br><span class="line">        user.setUserAddress(&quot;天津&quot;);</span><br><span class="line">        user.setUserBirthday(new Date());</span><br><span class="line">        user.setUserSex(&quot;男&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;保存操作之前：&quot; + user);</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        userDao.saveUser(user);</span><br><span class="line">        System.out.println(&quot;保存操作之后：&quot; + user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试更新操作</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testUpdate() throws Exception &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUserId(51);</span><br><span class="line">        user.setUserName(&quot;mybatis updateUser&quot;);</span><br><span class="line">        user.setUserAddress(&quot;天津1&quot;);</span><br><span class="line">        user.setUserBirthday(new Date());</span><br><span class="line">        user.setUserSex(&quot;男&quot;);</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        userDao.updateUser(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试删除</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testDelete() throws Exception &#123;</span><br><span class="line">        //5.执行删除方法</span><br><span class="line">        userDao.deleteUser(51);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试根据id查询用户</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindById() throws Exception &#123;</span><br><span class="line">        //5.执行查询一个</span><br><span class="line">        User user = userDao.findByID(42);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试名称模糊查询用户信息</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindByName() throws Exception &#123;</span><br><span class="line">        //5.执行模糊查询</span><br><span class="line">        List&lt;User&gt; user = userDao.findByName(&quot;%彭%&quot;);</span><br><span class="line">//        List&lt;User&gt; user = userDao.findByName(&quot;彭&quot;);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试查询用户条数</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindTotal() throws Exception &#123;</span><br><span class="line">        init();</span><br><span class="line">        //执行查询总记录条数</span><br><span class="line">        Integer number = userDao.findTotal();</span><br><span class="line">        System.out.println(&quot;总记录条数为：&quot; + number);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试使用QueryVo作为查询条件</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindUserByVo() throws Exception &#123;</span><br><span class="line">        QueryVo vo = new QueryVo();</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUserName(&quot;%彭%&quot;);</span><br><span class="line">        vo.setUser(user);</span><br><span class="line"></span><br><span class="line">        List&lt;User&gt; users = userDao.findUserByVo(vo);</span><br><span class="line">        for (User u : users) &#123;</span><br><span class="line">            System.out.println(u);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><h4 id="数据库表名和实体类属性名不一致"><a href="#数据库表名和实体类属性名不一致" class="headerlink" title="数据库表名和实体类属性名不一致"></a>数据库表名和实体类属性名不一致</h4><p>1.起别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--配置查询所有  其中id不能乱写必须是dao接口中的方法  resultType写的是实体类的全路径--&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultType=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--实体类中的属性名和数据库表中元素名字匹配不上时，使用别名即可匹配。id为数据库中表的列名，userId为实体类中属性名--&gt;</span><br><span class="line">        select id as userId,username as userName,address as userAddress ,sex as userSex, birthday as userBirthday from user</span><br><span class="line">    &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.配置查询结果的列名和实体类的属性名的对应关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> &lt;!--配置查询结果的列名和实体类的属性名的对应关系--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;userMap&quot; type=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--主键字段的对应--&gt;</span><br><span class="line">        &lt;id property=&quot;userId&quot; column=&quot;id&quot;&gt;&lt;/id&gt;</span><br><span class="line">        &lt;!--非主键字段的对应--&gt;</span><br><span class="line">        &lt;result property=&quot;userName&quot; column=&quot;username&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userAddress&quot; column=&quot;address&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userSex&quot; column=&quot;sex&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userBirthday&quot; column=&quot;bithday&quot;&gt;&lt;/result&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">再在查询的sql语句的xml中加入配置</span><br><span class="line">  &lt;select id=&quot;findAll&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user</span><br><span class="line">  &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置别名"><a href="#配置别名" class="headerlink" title="配置别名"></a>配置别名</h4><p>作用：mapper.xml里面例如parameterType=””就不用写全限定类名，写别名即可</p>
+<p> 1.使用typeAliases配置别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--使用typeAliases配置别名，他只能配置domain中类的别名--&gt;</span><br><span class="line">  &lt;typeAliases&gt;</span><br><span class="line">     &lt;!--typeAlias用于配置别名，type属性指定的是实体类中的全限定类名。alias属性指定别名，当指定了别名后不在区分大小写--&gt;</span><br><span class="line">      &lt;typeAlias type=&quot;top.zoick.domain.User&quot; alias=&quot;user&quot;&gt;&lt;/typeAlias&gt;</span><br><span class="line">  &lt;/typeAliases&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.使用package配置别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;typeAliases&gt;</span><br><span class="line">    &lt;!--用于指定要配置别名的包，当指定后，该包下的实体类都会注册别名，并且类名就是别名，不再区分大小写--&gt;</span><br><span class="line">        &lt;package name=&quot;top.zoick.domain&quot;/&gt;</span><br><span class="line">&lt;/typeAliases&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="OGNL表达式"><a href="#OGNL表达式" class="headerlink" title="OGNL表达式"></a>OGNL表达式</h4><p>Object Graphic Navigation Language<br>对象 　　图　　　导航 　　　语言<br>它是通过对象的取值方法来获取数据。·在写法上把get给省略了<br>比如:我们获取用户的名称<br>　　　　类中的写法:user.getUsername,<br>　　　　OGNL表达式写法:user.username<br>mybatis中为什么能直接写username,而不用user.呢:<br>　　　　因为在parameterType中已经提供了属性所属的类, 所以此时不需要写对象名</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/28/static-instanceof-转型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2062,657 +2653,11 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/依赖注入/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/16/依赖注入/" class="post-title-link" itemprop="url">依赖注入</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-16 21:05:57" itemprop="dateCreated datePublished" datetime="2019-09-16T21:05:57+08:00">2019-09-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>依赖注入(Dependency Injection)是spring框架核心ioc的具体实现.</p>
-<p>通过控制反转,我们把创建对象托管给了spring,但是代码中不可能消除所有依赖,例如:业务层仍然会调用持久层的方法,因此业务层类中应包含持久化层的实现类对象.<br>我们等待框架通过配置的方式将持久层对象传入业务层,而不是直接在代码中new某个具体的持久化层实现类,这种方式称为依赖注入.</p>
-<h2 id="注入方法"><a href="#注入方法" class="headerlink" title="注入方法"></a>注入方法</h2><h3 id="使用构造函数注入"><a href="#使用构造函数注入" class="headerlink" title="使用构造函数注入"></a>使用构造函数注入</h3><p><code>&lt;constructor-arg&gt;</code>用来定义构造函数的参数,其属性可大致分为两类</p>
-<ol>
-<li>寻找要赋值的字段<ol>
-<li>index：指定参数在构造函数参数列表的索引位置</li>
-<li>name：指定参数在构造函数中的数据类型</li>
-<li>type：指定参数在构造函数中的变量名,最常用的属性</li>
-</ol>
-</li>
-<li>给字段赋值<ol>
-<li>value：给基本数据类型和String类型赋值</li>
-<li>ref：给其它Bean类型的字段赋值</li>
-</ol>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line"></span><br><span class="line">    //如果是经常变化的数据,并不适用于注入的方式</span><br><span class="line">    private String name;</span><br><span class="line">    private Integer age;</span><br><span class="line">    private Date birthday;</span><br><span class="line"></span><br><span class="line">    public AccountServiceImpl(String name, Integer age, Date birthday) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.age = age;</span><br><span class="line">        this.birthday = birthday;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void saveAccount() &#123;</span><br><span class="line">		System.out.println(name+&quot;,&quot;+age+&quot;,&quot;+birthday);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用Date类的无参构造函数创建Date对象 --&gt;</span><br><span class="line">&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;name&quot; value=&quot;myname&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;age&quot; value=&quot;18&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">	&lt;!-- birthday字段为已经注册的bean对象,其id为now --&gt;</span><br><span class="line">	&lt;constructor-arg name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/constructor-arg&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用set注入"><a href="#使用set注入" class="headerlink" title="使用set注入"></a>使用set注入</h3><p>在类中提供需要注入成员属性的set方法,创建对象只调用要赋值属性的set方法</p>
-<p><code>&lt;property&gt;</code>,用来定义要调用set方法的成员. 其主要属性可大致分为两类:</p>
-<ol>
-<li><p>指定要调用set方法赋值的成员字段</p>
-<p>name：要调用set方法赋值的成员字段</p>
-</li>
-<li><p>指定赋给字段的值</p>
-<p>value：给基本数据类型和String类型赋值</p>
-<p>ref：给其它Bean类型的字段赋值</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line"></span><br><span class="line">	private String name;</span><br><span class="line">	private Integer age;</span><br><span class="line">	private Date birthday;</span><br><span class="line"></span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setAge(Integer age) &#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setBirthday(Date birthday) &#123;</span><br><span class="line">		this.birthday = birthday;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public void saveAccount() &#123;</span><br><span class="line">		System.out.println(name+&quot;,&quot;+age+&quot;,&quot;+birthday);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用Date类的无参构造函数创建Date对象 --&gt;</span><br><span class="line">&lt;bean id=&quot;now&quot; class=&quot;java.util.Date&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;name&quot; value=&quot;myname&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;property name=&quot;age&quot; value=&quot;21&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;!-- birthday字段为已经注册的bean对象,其id为now --&gt;</span><br><span class="line">	&lt;property name=&quot;birthday&quot; ref=&quot;now&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="集合注入"><a href="#集合注入" class="headerlink" title="集合注入"></a>集合注入</h3><p>集合字段及其对应的标签按照<strong>集合的结构</strong>分为两类：</p>
-<ol>
-<li><p>只有键的结构:</p>
-<ol>
-<li>数组字段：<code>&lt;array&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
-<li>List字段：<code>&lt;list&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
-<li>Set字段：<code>&lt;set&gt;</code>标签表示集合,<code>&lt;value&gt;</code>标签表示集合内的成员</li>
-</ol>
-<p>其中<code>&lt;array&gt;</code>,<code>&lt;list&gt;</code>,<code>&lt;set&gt;</code>标签之间可以互相替换使用.</p>
-</li>
-<li><p>键值对的结构:</p>
-<ol>
-<li>Map字段： <code>&lt;map&gt;</code>标签表示集合,<code>&lt;entry&gt;</code>标签表示集合内的键值对,其<code>key</code>属性表示键,<code>value</code>属性表示值</li>
-<li>Properties字段：<code>&lt;props&gt;</code>标签表示集合,<code>&lt;prop&gt;</code>标签表示键值对,其<code>key</code>属性表示键,标签内的内容表示值.</li>
-</ol>
-</li>
-</ol>
-<p>下面使用set方法注入各种集合字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class AccountServiceImpl implements IAccountService &#123;</span><br><span class="line">	// 集合字段</span><br><span class="line">	private String[] myArray;</span><br><span class="line">	private List&lt;String&gt; myList;</span><br><span class="line">	private Set&lt;String&gt; mySet;</span><br><span class="line">	private Map&lt;String,String&gt; myMap;</span><br><span class="line">	private Properties myProps;</span><br><span class="line"></span><br><span class="line">	// 集合字段的set方法</span><br><span class="line">	public void setMyStrs(String[] myArray) &#123;</span><br><span class="line">		this.myArray = myArray;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyList(List&lt;String&gt; myList) &#123;</span><br><span class="line">		this.myList = myList;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMySet(Set&lt;String&gt; mySet) &#123;</span><br><span class="line">		this.mySet = mySet;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyMap(Map&lt;String, String&gt; myMap) &#123;</span><br><span class="line">		this.myMap = myMap;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMyProps(Properties myProps) &#123;</span><br><span class="line">		this.myProps = myProps;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	public void saveAccount() &#123;</span><br><span class="line">		System.out.println(Arrays.toString(myArray));</span><br><span class="line">		System.out.println(myList);</span><br><span class="line">		System.out.println(mySet);</span><br><span class="line">		System.out.println(myMap);</span><br><span class="line">		System.out.println(myProps);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl3&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;myStrs&quot;&gt;</span><br><span class="line">		&lt;array&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/array&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myList&quot;&gt;</span><br><span class="line">		&lt;list&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/list&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;mySet&quot;&gt;</span><br><span class="line">		&lt;set&gt;</span><br><span class="line">			&lt;value&gt;value1&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;value&gt;value3&lt;/value&gt;</span><br><span class="line">		&lt;/set&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myMap&quot;&gt;</span><br><span class="line">		&lt;map&gt;</span><br><span class="line">			&lt;entry key=&quot;key1&quot; value=&quot;value1&quot;&gt;&lt;/entry&gt;</span><br><span class="line">			&lt;entry key=&quot;key2&quot;&gt;</span><br><span class="line">				&lt;value&gt;value2&lt;/value&gt;</span><br><span class="line">			&lt;/entry&gt;</span><br><span class="line">			</span><br><span class="line">		&lt;/map&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">	&lt;property name=&quot;myProps&quot;&gt;</span><br><span class="line">		&lt;props&gt;</span><br><span class="line">			&lt;prop key=&quot;key1&quot;&gt;value1&lt;/prop&gt;</span><br><span class="line">			&lt;prop key=&quot;key2&quot;&gt;value2&lt;/prop&gt;</span><br><span class="line">		&lt;/props&gt;</span><br><span class="line">	&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/ApplicationContext/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/16/ApplicationContext/" class="post-title-link" itemprop="url">spring bean</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-16 20:25:32" itemprop="dateCreated datePublished" datetime="2019-09-16T20:25:32+08:00">2019-09-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="bean标签"><a href="#bean标签" class="headerlink" title="bean标签"></a>bean标签</h2><ul>
-<li>作用: 配置托管给spring的对象,默认情况下调用类的无参构造函数,若果没有无参构造函数则不能创建成功</li>
-<li>属性：<ol>
-<li><code>id</code>: 指定对象在容器中的标识,将其作为参数传入<code>getBean()</code>方法可以获取获取对应对象.</li>
-<li><code>class</code>: 指定类的全类名,默认情况下调用无参构造函数</li>
-<li><code>scope</code>: 指定对象的作用范围</li>
-<li><code>init-method</code>：指定类中的初始化方法名称,在对象创建成功之后执行</li>
-<li><code>destroy-method</code>：指定类中销毁方法名称</li>
-</ol>
-</li>
-</ul>
-<h2 id="bean的作用范围和生命周期"><a href="#bean的作用范围和生命周期" class="headerlink" title="bean的作用范围和生命周期"></a>bean的作用范围和生命周期</h2><h3 id="作用范围"><a href="#作用范围" class="headerlink" title="作用范围"></a>作用范围</h3><p>xml配置中通过scope属性声明，注解中通过@scope声明,常见作用范围是单例和多例</p>
-<ul>
-<li><p>singleton作用域：单例（一个类有只一个实例），也是默认的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;IAcountService&quot; class=&quot;service.IAcountService&quot; scope=&quot;singleton&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">public class client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext ac=new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        IAcountService acountService1=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">        IAcountService acountService2=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">        System.out.println(acountService1==acountService2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>prototype作用域：多例，每次创建bean都会创建一个新实例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;IAcountService&quot; class=&quot;service.IAcountService&quot; scope=&quot;prototype&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">其余不变，输出：false</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>request</p>
-</li>
-<li><p>session</p>
-</li>
-<li><p>global session</p>
-</li>
-</ul>
-<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>单例对象的生命周期: 单例对象的创建与销毁和容器的创建与销毁时机一致</p>
-<ul>
-<li><p>对象出生: 当应用加载,创建容器时,对象就被创建</p>
-</li>
-<li><p>对象活着: 只要容器存在,对象一直活着</p>
-</li>
-<li><p>对象死亡: 当应用卸载,销毁容器时,对象就被销毁</p>
-<p>多例对象的生命周期: 多例对象的创建与销毁时机不受容器控制</p>
-</li>
-<li><p>对象出生: 当使用对象时,创建新的对象实例</p>
-</li>
-<li><p>对象活着: 只要对象在使用中,就一直活着</p>
-</li>
-<li><p>对象死亡: 当对象长时间不用时,被 java 的垃圾回收器回收了</p>
-</li>
-</ul>
-<h2 id="实例化bean的三种方式"><a href="#实例化bean的三种方式" class="headerlink" title="实例化bean的三种方式"></a>实例化bean的三种方式</h2><ol>
-<li><p>使用默认无参构造函数创建对象: 默认情况下会根据默认无参构造函数来创建类对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot; class=&quot;cn.maoritian.service.impl.AccountServiceImpl&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>通过普通工厂的方法，方法内创建对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	class=&quot;cn.maoritian.factory.StaticFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用工厂类的静态方法，静态方法内会创建对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;instancFactory&quot; class=&quot;cn.maoritian.factory.InstanceFactory&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;bean id=&quot;accountService&quot;</span><br><span class="line">	factory-bean=&quot;instancFactory&quot;</span><br><span class="line">	factory-method=&quot;createAccountService&quot;&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/spring概念/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/16/spring概念/" class="post-title-link" itemprop="url">ApplicationContext</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-16 20:01:31" itemprop="dateCreated datePublished" datetime="2019-09-16T20:01:31+08:00">2019-09-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p> ApplicationContext是spring的容器接口，通过idea我们来看一下其继承关系</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ApplicationContext1.png" alt></p>
-<h2 id="BeanFactory和ApplicatonContext区别"><a href="#BeanFactory和ApplicatonContext区别" class="headerlink" title="BeanFactory和ApplicatonContext区别"></a>BeanFactory和ApplicatonContext区别</h2><p>BeanFactory才是spring的顶层接口，ApplicatonContext是其子接口，主要区别</p>
-<ul>
-<li><p>ApplicationContext：只要一读取配置文件，默认情况下就会创建对象（立即加载）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService);</span><br><span class="line"></span><br><span class="line">结果：在执行完ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);就输出了“对象被加载了”，即读取完配置文件对象就被加载</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>BeanFactory什么时候要用对象才创建（延迟加载）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">IAcountService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  System.out.println(<span class="string">"对象加载了"</span>);</span><br><span class="line">&#125;        </span><br><span class="line"></span><br><span class="line">Resource resource = <span class="keyword">new</span> ClassPathResource(<span class="string">"bean.xml"</span>);</span><br><span class="line">BeanFactory beanFactory=<span class="keyword">new</span> XmlBeanFactory(resource);</span><br><span class="line">IAcountService acountService1=(IAcountService)beanFactory.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService1);</span><br><span class="line">结果：执行System.out.println(acountService1);才输出了“对象被加载了”</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="ApplicationContext接口3个实现类"><a href="#ApplicationContext接口3个实现类" class="headerlink" title="ApplicationContext接口3个实现类"></a>ApplicationContext接口3个实现类</h2><ul>
-<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
-<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
-<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
-</ul>
-<p>ClassPathXmlApplicationContext基本使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext ac=new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        IAcountService acountService1=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>AnnotationConfigApplicationContext基本使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration//相当于原来的bean.xml</span><br><span class="line">@ComponentScan(basePackages = &quot;com.xjh&quot;)//相当于&lt;context:component-scan&gt;&lt;/&gt;</span><br><span class="line">public class springConfig &#123;</span><br><span class="line">    @Bean(name = &quot;IAcountService&quot;)</span><br><span class="line">    public IAcountService getBean()&#123;</span><br><span class="line">        return new IAcountService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ApplicationContext ac=new AnnotationConfigApplicationContext(springConfig.class);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(&quot;IAcountService&quot;)</span><br><span class="line">System.out.println(acountService);</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2756,7 +2701,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2809,7 +2754,9 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2860,7 +2807,9 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

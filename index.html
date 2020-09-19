@@ -380,6 +380,503 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/19/向下转型与向上转型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/19/向下转型与向上转型/" class="post-title-link" itemprop="url">向下转型与向上转型</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-19 19:11:44" itemprop="dateCreated datePublished" datetime="2020-09-19T19:11:44+08:00">2020-09-19</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试题/" itemprop="url" rel="index"><span itemprop="name">面试题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>遇到一道面试题，发现向下转型有点问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a - b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    A a = <span class="keyword">new</span> B();</span><br><span class="line">    B b = <span class="keyword">new</span> B();</span><br><span class="line">    System.out.println(<span class="string">"Result="</span> + a.func1(<span class="number">100</span>, <span class="number">50</span>));</span><br><span class="line">    System.out.println(<span class="string">"Result="</span> + b.func1(<span class="number">100</span>, <span class="number">50</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Result=<span class="number">150</span> Result=<span class="number">150</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>多态可以概括为</strong></p>
+<ul>
+<li>父类引用指向子类对象</li>
+<li>该引用只能调用父类的方法和变量</li>
+<li>子类如果重写了父类方法，那么调用这个方法的时候将会调用子类中的方法</li>
+</ul>
+<p><strong>所以多态的三个条件</strong></p>
+<ul>
+<li>继承</li>
+<li>重写</li>
+<li>父类引用指向子类对象</li>
+</ul>
+<p><strong>向上转型与向下转型</strong></p>
+<ul>
+<li>向上转型： Person p = new Man() ; //向上转型不需要强制类型转型</li>
+<li>向下转型： Man man = (Man)new Person() ; //必须强制类型转化 </li>
+</ul>
+<p><strong>对于向上转型我们知道，向下转型有什么用呢，来个例子</strong></p>
+<p>新建一个电子产品接口 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface Electronics&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 新建一个Thinkpad笔记本类， Mouse鼠标类 ，并实现电子产品接口 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class Thinkpad implements Electronics&#123;</span><br><span class="line"></span><br><span class="line">    //Thinkpad引导方法</span><br><span class="line">    public void boot()&#123;</span><br><span class="line">        System.out.println(&quot;welcome,I am Thinkpad&quot;);        </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //使用Thinkpad编程  </span><br><span class="line">    public void program()&#123;</span><br><span class="line">        System.out.println(&quot;using Thinkpad program&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Mouse implements Electronics&#123;</span><br><span class="line"></span><br><span class="line">    //鼠标移动</span><br><span class="line">    public void move()&#123;</span><br><span class="line">        System.out.println(&quot;move the mouse&quot;);       </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //鼠标点击  </span><br><span class="line">    public void onClick()&#123;</span><br><span class="line">        System.out.println(&quot;a click of the mouse&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们想象一个情景：我们去商城买电子产品，电子产品有很多，所以就需要一个购物车来装这些电子产品吧。我们可以添加进购物车，然后通过购物车还能知道存放的电子产品数量，能拿到对应的电子产品。<br>那么，一个购物车类就出来了 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShopCar</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;Electronics&gt; mlist = <span class="keyword">new</span> ArrayList&lt;Electronics&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Electronics electronics)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        mlist.add(electronics);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> mlist.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Electronics <span class="title">getListItem</span><span class="params">(<span class="keyword">int</span> position)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> mlist.get(position);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为要存放多种电子产品，所以需要使用泛型，即 List<electronics> ，但是呢放进去就自动进行了向上转型，<strong>失去了子类独有的方法</strong>，这显然不是我们想要的，这是我们就需要向下转型了，来恢复子类特有的方法</electronics></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//开始测试thinkpad电脑</span></span><br><span class="line">Thinkpad thinkpad = (Thinkpad)shopcar.getListItem(THINKPAD);</span><br><span class="line">thinkpad.boot();</span><br><span class="line">thinkpad.program();</span><br></pre></td></tr></table></figure>
+
+<p>经过上面这个过程，子类实例已经赋值给了父类引用（即完成了向上转型），但很遗憾的丢失了子类扩展的方法。<br>很好的是Java语言有个向下转型的特性，让我们可以重新获得丢失的方法，即强转回子类  </p>
+<p>向下转型最大的用处是java的泛型编程，用处很大，Java的集合类都是这样的 </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/18/springmvc流程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/18/springmvc流程/" class="post-title-link" itemprop="url">springmvc流程</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-18 11:41:14" itemprop="dateCreated datePublished" datetime="2020-09-18T11:41:14+08:00">2020-09-18</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/17/CAS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/17/CAS/" class="post-title-link" itemprop="url">CAS</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-17 16:22:08" itemprop="dateCreated datePublished" datetime="2020-09-17T16:22:08+08:00">2020-09-17</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/意向锁/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1389,6 +1886,14 @@
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i]+nums[j]&gt;target)&#123;</span><br><span class="line">                --j;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[i]+nums[j]&lt;target)&#123;</span><br><span class="line">                ++i;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                res[<span class="number">0</span>]=nums[i];</span><br><span class="line">                res[<span class="number">1</span>]=nums[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h3 id="精选top26-删除排序数组重复的选项"><a href="#精选top26-删除排序数组重复的选项" class="headerlink" title="精选top26.删除排序数组重复的选项"></a>精选top26.删除排序数组重复的选项</h3><p>给定一个排序数组，你需要在<strong><a href="http://baike.baidu.com/item/原地算法" target="_blank" rel="noopener"> 原地</a></strong> 删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">给定数组 nums = [1,1,2], </span><br><span class="line"></span><br><span class="line">函数应该返回新的长度 2, 并且原数组 nums 的前两个元素被修改为 1, 2。 </span><br><span class="line"></span><br><span class="line">你不需要考虑数组中超出新长度后面的元素。</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>双指针，i慢指针，j快指针，j遇到重复的就往后走，遇到不一样的就把值赋给i+1的位置，这样最终返回i+1即可</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">removeDuplicates</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;nums.length;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i]!=nums[j])&#123;</span><br><span class="line">                i+=<span class="number">1</span>;</span><br><span class="line">                nums[i]=nums[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> i+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h2><h3 id="48-最长不含重复字符的子字符串"><a href="#48-最长不含重复字符的子字符串" class="headerlink" title="48.最长不含重复字符的子字符串"></a>48.最长不含重复字符的子字符串</h3><p> 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3 </span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br></pre></td></tr></table></figure>
 
@@ -2064,617 +2569,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/对象内存/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/06/16/对象内存/" class="post-title-link" itemprop="url">对象内存</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-06-16 16:21:48" itemprop="dateCreated datePublished" datetime="2020-06-16T16:21:48+08:00">2020-06-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="对象内存"><a href="#对象内存" class="headerlink" title="对象内存"></a>对象内存</h2><h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><p>对象的内存布局可分为3部分：对象头，对象实例数据和对齐填充（padding）</p>
-<p>对象头又包括2部分信息</p>
-<ul>
-<li>Mark Word：存储一些对象自身数据，比如哈希码，Gc分代年龄，锁状态等，一般64位虚拟机就占8字节，32位占4字节</li>
-<li>对象类型数据（引用）：指向方法区的.class，确定这个对象是哪个类的实例</li>
-</ul>
-<p>对象实例数据：包括成员变量等</p>
-<p>对齐填充：可有可不有，满足是8字节的整数倍时为0，不满足时进行填充</p>
-<h3 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h3><p>两种方式</p>
-<ul>
-<li><p>句柄访问：堆内划分出一块内存作为句柄，包括指向<strong>对象实例数据</strong>和<strong>对象类型数据</strong>的<strong>指针</strong></p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%981.jpg" alt></p>
-</li>
-<li><p>直接访问</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%982.jpg" alt></p>
-</li>
-</ul>
-<h3 id="new-Object-占多少字节"><a href="#new-Object-占多少字节" class="headerlink" title="new Object()占多少字节"></a>new Object()占多少字节</h3><p>普通对象和数组在内存布局是不一样的</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%983.png" alt></p>
-<p>对象头8字节</p>
-<p>类型指针8字节，但一般开启了压缩为4字节</p>
-<p>实例数据暂时没有，为0字节</p>
-<p>此时一共12字节，需要填充4字节，所以一共占16字节</p>
-<p>ps：如果关闭了压缩，则类型指针8字节，一共16字节，不需要填充</p>
-<h3 id="查看是否压缩指针"><a href="#查看是否压缩指针" class="headerlink" title="查看是否压缩指针"></a>查看是否压缩指针</h3><p>通过java -XX:+PrintCommandLineFlags -version查看指向java命令时默认带着的参数</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png" alt></p>
-<p>-XX:+UseCompressedClassPointers：这个就是指压缩了指针，<strong>64位jvm虚拟机</strong>默认指针是64位，压缩到4个字节</p>
-<p>-XX:+UseCompressedOops：和上面的并不一样，它指的是例如一个对象内部有一个String成员变量指向了另一个对象，此时也会压缩，也是4个字节</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/GC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/06/16/GC/" class="post-title-link" itemprop="url">GC</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-06-16 16:21:14" itemprop="dateCreated datePublished" datetime="2020-06-16T16:21:14+08:00">2020-06-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="GC看这篇就够了"><a href="#GC看这篇就够了" class="headerlink" title="GC看这篇就够了"></a>GC看这篇就够了</h2><h3 id="什么是垃圾"><a href="#什么是垃圾" class="headerlink" title="什么是垃圾"></a>什么是垃圾</h3><p>不再被使用的对象就是垃圾</p>
-<h3 id="怎么定位垃圾"><a href="#怎么定位垃圾" class="headerlink" title="怎么定位垃圾"></a>怎么定位垃圾</h3><ul>
-<li><p>引用计数算法（reference counting）</p>
-<p>可对象增加一个引用计数器，每有一个地方引用它时，计数加1，引用失效就减一，归零就代表这个对象不被使用，作为垃圾清除</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc1.png" alt></p>
-<p><strong>但是这种方式存在问题</strong>，解决不了循环依赖的情况。比如说a，b相互引用对方，而实际上两个对象都已经不再被使用了，但此时计数器依然为1，这样就无法垃圾收集器收集了</p>
-</li>
-<li><p>可达性分析</p>
-<p>通过一系列GC Roots做为起点，从这些节点往下搜索，搜索走过的路径称为引用链，如果一个对象到GC Roots没有引用链则是垃圾</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc2.jpg" alt></p>
-</li>
-</ul>
-<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="标记-清除"><a href="#标记-清除" class="headerlink" title="标记-清除"></a>标记-清除</h4><p>先标记需要回收的对象，然后进行清除</p>
-<p>问题：会造成内存碎片</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc3.png" alt></p>
-<h4 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h4><p>将内存一分为二，每次只使用一半，当这一块使用完，将其中存活者的对象复制到另一块中去，然后把使用的内存空间进行清理。也就是每次只清理整个半区（实际情况不是对半分，后面再说）</p>
-<p>优点：避免了碎片</p>
-<p>缺点：每次只使用一半内存</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc4.png" alt></p>
-<h4 id="标记-整理"><a href="#标记-整理" class="headerlink" title="标记-整理"></a>标记-整理</h4><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc5.png" alt></p>
-<p>标记还是一样，只是不直接对垃圾（可回收对象）进行回收，而是先整理，将存活对象移到一端，将端边界以外的内存进行清理</p>
-<h3 id="堆内存逻辑分区"><a href="#堆内存逻辑分区" class="headerlink" title="堆内存逻辑分区"></a>堆内存逻辑分区</h3><p>堆内存逻辑上分为新生代和老年代。新生代使用复制算法，老年代使用标记整理算法。</p>
-<p>新生代又分为eden和survivor，每次使用eden和一个survivor，回收时将eden和survivor中存活的对象复制到另一个survivor中去，一个eden和一个survivor的比例为8：1，这样就只会有10%的内存被浪费</p>
-<p>经过多次回收还存活的对象会进入到老年中去</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc6.png" alt></p>
-<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p>垃圾收集包括有Serial，ParNew，Parallel Scavenge，CMS等，通常组合使用，常用组合如下</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc7.png" alt></p>
-<h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>Serial收集器是一个单线程收集器，需要STW（stop the world），在进行垃圾回收的时候需要停掉正常工作的线程</p>
-<p>新生代叫做Serial（使用复制算法），回收老年代时叫做<strong>Serial Old</strong>（使用标记整理算法）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc8.jpg" alt></p>
-<h4 id="ParNew（和CMS组合）"><a href="#ParNew（和CMS组合）" class="headerlink" title="ParNew（和CMS组合）"></a>ParNew（和CMS组合）</h4><p>ParNew就是Serial收集器的多线程版本，多个线程进行垃圾回收</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc9.jpg" alt></p>
-<h4 id="Parallel-Scanvenge-Parallel-Old（jdk默认的哦）"><a href="#Parallel-Scanvenge-Parallel-Old（jdk默认的哦）" class="headerlink" title="Parallel Scanvenge+Parallel Old（jdk默认的哦）"></a>Parallel Scanvenge+Parallel Old（jdk默认的哦）</h4><p>同样需要stop the world，卡顿时间长，和ParNew差不多，看下面的-XX:+UseParallelGC</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png" alt></p>
-<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>前面的都需要STW，卡顿时间较长，CMS的目标就是最短回收停顿时间</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc11.jpg" alt></p>
-<p>运行过程包括4个阶段</p>
-<ul>
-<li><p>初始标记</p>
-<p>这阶段标记的是GC roots后的第一个节点（没有标记全部），所以时间不长</p>
-</li>
-<li><p>并发标记</p>
-<p>之前只标记了最接近GC Roots的结点，这个阶段沿着引用链标记其他的结点，不过是和其他工作线程一起进行的（之所以CMS卡顿时间短就在于并发标记，原来并发标记这一部分和初始标记一起的，卡顿时间就长，现在和其他线程一起进行，所以时间大大减少）</p>
-</li>
-<li><p>重新标记</p>
-<p>并发标记时工作线程还是在运行的，还会产生垃圾或者引用的改变，所以需要重新标记。不过之前大部分垃圾已经找到了，重新标记的垃圾并不多，所以浪费的时间也不长</p>
-</li>
-<li><p>并发清除</p>
-<p>清理垃圾，和其他工线程一起进行，也正因为其他工作线程还在干活，所以会产生<strong>浮动垃圾</strong></p>
-</li>
-</ul>
-<p>CMS也存在问题</p>
-<ul>
-<li>浮动垃圾，并发清理时会出现新的垃圾，只能下次回收</li>
-<li>内存碎片化：CMS采用的是Mark-Sweep，这个算法上面讲了会产生很多的内存碎片，当碎片很多以至于从新生代来到老年代的存活对象都没放时，会进行Serial Old，即使用<strong>标记整理</strong>（Mark-Compact）来整理这些碎片，由于Serial Old是需要STW的，此时会非常卡</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc10.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/redis主从复制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/06/01/redis主从复制/" class="post-title-link" itemprop="url">redis主从复制</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-06-01 09:16:56" itemprop="dateCreated datePublished" datetime="2020-06-01T09:16:56+08:00">2020-06-01</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><h3 id="单机redis存在问题"><a href="#单机redis存在问题" class="headerlink" title="单机redis存在问题"></a>单机redis存在问题</h3><ul>
-<li>机器故障：单机redis出现故障会对业务造成毁灭性打击</li>
-<li>容量瓶颈：需要不断升内存</li>
-</ul>
-<p>将数据复制多个副本保存在不同的服务器上，<strong>链接在一起</strong>，并保证数据是否<strong>同步</strong>的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif" alt></p>
-<p>一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接</p>
-<h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><p>指令就1条</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof master_ip master_port</span><br></pre></td></tr></table></figure>
-
-<p>3种方式连接</p>
-<ul>
-<li>发送命令 <code>slaveof master_ip master_port</code> </li>
-<li>启动时使用参数<code>--slaveof master_ip master_port</code> （redis-cli -p xxxx –slaveof）</li>
-<li>服务器配置 <code>slaveof master_ip master_port</code> （修改配置文件）</li>
-</ul>
-<h3 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png" alt></p>
-<p>分2步</p>
-<ul>
-<li>全量复制：将master现有的数据通过rdb方式生成rdb文件，发送给slave，进行数据恢复</li>
-<li>部分复制：进行bgsave的过程中master还会进行别的操作，所以需要复制缓冲区通过aof把指令给slave，并重写</li>
-</ul>
-<h3 id="命令传播阶段"><a href="#命令传播阶段" class="headerlink" title="命令传播阶段"></a>命令传播阶段</h3><h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>复制缓冲区有偏移量（offset）和字节值（需要同步的数据以字节存储在这部分）组成</p>
-<p>复制缓冲区大小需要合理，其结构为队列，先进先出，太小数据饱和会将前面的数据弹出，造成数据丢失</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis3.png" alt></p>
-<h4 id="命令传播"><a href="#命令传播" class="headerlink" title="命令传播"></a>命令传播</h4><p>该阶段主要还是slave发送指令，比对master缓冲区的偏移量和slave中保存的是否一致，不一致则将offset差值的数据通过socket传给slave，期间还有<strong>心跳机制</strong>保持双方的连通。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png" alt></p>
-<h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>slave发送 REPLCONF ACK {offset} 指令，既告诉master自己的偏移量，也可以看看判断master是否在线，1秒发一次</p>
-<p>master 通过ping指令看slave是否连接着，一般10秒一次</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2718,7 +2617,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2771,7 +2670,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2822,7 +2723,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
