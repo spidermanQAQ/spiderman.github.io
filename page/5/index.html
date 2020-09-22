@@ -380,6 +380,398 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis注解开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/mybatis注解开发/" class="post-title-link" itemprop="url">注解开发</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 20:22:55" itemprop="dateCreated datePublished" datetime="2019-10-14T20:22:55+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="注解开发增删改查"><a href="#注解开发增删改查" class="headerlink" title="注解开发增删改查"></a>注解开发增删改查</h2><p>解释一下，原来mapper.xml里的namespace不用写，因为本身就在IUserDao接口，rusultType不用因为泛型内说明了返回类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">public interface IUserDao &#123;</span><br><span class="line">    /**</span><br><span class="line">    * 查询所有用户</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @Select(&quot;select * from user&quot;)</span><br><span class="line">   List&lt;User&gt; findAll();</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 保存用户</span><br><span class="line">    * @param user</span><br><span class="line">    */</span><br><span class="line">   @Insert(&quot;insert into user(username,address,sex,birthday)values(#&#123;username&#125;,#&#123;address&#125;,#&#123;sex&#125;,#&#123;birthday&#125;)&quot;)</span><br><span class="line">   void saveUser(User user);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 更新用户</span><br><span class="line">    * @param user</span><br><span class="line">    */</span><br><span class="line">   @Update(&quot;update user set username=#&#123;username&#125;,sex=#&#123;sex&#125;,birthday=#&#123;birthday&#125;,address=#&#123;address&#125; where id=#&#123;id&#125;&quot;)</span><br><span class="line">   void updateUser(User user);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 删除用户</span><br><span class="line">    * @param userId</span><br><span class="line">    */</span><br><span class="line">   @Delete(&quot;delete from user where id=#&#123;id&#125; &quot;)</span><br><span class="line">   void deleteUser(Integer userId);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 根据id查询用户</span><br><span class="line">    * @param userId</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @Select(&quot;select * from user  where id=#&#123;id&#125; &quot;)</span><br><span class="line">   User findById(Integer userId);</span><br><span class="line"></span><br><span class="line">   /**</span><br><span class="line">    * 根据用户名称模糊查询</span><br><span class="line">    * @param username</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @Select(&quot;select * from user where username like #&#123;username&#125; &quot;)</span><br><span class="line">   List&lt;User&gt; findUserByName(String username);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注解开发多表查询"><a href="#注解开发多表查询" class="headerlink" title="注解开发多表查询"></a>注解开发多表查询</h2><p>一对一（多对一）</p>
+<p>@One 注解（一对一）  代替了<assocation>标签，是多表查询的关键，在注解中用来指定子查询返回单一对象</assocation></p>
+<p>select  指定用来多表查询的 sqlmapper  </p>
+<p>fetchType 会覆盖全局的配置参数 lazyLoadingEnabled</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public interface IAccountDao &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询所有账户，并且获取每个账户所属的用户信息</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from account&quot;)</span><br><span class="line">    @Results(id=&quot;accountMap&quot;,value = &#123;</span><br><span class="line">            @Result(id=true,column = &quot;id&quot;,property = &quot;id&quot;),</span><br><span class="line">            @Result(column = &quot;uid&quot;,property = &quot;uid&quot;),</span><br><span class="line">            @Result(column = &quot;money&quot;,property = &quot;money&quot;),</span><br><span class="line">            //这个注解是引入主表        FetchType(加载时机)  EAGER(立即加载)</span><br><span class="line">            @Result(property = &quot;user&quot;,column = &quot;uid&quot;,one=@One(select=&quot;com.itheima.dao.IUserDao.findById&quot;,fetchType= FetchType.EAGER))</span><br><span class="line">    &#125;)</span><br><span class="line">    List&lt;Account&gt; findAll();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据用户id查询账户信息</span><br><span class="line">     * @param userId</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from account where uid = #&#123;userId&#125;&quot;)</span><br><span class="line">    List&lt;Account&gt; findAccountByUid(Integer userId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一对多</p>
+<p>@Many 注解（多对一）       代替了<collection>标签,是是多表查询的关键，在注解中用来指定子查询返回对象集合</collection></p>
+<p>fetchType = FetchType.LAZY延迟加载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">public interface IUserDao &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询所有用户</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from user&quot;)</span><br><span class="line">    @Results(id=&quot;userMap&quot;,value=&#123;</span><br><span class="line">            @Result(id=true,column = &quot;id&quot;,property = &quot;userId&quot;),</span><br><span class="line">            @Result(column = &quot;username&quot;,property = &quot;userName&quot;),</span><br><span class="line">            @Result(column = &quot;address&quot;,property = &quot;userAddress&quot;),</span><br><span class="line">            @Result(column = &quot;sex&quot;,property = &quot;userSex&quot;),</span><br><span class="line">            @Result(column = &quot;birthday&quot;,property = &quot;userBirthday&quot;),</span><br><span class="line">            @Result(property = &quot;accounts&quot;,column = &quot;id&quot;,</span><br><span class="line">                    many = @Many(select = &quot;com.itheima.dao.IAccountDao.findAccountByUid&quot;,</span><br><span class="line">                                fetchType = FetchType.LAZY))</span><br><span class="line">    &#125;)</span><br><span class="line">    List&lt;User&gt; findAll();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据id查询用户</span><br><span class="line">     * @param userId</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from user  where id=#&#123;id&#125; &quot;)</span><br><span class="line">    @ResultMap(&quot;userMap&quot;)</span><br><span class="line">    User findById(Integer userId);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 根据用户名称模糊查询</span><br><span class="line">     * @param username</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select * from user where username like #&#123;username&#125; &quot;)</span><br><span class="line">    @ResultMap(&quot;userMap&quot;)</span><br><span class="line">    List&lt;User&gt; findUserByName(String username);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/延迟加载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/延迟加载/" class="post-title-link" itemprop="url">延迟加载</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 18:38:54" itemprop="dateCreated datePublished" datetime="2019-10-14T18:38:54+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="延迟加载的概念"><a href="#延迟加载的概念" class="headerlink" title="延迟加载的概念"></a>延迟加载的概念</h2><p>就是在需要用到数据时才进行加载，不需要用到数据时就不加载数据。延迟加载也称懒加载. 好处：先从单表查询，需要时再从关联表去关联查询，大大提高数据库性能，因为查询单表要比关联查询多张表速 度要快。  </p>
+<p>坏处：   因为只有当需要用到数据时，才会进行数据库查询，这样在大批量数据查询时，因为查询工作也要消耗 时间，所以可能造成用户等待时间变长，造成用户体验下降。 </p>
+<p>一对多，多对多：通常情况下我们都是采用延迟加载。<br>多对一，一对一：通常情况下我们都是采用立即加载。</p>
+<h2 id="一对多案例"><a href="#一对多案例" class="headerlink" title="一对多案例"></a>一对多案例</h2><ol>
+<li><p>在SqlMapConfig.xml中配置setting标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings&gt;</span><br><span class="line">        &lt;!-- 配置全局缓存--&gt;</span><br><span class="line">        &lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;true&quot;/&gt;</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>IUserDao.xml中配置collection标签</p>
+<p>property=”accList” :  关联查询的结果集存储在 User 对象的上哪个属性。 </p>
+<p>ofType=”account” ： 指定关联查询的结果集中的对象类型即List中的对象类型。此处可以使用别名，也可以使用全限定名</p>
+<p>单单1对多的查询，只需要上面两个属性，下面2个用于延迟加载</p>
+<p>1对多查询原理：代理对象通过findAll()的sql语句执行结果封装到rusultMap的嵌套结构中</p>
+<p>select 用于指定查询 account 列表的 sql 语句，所以填写的是该 sql 映射的 id </p>
+<p>column 用于指定 select 属性的 sql 语句的参数来源，上面的参数来自于 user 的 id 列，所以就写成 id 这一 个字段名了 （根据user的id查询账户）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace=&quot;com.itheima.dao.IUserDao&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 定义User的resultMap--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;userAccountMap&quot; type=&quot;user&quot;&gt;</span><br><span class="line">        &lt;id property=&quot;id&quot; column=&quot;id&quot;&gt;&lt;/id&gt;</span><br><span class="line">        &lt;result property=&quot;username&quot; column=&quot;username&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;address&quot; column=&quot;address&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;sex&quot; column=&quot;sex&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;birthday&quot; column=&quot;birthday&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;!-- 配置user对象中accounts集合的映射 --&gt;</span><br><span class="line">        &lt;collection property=&quot;accounts&quot; ofType=&quot;account&quot; select=&quot;com.itheima.dao.IAccountDao.findAccountByUid&quot; column=&quot;id&quot;&gt;&lt;/collection&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 查询所有 --&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultMap=&quot;userAccountMap&quot;&gt;</span><br><span class="line">        select * from user</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 根据id查询用户 --&gt;</span><br><span class="line">    &lt;select id=&quot;findById&quot; parameterType=&quot;INT&quot; resultType=&quot;user&quot;&gt;</span><br><span class="line">        select * from user where id = #&#123;uid&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 根据用户id查询账户列表 --&gt;</span><br><span class="line">    &lt;select id=&quot;findAccountByUid&quot; resultType=&quot;account&quot;&gt;</span><br><span class="line">        select * from account where uid = #&#123;uid&#125;</span><br><span class="line">    &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试类</p>
+<p>当注释了for循环输出，会发现只执行了一个findAll()的select语句，另一个select并没有执行，这就是延迟加载，你用不到我就我就不给你</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">   public void findAll()&#123;</span><br><span class="line">       List&lt;Account&gt; accounts = accoutDao.findAll();</span><br><span class="line">       for (Account account:accounts) &#123;</span><br><span class="line">           System.out.println(&quot;每一个account的信息&quot;);</span><br><span class="line">           System.out.println(account);</span><br><span class="line">           System.out.println(account.getUser());</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ol>
+<li><p>什么是缓存</p>
+<p>存在于内存中的临时数据</p>
+</li>
+<li><p>为什么使用缓存</p>
+<p>减少与数据库的交互次数，提高执行效率</p>
+</li>
+<li><p>什么样的数据能使用缓存，什么样的数据不能使用</p>
+<p>适用于缓存：<br>　  经常查询并且不经常改变的。<br>　  数据的正确与否对最终结果影响不大的<br>不适用于缓存：<br>　  经常改变的数据。<br>　  数据的正确与否对最终结果影响很大的。如，商品库存，银行汇率，股市牌价。</p>
+</li>
+</ol>
+<h3 id="mybatis中的一级缓存和二级缓存"><a href="#mybatis中的一级缓存和二级缓存" class="headerlink" title="mybatis中的一级缓存和二级缓存"></a>mybatis中的一级缓存和二级缓存</h3><p><strong>一级缓存</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/yijihauncun.png" alt></p>
+<p>它指的是mybatis中SqlSession对象的缓存。<br>　　当我们执行查询的时候，查询的结果会同时存入到SqlSession为我们提供的一块区域中。<br>　　每个SqlSession中持有了Executor，每个Executor中有一个LocalCache。当用户发起查询时，MyBatis根据当前执行的语句生成MappedStatement，在Local Cache进行查询，如果缓存命中的话，直接返回结果给用户，如果缓存没有命中的话，查询数据库，结果写入Local Cache，最后返回结果给用户。<br>　　当SqlSession对象消失时，mybatis的一级缓存也就消失了。</p>
+<p>测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void getStudentById() throws Exception &#123;</span><br><span class="line">        SqlSession sqlSession = factory.openSession(true); // 自动提交事务</span><br><span class="line">        StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);</span><br><span class="line">        System.out.println(studentMapper.getStudentById(1));</span><br><span class="line">        System.out.println(studentMapper.getStudentById(1));</span><br><span class="line">        System.out.println(studentMapper.getStudentById(1));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/yijihuancunjieguo.png" alt></p>
+<p><strong>二级缓存</strong></p>
+<p>它指的是mybatis中SqlSessionFactory对象的缓存。由同一个SqlSessionFactory对象创建的SqlSession共享其缓存。</p>
+<p>二级缓存的使用步骤：<br>　　　　　　　　第一步：让mybatis框架支持二级缓存（在SqlMapConfig.xml中配置）<br>　　　　　　　　第二步：让当前的映射文件支持二级缓存（在IUserDao.xml中配置）<br>　　　　　　　　第三步：让当前的操作支持二级缓存（在select标签中配置）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line"> public void testFirstLevelCache()&#123;</span><br><span class="line">     SqlSession sqlSession1 = factory.openSession();</span><br><span class="line">     IUserDao dao1 = sqlSession1.getMapper(IUserDao.class);</span><br><span class="line">     User user1 = dao1.findById(41);</span><br><span class="line">     System.out.println(user1);</span><br><span class="line">     sqlSession1.close();//一级缓存消失</span><br><span class="line"></span><br><span class="line">     SqlSession sqlSession2 = factory.openSession();</span><br><span class="line">     IUserDao dao2 = sqlSession2.getMapper(IUserDao.class);</span><br><span class="line">     User user2 = dao2.findById(41);</span><br><span class="line">     System.out.println(user2);</span><br><span class="line">     sqlSession2.close();</span><br><span class="line"></span><br><span class="line">     System.out.println(user1 == user2);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/erjihuancun3.png" alt></p>
+<p>这里要注意最后一个结果为false，图片没截好，原因如下</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/erjihauncun2.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatis多表查询/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2143,516 +2535,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/泛型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/22/泛型/" class="post-title-link" itemprop="url">泛型</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-22 11:48:44" itemprop="dateCreated datePublished" datetime="2019-09-22T11:48:44+08:00">2019-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>泛型：<strong>把类型明确的工作推迟到创建对象或调用方法的时候才去明确的特殊的类型</strong></p>
-<p>相关术语：</p>
-<ul>
-<li>ArrayList<e>：E为类型参数变量</e></li>
-<li>ArrayList<integer>：实际类型参数</integer></li>
-<li>整个ArrayList<e>为泛型类型</e></li>
-<li>整个ArrayList<integer>为参数化的类型</integer></li>
-</ul>
-<h2 id="为什么需要泛型"><a href="#为什么需要泛型" class="headerlink" title="为什么需要泛型"></a>为什么需要泛型</h2><p>没有泛型的情况下：</p>
-<ul>
-<li>Collection、Map集合对元素的类型是没有任何限制的。<strong>本来我的Collection集合装载的是全部的Dog对象，但是外边把Cat对象存储到集合中，是没有任何语法错误的。</strong></li>
-<li>把对象扔进集合中，集合是不知道元素的类型是什么的，仅仅知道是Object。因此在get()的时候，返回的是Object。<strong>外边获取该对象，还需要强制转换</strong></li>
-</ul>
-<p>有泛型的情况下：</p>
-<ul>
-<li>程序简洁（不用强制转换）</li>
-<li>程序健壮（只要编译时期没有警告，那么运行时期就不会出现ClassCastException异常）</li>
-<li>可读性和稳定性（在编写集合的时候，就限定了类型）</li>
-</ul>
-<p><strong>Example</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//创建集合对象</span><br><span class="line">ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">list.add(&quot;hello&quot;);</span><br><span class="line">list.add(&quot;world&quot;);</span><br><span class="line">list.add(&quot;java&quot;);</span><br><span class="line"></span><br><span class="line">//遍历,由于明确了类型.我们可以增强for</span><br><span class="line">for (String s : list) &#123;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="泛型类-泛型方法"><a href="#泛型类-泛型方法" class="headerlink" title="泛型类 泛型方法"></a>泛型类 泛型方法</h2><h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>泛型类：<strong>泛型定义在类上，用户使用该类的时候，才把类型明确下来</strong></p>
-<p>基本格式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    1:把泛型定义在类上</span><br><span class="line">    2:类型变量定义在类上,方法中也可以使用</span><br><span class="line"> */</span><br><span class="line">public class ObjectTool&lt;T&gt; &#123;</span><br><span class="line">    private T obj;</span><br><span class="line"></span><br><span class="line">    public T getObj() &#123;</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setObj(T obj) &#123;</span><br><span class="line">        this.obj = obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用户想要使用哪种类型，就在创建的时候指定类型。使用的时候，该类就会自动转换成用户想要使用的类型了。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //创建对象并指定元素类型</span><br><span class="line">    ObjectTool&lt;String&gt; tool = new ObjectTool&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    tool.setObj(new String(&quot;xxx&quot;));</span><br><span class="line">    String s = tool.getObj();</span><br><span class="line">    System.out.println(s);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //创建对象并指定元素类型</span><br><span class="line">    ObjectTool&lt;Integer&gt; objectTool = new ObjectTool&lt;&gt;();</span><br><span class="line">    /**</span><br><span class="line">     * 如果我在这个对象里传入的是String类型的,它在编译时期就通过不了了.</span><br><span class="line">     */</span><br><span class="line">    objectTool.setObj(10);</span><br><span class="line">    int i = objectTool.getObj();</span><br><span class="line">    System.out.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>在类上定义的泛型在方法上也能用，那泛型方法的适用情况是什么呢</p>
-<p><strong>小题大做</strong>：我就想在一个方法上使用泛型，又不要考虑其他的，把整个类都泛型不是有点多余了吗</p>
-<p>基本格式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//定义泛型方法..</span><br><span class="line">public &lt;T&gt; void show(T t) &#123;</span><br><span class="line">    System.out.println(t);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //创建对象</span><br><span class="line">    ObjectTool tool = new ObjectTool();</span><br><span class="line"></span><br><span class="line">    //调用方法,传入的参数是什么类型,返回值就是什么类型</span><br><span class="line">    tool.show(&quot;hello&quot;);</span><br><span class="line">    tool.show(12);</span><br><span class="line">    tool.show(12.5);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="泛型类的子类"><a href="#泛型类的子类" class="headerlink" title="泛型类的子类"></a>泛型类的子类</h3><p>泛型类本质上还是一个类，可以被继承</p>
-<ul>
-<li><strong>子类明确泛型类的类型参数变量</strong></li>
-<li><strong>子类不明确泛型类的类型参数变量</strong></li>
-</ul>
-<h4 id="明确类型参数变量"><a href="#明确类型参数变量" class="headerlink" title="明确类型参数变量"></a>明确类型参数变量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    把泛型定义在接口上</span><br><span class="line"> */</span><br><span class="line">public interface Inter&lt;T&gt; &#123;</span><br><span class="line">    public abstract void show(T t);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 子类明确泛型类的类型参数变量:</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">public class InterImpl implements Inter&lt;String&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void show(String s) &#123;</span><br><span class="line">        System.out.println(s);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="不明确类型参数变量"><a href="#不明确类型参数变量" class="headerlink" title="不明确类型参数变量"></a>不明确类型参数变量</h4><ul>
-<li>当子类不明确泛型类的类型参数变量时，<strong>外界使用子类的时候，也需要传递类型参数变量进来，在实现类上需要定义出类型参数变量</strong></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //测试第一种情况</span><br><span class="line">    //Inter&lt;String&gt; i = new InterImpl();</span><br><span class="line">    //i.show(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    //第二种情况测试</span><br><span class="line">    Inter&lt;String&gt; ii = new InterImpl&lt;&gt;();</span><br><span class="line">    ii.show(&quot;100&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="类型通配符"><a href="#类型通配符" class="headerlink" title="类型通配符"></a>类型通配符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void test(List list)&#123;</span><br><span class="line"></span><br><span class="line">    for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">        </span><br><span class="line">        System.out.println(list.get(i));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>像这个遍历集合list是可以的，但是会有警告，没有明确类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void test(List&lt;Object&gt; list)&#123;</span><br><span class="line"></span><br><span class="line">    for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">        </span><br><span class="line">        System.out.println(list.get(i));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这样行不行呢？只能遍历装载Object类型的集合</p>
-<p>那怎么办呢，就用到我们的类型通配符了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void test(List&lt;?&gt; list)&#123;</span><br><span class="line"></span><br><span class="line">    for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">        </span><br><span class="line">        System.out.println(list.get(i));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>?号通配符表示可以匹配任意类型，任意的Java类都可以匹配</strong>…..</p>
-<p>现在非常值得注意的是，当我们使用?号通配符的时候：<strong>就只能调对象与类型无关的方法，不能调用对象与类型有关的方法。</strong></p>
-<p>也就是说直到我们在这遍历才知道集合元素具体的类型，现在是不知道的，不能使用类似add()的方法，往里面加元素，</p>
-<h4 id="通配符上限"><a href="#通配符上限" class="headerlink" title="通配符上限"></a>通配符上限</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;? extends Number&gt;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码表示的是：<strong>List集合装载的元素只能是Number的子类或自身</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">    //List集合装载的是Integer，可以调用该方法</span><br><span class="line">    List&lt;Integer&gt; integer = new ArrayList&lt;&gt;();</span><br><span class="line">    test(integer);</span><br><span class="line"></span><br><span class="line">    //List集合装载的是String，在编译时期就报错了</span><br><span class="line">    List&lt;String&gt; strings = new ArrayList&lt;&gt;();</span><br><span class="line">    test(strings);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void test(List&lt;? extends Number&gt; list) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="通配符和泛型方法"><a href="#通配符和泛型方法" class="headerlink" title="通配符和泛型方法"></a>通配符和泛型方法</h4><p><strong>大多时候，我们都可以使用泛型方法来代替通配符的</strong>…..</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//使用通配符</span><br><span class="line">public static void test(List&lt;?&gt; list) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//使用泛型方法</span><br><span class="line">public &lt;T&gt; void  test2(List&lt;T&gt; t) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原则：</p>
-<ul>
-<li>如果<strong>参数之间的类型有依赖关系</strong>，或者返<strong>回值是与参数之间有依赖关系</strong>的。那么就使用<strong>泛型方法</strong></li>
-<li>如果<strong>没有依赖关系</strong>的，就使用<strong>通配符</strong>，通配符会<strong>灵活一些.</strong></li>
-</ul>
-<h2 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h2><p>类型擦除就是虚拟机对泛型其实一无所知，所有的工作都是编译器做的</p>
-<p>我们编写的泛型类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Pair&lt;T&gt; &#123;</span><br><span class="line">    private T first;</span><br><span class="line">    private T last;</span><br><span class="line">    public Pair(T first, T last) &#123;</span><br><span class="line">        this.first = first;</span><br><span class="line">        this.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    public T getFirst() &#123;</span><br><span class="line">        return first;</span><br><span class="line">    &#125;</span><br><span class="line">    public T getLast() &#123;</span><br><span class="line">        return last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>虚拟机执行的代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Pair &#123;</span><br><span class="line">    private Object first;</span><br><span class="line">    private Object last;</span><br><span class="line">    public Pair(Object first, Object last) &#123;</span><br><span class="line">        this.first = first;</span><br><span class="line">        this.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    public Object getFirst() &#123;</span><br><span class="line">        return first;</span><br><span class="line">    &#125;</span><br><span class="line">    public Object getLast() &#123;</span><br><span class="line">        return last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>所以编译器干了2件事：</p>
-<ul>
-<li>编译器把类型<code>&lt;T&gt;</code>视为<code>Object</code>；</li>
-<li>编译器根据<code>&lt;T&gt;</code>实现安全的强制转型。</li>
-</ul>
-<p>我们使用泛型时</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;String&gt; p = new Pair&lt;&gt;(&quot;Hello&quot;, &quot;world&quot;);</span><br><span class="line">String first = p.getFirst();</span><br><span class="line">String last = p.getLast();</span><br></pre></td></tr></table></figure>
-
-<p>虚拟机的视角：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pair p = new Pair(&quot;Hello&quot;, &quot;world&quot;);</span><br><span class="line">String first = (String) p.getFirst();</span><br><span class="line">String last = (String) p.getLast();</span><br></pre></td></tr></table></figure>
-
-<p>所以编译器真的牛批，编译器内部永远把所有类型<code>T</code>视为<code>Object</code>处理，但是，在需要转型的时候，编译器会根据<code>T</code>的类型自动为我们实行安全地强制转型。</p>
-<p>也因为这样，泛型的局限就出来</p>
-<ul>
-<li><p><t>不能是基本数据类型</t></p>
-</li>
-<li><p>不能取得带泛型的class</p>
-<pre><code>Pair&lt;String&gt; p1 = new Pair&lt;&gt;(&quot;Hello&quot;, &quot;world&quot;);
-Pair&lt;Integer&gt; p2 = new Pair&lt;&gt;(123, 456);
-Class c1 = p1.getClass();
-Class c2 = p2.getClass();
-System.out.println(c1==c2); // true
-System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型类</p>
-<p>编译器把<t>都看作是Object，我们对<code>Pair&lt;String&gt;</code>和<code>Pair&lt;Integer&gt;</code>类型获取<code>Class</code>时，获取到的是同一个<code>Class</code>，也就是<code>Pair</code>类的<code>Class</code>。</t></p>
-<p>换句话说，所有泛型实例，无论<code>T</code>的类型是什么，<code>getClass()</code>返回同一个<code>Class</code>实例，因为编译后它们全部都是<code>Pair&lt;Object&gt;</code>。</p>
-</li>
-<li><p>不能实例化<t>类型</t></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class Pair&lt;T&gt; &#123;</span><br><span class="line">    private T first;</span><br><span class="line">    private T last;</span><br><span class="line">    public Pair() &#123;</span><br><span class="line">        // Compile error:</span><br><span class="line">        first = new T();</span><br><span class="line">        last = new T();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>​       因为擦除，first = new T()， last = new T()都变成了first = new Object(); last = new Object();那你创建new Pair<string>()和new Pair<integer>()就都是Object，显然编译器不会让你这么干的</integer></string></p>
-<h2 id="泛型的应用"><a href="#泛型的应用" class="headerlink" title="泛型的应用"></a>泛型的应用</h2><p><strong>只写一个抽象DAO，别的DAO只要继承该抽象DAO，就有对应的方法了。</strong></p>
-<ul>
-<li>抽象DAO</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseDao&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    //模拟hibernate....</span><br><span class="line">    private Session session;</span><br><span class="line">    private Class clazz;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    //哪个子类调的这个方法，得到的class就是子类处理的类型（非常重要）</span><br><span class="line">    public BaseDao()&#123;</span><br><span class="line">        Class clazz = this.getClass();  //拿到的是子类</span><br><span class="line">        ParameterizedType  pt = (ParameterizedType) clazz.getGenericSuperclass();  //BaseDao&lt;Category&gt;</span><br><span class="line">        clazz = (Class) pt.getActualTypeArguments()[0];</span><br><span class="line">        System.out.println(clazz);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    public void add(T t)&#123;</span><br><span class="line">        session.save(t);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public T find(String id)&#123;</span><br><span class="line">        return (T) session.get(clazz, id);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void update(T t)&#123;</span><br><span class="line">        session.update(t);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void delete(String id)&#123;</span><br><span class="line">        T t = (T) session.get(clazz, id);</span><br><span class="line">        session.delete(t);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public class CategoryDao extends BaseDao&lt;Category&gt; &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public class BookDao extends BaseDao&lt;Book&gt; &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/动态代理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/22/动态代理/" class="post-title-link" itemprop="url">动态代理</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-22 11:34:26" itemprop="dateCreated datePublished" datetime="2019-09-22T11:34:26+08:00">2019-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接）</p>
-<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><ol>
-<li><p>为现有每个类编写一个对应的代理类，并且实现相同的接口</p>
-</li>
-<li><p>在代理对象中通过构造器塞入目标对象，实现相同方法并进行增强。这样，我们只需要代理对象，原对象可以不用了</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili1.png" alt></p>
-</li>
-</ol>
-<p> 缺点：每个类都需要一个代理，如果是成百上千的类，岂不是得要一堆代理类，系统臃肿。</p>
-<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><h3 id="对象创建原理"><a href="#对象创建原理" class="headerlink" title="对象创建原理"></a>对象创建原理</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dontaidaili2.jpg" alt></p>
-<p>在创建实例对象之前会创建一个Class对象，而Class对象是Class类的实例，Class类是描述所有类的</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/Java%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.bmp" alt></p>
-<p>所以如果我们能拿到代理Class对象，从而通过反射创建对象实例，不就可以不写代理类吗</p>
-<p>Class对象 包含有类的全部信息，构造器，方法等，那我们怎么才能获取这些信息？</p>
-<p>接口，因为代理类和目标对象都实现了相同的接口，从接口那我们可以获取要的全部信息。问题又来了，接口不能 </p>
-<p>实例化，那怎么办？这就进入正题了</p>
-<h3 id="动态代理-1"><a href="#动态代理-1" class="headerlink" title="动态代理"></a>动态代理</h3><p>jdk提供了 java.lang.reflect.Proxy类和 java.lang.reflect.InnovationHandler接口来帮助我们</p>
-<ol>
-<li><p>Proxy有个静态方法，proxy.getProxyClass(ClassLoader,interfaces)，通过传入<strong>类加载器和接口</strong>，返回Class对象</p>
-<p>这个方法会从传入的接口Class，复制一份，并且<strong>加了个构造器</strong>，这样这个新的Class对象可以创建对象了。</p>
-<p>一句话，proProxyClass()方法以<strong>Class对象造Class对象</strong></p>
-<p>下图为第一阶段方案，后面会越来越简单</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili3.png" alt></p>
-</li>
-</ol>
-<ol start="2">
-<li><p>在获得构造器后，通过反射创造代理实例</p>
-</li>
-<li><p>在创建Class对象时，需要传入InnocationHandler。在调用代理对象的方法时，会自动调用InnocationHandler的invoke方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object invoke(Object proxy,Method method,Object[] args)</span><br><span class="line">          在代理实例上处理方法调用并返回结果</span><br></pre></td></tr></table></figure>
-
-<p>怎么调用呢？</p>
-<p>原理：如下图，每个代理对象内部都由一个 InvocationHandler，且在执行内部方法时都会调用handler.invoke()方法</p>
-<p> inInvocationHandler接收三个参数</p>
-<ul>
-<li>proxy，代理后的实例对象。</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>method，当前执行的方法。</p>
-<ul>
-<li><p>args，当前方法的参数。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/domgtaidaili4.jpg" alt></p>
-<p>仔细看上图，inInvocationHandler的invoke()方法并没有写入目标对象，所以需要我们每次都new一个目标对象。</p>
-<p>但是我们每次都是先new一个目标对象，然后去执行目标对象的方法，这样会带来一个问题：来一个目标对象就要new一个，这谁顶得住，所以有了下面的优化1(也就是把类的实例化过程提取出来，便利了一点，本质没变)</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/daili2.png" alt></p>
-<p>优化2，不用getProxyClass()，用Proxy.newProxyInstance，直接把中间得到代理class对象给隐藏了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public IAccountService getAccountService() &#123;</span><br><span class="line">        return (IAccountService)Proxy.newProxyInstance(accountService.getClass().getClassLoader(),</span><br><span class="line">                accountService.getClass().getInterfaces(),</span><br><span class="line">                new InvocationHandler() &#123;</span><br><span class="line">                    /**</span><br><span class="line">                     * 添加事务的支持</span><br><span class="line">                     *</span><br><span class="line">                     * @param proxy</span><br><span class="line">                     * @param method</span><br><span class="line">                     * @param args</span><br><span class="line">                     * @return</span><br><span class="line">               * @throws Throwable</span><br><span class="line">                     */</span><br><span class="line">                 @Override</span><br><span class="line">                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line"></span><br><span class="line">                        if(&quot;test&quot;.equals(method.getName()))&#123;</span><br><span class="line">                            return method.invoke(accountService,args);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        Object rtValue = null;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            //1.开启事务</span><br><span class="line">                            txManager.beginTransaction();</span><br><span class="line">                            //2.执行操作</span><br><span class="line">                            rtValue = method.invoke(accountService, args);</span><br><span class="line">                            //3.提交事务</span><br><span class="line">                            txManager.commit();</span><br><span class="line">                            //4.返回结果</span><br><span class="line">                            return rtValue;</span><br><span class="line">                        &#125; catch (Exception e) &#123;</span><br><span class="line">                            //5.回滚操作</span><br><span class="line">                            txManager.rollback();</span><br><span class="line">                            throw new RuntimeException(e);</span><br><span class="line">                        &#125; finally &#123;</span><br><span class="line">                            //6.释放连接</span><br><span class="line">                            txManager.release();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-</li>
-</ul>
-<p>   说白了一个返回代理class对象，一个返回代理对象</p>
-<p>   <strong>总的流程</strong></p>
-<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili5.jpg" alt></p>
-<p>​         </p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p> <a href="https://www.zhihu.com/question/20794107/answer/658139129" target="_blank" rel="noopener">https://www.zhihu.com/question/20794107/answer/658139129</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2701,7 +2583,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

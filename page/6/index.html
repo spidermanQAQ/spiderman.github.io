@@ -380,6 +380,516 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/泛型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/22/泛型/" class="post-title-link" itemprop="url">泛型</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 11:48:44" itemprop="dateCreated datePublished" datetime="2019-09-22T11:48:44+08:00">2019-09-22</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="什么是泛型"><a href="#什么是泛型" class="headerlink" title="什么是泛型"></a>什么是泛型</h2><p>泛型：<strong>把类型明确的工作推迟到创建对象或调用方法的时候才去明确的特殊的类型</strong></p>
+<p>相关术语：</p>
+<ul>
+<li>ArrayList<e>：E为类型参数变量</e></li>
+<li>ArrayList<integer>：实际类型参数</integer></li>
+<li>整个ArrayList<e>为泛型类型</e></li>
+<li>整个ArrayList<integer>为参数化的类型</integer></li>
+</ul>
+<h2 id="为什么需要泛型"><a href="#为什么需要泛型" class="headerlink" title="为什么需要泛型"></a>为什么需要泛型</h2><p>没有泛型的情况下：</p>
+<ul>
+<li>Collection、Map集合对元素的类型是没有任何限制的。<strong>本来我的Collection集合装载的是全部的Dog对象，但是外边把Cat对象存储到集合中，是没有任何语法错误的。</strong></li>
+<li>把对象扔进集合中，集合是不知道元素的类型是什么的，仅仅知道是Object。因此在get()的时候，返回的是Object。<strong>外边获取该对象，还需要强制转换</strong></li>
+</ul>
+<p>有泛型的情况下：</p>
+<ul>
+<li>程序简洁（不用强制转换）</li>
+<li>程序健壮（只要编译时期没有警告，那么运行时期就不会出现ClassCastException异常）</li>
+<li>可读性和稳定性（在编写集合的时候，就限定了类型）</li>
+</ul>
+<p><strong>Example</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//创建集合对象</span><br><span class="line">ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">list.add(&quot;hello&quot;);</span><br><span class="line">list.add(&quot;world&quot;);</span><br><span class="line">list.add(&quot;java&quot;);</span><br><span class="line"></span><br><span class="line">//遍历,由于明确了类型.我们可以增强for</span><br><span class="line">for (String s : list) &#123;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="泛型类-泛型方法"><a href="#泛型类-泛型方法" class="headerlink" title="泛型类 泛型方法"></a>泛型类 泛型方法</h2><h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>泛型类：<strong>泛型定义在类上，用户使用该类的时候，才把类型明确下来</strong></p>
+<p>基本格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    1:把泛型定义在类上</span><br><span class="line">    2:类型变量定义在类上,方法中也可以使用</span><br><span class="line"> */</span><br><span class="line">public class ObjectTool&lt;T&gt; &#123;</span><br><span class="line">    private T obj;</span><br><span class="line"></span><br><span class="line">    public T getObj() &#123;</span><br><span class="line">        return obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setObj(T obj) &#123;</span><br><span class="line">        this.obj = obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用户想要使用哪种类型，就在创建的时候指定类型。使用的时候，该类就会自动转换成用户想要使用的类型了。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //创建对象并指定元素类型</span><br><span class="line">    ObjectTool&lt;String&gt; tool = new ObjectTool&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    tool.setObj(new String(&quot;xxx&quot;));</span><br><span class="line">    String s = tool.getObj();</span><br><span class="line">    System.out.println(s);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //创建对象并指定元素类型</span><br><span class="line">    ObjectTool&lt;Integer&gt; objectTool = new ObjectTool&lt;&gt;();</span><br><span class="line">    /**</span><br><span class="line">     * 如果我在这个对象里传入的是String类型的,它在编译时期就通过不了了.</span><br><span class="line">     */</span><br><span class="line">    objectTool.setObj(10);</span><br><span class="line">    int i = objectTool.getObj();</span><br><span class="line">    System.out.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>在类上定义的泛型在方法上也能用，那泛型方法的适用情况是什么呢</p>
+<p><strong>小题大做</strong>：我就想在一个方法上使用泛型，又不要考虑其他的，把整个类都泛型不是有点多余了吗</p>
+<p>基本格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//定义泛型方法..</span><br><span class="line">public &lt;T&gt; void show(T t) &#123;</span><br><span class="line">    System.out.println(t);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //创建对象</span><br><span class="line">    ObjectTool tool = new ObjectTool();</span><br><span class="line"></span><br><span class="line">    //调用方法,传入的参数是什么类型,返回值就是什么类型</span><br><span class="line">    tool.show(&quot;hello&quot;);</span><br><span class="line">    tool.show(12);</span><br><span class="line">    tool.show(12.5);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="泛型类的子类"><a href="#泛型类的子类" class="headerlink" title="泛型类的子类"></a>泛型类的子类</h3><p>泛型类本质上还是一个类，可以被继承</p>
+<ul>
+<li><strong>子类明确泛型类的类型参数变量</strong></li>
+<li><strong>子类不明确泛型类的类型参数变量</strong></li>
+</ul>
+<h4 id="明确类型参数变量"><a href="#明确类型参数变量" class="headerlink" title="明确类型参数变量"></a>明确类型参数变量</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    把泛型定义在接口上</span><br><span class="line"> */</span><br><span class="line">public interface Inter&lt;T&gt; &#123;</span><br><span class="line">    public abstract void show(T t);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 子类明确泛型类的类型参数变量:</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">public class InterImpl implements Inter&lt;String&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void show(String s) &#123;</span><br><span class="line">        System.out.println(s);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="不明确类型参数变量"><a href="#不明确类型参数变量" class="headerlink" title="不明确类型参数变量"></a>不明确类型参数变量</h4><ul>
+<li>当子类不明确泛型类的类型参数变量时，<strong>外界使用子类的时候，也需要传递类型参数变量进来，在实现类上需要定义出类型参数变量</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //测试第一种情况</span><br><span class="line">    //Inter&lt;String&gt; i = new InterImpl();</span><br><span class="line">    //i.show(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    //第二种情况测试</span><br><span class="line">    Inter&lt;String&gt; ii = new InterImpl&lt;&gt;();</span><br><span class="line">    ii.show(&quot;100&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="类型通配符"><a href="#类型通配符" class="headerlink" title="类型通配符"></a>类型通配符</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void test(List list)&#123;</span><br><span class="line"></span><br><span class="line">    for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">        </span><br><span class="line">        System.out.println(list.get(i));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>像这个遍历集合list是可以的，但是会有警告，没有明确类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void test(List&lt;Object&gt; list)&#123;</span><br><span class="line"></span><br><span class="line">    for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">        </span><br><span class="line">        System.out.println(list.get(i));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样行不行呢？只能遍历装载Object类型的集合</p>
+<p>那怎么办呢，就用到我们的类型通配符了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void test(List&lt;?&gt; list)&#123;</span><br><span class="line"></span><br><span class="line">    for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">        </span><br><span class="line">        System.out.println(list.get(i));</span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>?号通配符表示可以匹配任意类型，任意的Java类都可以匹配</strong>…..</p>
+<p>现在非常值得注意的是，当我们使用?号通配符的时候：<strong>就只能调对象与类型无关的方法，不能调用对象与类型有关的方法。</strong></p>
+<p>也就是说直到我们在这遍历才知道集合元素具体的类型，现在是不知道的，不能使用类似add()的方法，往里面加元素，</p>
+<h4 id="通配符上限"><a href="#通配符上限" class="headerlink" title="通配符上限"></a>通配符上限</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;? extends Number&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码表示的是：<strong>List集合装载的元素只能是Number的子类或自身</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">    //List集合装载的是Integer，可以调用该方法</span><br><span class="line">    List&lt;Integer&gt; integer = new ArrayList&lt;&gt;();</span><br><span class="line">    test(integer);</span><br><span class="line"></span><br><span class="line">    //List集合装载的是String，在编译时期就报错了</span><br><span class="line">    List&lt;String&gt; strings = new ArrayList&lt;&gt;();</span><br><span class="line">    test(strings);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void test(List&lt;? extends Number&gt; list) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="通配符和泛型方法"><a href="#通配符和泛型方法" class="headerlink" title="通配符和泛型方法"></a>通配符和泛型方法</h4><p><strong>大多时候，我们都可以使用泛型方法来代替通配符的</strong>…..</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//使用通配符</span><br><span class="line">public static void test(List&lt;?&gt; list) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//使用泛型方法</span><br><span class="line">public &lt;T&gt; void  test2(List&lt;T&gt; t) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原则：</p>
+<ul>
+<li>如果<strong>参数之间的类型有依赖关系</strong>，或者返<strong>回值是与参数之间有依赖关系</strong>的。那么就使用<strong>泛型方法</strong></li>
+<li>如果<strong>没有依赖关系</strong>的，就使用<strong>通配符</strong>，通配符会<strong>灵活一些.</strong></li>
+</ul>
+<h2 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h2><p>类型擦除就是虚拟机对泛型其实一无所知，所有的工作都是编译器做的</p>
+<p>我们编写的泛型类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Pair&lt;T&gt; &#123;</span><br><span class="line">    private T first;</span><br><span class="line">    private T last;</span><br><span class="line">    public Pair(T first, T last) &#123;</span><br><span class="line">        this.first = first;</span><br><span class="line">        this.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    public T getFirst() &#123;</span><br><span class="line">        return first;</span><br><span class="line">    &#125;</span><br><span class="line">    public T getLast() &#123;</span><br><span class="line">        return last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虚拟机执行的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Pair &#123;</span><br><span class="line">    private Object first;</span><br><span class="line">    private Object last;</span><br><span class="line">    public Pair(Object first, Object last) &#123;</span><br><span class="line">        this.first = first;</span><br><span class="line">        this.last = last;</span><br><span class="line">    &#125;</span><br><span class="line">    public Object getFirst() &#123;</span><br><span class="line">        return first;</span><br><span class="line">    &#125;</span><br><span class="line">    public Object getLast() &#123;</span><br><span class="line">        return last;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以编译器干了2件事：</p>
+<ul>
+<li>编译器把类型<code>&lt;T&gt;</code>视为<code>Object</code>；</li>
+<li>编译器根据<code>&lt;T&gt;</code>实现安全的强制转型。</li>
+</ul>
+<p>我们使用泛型时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;String&gt; p = new Pair&lt;&gt;(&quot;Hello&quot;, &quot;world&quot;);</span><br><span class="line">String first = p.getFirst();</span><br><span class="line">String last = p.getLast();</span><br></pre></td></tr></table></figure>
+
+<p>虚拟机的视角：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Pair p = new Pair(&quot;Hello&quot;, &quot;world&quot;);</span><br><span class="line">String first = (String) p.getFirst();</span><br><span class="line">String last = (String) p.getLast();</span><br></pre></td></tr></table></figure>
+
+<p>所以编译器真的牛批，编译器内部永远把所有类型<code>T</code>视为<code>Object</code>处理，但是，在需要转型的时候，编译器会根据<code>T</code>的类型自动为我们实行安全地强制转型。</p>
+<p>也因为这样，泛型的局限就出来</p>
+<ul>
+<li><p><t>不能是基本数据类型</t></p>
+</li>
+<li><p>不能取得带泛型的class</p>
+<pre><code>Pair&lt;String&gt; p1 = new Pair&lt;&gt;(&quot;Hello&quot;, &quot;world&quot;);
+Pair&lt;Integer&gt; p2 = new Pair&lt;&gt;(123, 456);
+Class c1 = p1.getClass();
+Class c2 = p2.getClass();
+System.out.println(c1==c2); // true
+System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型类</p>
+<p>编译器把<t>都看作是Object，我们对<code>Pair&lt;String&gt;</code>和<code>Pair&lt;Integer&gt;</code>类型获取<code>Class</code>时，获取到的是同一个<code>Class</code>，也就是<code>Pair</code>类的<code>Class</code>。</t></p>
+<p>换句话说，所有泛型实例，无论<code>T</code>的类型是什么，<code>getClass()</code>返回同一个<code>Class</code>实例，因为编译后它们全部都是<code>Pair&lt;Object&gt;</code>。</p>
+</li>
+<li><p>不能实例化<t>类型</t></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class Pair&lt;T&gt; &#123;</span><br><span class="line">    private T first;</span><br><span class="line">    private T last;</span><br><span class="line">    public Pair() &#123;</span><br><span class="line">        // Compile error:</span><br><span class="line">        first = new T();</span><br><span class="line">        last = new T();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>​       因为擦除，first = new T()， last = new T()都变成了first = new Object(); last = new Object();那你创建new Pair<string>()和new Pair<integer>()就都是Object，显然编译器不会让你这么干的</integer></string></p>
+<h2 id="泛型的应用"><a href="#泛型的应用" class="headerlink" title="泛型的应用"></a>泛型的应用</h2><p><strong>只写一个抽象DAO，别的DAO只要继承该抽象DAO，就有对应的方法了。</strong></p>
+<ul>
+<li>抽象DAO</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseDao&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    //模拟hibernate....</span><br><span class="line">    private Session session;</span><br><span class="line">    private Class clazz;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    //哪个子类调的这个方法，得到的class就是子类处理的类型（非常重要）</span><br><span class="line">    public BaseDao()&#123;</span><br><span class="line">        Class clazz = this.getClass();  //拿到的是子类</span><br><span class="line">        ParameterizedType  pt = (ParameterizedType) clazz.getGenericSuperclass();  //BaseDao&lt;Category&gt;</span><br><span class="line">        clazz = (Class) pt.getActualTypeArguments()[0];</span><br><span class="line">        System.out.println(clazz);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    public void add(T t)&#123;</span><br><span class="line">        session.save(t);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public T find(String id)&#123;</span><br><span class="line">        return (T) session.get(clazz, id);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void update(T t)&#123;</span><br><span class="line">        session.update(t);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void delete(String id)&#123;</span><br><span class="line">        T t = (T) session.get(clazz, id);</span><br><span class="line">        session.delete(t);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public class CategoryDao extends BaseDao&lt;Category&gt; &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public class BookDao extends BaseDao&lt;Book&gt; &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/动态代理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/22/动态代理/" class="post-title-link" itemprop="url">动态代理</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 11:34:26" itemprop="dateCreated datePublished" datetime="2019-09-22T11:34:26+08:00">2019-09-22</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>学习Spring的AOP之前，有必要对动态代理有所了解（本文全部参考最后的参考文章链接）</p>
+<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><ol>
+<li><p>为现有每个类编写一个对应的代理类，并且实现相同的接口</p>
+</li>
+<li><p>在代理对象中通过构造器塞入目标对象，实现相同方法并进行增强。这样，我们只需要代理对象，原对象可以不用了</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili1.png" alt></p>
+</li>
+</ol>
+<p> 缺点：每个类都需要一个代理，如果是成百上千的类，岂不是得要一堆代理类，系统臃肿。</p>
+<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><h3 id="对象创建原理"><a href="#对象创建原理" class="headerlink" title="对象创建原理"></a>对象创建原理</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dontaidaili2.jpg" alt></p>
+<p>在创建实例对象之前会创建一个Class对象，而Class对象是Class类的实例，Class类是描述所有类的</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/Java%E4%BB%A3%E7%A0%81%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5.bmp" alt></p>
+<p>所以如果我们能拿到代理Class对象，从而通过反射创建对象实例，不就可以不写代理类吗</p>
+<p>Class对象 包含有类的全部信息，构造器，方法等，那我们怎么才能获取这些信息？</p>
+<p>接口，因为代理类和目标对象都实现了相同的接口，从接口那我们可以获取要的全部信息。问题又来了，接口不能 </p>
+<p>实例化，那怎么办？这就进入正题了</p>
+<h3 id="动态代理-1"><a href="#动态代理-1" class="headerlink" title="动态代理"></a>动态代理</h3><p>jdk提供了 java.lang.reflect.Proxy类和 java.lang.reflect.InnovationHandler接口来帮助我们</p>
+<ol>
+<li><p>Proxy有个静态方法，proxy.getProxyClass(ClassLoader,interfaces)，通过传入<strong>类加载器和接口</strong>，返回Class对象</p>
+<p>这个方法会从传入的接口Class，复制一份，并且<strong>加了个构造器</strong>，这样这个新的Class对象可以创建对象了。</p>
+<p>一句话，proProxyClass()方法以<strong>Class对象造Class对象</strong></p>
+<p>下图为第一阶段方案，后面会越来越简单</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili3.png" alt></p>
+</li>
+</ol>
+<ol start="2">
+<li><p>在获得构造器后，通过反射创造代理实例</p>
+</li>
+<li><p>在创建Class对象时，需要传入InnocationHandler。在调用代理对象的方法时，会自动调用InnocationHandler的invoke方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Object invoke(Object proxy,Method method,Object[] args)</span><br><span class="line">          在代理实例上处理方法调用并返回结果</span><br></pre></td></tr></table></figure>
+
+<p>怎么调用呢？</p>
+<p>原理：如下图，每个代理对象内部都由一个 InvocationHandler，且在执行内部方法时都会调用handler.invoke()方法</p>
+<p> inInvocationHandler接收三个参数</p>
+<ul>
+<li>proxy，代理后的实例对象。</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>method，当前执行的方法。</p>
+<ul>
+<li><p>args，当前方法的参数。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/domgtaidaili4.jpg" alt></p>
+<p>仔细看上图，inInvocationHandler的invoke()方法并没有写入目标对象，所以需要我们每次都new一个目标对象。</p>
+<p>但是我们每次都是先new一个目标对象，然后去执行目标对象的方法，这样会带来一个问题：来一个目标对象就要new一个，这谁顶得住，所以有了下面的优化1(也就是把类的实例化过程提取出来，便利了一点，本质没变)</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/daili2.png" alt></p>
+<p>优化2，不用getProxyClass()，用Proxy.newProxyInstance，直接把中间得到代理class对象给隐藏了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public IAccountService getAccountService() &#123;</span><br><span class="line">        return (IAccountService)Proxy.newProxyInstance(accountService.getClass().getClassLoader(),</span><br><span class="line">                accountService.getClass().getInterfaces(),</span><br><span class="line">                new InvocationHandler() &#123;</span><br><span class="line">                    /**</span><br><span class="line">                     * 添加事务的支持</span><br><span class="line">                     *</span><br><span class="line">                     * @param proxy</span><br><span class="line">                     * @param method</span><br><span class="line">                     * @param args</span><br><span class="line">                     * @return</span><br><span class="line">               * @throws Throwable</span><br><span class="line">                     */</span><br><span class="line">                 @Override</span><br><span class="line">                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line"></span><br><span class="line">                        if(&quot;test&quot;.equals(method.getName()))&#123;</span><br><span class="line">                            return method.invoke(accountService,args);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        Object rtValue = null;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            //1.开启事务</span><br><span class="line">                            txManager.beginTransaction();</span><br><span class="line">                            //2.执行操作</span><br><span class="line">                            rtValue = method.invoke(accountService, args);</span><br><span class="line">                            //3.提交事务</span><br><span class="line">                            txManager.commit();</span><br><span class="line">                            //4.返回结果</span><br><span class="line">                            return rtValue;</span><br><span class="line">                        &#125; catch (Exception e) &#123;</span><br><span class="line">                            //5.回滚操作</span><br><span class="line">                            txManager.rollback();</span><br><span class="line">                            throw new RuntimeException(e);</span><br><span class="line">                        &#125; finally &#123;</span><br><span class="line">                            //6.释放连接</span><br><span class="line">                            txManager.release();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<p>   说白了一个返回代理class对象，一个返回代理对象</p>
+<p>   <strong>总的流程</strong></p>
+<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/dongtaidaili5.jpg" alt></p>
+<p>​         </p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p> <a href="https://www.zhihu.com/question/20794107/answer/658139129" target="_blank" rel="noopener">https://www.zhihu.com/question/20794107/answer/658139129</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/依赖注入/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2074,504 +2584,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/session和Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件（<strong>本地的</strong>），并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。（<strong>用户登陆信息</strong>）</p>
-<p><strong>识别返回用户包括三个步骤</strong></p>
-<ul>
-<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
-<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
-<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
-</ul>
-<p><strong>cookie设置过程</strong></p>
-<ul>
-<li><strong>客户端发送一个http请求到服务器端</strong> </li>
-<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
-<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
-<li><strong>服务器端发送一个http响应到客户端</strong></li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
-<p><strong>这里给一个Cookie响应头例子</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
-
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E5%B1%9E%E6%80%A7.png" alt></p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ol>
-<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置最大生命周期（以秒为单位）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发送Cookie到HTTP响应头</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
-
-<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
-<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把<strong>用户的信息</strong>，以某种形式记录在服务器，这就是Session</p>
-<p><strong>简单例子：购物的时候不用登陆是cookie，购物车里的信息是session，因为购物车的东西都是保存在服务器的</strong> </p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>用户第一次访问服务器，<strong>服务器会创建</strong>一个Session对象给用户，并将该session对象的JESSIONID（<strong>一个标识，可以理解为session id</strong>）使用Cookie技术存储到浏览器中，利用该标识用户服务器就可以鉴别客户端请求（购物车）</p>
-<h3 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h3><ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<h3 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h3><ul>
-<li><p>创建session对象/获取session对象         HttpSession hs=request.getSession()这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ul>
-<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
-<li>JESSIONID是在浏览器中，关闭浏览器就没得了</li>
-<li>存储和获取是在不同请求，但存储要先于获取</li>
-</ul>
-<p>作用域：一次会话（即可以多次请求，主要session没失效），<strong>购物车你换台电脑应该保存着，但登陆信息则没有了</strong></p>
-<h3 id="验证码部分代码示例"><a href="#验证码部分代码示例" class="headerlink" title="验证码部分代码示例"></a>验证码部分代码示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/verify&quot;)</span><br><span class="line">  public void verification(HttpServletRequest req, HttpServletResponse resp) throws IOException &#123;</span><br><span class="line">      VerificationCode code = new VerificationCode();</span><br><span class="line">      BufferedImage image = code.getImage();</span><br><span class="line">      String text = code.getText();</span><br><span class="line">      HttpSession session = req.getSession();</span><br><span class="line">      session.setAttribute(&quot;verify_code&quot;,text);</span><br><span class="line">      //以流的方式将验证码发送到前端</span><br><span class="line">      VerificationCode.output(image,resp.getOutputStream());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/05/java装箱与拆箱/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/05/java装箱与拆箱/" class="post-title-link" itemprop="url">java装箱与拆箱</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-05 10:38:53" itemprop="dateCreated datePublished" datetime="2019-09-05T10:38:53+08:00">2019-09-05</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>包装类</strong>：基本数据类型使用方便，但没有对应方法来操作这些数据，因而使用一个类，在类中定义操作数据的方法，这些类叫做包装类</p>
-<p>简单来说，java装箱就是基本数据类型转换成包装类类型，拆箱就是包装类类型转换成基本数据类型</p>
-<p>对应关系如下</p>
-<table>
-<thead>
-<tr>
-<th>基本数据类型</th>
-<th>包装类</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-</tbody></table>
-<h3 id="装箱与拆箱"><a href="#装箱与拆箱" class="headerlink" title="装箱与拆箱"></a>装箱与拆箱</h3><p><strong>静态方法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//返回保存指定int的值的Integer对象</span><br><span class="line">Integer in1=Integer.valueof(1);</span><br><span class="line">//返回保存指定String的值的Integer对象</span><br><span class="line">Integer in2=Integer.valueof(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
-
-<p>看一下Interger.valueof源码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 public static Integer valueOf(int i) &#123;</span><br><span class="line">2 return  i &gt;= 128 || i &lt; -128 ? new Integer(i) : SMALL_VALUES[i + 128];</span><br><span class="line">3 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>它会首先判断i的大小：如果i小于-128或者大于等于128，就创建一个Integer对象，否则执行SMALL_VALUES[i + 128] 。注意这里i如果小于-128或者大于等于128，就会创建不同对象，而处于中间的都会创建同一个对象。</p>
-<p>总结来说装箱即valueof( )方法就是会返回Interger类型的对象</p>
-<p><strong>Interger构造函数</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Integer in1=new Integer(1);</span><br><span class="line">//这里只能是基本类型的字符串</span><br><span class="line">Integer in1=new Integer(&quot;1&quot;);</span><br></pre></td></tr></table></figure>
-
-<p>源码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 private final int value;</span><br><span class="line">2 </span><br><span class="line">3 public Integer(int value) &#123;</span><br><span class="line">4     this.value = value;</span><br><span class="line">5 &#125;</span><br><span class="line">6 //这里的String必须是基本类型的字符串，100可以，a就不行</span><br><span class="line">7 public Integer(String string) throws NumberFormatException &#123;</span><br><span class="line">8     this(parseInt(string));</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>下面看看SMALL_VALUES[i + 128]是什么东西</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private static final Integer[] SMALL_VALUES = new Integer[256];</span><br></pre></td></tr></table></figure>
-
-<p> 就是说-128-128之间256个数是提前就定义好的，存放256个Integer数在SMALL_VALUES数组中，需要的时候从里面拿，只不过都是同一个对象。</p>
-<p><strong>拆箱的intvalue( )源码</strong></p>
-<p>接着看看intValue函数,就是返回value值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 @Override</span><br><span class="line">2 public int intValue() &#123;</span><br><span class="line">3     return value;</span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="自动装箱与拆箱"><a href="#自动装箱与拆箱" class="headerlink" title="自动装箱与拆箱"></a>自动装箱与拆箱</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 //自动装箱</span><br><span class="line">2 Integer total = 99;</span><br><span class="line">3 </span><br><span class="line">4 //自定拆箱</span><br><span class="line">5 int totalprim = total;</span><br></pre></td></tr></table></figure>
-
-<p>自动装箱：直接把int类型的整数赋值包装类</p>
-<p>自动拆箱：包装类无法直接参与运算，可以自动转换为基本数据类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Interger total=99实际上执行了Interger total =Interger.valueof(99);</span><br><span class="line"></span><br><span class="line">int totalprim = total 实际上执行了int totalprim =total.intvalue( );</span><br></pre></td></tr></table></figure>
-
-<h3 id="装箱拆箱作用"><a href="#装箱拆箱作用" class="headerlink" title="装箱拆箱作用"></a>装箱拆箱作用</h3><ul>
-<li><p>将基本数据类型放入集合类中 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">list.add(1);//自动装箱list.add(new Integer(1));</span><br><span class="line">list.get(1);//自动拆箱list.get(0).intvalue();</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<ul>
-<li><p>包装类型和基本数据类型比较</p>
-</li>
-<li><p>包装类型运算</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer i = 10;</span><br><span class="line">Integer j = 20;</span><br><span class="line"> </span><br><span class="line">System.out.println(i+j);</span><br></pre></td></tr></table></figure>
-
-<p>(i+j)即为(Interger.invalue(i)+interger.invalue(j))</p>
-<p>最后给出一道面试题</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public void testAutoBox2() &#123;</span><br><span class="line">     //1</span><br><span class="line">     int a = 100;</span><br><span class="line">     Integer b = 100;</span><br><span class="line">     System.out.println(a == b);</span><br><span class="line">     </span><br><span class="line">     //2</span><br><span class="line">     Integer c = 100;</span><br><span class="line">     Integer d = 100;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">     </span><br><span class="line">     //3   </span><br><span class="line">     c = 200;</span><br><span class="line">     d = 200;</span><br><span class="line">     System.out.println(c == d);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>结果为 True True false  。在-127，127内的数据同基本数据类型一样存放在常量池，无论多少个值为100，100的地址都是一样的。200&gt;127,此时会在堆建对象，自然是2个对象，不一样。</p>
-<h3 id="字符串和基本类型的相互转换"><a href="#字符串和基本类型的相互转换" class="headerlink" title="字符串和基本类型的相互转换"></a>字符串和基本类型的相互转换</h3><p>基本类型-&gt;字符串</p>
-<ul>
-<li>基本类型的值+” “</li>
-<li>包装类的静态方法toString(参数)，不是Object类的toString()</li>
-<li>String类的静态方法valueof(参数)</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">int i1=100;</span><br><span class="line">String s1=i1+&quot;&quot;;</span><br><span class="line">System.out.println(s1+200);//100200这里是字符串的加</span><br><span class="line"></span><br><span class="line">String s2=Integer.toString(100);</span><br><span class="line">System.out.println(s2+200);</span><br><span class="line"></span><br><span class="line">String s3=String.valueOf(100);</span><br><span class="line">System.out.println(s3+200);</span><br></pre></td></tr></table></figure>
-
-<p> 字符串-&gt;基本类型</p>
-<p>使用包装类的静态方法parsexxx(“字符串”)；</p>
-<p>​          Integer类：static int parseInt(String s)</p>
-<p>​          Double类：static double parseDouble(String s)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int i=Integer.parseInt(s1);</span><br><span class="line">System.out.println(i);</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2620,7 +2632,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
