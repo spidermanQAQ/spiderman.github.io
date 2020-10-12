@@ -121,7 +121,7 @@
 <meta property="og:description" content="域名服务器类型 根域名服务器：所有域名服务器都知道所有顶级域名服务器的域名和IP地址 顶级域名服务器：这些域名服务器负责管理在该顶级域名服务器注册的所有二级域名 权限域名服务器：负责一个区的域名服务器，当一个权限域名服务器还不能给出最后的查询回答时，就会告诉发出查询请求的DNS客户，下一步应当去找哪一个权限服务器 本地域名服务器：当一个主机发出DNS查询请求时，这个查询请求就会发送到本地域名服务器">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/1600762453040.jpg">
-<meta property="og:updated_time" content="2020-09-22T10:43:26.541Z">
+<meta property="og:updated_time" content="2020-10-12T11:28:08.911Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNS解析">
 <meta name="twitter:description" content="域名服务器类型 根域名服务器：所有域名服务器都知道所有顶级域名服务器的域名和IP地址 顶级域名服务器：这些域名服务器负责管理在该顶级域名服务器注册的所有二级域名 权限域名服务器：负责一个区的域名服务器，当一个权限域名服务器还不能给出最后的查询回答时，就会告诉发出查询请求的DNS客户，下一步应当去找哪一个权限服务器 本地域名服务器：当一个主机发出DNS查询请求时，这个查询请求就会发送到本地域名服务器">
@@ -497,7 +497,8 @@
 <li>根域名服务器告诉本地域名服务器，下一次应查询的顶级域名服务器dns.com的IP地址</li>
 <li>本地域名服务i去向顶级域名服务器dns.com查询</li>
 <li>顶级域名服务器告诉本地域名服务器下一次应该查询的权限域名服务器dns.abc.com的IP地址</li>
-<li>本地域名服务器dns.abc.com告诉本地域名服务器，所查询的主机的IP地址</li>
+<li>本地域名服务器向权限域名服务器dns.abc.com进行查询</li>
+<li>权限域名服务器dns.abc.com告诉本地域名服务器，所查询的主机的IP地址</li>
 <li>本地域名服务器最后把查询结果告诉主机</li>
 </ul>
 <p>注意在查询过程中都是使用的<strong>UDP用户数据报</strong>的报文</p>
@@ -600,6 +601,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2020/10/10/线程基础/" rel="prev" title="线程基础">
+                线程基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -669,7 +674,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -724,7 +729,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -777,7 +784,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

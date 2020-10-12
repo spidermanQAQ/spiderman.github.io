@@ -380,6 +380,867 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/09/final关键字/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/09/final关键字/" class="post-title-link" itemprop="url">final关键字</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-09 09:45:50" itemprop="dateCreated datePublished" datetime="2019-09-09T09:45:50+08:00">2019-09-09</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h1><h2 id="final关键字基本用法"><a href="#final关键字基本用法" class="headerlink" title="final关键字基本用法"></a>final关键字基本用法</h2><ol>
+<li><p>final修饰类</p>
+<p>当一个类用final修饰时，这个类就不能被继承了。所以在使用final修饰类的时候，要注意谨慎选择，除非这个类真的在以后不会用来继承或者出于安全的考虑，尽量不要将类设计为final类。 </p>
+</li>
+<li><p>final修饰方法</p>
+<p> 如果只有在想明确禁止 该方法在子类中被覆盖的情况下才将方法设置为final的。即父类的final方法是不能被子类所覆盖的，也就是说子类是不能够存在和父类一模一样的方法的 </p>
+</li>
+<li><p>final修饰变量</p>
+<p> final<strong>成员变量表示常量，只能被赋值一次，赋值后值不再改变</strong> </p>
+<p>先来个很常见的题目引入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123; </span><br><span class="line">    public static void main(String[] args)  &#123; </span><br><span class="line">        String a = &quot;hello2&quot;;   </span><br><span class="line">        final String b = &quot;hello&quot;; </span><br><span class="line">        String d = &quot;hello&quot;; </span><br><span class="line">        String c = b + 2;   </span><br><span class="line">        String e = d + 2; </span><br><span class="line">        System.out.println((a == c)); </span><br><span class="line">        System.out.println((a == e)); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>​       分析：final变量是基本数据类型以及String类型时 ，如果在编译器就知道其确切值，编译器就会把它当作常量来看，所以b会直接以hello来替代。常量字符串的“+”操作，编译阶段直接会合成为一个字符串。在编译期间，这种拼接会被优化，编译器直接帮你拼好 ，如string str=”ja”+”va”，在编译阶段会直接合并成语句String str=”java”，于是会去常量池中查找是否存在”java” ，从而进行创建或引用，这里的c即为“hello”+2，也就是“hello2”，所以a和c指向的是同一个hello2，而a和e则是不同对象，为什么呢，一开始我也不知道，在查阅相关博客后，对常量池等知识有了了解，下面对String创建的变量进行详细解析。</p>
+<ol>
+<li><p>new String都是在堆上创建字符串对象。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/newString.png" alt></p>
+<p>其实这里常量池中也会有一个“abcd”的字符串，当new时，会拷贝一份该字符串存放到堆中，于是y指向了堆中的那个“abcd”字符串 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s = new String(&quot;abc&quot;);</span><br><span class="line">String s1 = &quot;abc&quot;;</span><br><span class="line">String s2 = new String(&quot;abc&quot;);</span><br><span class="line">  </span><br><span class="line">System.out.println(s == s1);</span><br><span class="line">System.out.println(s == s2);</span><br><span class="line">System.out.println(s1 == s2);</span><br></pre></td></tr></table></figure>
+
+<p>这里在详细分析以下这两行代码：</p>
+<ol>
+<li><p>首先在常量池中创建abc对象，然后new关键字会在堆里再创建一个对象，在堆里的这个对象则是在栈中的s1所指向的</p>
+</li>
+<li><p>当轮到s2时，首先同样会在常量池中看有没有abc，这里已经有了，则不用自己创建。然后new自己创建一个在堆中的对象，s2指向这个对象</p>
+<p>所以虽然s1和s2指向的最终内容都是abc，但它们是2个不同的对象，因为指向的是不同堆对象</p>
+</li>
+</ol>
+</li>
+<li><p>通过字面量赋值创建字符串（如：String str=”twm”）时，会先在常量池中查找是否存在相同的字符串，若存在，则将栈中的引用直接指向该字符串；若不存在，则在常量池中生成一个字符串，再将栈中的引用指向该字符串。 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/String.png" alt></p>
+<p> 再来个经典例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> 1 String s1 = &quot;Hello&quot;;</span><br><span class="line"> 2 String s2 = &quot;Hello&quot;;</span><br><span class="line"> 3 String s3 = &quot;Hel&quot; + &quot;lo&quot;;</span><br><span class="line"> 4 String s4 = &quot;Hel&quot; + new String(&quot;lo&quot;);</span><br><span class="line"> 5 String s5 = new String(&quot;Hello&quot;);</span><br><span class="line"> 6 String s6 = s5.intern();</span><br><span class="line"> 7 String s7 = &quot;H&quot;;</span><br><span class="line"> 8 String s8 = &quot;ello&quot;;</span><br><span class="line"> 9 String s9 = s7 + s8;</span><br><span class="line">10           </span><br><span class="line">11 System.out.println(s1 == s2);  // true</span><br><span class="line">12 System.out.println(s1 == s3);  // true</span><br><span class="line">13 System.out.println(s1 == s4);  // false</span><br><span class="line">14 System.out.println(s1 == s9);  // false</span><br><span class="line">15 System.out.println(s4 == s5);  // false</span><br><span class="line">16 System.out.println(s1 == s6);  // true</span><br></pre></td></tr></table></figure>
+
+<p> s1 == s2这个非常好理解，s1、s2在赋值时，均使用的字符串字面量，说白话点，就是直接把字符串写死，在编译期间，这种字面量会直接放入class文件的常量池中，从而实现复用，载入运行时常量池后，s1、s2指向的是同一个内存地址，所以相等。</p>
+<p> s1 == s3这个地方有个坑，s3虽然是动态拼接出来的字符串，但是所有参与拼接的部分都是已知的字面量，在编译期间，这种拼接会被优化，编译器直接帮你拼好，因此String s3 = “Hel” + “lo”;在class文件中被优化成String s3 = “Hello”，所以s1 == s3成立。</p>
+<p>s1 == s4当然不相等，s4虽然也是拼接出来的，但new String(“lo”)这部分不是已知字面量，是一个不可预料的部分，编译器不会优化，必须等到运行时才可以确定结果，结合<strong>字符串不变</strong>定理，鬼知道s4被分配到哪去了，所以地址肯定不同 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/final.png" alt></p>
+</li>
+</ol>
+<p>   s1 == s9也不相等，道理差不多，虽然s7、s8在赋值的时候使用的字符串字面量，但是拼接成s9的时候，s7、s8作为<strong>两个变量</strong>，都是<strong>不可预料</strong>的，编译器毕竟是编译器，不可能当解释器用，不能在编译期被确定，所以不做优化，只能等到运行时，在堆中创建s7、s8拼接成的新字符串，在堆中地址不确定，不可能与方法区常量池中的s1地址相同 </p>
+<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/helnewstring.jpg" alt></p>
+<p>   s4 == s5已经不用解释了，绝对不相等，二者都在堆中，但地址不同。</p>
+<p>   s1 == s6这两个相等完全归功于intern方法，s5在堆中，内容为Hello ，intern方法会尝试将Hello字符串添加到常量池中，并返回其在常量池中的地址，因为常量池中已经有了Hello字符串，所以intern方法直接返回地址；而s1在编译期就已经指向常量池了，因此s1和s6指向同一地址，相等。</p>
+<p>   注意：<strong>只有使用引号包含文本的方式创建的String对象之间使用“+”连接产生的新对象才会被加入字符串池中</strong> </p>
+<p>   <strong>对于所有包含new方式新建对象（包括null）的“+”连接表达式，它所产生的新对象都不会被加入字符串池中</strong> </p>
+<h2 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h2><p>   Java中的常量池，实际上分为两种形态：<strong>静态常量池</strong>和<strong>运行时常量池</strong>。</p>
+<p>   ​     所谓<strong>静态常量池</strong>，即<em>.class文件中的常量池，class文件中的常量池不仅仅包含字符串(数字)字面量，还包含类、方法的信息，占用class文件绝大部分空间。这种常量池主要用于存放两大类常量：*</em>字面量<strong>(Literal)和</strong>符号引用量**(Symbolic References)，字面量相当于Java语言层面常量的概念，如文本字符串，声明为final的常量值等，符号引用则属于编译原理方面的概念，包括了如下三种类型的常量：</p>
+<ul>
+<li><p>类和接口的全限定名</p>
+</li>
+<li><p>字段名称和描述符</p>
+</li>
+<li><p>方法名称和描述符</p>
+<p>​     而<strong>运行时常量池</strong>，则是jvm虚拟机在完成类装载操作后，将class文件中的常量池载入到内存中，并保存在<strong>方法区</strong>中，我们常说的常量池，就是指方法区中的运行时常量池。</p>
+<p>运行时常量池相对于CLass文件常量池的另外一个重要特征是<strong>具备动态性</strong>，Java语言并不要求常量一定只有编译期才能产生，也就是并非预置入CLass文件中常量池的内容才能进入方法区运行时常量池，运行期间也可能将新的常量放入池中，这种特性被开发人员利用比较多的就是<strong>String类的intern()</strong>方法。</p>
+<p>String的intern()方法会查找在常量池中是否存在一份equal相等的字符串,如果有则返回该字符串的引用,如果没有则添加自己的字符串进入常量池。</p>
+</li>
+</ul>
+<p>   <strong>常量池的好处</strong> 常量池是为了避免频繁的创建和销毁对象而影响系统性能，其实现了对象的共享。 例如字符串常量池，在编译阶段就把所有的字符串文字放到一个常量池中。 </p>
+<p>   （1）节省内存空间：常量池中所有相同的字符串常量被合并，只占用一个空间。 </p>
+<p>   （2）节省运行时间：比较字符串时，==比equals()快。对于两个引用变量，只用==判断引用是否相等，也就可以判断实际值是否相等。 </p>
+<p>   参考博客：<a href="https://www.cnblogs.com/lizhangyong/p/8909329.html" target="_blank" rel="noopener">https://www.cnblogs.com/lizhangyong/p/8909329.html</a> </p>
+<p>   ​                   <a href="https://www.cnblogs.com/xiaoxi/p/6392154.html" target="_blank" rel="noopener">https://www.cnblogs.com/xiaoxi/p/6392154.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/HttpServlet请求和响应/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/HttpServlet请求和响应/" class="post-title-link" itemprop="url">HttpServletRequest,HttpServletResponse</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:40:54" itemprop="dateCreated datePublished" datetime="2019-09-08T15:40:54+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="HttpServletRequest"><a href="#HttpServletRequest" class="headerlink" title="HttpServletRequest"></a><em>HttpServletRequest</em></h2><p>HttpServletRequest 对象是一个专门用来存储HTTP 请求信息的对象 </p>
+<h3 id="HttpServletRequest对象的由来"><a href="#HttpServletRequest对象的由来" class="headerlink" title="HttpServletRequest对象的由来"></a>HttpServletRequest对象的由来</h3><ul>
+<li>浏览器发送的http请求既要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储</li>
+<li>HttpServletRequest对象中存储请求信息，服务器调用servlet时将request对象作为参数传给Servlet方法</li>
+</ul>
+<h3 id="HttpServletRequest常用方法"><a href="#HttpServletRequest常用方法" class="headerlink" title="HttpServletRequest常用方法"></a>HttpServletRequest常用方法</h3><ul>
+<li>getMethod（）获取请求方法</li>
+<li>getRequestUrl（ ）获取完整请求路径`</li>
+<li>String getServletPath（）返回调用的请求的 URL 的一部分（拦截器就用到了）</li>
+<li>String getParameter(String name)   以字符串形式返回请求参数的值 </li>
+<li>HttpSession getSession()   返回与该请求关联的当前 session 会话 </li>
+<li>Object getAttribute(String name)   以对象形式返回已命名属性的值 </li>
+</ul>
+<h3 id="HTTP请求格式"><a href="#HTTP请求格式" class="headerlink" title="HTTP请求格式"></a>HTTP请求格式</h3><p>请求行</p>
+<p>请求头</p>
+<p>请求空行</p>
+<p>请求体： 如有POST请求 那么数据体 在Form Data里 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hhttservlet1.png" alt></p>
+<h2 id="HttpServletResponse"><a href="#HttpServletResponse" class="headerlink" title="HttpServletResponse"></a>HttpServletResponse</h2><h3 id="HttpServletResponse常用方法"><a href="#HttpServletResponse常用方法" class="headerlink" title="HttpServletResponse常用方法"></a>HttpServletResponse常用方法</h3><ul>
+<li>void setContentType(String type)    设置被发送到客户端的响应的内容类型，一般printwiter会用到 </li>
+<li>PrintWriter getWriter() throws IOException  服务器输出字符数据到浏览器，这个方法是其父接口ServletResponse的方法</li>
+<li>ServletOutputStream getOutputStream() throws IOException 服务器输出字节数据到浏览器，这个方法也是其父接口ServletResponse的方法</li>
+</ul>
+<h3 id="HTTP响应体格式"><a href="#HTTP响应体格式" class="headerlink" title="HTTP响应体格式"></a>HTTP响应体格式</h3><p>响应行：协议/版本 响应状态码 状态码描述</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1xx 消息，一般是告诉客户端，请求已经收到了，正在处理，别急...</span><br><span class="line">2xx 处理成功，一般表示：请求收悉、我明白你要的、请求已受理、已经处理完成等信息.</span><br><span class="line">3xx 重定向到其它地方。它让客户端再发起一个请求以完成整个处理。</span><br><span class="line">4xx 处理发生错误，责任在客户端，如客户端的请求一个不存在的资源，客户端未被授权，禁止访问等。</span><br><span class="line">5xx 处理发生错误，责任在服务端，如服务端抛出异常，路由出错，HTTP版本不支持等。</span><br></pre></td></tr></table></figure>
+
+<p>响应头：键值对形式 ，例如Content-Type：服务器告诉客户端本次响应体数据格式以及编码格式</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/httpservlet2.png" alt></p>
+<p>响应空行</p>
+<p>响应体：传输的数据</p>
+<h3 id="验证码部分代码"><a href="#验证码部分代码" class="headerlink" title="验证码部分代码"></a>验证码部分代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class LoginFilter extends GenericFilter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest req = (HttpServletRequest) servletRequest;</span><br><span class="line">        HttpServletResponse resp=(HttpServletResponse)servletResponse;</span><br><span class="line"></span><br><span class="line">        if (&quot;POST&quot;.equalsIgnoreCase(req.getMethod())&amp;&amp;&quot;/doLogin&quot;.equals(req.getServletPath()))&#123;</span><br><span class="line">            String code = req.getParameter(&quot;code&quot;);</span><br><span class="line">            String verify_code =(String) req.getSession().getAttribute(&quot;verify_code&quot;);</span><br><span class="line">            if (code==null||&quot;&quot;.equals(code)||!verify_code.toLowerCase().equals(code.toLowerCase()))&#123;</span><br><span class="line">                resp.setContentType(&quot;application/json;charset=utf-8&quot;);</span><br><span class="line">                PrintWriter out = resp.getWriter();</span><br><span class="line">                //RespBean.error(&quot;验证码错误&quot;))是一个对象，RestController=controller+responsebody把对象转换成json字符串输出</span><br><span class="line">                //ObjectMapper是jackson的李哥类，用来json和对象的相互转化</span><br><span class="line">                out.write(new ObjectMapper().writeValueAsString(RespBean.error(&quot;验证码错误&quot;)));</span><br><span class="line">                out.flush();</span><br><span class="line">                out.close();</span><br><span class="line">                return;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                filterChain.doFilter(req,resp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            filterChain.doFilter(req,resp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/过滤器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/过滤器/" class="post-title-link" itemprop="url">过滤器</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:38:59" itemprop="dateCreated datePublished" datetime="2019-09-08T15:38:59+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ul>
+<li><p>对服务器接受的资源和响应给浏览器的资源进行管理</p>
+</li>
+<li><p>保护servlet</p>
+</li>
+</ul>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ul>
+<li><p>创建一个实现Filter接口的普通java类</p>
+</li>
+<li><p>覆写接口的方法</p>
+<p>init方法：服务器启动即执行，资源初始化</p>
+<p>doFilter方法：拦截请求，在此方法中对资源实现管理  要手动对资源放行：chain.doFilter(request,response)</p>
+<p>destroy方法：服务器关闭</p>
+</li>
+<li><p>在web.xml配置过滤器（是服务器在使用过滤器）  </p>
+<p>url-patten：/*表示拦截所有请求。</p>
+</li>
+</ul>
+<p>​       url-patten：*.do 表示所有以.do结尾的请求。一般用来进行模块拦截。</p>
+<p>​       url-patten：/ts 表示拦截指定url的请求，针对某个servlet拦截，保护servlet</p>
+<h3 id="过滤器生命周期：服务器启动到关闭。"><a href="#过滤器生命周期：服务器启动到关闭。" class="headerlink" title="过滤器生命周期：服务器启动到关闭。"></a>过滤器生命周期：服务器启动到关闭。</h3><h3 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a>执行机制</h3><p>浏览器发起请求到服务器，服务器接到请求后，根据url在web.xml中找到对应的过滤器执行doFilter方法，该方法对此次请求进行处理后如果符合则放行，放行后还有其他符合要求的进行过滤，找到执行对应的servlet进行处理。servlet对请求处理完毕后，service方法结束。还需继续返回相应的doFilter检修执行</p>
+<h3 id="验证码拦截器"><a href="#验证码拦截器" class="headerlink" title="验证码拦截器"></a>验证码拦截器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class LoginFilter extends GenericFilter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest req = (HttpServletRequest) servletRequest;</span><br><span class="line">        HttpServletResponse resp=(HttpServletResponse)servletResponse;</span><br><span class="line"></span><br><span class="line">        if (&quot;POST&quot;.equalsIgnoreCase(req.getMethod())&amp;&amp;&quot;/doLogin&quot;.equals(req.getServletPath()))&#123;</span><br><span class="line">            String code = req.getParameter(&quot;code&quot;);</span><br><span class="line">            String verify_code =(String) req.getSession().getAttribute(&quot;verify_code&quot;);</span><br><span class="line">            if (code==null||&quot;&quot;.equals(code)||!verify_code.toLowerCase().equals(code.toLowerCase()))&#123;</span><br><span class="line">                resp.setContentType(&quot;application/json;charset=utf-8&quot;);</span><br><span class="line">                PrintWriter out = resp.getWriter();</span><br><span class="line">                //RespBean.error(&quot;验证码错误&quot;))是一个对象，RestController=controller+responsebody把对象转换成json字符串输出</span><br><span class="line">                //ObjectMapper是jackson的李哥类，用来json和对象的相互转化</span><br><span class="line">                out.write(new ObjectMapper().writeValueAsString(RespBean.error(&quot;验证码错误&quot;)));</span><br><span class="line">                out.flush();</span><br><span class="line">                out.close();</span><br><span class="line">                return;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                filterChain.doFilter(req,resp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            filterChain.doFilter(req,resp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Cookie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
+<p>识别返回用户包括三个步骤：</p>
+<ul>
+<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
+<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
+<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
+</ul>
+<p>cookie设置过程：</p>
+<ul>
+<li><strong>客户端发送一个http请求到服务器端</strong> </li>
+<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
+<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
+<li><strong>服务器端发送一个http响应到客户端</strong></li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
+<p>这里给一个Cookie响应头例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
+
+<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E5%B1%9E%E6%80%A7.png" alt></p>
+<p>使用：</p>
+<ol>
+<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置最大生命周期（以秒为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送Cookie到HTTP响应头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
+
+<p> 特点：</p>
+<ol>
+<li><p>这是浏览器端的数据存储技术</p>
+</li>
+<li><p>数据声明是在服务器</p>
+</li>
+<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
+<p>​                定时存储：到期之后才会没得</p>
+</li>
+</ol>
+<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/session.png" alt></p>
+<p>如图，浏览器中只有jessionId的键值对，cookie对象中也只有jessionid，用户信息均存在服务器中，用户下次发送请求中会携带jessionId，服务器会识别。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/session2.png" alt></p>
+<p>对比可知，cookie直接以 [{user:xavier},{gender:man}]的格式放在客户端cookie上的，而session是用[{“JsessionId:xxxx”}]的格式放在客户端cookie，然后在再次访问的时候运用读取JessionId的值即(xxxx)的方式在服务器域对象里面找到对应的数据，既 [{user:xavier},{gender:man}]。 </p>
+<p>特点：</p>
+<ol>
+<li>存储在服务器</li>
+<li>服务器进行创建</li>
+<li>依赖Cookie技术</li>
+<li>一次会话</li>
+<li>默认存储时间30分钟</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建session对象/获取session对象         </p>
+</li>
+<li><p>HttpSession hs=request.getSession()</p>
+<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
+<p>如果没有创建，那么新建一个</p>
+</li>
+<li><p>设置session存储时间 hs.invalidate( )</p>
+</li>
+<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
+<p>获取数据 hs.getAttribute(String name)</p>
+</li>
+</ol>
+<p>使用情景</p>
+<p>​         用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
+<p>注意</p>
+<p>​         JESSIONID是在浏览器中，关闭浏览器就没得了</p>
+<p>​         存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
+<p>作用域</p>
+<p>​          一次会话（即可以多次请求，主要session没失效）</p>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">    //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/session和Cookie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1394,7 +2255,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1449,7 +2310,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1502,7 +2365,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

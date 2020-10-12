@@ -380,6 +380,994 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/28/spring mvc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/28/spring mvc/" class="post-title-link" itemprop="url">spring mvc基础</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-28 12:38:37" itemprop="dateCreated datePublished" datetime="2019-09-28T12:38:37+08:00">2019-09-28</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/springmvc/" itemprop="url" rel="index"><span itemprop="name">springmvc</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>spring mvc负责接收客户端请求，向客户端响应结果，通常客户端使用http协议请求 web 层，web 需要接收 http 请求，完成 http 响应。  </p>
+<p>表现层包括展示层和控制层：控制层负责接收请求，展示层负责结果的展示。  表现层依赖业务层，接收到客户端请求一般会调用业务层进行业务处理，并将处理结果响应给客户端。  表现层的设计一般都使用 MVC 模型。（MVC 是表现层的设计模型，和其他层没有关系） </p>
+<h2 id="springmvc基本组件及流程分析"><a href="#springmvc基本组件及流程分析" class="headerlink" title="springmvc基本组件及流程分析"></a>springmvc基本组件及流程分析</h2><p>处理器映射器HandlerMapping,处理器适配器HandlAdapter,视图解析器ViewResolver称为SpringMVC三大组件.在bean.xml中声明&lt;mvc:annotation-driven conversion-service=”conversionService”/&gt;标签相当于自动配置了处理器映射器和处理器适配，视图解析器需要自己配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> &lt;!-- 配置视图解析器,用于解析项目跳转到的文件的位置 --&gt;</span><br><span class="line">&lt;bean id=&quot;viewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springmvc%E7%BB%84%E4%BB%B6.png" alt></p>
+<ol>
+<li>前端控制器(核心控制器)<code>DispatcherServlet</code>:用户请求最先达到的控制器,前端控制器调用其他组件处理请求,是MVC架构中的C,是整个流程控制的核心.其存在降低了组件间的耦合性.</li>
+<li>处理器映射器<code>HandlerMapping</code>:负责根据用户请求找到处理器.</li>
+<li>处理器适配器<code>HandlAdapter</code>: 对处理器进行执行.这是一种适配器模式的应用</li>
+<li>处理器<code>Handler</code>:具体的业务方法.</li>
+<li>视图解析器<code>ViewResolver</code>: 负责将处理结果生成视图. <code>ViewResolver</code>首先根据<code>逻辑视图名</code>解析成<code>物理视图名</code><br>即具体的页面地址,再生成<code>View</code>视图对象,最后对<code>View</code>进行渲染将处理结果通过页面展示给用户</li>
+</ol>
+<h2 id="请求参数绑定"><a href="#请求参数绑定" class="headerlink" title="请求参数绑定"></a>请求参数绑定</h2><p>概念：拿到客户端发出请求的请求参数的过程叫做请求参数的绑定</p>
+<ul>
+<li><p>基本数据类型和字符串类型 </p>
+<p>要求我们的参数名称必须和控制器中方法的形参名称保持一致。(严格区分大小写) </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;account/findAccount?accountId=10&amp;accountName=zhangsan&quot;&gt;查询账户&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/findAccount&quot;) </span><br><span class="line">public String findAccount(Integer accountId,String accountName) &#123; </span><br><span class="line">  System.out.println(&quot;查询了账户。。。。&quot;+accountId+&quot;,&quot;+accountName);  </span><br><span class="line">  return &quot;success&quot;; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实体类型（JavaBean） </p>
+<p>参数也要保持一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class User implements Serializable&#123;</span><br><span class="line"></span><br><span class="line">    private String uname;</span><br><span class="line">    private Integer age;</span><br><span class="line">    private Date date;</span><br><span class="line">    private User user;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/saveAccount&quot;)</span><br><span class="line">public String saveAccount(Account account)&#123;</span><br><span class="line">    System.out.println(&quot;执行了...&quot;);</span><br><span class="line">    System.out.println(account);</span><br><span class="line">    return &quot;success&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;param/saveAccount&quot; method=&quot;post&quot;&gt;</span><br><span class="line">     姓名：&lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br/&gt;</span><br><span class="line">     密码：&lt;input type=&quot;text&quot; name=&quot;password&quot; /&gt;&lt;br/&gt;</span><br><span class="line">     金额：&lt;input type=&quot;text&quot; name=&quot;money&quot; /&gt;&lt;br/&gt;</span><br><span class="line">     用户姓名：&lt;input type=&quot;text&quot; name=&quot;user.uname&quot; /&gt;&lt;br/&gt;</span><br><span class="line">     用户年龄：&lt;input type=&quot;text&quot; name=&quot;user.age&quot; /&gt;&lt;br/&gt;</span><br><span class="line">     &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;</span><br><span class="line"> &lt;/form&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>集合数据类型（List、map集合等） </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Account implements Serializable&#123;</span><br><span class="line"></span><br><span class="line">    private String username;</span><br><span class="line">    private String password;</span><br><span class="line">    private Double money;</span><br><span class="line"></span><br><span class="line">   // private User user;</span><br><span class="line"></span><br><span class="line">    private List&lt;User&gt; list;</span><br><span class="line">    private Map&lt;String,User&gt; map;</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;param/saveAccount&quot; method=&quot;post&quot;&gt;</span><br><span class="line">      姓名：&lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br/&gt;</span><br><span class="line">      密码：&lt;input type=&quot;text&quot; name=&quot;password&quot; /&gt;&lt;br/&gt;</span><br><span class="line">      金额：&lt;input type=&quot;text&quot; name=&quot;money&quot; /&gt;&lt;br/&gt;</span><br><span class="line">  </span><br><span class="line">      用户姓名：&lt;input type=&quot;text&quot; name=&quot;list[0].uname&quot; /&gt;&lt;br/&gt;</span><br><span class="line">      用户年龄：&lt;input type=&quot;text&quot; name=&quot;list[0].age&quot; /&gt;&lt;br/&gt;</span><br><span class="line">  </span><br><span class="line">      用户姓名：&lt;input type=&quot;text&quot; name=&quot;map[&apos;one&apos;].uname&quot; /&gt;&lt;br/&gt;</span><br><span class="line">      用户年龄：&lt;input type=&quot;text&quot; name=&quot;map[&apos;one&apos;].age&quot; /&gt;&lt;br/&gt;</span><br><span class="line">      &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;</span><br><span class="line">  &lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<p>大体流程：uname,age封装到user对象，再把user添加到list集合中</p>
+</li>
+</ul>
+<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><p>基本的参数绑定：请求中的value值会传递给控制器方法的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;account/findAccount?name=哈哈&quot;&gt;查询账户&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 控制器类</span><br><span class="line">@Controller</span><br><span class="line">@RequestMapping(path = &quot;/account&quot;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">	@RequestMapping(path = &quot;/findAccount&quot;)</span><br><span class="line">	public void findAccount(String name) &#123;</span><br><span class="line">		 System.out.println(name);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>RequestParam注解  把请求中的指定名称的参数传递给控制器中的形参赋值 ,本来如果是name直接可以获取到，现在为username，与name不一样时，就要用到这个注解</p>
+<ul>
+<li><code>name</code>: <code>value</code>属性的别名,指定请求参数的名称</li>
+<li><code>required</code>: 指定该请求参数是否必须的,默认为<code>true</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;testRequestParam?name=哈哈&quot;&gt;测试requestParam注解&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/testRequestParam&quot;)</span><br><span class="line">public String handlerMethod(@RequestParam(name=&quot;name&quot;) String username) &#123;</span><br><span class="line">    System.out.println(&quot;执行了...&quot;);</span><br><span class="line">    System.out.println(username);</span><br><span class="line">    return &quot;success&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RequestBody注解 用于获取请求体的内容（注意：get方法不可以） </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(path=&quot;/hello&quot;)    </span><br><span class="line">public String sayHello(@RequestBody String body) &#123;       </span><br><span class="line">    System.out.println(&quot;aaaa&quot;);        </span><br><span class="line">    System.out.println(body);        </span><br><span class="line">    return &quot;success&quot;;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PathVariable注解 拥有绑定url中的占位符的。例如：url中有/delete/{id}，{id}就是占位符 。</p>
+<p>这里就可以将10-&gt;sid-&gt;id</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href=&quot;testPathVariable/10&quot;&gt;测试&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value=&quot;/testPathVariable/&#123;sid&#125;&quot;)</span><br><span class="line">public String testPathVariable(@PathVariable(name=&quot;sid&quot;) String id)&#123;</span><br><span class="line">    System.out.println(&quot;执行了...&quot;);</span><br><span class="line">    System.out.println(id);</span><br><span class="line">    return &quot;success&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RequestHeader注解 获取指定请求头的值 </p>
+<ul>
+<li>value：请求头的名称 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(path=&quot;/hello&quot;)    </span><br><span class="line">public String sayHello(@RequestHeader(value=&quot;Accept&quot;) String header) &#123;             System.out.println(header);        </span><br><span class="line">return &quot;success&quot;;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>CookieValue注解 ：用于获取指定cookie的名称的值 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(path=&quot;/hello&quot;)    </span><br><span class="line">public String sayHello(@CookieValue(value=&quot;JSESSIONID&quot;) String cookieValue) &#123;          System.out.println(cookieValue);        </span><br><span class="line"> return &quot;success&quot;;    </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ModelAttribute注解 </p>
+<p>出现在方法上：表示当前方法会在控制器方法执行前先执行。 </p>
+<p>出现在参数上：获取指定的数据给参数赋值。 </p>
+<p>方式1：有返回值，这里uname和age会从表单那获得，数据会变，age不是20，data数据则会从模拟的数据库中去取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;anno/testModelAttribute&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        用户姓名：&lt;input type=&quot;text&quot; name=&quot;uname&quot; /&gt;&lt;br/&gt;</span><br><span class="line">        用户年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot; /&gt;&lt;br/&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;提交&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value=&quot;/testModelAttribute&quot;)</span><br><span class="line">   public String testModelAttribute(@ModelAttribute(&quot;abc&quot;) User user)&#123;</span><br><span class="line">       System.out.println(&quot;testModelAttribute执行了...&quot;);</span><br><span class="line">       System.out.println(user);</span><br><span class="line">       return &quot;success&quot;;</span><br><span class="line">   &#125;</span><br><span class="line">   @ModelAttribute</span><br><span class="line">   public User showUser(String uname)&#123;</span><br><span class="line">       System.out.println(&quot;showUser执行了...&quot;);</span><br><span class="line">       // 通过用户查询数据库（模拟）</span><br><span class="line">       User user = new User();</span><br><span class="line">       user.setUname(uname);</span><br><span class="line">       user.setAge(20);</span><br><span class="line">       user.setDate(new Date());</span><br><span class="line">       return user;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>方式2：无返回值，将user存入map，再通过这个注解取得user内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value=&quot;/testModelAttribute&quot;)</span><br><span class="line">   public String testModelAttribute(@ModelAttribute(&quot;abc&quot;) User user)&#123;</span><br><span class="line">       System.out.println(&quot;testModelAttribute执行了...&quot;);</span><br><span class="line">       System.out.println(user);</span><br><span class="line">       return &quot;success&quot;;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   @ModelAttribute</span><br><span class="line">   public void showUser(String uname, Map&lt;String,User&gt; map)&#123;</span><br><span class="line">       System.out.println(&quot;showUser执行了...&quot;);</span><br><span class="line">       // 通过用户查询数据库（模拟）</span><br><span class="line">       User user = new User();</span><br><span class="line">       user.setUname(uname);</span><br><span class="line">       user.setAge(20);</span><br><span class="line">       user.setDate(new Date());</span><br><span class="line">       map.put(&quot;abc&quot;,user);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>SessionAttributes注解 用于多次执行控制器方法间的参数共享 ，也就是session，之所以不用request方法是为了降低与servlet api之间的耦合度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">   @RequestMapping(path=&quot;/updateUser&quot;)    </span><br><span class="line">   public String updateUser(@ModelAttribute(value=&quot;abc&quot;) User user) &#123;        System.out.println(user);        </span><br><span class="line">       return &quot;success&quot;;    </span><br><span class="line">   &#125;</span><br><span class="line">   @Controller @RequestMapping(path=&quot;/user&quot;) </span><br><span class="line">@SessionAttributes(value= &#123;&quot;username&quot;,&quot;password&quot;,&quot;age&quot;&#125;,types= &#123;String.class,Integer.class&#125;)        </span><br><span class="line">   // 把数据存入到session域对象中 </span><br><span class="line">   public class HelloController &#123;        </span><br><span class="line">   /**     </span><br><span class="line">   * 向session中存入值     </span><br><span class="line">   * @return     </span><br><span class="line">   */    </span><br><span class="line">   @RequestMapping(path=&quot;/save&quot;)    </span><br><span class="line">   public String save(Model model) &#123;        </span><br><span class="line">   System.out.println(&quot;向session域中保存数据&quot;);        </span><br><span class="line">   model.addAttribute(&quot;username&quot;, &quot;root&quot;);        </span><br><span class="line">   model.addAttribute(&quot;password&quot;, &quot;123&quot;);        </span><br><span class="line">   model.addAttribute(&quot;age&quot;, 20);       </span><br><span class="line">   return &quot;success&quot;;    </span><br><span class="line">   &#125;        </span><br><span class="line">   /**     </span><br><span class="line">   * 从session中获取值     </span><br><span class="line">   * @return     </span><br><span class="line">   */    </span><br><span class="line">   @RequestMapping(path=&quot;/find&quot;)    </span><br><span class="line">   public String find(ModelMap modelMap) &#123;        </span><br><span class="line">   String username = (String) </span><br><span class="line">   modelMap.get(&quot;username&quot;);        </span><br><span class="line">   String password = (String) </span><br><span class="line">   modelMap.get(&quot;password&quot;);        </span><br><span class="line">   Integer age = (Integer) </span><br><span class="line">   modelMap.get(&quot;age&quot;);        </span><br><span class="line">   System.out.println(username + &quot; : &quot;+password +&quot; : &quot;+age);        </span><br><span class="line">   return &quot;success&quot;;    </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h2 id="响应数据和结果视图"><a href="#响应数据和结果视图" class="headerlink" title="响应数据和结果视图"></a>响应数据和结果视图</h2><ol>
+<li><p>返回字符串  Controller方法返回字符串可以指定逻辑视图的名称，根据视图解析器为物理视图的地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value=&quot;/hello&quot;)    </span><br><span class="line">public String sayHello() &#123;        </span><br><span class="line">System.out.println(&quot;Hello SpringMVC!!&quot;);        </span><br><span class="line">// 跳转到XX页面        </span><br><span class="line">return &quot;success&quot;;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>返回值是void </p>
+<ol>
+<li>如果控制器的方法返回值编写成void，执行程序报404的异常，默认查找JSP页面没有找到</li>
+<li>可以使用请求转发或者重定向跳转到指定的页面</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value=&quot;/initAdd&quot;)    </span><br><span class="line">public void initAdd(HttpServletRequest request,HttpServletResponse response) throws Exception &#123;        </span><br><span class="line">   System.out.println(&quot;请求转发或者重定向&quot;);        </span><br><span class="line">   // 请求转发        </span><br><span class="line">   // request.getRequestDispatcher(&quot;/WEB-INF/pages/add.jsp&quot;).forward(request, response); </span><br><span class="line">   // 重定向        </span><br><span class="line">   // response.sendRedirect(request.getContextPath()+&quot;/add2.jsp&quot;);                      response.setCharacterEncoding(&quot;UTF-8&quot;);          response.setContentType(&quot;text/html;charset=UTF-8&quot;);                </span><br><span class="line">// 直接响应数据        </span><br><span class="line">   response.getWriter().print(&quot;你好&quot;);        </span><br><span class="line">   return;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>返回值是ModelAndView对象   ModelAndView对象是Spring提供的一个对象，可以用来调整具体的JSP视图</p>
+<p>model可以存储对象，view可以跳转页面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/testModelAndView&quot;)</span><br><span class="line">  public ModelAndView testModelAndView()&#123;</span><br><span class="line">      // 创建ModelAndView对象</span><br><span class="line">      ModelAndView mv = new ModelAndView();</span><br><span class="line">      System.out.println(&quot;testModelAndView方法执行了...&quot;);</span><br><span class="line">      // 模拟从数据库中查询出User对象</span><br><span class="line">      User user = new User();</span><br><span class="line">      user.setUsername(&quot;小凤&quot;);</span><br><span class="line">      user.setPassword(&quot;456&quot;);</span><br><span class="line">      user.setAge(30);</span><br><span class="line">      // 把user对象存储到mv对象中，也会把user对象存入到request对象</span><br><span class="line">      mv.addObject(&quot;user&quot;,user);</span><br><span class="line">      // 跳转到哪个页面</span><br><span class="line">      mv.setViewName(&quot;success&quot;);</span><br><span class="line">      return mv;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>foward和redirect</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/delete&quot;)    </span><br><span class="line">public String delete() throws Exception &#123;        </span><br><span class="line">System.out.println(&quot;delete方法执行了...&quot;);        </span><br><span class="line">// return &quot;forward:/WEB-INF/pages/success.jsp&quot;;        </span><br><span class="line">return &quot;forward:/user/findAll&quot;;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/count&quot;)    </span><br><span class="line">public String count() throws Exception &#123;        </span><br><span class="line">System.out.println(&quot;count方法执行了...&quot;);        </span><br><span class="line">return &quot;redirect:/add.jsp&quot;;        </span><br><span class="line">// return &quot;redirect:/user/findAll&quot;;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ResponseBody响应json数据 </p>
+<ol>
+<li><p>DispatcherServlet会拦截到所有的资源，导致一个问题就是静态资源（img、css、js）也会被拦截到，从而 不能被使用。解决问题就是需要配置静态资源不进行拦截，在springmvc.xml配置文件添加如下配置 </p>
+<ol>
+<li>mvc:resources标签配置不过滤<ol>
+<li>location元素表示webapp目录下的包下的所有文件 </li>
+<li>mapping元素表示以/static开头的所有请求路径，如/static/a 或者/static/a/b</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--前端控制器，哪些静态资源不拦截--&gt;</span><br><span class="line">  &lt;mvc:resources location=&quot;/js/&quot; mapping=&quot;/js/**&quot;  /&gt;</span><br><span class="line">  &lt;mvc:resources location=&quot;/css/&quot; mapping=&quot;/css/&quot;   /&gt;</span><br><span class="line">  &lt;mvc:resources location=&quot;/images/&quot; mapping=&quot;/images/&quot;/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用@RequestBody获取请求体数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/testJson&quot;)    </span><br><span class="line">public void testJson(@RequestBody String body) &#123;        </span><br><span class="line">System.out.println(body);    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$(function () &#123;</span><br><span class="line">        $(&quot;#btn&quot;).click(function () &#123;</span><br><span class="line">           //alert(&quot;hello btn&quot;);</span><br><span class="line">           $.ajax(&#123;</span><br><span class="line">              // 编写json格式，设置属性和值</span><br><span class="line">              url:&quot;user/testAjax&quot;,</span><br><span class="line">              contentType:&quot;application/json;charset=UTF-8&quot;,</span><br><span class="line">              data:&apos;&#123;&quot;username&quot;:&quot;hehe&quot;,&quot;password&quot;:&quot;123&quot;,&quot;age&quot;:30&#125;&apos;,</span><br><span class="line">              dataType:&quot;json&quot;,</span><br><span class="line">              type:&quot;post&quot;,</span><br><span class="line">              success:function(data) &#123;</span><br><span class="line">             </span><br><span class="line">              &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">     &#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用@ResponseBody注解把JavaBean对象转换成json字符串，直接响应 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/testAjax&quot;)</span><br><span class="line">   public @ResponseBody User testAjax(@RequestBody  User user) &#123;</span><br><span class="line">       System.out.println(&quot;响应ajax&quot;);</span><br><span class="line">       //客户端发送请求，传的是json格式的数据，后端把数据封装到user对象中</span><br><span class="line">       System.out.println(user);</span><br><span class="line">       //做响应</span><br><span class="line">       user.setAge(20);</span><br><span class="line">       user.setUsername(&quot;haha&quot;);</span><br><span class="line">       return user;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$(function () &#123;</span><br><span class="line">        $(&quot;#btn&quot;).click(function () &#123;</span><br><span class="line">           //alert(&quot;hello btn&quot;);</span><br><span class="line">           $.ajax(&#123;</span><br><span class="line">              // 编写json格式，设置属性和值</span><br><span class="line">              url:&quot;user/testAjax&quot;,</span><br><span class="line">              contentType:&quot;application/json;charset=UTF-8&quot;,</span><br><span class="line">              data:&apos;&#123;&quot;username&quot;:&quot;hehe&quot;,&quot;password&quot;:&quot;123&quot;,&quot;age&quot;:30&#125;&apos;,</span><br><span class="line">              dataType:&quot;json&quot;,</span><br><span class="line">              type:&quot;post&quot;,</span><br><span class="line">              success:function(data) &#123;</span><br><span class="line">                 //data服务器响应的json数据，进行解析</span><br><span class="line">                 alert(data);</span><br><span class="line">                 alert(data.usrname);</span><br><span class="line">                 alert(data.age);</span><br><span class="line">              &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">     &#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="异常处理思路"><a href="#异常处理思路" class="headerlink" title="异常处理思路"></a>异常处理思路</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BC%82%E5%B8%B8.png" alt></p>
+<h3 id="异常处理步骤"><a href="#异常处理步骤" class="headerlink" title="异常处理步骤"></a>异常处理步骤</h3><ol>
+<li><p>controller类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(&quot;/user&quot;)</span><br><span class="line">public class UserController &#123;</span><br><span class="line">    @RequestMapping(&quot;/testException&quot;)</span><br><span class="line">    public String testException()throws Exception&#123;</span><br><span class="line">        System.out.println(&quot;异常处理&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            int i=1/0;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            throw new myexception(&quot;出现异常&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;success&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义异常类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class myexception extends Exception &#123;</span><br><span class="line">    private String message;</span><br><span class="line"></span><br><span class="line">    public myexception(String message) &#123;</span><br><span class="line">        this.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getMessage() &#123;</span><br><span class="line">        return message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setMessage(String message) &#123;</span><br><span class="line">        this.message = message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义异常处理器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class myexceptionResolver implements HandlerExceptionResolver &#123;</span><br><span class="line"></span><br><span class="line">      public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception ex) &#123;</span><br><span class="line">        //获取异常对象</span><br><span class="line">        myexception s=null;</span><br><span class="line">        //instanceof 严格来说是Java中的一个双目运算符，用来测试一个对象是否为一个类的实例</span><br><span class="line">        //obj instanceof Class</span><br><span class="line">        //其中 obj 为一个对象，Class 表示一个类或者一个接口，当 obj 为 Class 的对象，或者是其直接或间接子类，或者是其接口的实现类，结果result 都返回 true，否则返回false。</span><br><span class="line">        if (ex instanceof myexception)&#123;</span><br><span class="line">            s=(myexception) ex;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            s=new myexception(&quot;程序在维护&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //创建ModelAndView对象</span><br><span class="line">        ModelAndView mv=new ModelAndView();</span><br><span class="line">        mv.addObject(&quot;errormsg&quot;, s.getMessage());</span><br><span class="line">        mv.setViewName(&quot;error&quot;);</span><br><span class="line">        return mv;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置异常处理器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;myexceptionResolver&quot; class=&quot;cn.itcast.exception.myexceptionResolver&quot;&gt;&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/lanjiqi1.png" alt></p>
+<h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><ol>
+<li>SpringMVC框架中的拦截器用于对处理器进行预处理和后处理的技术。</li>
+<li>可以定义拦截器链，连接器链就是将拦截器按着一定的顺序结成一条链，在访问被拦截的方法时，拦截器链 中的拦截器会按着定义的顺序执行</li>
+<li>拦截器和过滤器的功能比较类似，有区别<ul>
+<li>过滤器是Servlet规范的一部分，任何框架都可以使用过滤器技术，拦截器是SpringMVC框架独有的</li>
+<li>过滤器配置了/*，可以拦截任何资源，拦截器只会对控制器中的方法进行拦截</li>
+<li>拦截器也是AOP思想的一种实现方式 ，想要自定义拦截器，需要实现HandlerInterceptor接口</li>
+</ul>
+</li>
+</ol>
+<h3 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h3><ol>
+<li><p>创建类，实现HandlerInterceptor接口，重写需要的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> public class interceptor1 implements HandlerInterceptor &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;我要拦截你，interceptor1&quot;);</span><br><span class="line">        //request.getRequestDispatcher(&quot;WEB-INF/pages/error.jsp&quot;).forward(request,response);</span><br><span class="line">        //放行</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;拦截1已经执行了&quot;);</span><br><span class="line">        //request.getRequestDispatcher(&quot;WEB-INF/pages/error.jsp&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;我TM最后&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在springmvc.xml中配置拦截器类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 配置拦截器的作用范围 --&gt; </span><br><span class="line">&lt;mvc:interceptors&gt;  </span><br><span class="line">  &lt;mvc:interceptor&gt; </span><br><span class="line">    &lt;mvc:mapping path=&quot;/**&quot; /&gt;&lt;!-- 用于指定对拦截的 url --&gt;   </span><br><span class="line">    &lt;mvc:exclude-mapping path=&quot;&quot;/&gt;&lt;!-- 用于指定排除的 url--&gt;   </span><br><span class="line">    &lt;bean id=&quot;handlerInterceptorDemo1&quot;           class=&quot;com.itheima.web.interceptor.HandlerInterceptorDemo1&quot;&gt;</span><br><span class="line">    &lt;/bean&gt; </span><br><span class="line">  &lt;/mvc:interceptor&gt; </span><br><span class="line">&lt;/mvc:interceptors&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mvclanjiqi.png" alt></p>
+<h3 id="HandlerInterceptor中的方法"><a href="#HandlerInterceptor中的方法" class="headerlink" title="HandlerInterceptor中的方法"></a>HandlerInterceptor中的方法</h3><ol>
+<li>preHandle方法是controller方法执行前拦截的方法 <ol>
+<li>可以使用request或者response跳转到指定的页面 </li>
+<li>return true放行，执行下一个拦截器，如果没有拦截器，执行controller中的方法， return false不放行，不会执行controller中的方法</li>
+</ol>
+</li>
+<li>postHandle是controller方法执行后执行的方法，在JSP视图执行前。<ol>
+<li>可以使用request或者response跳转到指定的页面</li>
+<li>如果指定了跳转的页面，那么controller方法跳转的页面将不会显示</li>
+</ol>
+</li>
+<li>postHandle方法是在JSP执行后执行 <ol>
+<li>request或者response不能再跳转页面了</li>
+</ol>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/事务进阶/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/23/事务进阶/" class="post-title-link" itemprop="url">事务进阶</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-23 21:25:46" itemprop="dateCreated datePublished" datetime="2019-09-23T21:25:46+08:00">2019-09-23</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>一个没有加@Transactional注解的方法，去调用一个加了@Transactional的方法，会不会产生事务？</strong></p>
+<p>@Transactional：</p>
+<ul>
+<li>对接口加上<code>@Transactional</code>注解,表示对该接口的所有实现类进行事务控制</li>
+<li>对类加上<code>@Transactional</code>注解,表示对类中的所有方法进行事务控制</li>
+<li>对具体某一方法加以<code>@Transactional</code>注解,表示对具体方法进行事务控制</li>
+</ul>
+<p>一个<code>@Transactional</code>的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void deleteAllAndAddOneTransactional(Customer customer) &#123;</span><br><span class="line"> customerRepository.deleteAll();</span><br><span class="line"> if (&quot;Yang&quot;.equals(customer.getFirstName())) &#123;</span><br><span class="line"> throw new RuntimeException();</span><br><span class="line"> &#125;</span><br><span class="line"> customerRepository.save(customer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法内先去执行deleteAll()，删除表中全部数据；然后执行save()保存数据。</p>
+<p>这两个方法中间，会判断传进来的firstName是不是等于“Yang”，是，则抛异常，用于模拟两个数据库操作之间可能发生的异常场景。</p>
+<p>如果没有加@Transactional注解，那么这两个操作就不在一个事务里面，不具有原子性。如果deleteAll之后抛异常，那么就会导致只删除不新增。</p>
+<p>而加了@Transactional之后，这两个动作在一个事务里头，具有原子性，要么全部成功，要么全部失败。如果deleteAll之后抛异常，则事务回滚，恢复原先被删除的数据。</p>
+<p><strong>问题登场，这种情况下</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAllAndAddOne</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">System.out.println(<span class="string">"go into deleteAllAndAddOne"</span>);</span><br><span class="line">deleteAllAndAddOneTransactional(customer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAllAndAddOneTransactional</span><span class="params">(Customer customer)</span> </span>&#123;</span><br><span class="line">customerRepository.deleteAll();</span><br><span class="line"><span class="keyword">if</span> (<span class="string">"Yang"</span>.equals(customer.getFirstName())) &#123;</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">&#125;</span><br><span class="line">customerRepository.save(customer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>其实Spring的@Transactional，跟Spring AOP一样，都是利用了动态代理。</strong></p>
+<p>我们写了一个类，里面写了一个加了@Transactional注解的方法，这原本平淡无奇，什么用也没有，就像这样：</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie1.png" alt></p>
+<p>关键在于，Spring在检查到@Transactional注解之后，给这个对象生成了一个代理对象proxy：</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie2.png" alt></p>
+<p>代理对象的methodB，会先开启事务（beginTransaction），然后再去执行原先对象target的methodB，如果抛异常，则回滚（rollBack），如果一切顺利，则提交（commit）。</p>
+<p>而最后注入Spring容器的，也正是这个带有事务逻辑的代理对象。所以我们调用methodB时会产生事务。</p>
+<p>现在，我们写了一个新方法，methodA，里头去调用methodB：</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/shiwujinjie3.png" alt></p>
+<p>由于methodA没有加@Transactional注解，所以代理对象里面，直接就是target.methodA()，直接调用了原来对象的methodA。</p>
+<p>这下就很清晰了，代理对象的methodA，去调用原来对象的methodA，原来对象的methodA，再去调用原来对象的methodB，而原来对象的methodB，是不具有事务的。事务只存在于代理对象的methodB. 所以整个方法也就没有事务了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/jdbcTemplate和事务/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/23/jdbcTemplate和事务/" class="post-title-link" itemprop="url">jdbcTemplate和事务</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-23 20:32:00" itemprop="dateCreated datePublished" datetime="2019-09-23T20:32:00+08:00">2019-09-23</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="回顾对jdbc的优化历程"><a href="#回顾对jdbc的优化历程" class="headerlink" title="回顾对jdbc的优化历程"></a>回顾对jdbc的优化历程</h2><h3 id="原生的jdbc"><a href="#原生的jdbc" class="headerlink" title="原生的jdbc"></a>原生的jdbc</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    String sql = &quot;insert into t_dept(deptName) values(&apos;test&apos;);&quot;;</span><br><span class="line">    Connection con = null;</span><br><span class="line">    Statement stmt = null;</span><br><span class="line">    //注册驱动</span><br><span class="line">    Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</span><br><span class="line">    // 连接对象</span><br><span class="line">    con = DriverManager.getConnection(&quot;jdbc:mysql:///hib_demo&quot;, &quot;root&quot;, &quot;root&quot;);</span><br><span class="line">    // 执行命令对象</span><br><span class="line">    stmt =  con.createStatement();</span><br><span class="line">    // 执行</span><br><span class="line">    stmt.execute(sql);</span><br><span class="line">    // 关闭</span><br><span class="line">    stmt.close();</span><br><span class="line">    con.close();</span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="进化"><a href="#进化" class="headerlink" title="进化"></a>进化</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">  * 连接数据库的driver，url，username，password通过配置文件来配置，可以增加灵活性</span><br><span class="line">  * 当我们需要切换数据库的时候，只需要在配置文件中改以上的信息即可</span><br><span class="line">  *</span><br><span class="line">  * */</span><br><span class="line">  private static String  driver = null;</span><br><span class="line">  private static String  url = null;</span><br><span class="line">  private static String  username = null;</span><br><span class="line">  private static String password = null;</span><br><span class="line"></span><br><span class="line">  static &#123;</span><br><span class="line">      try &#123;</span><br><span class="line"></span><br><span class="line">          //获取配置文件的读入流</span><br><span class="line">          InputStream inputStream = UtilsDemo.class.getClassLoader().getResourceAsStream(&quot;db.properties&quot;);</span><br><span class="line"></span><br><span class="line">          Properties properties = new Properties();</span><br><span class="line">          properties.load(inputStream);</span><br><span class="line">          //获取配置文件的信息</span><br><span class="line">          driver = properties.getProperty(&quot;driver&quot;);</span><br><span class="line">          url = properties.getProperty(&quot;url&quot;);</span><br><span class="line">          username = properties.getProperty(&quot;username&quot;);</span><br><span class="line">          password = properties.getProperty(&quot;password&quot;);</span><br><span class="line"></span><br><span class="line">          //加载驱动类</span><br><span class="line">          Class.forName(driver);</span><br><span class="line"></span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">      &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">          e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public static Connection getConnection() throws SQLException &#123;</span><br><span class="line">      return DriverManager.getConnection(url,username,password);</span><br><span class="line">  &#125;</span><br><span class="line">  public static void release(Connection connection, Statement statement, ResultSet resultSet) &#123;</span><br><span class="line"></span><br><span class="line">      if (resultSet != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              resultSet.close();</span><br><span class="line">          &#125; catch (SQLException e) &#123;</span><br><span class="line">              e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (statement != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              statement.close();</span><br><span class="line">          &#125; catch (SQLException e) &#123;</span><br><span class="line">              e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (connection != null) &#123;</span><br><span class="line">          try &#123;</span><br><span class="line">              connection.close();</span><br><span class="line">          &#125; catch (SQLException e) &#123;</span><br><span class="line">              e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过上面一层的封装，我们可以<strong>在使用的地方直接使用工具类来得到与数据库的连接…那么比原来就方便很多了！</strong>但是呢，<strong>每次还是需要使用Connection去创建一个Statement对象。并且无论是什么方法，其实就是SQL语句和传递进来的参数不同！</strong></p>
+<h2 id="spring的jdbcTemplate"><a href="#spring的jdbcTemplate" class="headerlink" title="spring的jdbcTemplate"></a>spring的jdbcTemplate</h2><p>首先还是看一下我们原生的JDBC代码：<strong>获取Connection是可以抽取出来的，直接使用dataSource来得到Connection就行了</strong>。</p>
+<p><code>JdbcTemplate</code>对象在执行sql语句时也需要一个数据源,这个数据源可以使用<code>C3P0</code>或者<code>DBCP</code>,也可以使用Spring的内置数据源<code>DriverManagerDataSource</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql:///hib_demo&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;initialPoolSize&quot; value=&quot;3&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;maxPoolSize&quot; value=&quot;10&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;maxStatements&quot; value=&quot;100&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;acquireIncrement&quot; value=&quot;2&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">// IOC容器注入</span><br><span class="line">private DataSource dataSource;</span><br><span class="line">public void setDataSource(DataSource dataSource) &#123;</span><br><span class="line">    this.dataSource = dataSource;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public void save() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        String sql = &quot;insert into t_dept(deptName) values(&apos;test&apos;);&quot;;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        Statement stmt = null;</span><br><span class="line">        // 连接对象</span><br><span class="line">        con = dataSource.getConnection();</span><br><span class="line">        // 执行命令对象</span><br><span class="line">        stmt =  con.createStatement();</span><br><span class="line">        // 执行</span><br><span class="line">        stmt.execute(sql);</span><br><span class="line"></span><br><span class="line">        // 关闭</span><br><span class="line">        stmt.close();</span><br><span class="line">        con.close();</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Spring来提供了JdbcTemplate这么一个类给我们使用！它封装了DataSource，也就是说我们可以在Dao中使用JdbcTemplate就行了。</strong></p>
+<ol>
+<li><p>配置c3p0数据源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/数据库名&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;user&quot; value=&quot;用户名&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;密码&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建<code>JdbcTemplate</code>对象，向<code>JdbcTemplate</code>的构造方法传入数据源创建对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用JdbcTemplate实现增删改</p>
+<p><code>JdbcTemplate</code>的增删改操作使用其<code>update(&quot;SQL语句&quot;, 参数...)</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //1.获取Spring容器</span><br><span class="line">    ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">    //2.根据id获取JdbcTemplate对象</span><br><span class="line">    JdbcTemplate jt = (JdbcTemplate) ac.getBean(&quot;jdbcTemplate&quot;);</span><br><span class="line">    //3.执行增加操作</span><br><span class="line">    jt.update(&quot;insert into account(name,money)values(?,?)&quot;,&quot;名字&quot;,5000);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    //1.获取Spring容器</span><br><span class="line">    ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">    //2.根据id获取JdbcTemplate对象</span><br><span class="line">    JdbcTemplate jt = (JdbcTemplate) ac.getBean(&quot;jdbcTemplate&quot;);</span><br><span class="line">    //3.执行删除操作</span><br><span class="line">    jt.update(&quot;delete from account where id = ?&quot;,6);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="jdbcTemplate的query（）"><a href="#jdbcTemplate的query（）" class="headerlink" title="jdbcTemplate的query（）"></a>jdbcTemplate的query（）</h2><p><code>JdbcTemplate</code>的查询操作使用其<code>query()</code>方法,其参数如下：</p>
+<ul>
+<li><code>String sql</code>: SQL语句</li>
+<li><code>RowMapper&lt;T&gt; rowMapper</code>: 指定如何将查询结果<code>ResultSet</code>对象转换为<code>T</code>对象.</li>
+<li><code>@Nullable Object... args</code>: SQL语句的参数</li>
+</ul>
+<p>查询所有和一条记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public List&lt;Account&gt; findAllAccounts() &#123;</span><br><span class="line">    List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class));</span><br><span class="line">    return accounts;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public Account findAccountById(Integer accountId) &#123;</span><br><span class="line">    List&lt;Account&gt; accounts = jdbcTemplate.query(&quot;select * from account where id = ?&quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class), accountId);</span><br><span class="line">    return accounts.isEmpty() ? null : accounts.get(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在Dao层使用JdbcTemplate"><a href="#在Dao层使用JdbcTemplate" class="headerlink" title="在Dao层使用JdbcTemplate"></a>在Dao层使用JdbcTemplate</h2><p>在DAO层使用<code>JdbcTemplate</code>,需要给DAO注入<code>JdbcTemplate</code>对象.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class AccountDaoImpl implements IAccountDao &#123;</span><br><span class="line">    </span><br><span class="line">    private JdbcTemplate jdbcTemplate;	// JdbcTemplate对象</span><br><span class="line"></span><br><span class="line">    // JdbcTemplate对象的set方法</span><br><span class="line">    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        this.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // DAO层方法</span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountById(Integer id) &#123;</span><br><span class="line">        // 实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // DAO层方法</span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountByName(String name) &#123;</span><br><span class="line">        // 实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 其它DAO层方法...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Dao层中继承JdbcDaoSupport类"><a href="#Dao层中继承JdbcDaoSupport类" class="headerlink" title="Dao层中继承JdbcDaoSupport类"></a>Dao层中继承JdbcDaoSupport类</h2><p>在实际项目中,我们会创建许多DAO对象,若每个DAO对象都注入一个JdbcTemplate对象,会造成代码冗余.</p>
+<p>实际的项目中我们可以让DAO对象继承Spring内置的JdbcDaoSupport类.在JdbcDaoSupport类中定义了JdbcTemplate和DataSource成员属性,在实际编程中,只需要向其注入DataSource成员即可,DataSource的set方法中会注入JdbcTemplate对象.<br>DAO的实现类中调用父类的getJdbcTemplate()方法获得JdbcTemplate()对象.<br> <code>JdbcDaoSupport</code>类的源代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public abstract class JdbcDaoSupport extends DaoSupport &#123;</span><br><span class="line">    </span><br><span class="line">    @Nullable</span><br><span class="line">    private JdbcTemplate jdbcTemplate;	// 定义JdbcTemplate成员变量</span><br><span class="line"></span><br><span class="line">    public JdbcDaoSupport() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // DataSource的set方法,注入DataSource时调用createJdbcTemplate方法注入JdbcTemplate</span><br><span class="line">    public final void setDataSource(DataSource dataSource) &#123;</span><br><span class="line">        if (this.jdbcTemplate == null || dataSource != this.jdbcTemplate.getDataSource()) &#123;</span><br><span class="line">            this.jdbcTemplate = this.createJdbcTemplate(dataSource);</span><br><span class="line">            this.initTemplateConfig();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 创建JdbcTemplate,用来被setDataSource()调用注入JdbcTemplate</span><br><span class="line">    protected JdbcTemplate createJdbcTemplate(DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // JdbcTemplate的get方法,子类通过该方法获得JdbcTemplate对象</span><br><span class="line">    @Nullable</span><br><span class="line">    public final JdbcTemplate getJdbcTemplate() &#123;</span><br><span class="line">        return this.jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    public final DataSource getDataSource() &#123;</span><br><span class="line">        return this.jdbcTemplate != null ? this.jdbcTemplate.getDataSource() : null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public final void setJdbcTemplate(@Nullable JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        this.jdbcTemplate = jdbcTemplate;</span><br><span class="line">        this.initTemplateConfig();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>bean.xml</code>中,我们只要为DAO对象注入<code>DataSource</code>对象即可,让<code>JdbcDaoSupport</code>自动调用<code>JdbcTemplate</code>的set方法注入<code>JdbcTemplate</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 配置数据源--&gt;</span><br><span class="line">    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/数据库名&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;用户名&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;密码&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 配置账户的持久层--&gt;</span><br><span class="line">    &lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;</span><br><span class="line">        &lt;!--不用我们手动配置JdbcTemplate成员了--&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;jdbcTemplate&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在实现DAO接口时,我们通过<code>super.getJdbcTemplate()</code>方法获得<code>JdbcTemplate</code>对象.</p>
+<p>即JdbcDaoSupport的DataSource的set方法会子啊注入dataSource时调用createJDbcTemplate方法，最后通过getJdbcTemplate方法得到jdbcTemplate对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class AccountDaoImpl extends JdbcDaoSupport implements IAccountDao &#123;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountById(Integer id) &#123;</span><br><span class="line">		//调用继承自父类的getJdbcTemplate()方法获得JdbcTemplate对象</span><br><span class="line">        List&lt;Account&gt; list = getJdbcTemplate().query(&quot;select * from account whereid = ? &quot;, new AccountRowMapper(), id);</span><br><span class="line">        return list.isEmpty() ? null : list.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Account findAccountByName(String name) &#123;</span><br><span class="line">        //调用继承自父类的getJdbcTemplate()方法获得JdbcTemplate对象</span><br><span class="line">        List&lt;Account&gt; accounts = getJdbcTemplate().query(&quot;select * from account wherename = ? &quot;, new BeanPropertyRowMapper&lt;Account&gt;(Account.class), name);</span><br><span class="line">        if (accounts.isEmpty()) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125; else if (accounts.size() &gt; 1) &#123;</span><br><span class="line">            throw new RuntimeException(&quot;结果集不唯一，不是只有一个账户对象&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void updateAccount(Account account) &#123;</span><br><span class="line">		//调用继承自父类的getJdbcTemplate()方法获得JdbcTemplate对象</span><br><span class="line">        getJdbcTemplate().update(&quot;update account set money = ? where id = ? &quot;, account.getMoney(), account.getId());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="spring事务"><a href="#spring事务" class="headerlink" title="spring事务"></a>spring事务</h2><p> bean.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--配置JdbcTemplate--&gt;</span><br><span class="line">&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置账户的持久层--&gt;</span><br><span class="line">&lt;bean id=&quot;accountDao&quot; class=&quot;com.itheima.dao.impl.AccountDaoImpl&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;jdbcTemplate&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;</span><br><span class="line"> &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置数据源--&gt;</span><br><span class="line">&lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/eesy&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;username&quot; value=&quot;root&quot;&gt;&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;19971025&quot;&gt;&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">//账户持久层实现类(这个版本适合xml配置)</span><br><span class="line">public class AccountDaoImpl extends JdbcDaoSupport implements IAccountDao &#123;</span><br><span class="line">    </span><br><span class="line">    public Account findAccountById(Integer accountId) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts=super.getJdbcTemplate().query(&quot;select *from account where id = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountId);</span><br><span class="line">        return accounts.isEmpty()?null:accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Account findAccountByName(String accountName) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts=super.getJdbcTemplate().query(&quot;select *from account where name = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountName);</span><br><span class="line">        if (accounts.isEmpty())&#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        if (accounts.size()&gt;1)&#123;</span><br><span class="line">            throw new RuntimeException(&quot;结果集不唯一&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void updateAccount(Account account) &#123;</span><br><span class="line">        super.getJdbcTemplate().update(&quot;update account set name=?,money=? where id=?&quot;,account.getName(),account.getMoney(),account.getId());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">//账户持久层实现类（这个版本适合注解配置版本）</span><br><span class="line">@Repository</span><br><span class="line">public class AccountDaoImpl2  implements IAccountDao &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        this.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Account findAccountById(Integer accountId) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts= jdbcTemplate.query(&quot;select *from account where id = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountId);</span><br><span class="line">        return accounts.isEmpty()?null:accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Account findAccountByName(String accountName) &#123;</span><br><span class="line">        List&lt;Account&gt;accounts=jdbcTemplate.query(&quot;select *from account where name = ?&quot;,new BeanPropertyRowMapper&lt;Account&gt;(Account.class),accountName);</span><br><span class="line">        if (accounts.isEmpty())&#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        if (accounts.size()&gt;1)&#123;</span><br><span class="line">            throw new RuntimeException(&quot;结果集不唯一&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return accounts.get(0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void updateAccount(Account account) &#123;</span><br><span class="line">        jdbcTemplate.update(&quot;update account set name=?,money=? where id=?&quot;,account.getName(),account.getMoney(),account.getId());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/AOP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/22/AOP/" class="post-title-link" itemprop="url">AOP</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-22 15:36:36" itemprop="dateCreated datePublished" datetime="2019-09-22T15:36:36+08:00">2019-09-22</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="AOP相关概念"><a href="#AOP相关概念" class="headerlink" title="AOP相关概念"></a>AOP相关概念</h2><p>Joinpoint(连接点): 被拦截到的方法.</p>
+<p>Pointcut(切入点): 我们对其进行增强的方法.</p>
+<p>Advice(通知/增强): 对切入点进行的增强操作</p>
+<p>​       包括前置通知,后置通知,异常通知,最终通知,环绕通知</p>
+<p>Weaving(织入): 是指把增强应用到目标对象来创建新的代理对象的过程。</p>
+<p>Aspect(切面): 是切入点和通知的结合</p>
+<h2 id="使用XML配置AOP"><a href="#使用XML配置AOP" class="headerlink" title="使用XML配置AOP"></a>使用XML配置AOP</h2><ol>
+<li><p>在<code>bean.xml中引入约束</code>并将通知类注入Spring容器中</p>
+</li>
+<li><p>使用<code>&lt;aop:config&gt;</code>标签声明AOP配置,所有关于AOP配置的代码都写在<code>&lt;aop:config&gt;</code>标签内</p>
+</li>
+<li><p>使用<code>&lt;aop:aspect&gt;</code>标签配置切面,其属性如下</p>
+<ul>
+<li><code>id</code>: 指定切面的<code>id</code></li>
+<li><code>ref</code>: 引用通知类的<code>id</code></li>
+</ul>
+</li>
+<li><p>使用<code>&lt;aop:pointcut&gt;</code>标签配置切入点表达式,指定对哪些方法进行增强,其属性如下</p>
+</li>
+<li><p>使用<code>&lt;aop:xxx&gt;</code>标签配置对应类型的通知方法</p>
+<p>其属性如下:</p>
+<p>method: 指定通知类中的增强方法名.<br>ponitcut-ref: 指定切入点的表达式的id<br>poinitcut: 指定切入点表达式<br>其中pointcut-ref和pointref属性只能有其中一个</p>
+<p>具体的通知类型:</p>
+<p>aop:before：配置前置通知,指定的增强方法在切入点方法之前执行.<br>aop:after-returning：配置后置通知,指定的增强方法在切入点方法正常执行之后执行.<br>aop:afetr-throwing：配置异常通知,指定的增强方法在切入点方法产生异常后执行.<br>aop:after：配置最终通知,无论切入点方法执行时是否发生异常,指定的增强方法都会最后执行.<br>aop:around： 配置环绕通知,可以在代码中手动控制增强代码的执行时机.</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 配置Logger类，以后相当于事务控制类 --&gt;</span><br><span class="line">&lt;bean id=&quot;logger&quot; class=&quot;com.itheima.utils.Logger&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置AOP--&gt;</span><br><span class="line">&lt;aop:config&gt;</span><br><span class="line">    &lt;!-- 配置切入点表达式 id属性用于指定表达式的唯一标识。expression属性用于指定表达式内容</span><br><span class="line">          此标签写在aop:aspect标签内部只能当前切面使用。</span><br><span class="line">          它还可以写在aop:aspect外面，此时就变成了所有切面可用</span><br><span class="line">      --&gt;</span><br><span class="line">    &lt;aop:pointcut id=&quot;pt1&quot; expression=&quot;execution(* com.itheima.service.impl.*.*(..))&quot;&gt;&lt;/aop:pointcut&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!--配置切面 --&gt;</span><br><span class="line">    &lt;aop:aspect id=&quot;logAdvice&quot; ref=&quot;logger&quot;&gt;</span><br><span class="line">        &lt;!-- 配置前置通知：在切入点方法执行之前执行</span><br><span class="line">        &lt;aop:before method=&quot;beforePrintLog&quot; pointcut-ref=&quot;pt1&quot; &gt;&lt;/aop:before&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置后置通知：在切入点方法正常执行之后值。它和异常通知永远只能执行一个</span><br><span class="line">        &lt;aop:after-returning method=&quot;afterReturningPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after-returning&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置异常通知：在切入点方法执行产生异常之后执行。它和后置通知永远只能执行一个</span><br><span class="line">        &lt;aop:after-throwing method=&quot;afterThrowingPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after-throwing&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置最终通知：无论切入点方法是否正常执行它都会在其后面执行</span><br><span class="line">        &lt;aop:after method=&quot;afterPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置环绕通知 详细的注释请看Logger类中--&gt;</span><br><span class="line">        &lt;aop:around method=&quot;aroundPringLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:around&gt;</span><br><span class="line">    &lt;/aop:aspect&gt;</span><br><span class="line">&lt;/aop:config&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="环绕通知"><a href="#环绕通知" class="headerlink" title="环绕通知"></a>环绕通知</h2><ol>
+<li><p><code>前置通知</code>,<code>后置通知</code>,<code>异常通知</code>,<code>最终通知</code>的执行顺序</p>
+<p>Spring是基于动态代理对方法进行增强的,<code>前置通知</code>,<code>后置通知</code>,<code>异常通知</code>,<code>最终通知</code>在增强方法中的执行时机如下:</p>
+<p><strong>类似于动态代理</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 增强方法</span><br><span class="line">@Override</span><br><span class="line">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable&#123;</span><br><span class="line">    Object rtValue = null;</span><br><span class="line">    try &#123;</span><br><span class="line">        // 执行前置通知</span><br><span class="line">        </span><br><span class="line">        // 执行原方法</span><br><span class="line">        rtValue = method.invoke(accountService, args); </span><br><span class="line">        </span><br><span class="line">        // 执行后置通知</span><br><span class="line">        return rtValue;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        // 执行异常通知</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        // 执行最终通知</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>环绕通知允许我们更自由地控制增强代码执行的时机</p>
+<p>Spring框架为我们提供一个接口ProceedingJoinPoint,它的实例对象可以作为环绕通知方法的参数,通过参数控制被增强方法的执行时机.</p>
+<p>ProceedingJoinPoint对象的getArgs()方法返回被拦截的参数<br>ProceedingJoinPoint对象的proceed()方法执行被拦截的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 环绕通知方法,返回Object类型</span><br><span class="line">public Object printLogAround(ProceedingJoinPoint pjp) &#123;</span><br><span class="line">    Object rtValue = null;</span><br><span class="line">    try &#123;</span><br><span class="line">        Object[] args = pjp.getArgs();        </span><br><span class="line">        printLogBefore();			// 执行前置通知</span><br><span class="line">    	rtValue = pjp.proceed(args);// 执行被拦截方法</span><br><span class="line">        printLogAfterReturn();		// 执行后置通知</span><br><span class="line">    &#125;catch(Throwable e) &#123;</span><br><span class="line">        printLogAfterThrowing();	// 执行异常通知</span><br><span class="line">    &#125;finally &#123;</span><br><span class="line">        printLogAfter();			// 执行最终通知</span><br><span class="line">    &#125;</span><br><span class="line">    return rtValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="spring中对AOP的注解"><a href="#spring中对AOP的注解" class="headerlink" title="spring中对AOP的注解"></a>spring中对AOP的注解</h2><p><strong>用于声明切面的注解</strong></p>
+<p><code>@Aspect</code>: 声明当前类为通知类,该类定义了一个切面.相当于xml配置中的<code>&lt;aop:aspect&gt;</code>标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect</span><br><span class="line">public class Logger &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用于声明通知的注解</strong><br>@Before: 声明该方法为前置通知.相当于xml配置中的<a href="aop:before" target="_blank" rel="noopener">aop:before</a>标签<br>@AfterReturning: 声明该方法为后置通知.相当于xml配置中的<a href="aop:after-returning" target="_blank" rel="noopener">aop:after-returning</a>标签<br>@AfterThrowing: 声明该方法为异常通知.相当于xml配置中的<a href="aop:after-throwing" target="_blank" rel="noopener">aop:after-throwing</a>标签<br>@After: 声明该方法为最终通知.相当于xml配置中的<a href="aop:after" target="_blank" rel="noopener">aop:after</a>标签<br>@Around: 声明该方法为环绕通知.相当于xml配置中的<a href="aop:around" target="_blank" rel="noopener">aop:around</a>标签<br>属性:</p>
+<p>​      value: 用于指定切入点表达式或切入点表达式的引用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect	//表示当前类是一个通知类</span><br><span class="line">public class Logger &#123;</span><br><span class="line"></span><br><span class="line">    // 配置前置通知</span><br><span class="line">	@Before(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogBefore()&#123;</span><br><span class="line">        System.out.println(&quot;前置通知Logger类中的printLogBefore方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置后置通知</span><br><span class="line">    @AfterReturning(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;后置通知Logger类中的printLogAfterReturning方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 配置异常通知</span><br><span class="line">	@AfterThrowing(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;异常通知Logger类中的printLogAfterThrowing方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置最终通知</span><br><span class="line">    @After(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfter()&#123;</span><br><span class="line">        System.out.println(&quot;最终通知Logger类中的printLogAfter方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置环绕通知</span><br><span class="line">    @Around(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public Object aroundPringLog(ProceedingJoinPoint pjp)&#123;</span><br><span class="line">        Object rtValue = null;</span><br><span class="line">        try&#123;</span><br><span class="line">            Object[] args = pjp.getArgs();	</span><br><span class="line">			printLogBefore();				// 执行前置通知</span><br><span class="line">            rtValue = pjp.proceed(args);	// 执行切入点方法</span><br><span class="line">			printLogAfterReturning();		// 执行后置通知</span><br><span class="line">            return rtValue;</span><br><span class="line">        &#125;catch (Throwable t)&#123;</span><br><span class="line">            printLogAfterThrowing();		// 执行异常通知</span><br><span class="line">            throw new RuntimeException(t);</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            printLogAfter();				// 执行最终通知</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>用于指定切入点表达式的注解</strong></p>
+<p><code>@Pointcut</code>: 指定切入点表达式,其属性如下:</p>
+<ul>
+<li><code>value</code>: 指定表达式的内容</li>
+</ul>
+<p><code>@Pointcut</code>注解没有<code>id</code>属性,通过调用被注解的方法获取切入点表达式.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect	//表示当前类是一个通知类</span><br><span class="line">public class Logger &#123;</span><br><span class="line"></span><br><span class="line">    // 配置切入点表达式</span><br><span class="line">    @Pointcut(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    private void pt1()&#123;&#125; </span><br><span class="line">    </span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">	@Before(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogBefore()&#123;</span><br><span class="line">        System.out.println(&quot;前置通知Logger类中的printLogBefore方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">    @AfterReturning(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogAfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;后置通知Logger类中的printLogAfterReturning方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">	@AfterThrowing(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogAfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;异常通知Logger类中的printLogAfterThrowing方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="纯注解配置AOP"><a href="#纯注解配置AOP" class="headerlink" title="纯注解配置AOP"></a>纯注解配置AOP</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@ComponentScan(basePackages=&quot;cn.maoritian&quot;)</span><br><span class="line">@EnableAspectJAutoProxy			// 允许AOP</span><br><span class="line">public class SpringConfiguration &#123;</span><br><span class="line">    // 具体配置</span><br><span class="line">    //...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/ncepu_Chen/article/details/94510298#SpringAOP_159" target="_blank" rel="noopener">https://blog.csdn.net/ncepu_Chen/article/details/94510298#SpringAOP_159</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/泛型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1723,867 +2711,6 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/09/final关键字/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/09/final关键字/" class="post-title-link" itemprop="url">final关键字</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-09 09:45:50" itemprop="dateCreated datePublished" datetime="2019-09-09T09:45:50+08:00">2019-09-09</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="final关键字"><a href="#final关键字" class="headerlink" title="final关键字"></a>final关键字</h1><h2 id="final关键字基本用法"><a href="#final关键字基本用法" class="headerlink" title="final关键字基本用法"></a>final关键字基本用法</h2><ol>
-<li><p>final修饰类</p>
-<p>当一个类用final修饰时，这个类就不能被继承了。所以在使用final修饰类的时候，要注意谨慎选择，除非这个类真的在以后不会用来继承或者出于安全的考虑，尽量不要将类设计为final类。 </p>
-</li>
-<li><p>final修饰方法</p>
-<p> 如果只有在想明确禁止 该方法在子类中被覆盖的情况下才将方法设置为final的。即父类的final方法是不能被子类所覆盖的，也就是说子类是不能够存在和父类一模一样的方法的 </p>
-</li>
-<li><p>final修饰变量</p>
-<p> final<strong>成员变量表示常量，只能被赋值一次，赋值后值不再改变</strong> </p>
-<p>先来个很常见的题目引入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123; </span><br><span class="line">    public static void main(String[] args)  &#123; </span><br><span class="line">        String a = &quot;hello2&quot;;   </span><br><span class="line">        final String b = &quot;hello&quot;; </span><br><span class="line">        String d = &quot;hello&quot;; </span><br><span class="line">        String c = b + 2;   </span><br><span class="line">        String e = d + 2; </span><br><span class="line">        System.out.println((a == c)); </span><br><span class="line">        System.out.println((a == e)); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>​       分析：final变量是基本数据类型以及String类型时 ，如果在编译器就知道其确切值，编译器就会把它当作常量来看，所以b会直接以hello来替代。常量字符串的“+”操作，编译阶段直接会合成为一个字符串。在编译期间，这种拼接会被优化，编译器直接帮你拼好 ，如string str=”ja”+”va”，在编译阶段会直接合并成语句String str=”java”，于是会去常量池中查找是否存在”java” ，从而进行创建或引用，这里的c即为“hello”+2，也就是“hello2”，所以a和c指向的是同一个hello2，而a和e则是不同对象，为什么呢，一开始我也不知道，在查阅相关博客后，对常量池等知识有了了解，下面对String创建的变量进行详细解析。</p>
-<ol>
-<li><p>new String都是在堆上创建字符串对象。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/newString.png" alt></p>
-<p>其实这里常量池中也会有一个“abcd”的字符串，当new时，会拷贝一份该字符串存放到堆中，于是y指向了堆中的那个“abcd”字符串 。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s = new String(&quot;abc&quot;);</span><br><span class="line">String s1 = &quot;abc&quot;;</span><br><span class="line">String s2 = new String(&quot;abc&quot;);</span><br><span class="line">  </span><br><span class="line">System.out.println(s == s1);</span><br><span class="line">System.out.println(s == s2);</span><br><span class="line">System.out.println(s1 == s2);</span><br></pre></td></tr></table></figure>
-
-<p>这里在详细分析以下这两行代码：</p>
-<ol>
-<li><p>首先在常量池中创建abc对象，然后new关键字会在堆里再创建一个对象，在堆里的这个对象则是在栈中的s1所指向的</p>
-</li>
-<li><p>当轮到s2时，首先同样会在常量池中看有没有abc，这里已经有了，则不用自己创建。然后new自己创建一个在堆中的对象，s2指向这个对象</p>
-<p>所以虽然s1和s2指向的最终内容都是abc，但它们是2个不同的对象，因为指向的是不同堆对象</p>
-</li>
-</ol>
-</li>
-<li><p>通过字面量赋值创建字符串（如：String str=”twm”）时，会先在常量池中查找是否存在相同的字符串，若存在，则将栈中的引用直接指向该字符串；若不存在，则在常量池中生成一个字符串，再将栈中的引用指向该字符串。 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/String.png" alt></p>
-<p> 再来个经典例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> 1 String s1 = &quot;Hello&quot;;</span><br><span class="line"> 2 String s2 = &quot;Hello&quot;;</span><br><span class="line"> 3 String s3 = &quot;Hel&quot; + &quot;lo&quot;;</span><br><span class="line"> 4 String s4 = &quot;Hel&quot; + new String(&quot;lo&quot;);</span><br><span class="line"> 5 String s5 = new String(&quot;Hello&quot;);</span><br><span class="line"> 6 String s6 = s5.intern();</span><br><span class="line"> 7 String s7 = &quot;H&quot;;</span><br><span class="line"> 8 String s8 = &quot;ello&quot;;</span><br><span class="line"> 9 String s9 = s7 + s8;</span><br><span class="line">10           </span><br><span class="line">11 System.out.println(s1 == s2);  // true</span><br><span class="line">12 System.out.println(s1 == s3);  // true</span><br><span class="line">13 System.out.println(s1 == s4);  // false</span><br><span class="line">14 System.out.println(s1 == s9);  // false</span><br><span class="line">15 System.out.println(s4 == s5);  // false</span><br><span class="line">16 System.out.println(s1 == s6);  // true</span><br></pre></td></tr></table></figure>
-
-<p> s1 == s2这个非常好理解，s1、s2在赋值时，均使用的字符串字面量，说白话点，就是直接把字符串写死，在编译期间，这种字面量会直接放入class文件的常量池中，从而实现复用，载入运行时常量池后，s1、s2指向的是同一个内存地址，所以相等。</p>
-<p> s1 == s3这个地方有个坑，s3虽然是动态拼接出来的字符串，但是所有参与拼接的部分都是已知的字面量，在编译期间，这种拼接会被优化，编译器直接帮你拼好，因此String s3 = “Hel” + “lo”;在class文件中被优化成String s3 = “Hello”，所以s1 == s3成立。</p>
-<p>s1 == s4当然不相等，s4虽然也是拼接出来的，但new String(“lo”)这部分不是已知字面量，是一个不可预料的部分，编译器不会优化，必须等到运行时才可以确定结果，结合<strong>字符串不变</strong>定理，鬼知道s4被分配到哪去了，所以地址肯定不同 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/final.png" alt></p>
-</li>
-</ol>
-<p>   s1 == s9也不相等，道理差不多，虽然s7、s8在赋值的时候使用的字符串字面量，但是拼接成s9的时候，s7、s8作为<strong>两个变量</strong>，都是<strong>不可预料</strong>的，编译器毕竟是编译器，不可能当解释器用，不能在编译期被确定，所以不做优化，只能等到运行时，在堆中创建s7、s8拼接成的新字符串，在堆中地址不确定，不可能与方法区常量池中的s1地址相同 </p>
-<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/helnewstring.jpg" alt></p>
-<p>   s4 == s5已经不用解释了，绝对不相等，二者都在堆中，但地址不同。</p>
-<p>   s1 == s6这两个相等完全归功于intern方法，s5在堆中，内容为Hello ，intern方法会尝试将Hello字符串添加到常量池中，并返回其在常量池中的地址，因为常量池中已经有了Hello字符串，所以intern方法直接返回地址；而s1在编译期就已经指向常量池了，因此s1和s6指向同一地址，相等。</p>
-<p>   注意：<strong>只有使用引号包含文本的方式创建的String对象之间使用“+”连接产生的新对象才会被加入字符串池中</strong> </p>
-<p>   <strong>对于所有包含new方式新建对象（包括null）的“+”连接表达式，它所产生的新对象都不会被加入字符串池中</strong> </p>
-<h2 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h2><p>   Java中的常量池，实际上分为两种形态：<strong>静态常量池</strong>和<strong>运行时常量池</strong>。</p>
-<p>   ​     所谓<strong>静态常量池</strong>，即<em>.class文件中的常量池，class文件中的常量池不仅仅包含字符串(数字)字面量，还包含类、方法的信息，占用class文件绝大部分空间。这种常量池主要用于存放两大类常量：*</em>字面量<strong>(Literal)和</strong>符号引用量**(Symbolic References)，字面量相当于Java语言层面常量的概念，如文本字符串，声明为final的常量值等，符号引用则属于编译原理方面的概念，包括了如下三种类型的常量：</p>
-<ul>
-<li><p>类和接口的全限定名</p>
-</li>
-<li><p>字段名称和描述符</p>
-</li>
-<li><p>方法名称和描述符</p>
-<p>​     而<strong>运行时常量池</strong>，则是jvm虚拟机在完成类装载操作后，将class文件中的常量池载入到内存中，并保存在<strong>方法区</strong>中，我们常说的常量池，就是指方法区中的运行时常量池。</p>
-<p>运行时常量池相对于CLass文件常量池的另外一个重要特征是<strong>具备动态性</strong>，Java语言并不要求常量一定只有编译期才能产生，也就是并非预置入CLass文件中常量池的内容才能进入方法区运行时常量池，运行期间也可能将新的常量放入池中，这种特性被开发人员利用比较多的就是<strong>String类的intern()</strong>方法。</p>
-<p>String的intern()方法会查找在常量池中是否存在一份equal相等的字符串,如果有则返回该字符串的引用,如果没有则添加自己的字符串进入常量池。</p>
-</li>
-</ul>
-<p>   <strong>常量池的好处</strong> 常量池是为了避免频繁的创建和销毁对象而影响系统性能，其实现了对象的共享。 例如字符串常量池，在编译阶段就把所有的字符串文字放到一个常量池中。 </p>
-<p>   （1）节省内存空间：常量池中所有相同的字符串常量被合并，只占用一个空间。 </p>
-<p>   （2）节省运行时间：比较字符串时，==比equals()快。对于两个引用变量，只用==判断引用是否相等，也就可以判断实际值是否相等。 </p>
-<p>   参考博客：<a href="https://www.cnblogs.com/lizhangyong/p/8909329.html" target="_blank" rel="noopener">https://www.cnblogs.com/lizhangyong/p/8909329.html</a> </p>
-<p>   ​                   <a href="https://www.cnblogs.com/xiaoxi/p/6392154.html" target="_blank" rel="noopener">https://www.cnblogs.com/xiaoxi/p/6392154.html</a> </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/HttpServlet请求和响应/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/HttpServlet请求和响应/" class="post-title-link" itemprop="url">HttpServletRequest,HttpServletResponse</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:40:54" itemprop="dateCreated datePublished" datetime="2019-09-08T15:40:54+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="HttpServletRequest"><a href="#HttpServletRequest" class="headerlink" title="HttpServletRequest"></a><em>HttpServletRequest</em></h2><p>HttpServletRequest 对象是一个专门用来存储HTTP 请求信息的对象 </p>
-<h3 id="HttpServletRequest对象的由来"><a href="#HttpServletRequest对象的由来" class="headerlink" title="HttpServletRequest对象的由来"></a>HttpServletRequest对象的由来</h3><ul>
-<li>浏览器发送的http请求既要存储又要保证完整性，Servlet的解决方案就是创建一个对象进行存储，每接受一个请求，服务器就要创建一个对象进行存储</li>
-<li>HttpServletRequest对象中存储请求信息，服务器调用servlet时将request对象作为参数传给Servlet方法</li>
-</ul>
-<h3 id="HttpServletRequest常用方法"><a href="#HttpServletRequest常用方法" class="headerlink" title="HttpServletRequest常用方法"></a>HttpServletRequest常用方法</h3><ul>
-<li>getMethod（）获取请求方法</li>
-<li>getRequestUrl（ ）获取完整请求路径`</li>
-<li>String getServletPath（）返回调用的请求的 URL 的一部分（拦截器就用到了）</li>
-<li>String getParameter(String name)   以字符串形式返回请求参数的值 </li>
-<li>HttpSession getSession()   返回与该请求关联的当前 session 会话 </li>
-<li>Object getAttribute(String name)   以对象形式返回已命名属性的值 </li>
-</ul>
-<h3 id="HTTP请求格式"><a href="#HTTP请求格式" class="headerlink" title="HTTP请求格式"></a>HTTP请求格式</h3><p>请求行</p>
-<p>请求头</p>
-<p>请求空行</p>
-<p>请求体： 如有POST请求 那么数据体 在Form Data里 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hhttservlet1.png" alt></p>
-<h2 id="HttpServletResponse"><a href="#HttpServletResponse" class="headerlink" title="HttpServletResponse"></a>HttpServletResponse</h2><h3 id="HttpServletResponse常用方法"><a href="#HttpServletResponse常用方法" class="headerlink" title="HttpServletResponse常用方法"></a>HttpServletResponse常用方法</h3><ul>
-<li>void setContentType(String type)    设置被发送到客户端的响应的内容类型，一般printwiter会用到 </li>
-<li>PrintWriter getWriter() throws IOException  服务器输出字符数据到浏览器，这个方法是其父接口ServletResponse的方法</li>
-<li>ServletOutputStream getOutputStream() throws IOException 服务器输出字节数据到浏览器，这个方法也是其父接口ServletResponse的方法</li>
-</ul>
-<h3 id="HTTP响应体格式"><a href="#HTTP响应体格式" class="headerlink" title="HTTP响应体格式"></a>HTTP响应体格式</h3><p>响应行：协议/版本 响应状态码 状态码描述</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1xx 消息，一般是告诉客户端，请求已经收到了，正在处理，别急...</span><br><span class="line">2xx 处理成功，一般表示：请求收悉、我明白你要的、请求已受理、已经处理完成等信息.</span><br><span class="line">3xx 重定向到其它地方。它让客户端再发起一个请求以完成整个处理。</span><br><span class="line">4xx 处理发生错误，责任在客户端，如客户端的请求一个不存在的资源，客户端未被授权，禁止访问等。</span><br><span class="line">5xx 处理发生错误，责任在服务端，如服务端抛出异常，路由出错，HTTP版本不支持等。</span><br></pre></td></tr></table></figure>
-
-<p>响应头：键值对形式 ，例如Content-Type：服务器告诉客户端本次响应体数据格式以及编码格式</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/httpservlet2.png" alt></p>
-<p>响应空行</p>
-<p>响应体：传输的数据</p>
-<h3 id="验证码部分代码"><a href="#验证码部分代码" class="headerlink" title="验证码部分代码"></a>验证码部分代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class LoginFilter extends GenericFilter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest req = (HttpServletRequest) servletRequest;</span><br><span class="line">        HttpServletResponse resp=(HttpServletResponse)servletResponse;</span><br><span class="line"></span><br><span class="line">        if (&quot;POST&quot;.equalsIgnoreCase(req.getMethod())&amp;&amp;&quot;/doLogin&quot;.equals(req.getServletPath()))&#123;</span><br><span class="line">            String code = req.getParameter(&quot;code&quot;);</span><br><span class="line">            String verify_code =(String) req.getSession().getAttribute(&quot;verify_code&quot;);</span><br><span class="line">            if (code==null||&quot;&quot;.equals(code)||!verify_code.toLowerCase().equals(code.toLowerCase()))&#123;</span><br><span class="line">                resp.setContentType(&quot;application/json;charset=utf-8&quot;);</span><br><span class="line">                PrintWriter out = resp.getWriter();</span><br><span class="line">                //RespBean.error(&quot;验证码错误&quot;))是一个对象，RestController=controller+responsebody把对象转换成json字符串输出</span><br><span class="line">                //ObjectMapper是jackson的李哥类，用来json和对象的相互转化</span><br><span class="line">                out.write(new ObjectMapper().writeValueAsString(RespBean.error(&quot;验证码错误&quot;)));</span><br><span class="line">                out.flush();</span><br><span class="line">                out.close();</span><br><span class="line">                return;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                filterChain.doFilter(req,resp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            filterChain.doFilter(req,resp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/过滤器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/过滤器/" class="post-title-link" itemprop="url">过滤器</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:38:59" itemprop="dateCreated datePublished" datetime="2019-09-08T15:38:59+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h1><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ul>
-<li><p>对服务器接受的资源和响应给浏览器的资源进行管理</p>
-</li>
-<li><p>保护servlet</p>
-</li>
-</ul>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ul>
-<li><p>创建一个实现Filter接口的普通java类</p>
-</li>
-<li><p>覆写接口的方法</p>
-<p>init方法：服务器启动即执行，资源初始化</p>
-<p>doFilter方法：拦截请求，在此方法中对资源实现管理  要手动对资源放行：chain.doFilter(request,response)</p>
-<p>destroy方法：服务器关闭</p>
-</li>
-<li><p>在web.xml配置过滤器（是服务器在使用过滤器）  </p>
-<p>url-patten：/*表示拦截所有请求。</p>
-</li>
-</ul>
-<p>​       url-patten：*.do 表示所有以.do结尾的请求。一般用来进行模块拦截。</p>
-<p>​       url-patten：/ts 表示拦截指定url的请求，针对某个servlet拦截，保护servlet</p>
-<h3 id="过滤器生命周期：服务器启动到关闭。"><a href="#过滤器生命周期：服务器启动到关闭。" class="headerlink" title="过滤器生命周期：服务器启动到关闭。"></a>过滤器生命周期：服务器启动到关闭。</h3><h3 id="执行机制"><a href="#执行机制" class="headerlink" title="执行机制"></a>执行机制</h3><p>浏览器发起请求到服务器，服务器接到请求后，根据url在web.xml中找到对应的过滤器执行doFilter方法，该方法对此次请求进行处理后如果符合则放行，放行后还有其他符合要求的进行过滤，找到执行对应的servlet进行处理。servlet对请求处理完毕后，service方法结束。还需继续返回相应的doFilter检修执行</p>
-<h3 id="验证码拦截器"><a href="#验证码拦截器" class="headerlink" title="验证码拦截器"></a>验证码拦截器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class LoginFilter extends GenericFilter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest req = (HttpServletRequest) servletRequest;</span><br><span class="line">        HttpServletResponse resp=(HttpServletResponse)servletResponse;</span><br><span class="line"></span><br><span class="line">        if (&quot;POST&quot;.equalsIgnoreCase(req.getMethod())&amp;&amp;&quot;/doLogin&quot;.equals(req.getServletPath()))&#123;</span><br><span class="line">            String code = req.getParameter(&quot;code&quot;);</span><br><span class="line">            String verify_code =(String) req.getSession().getAttribute(&quot;verify_code&quot;);</span><br><span class="line">            if (code==null||&quot;&quot;.equals(code)||!verify_code.toLowerCase().equals(code.toLowerCase()))&#123;</span><br><span class="line">                resp.setContentType(&quot;application/json;charset=utf-8&quot;);</span><br><span class="line">                PrintWriter out = resp.getWriter();</span><br><span class="line">                //RespBean.error(&quot;验证码错误&quot;))是一个对象，RestController=controller+responsebody把对象转换成json字符串输出</span><br><span class="line">                //ObjectMapper是jackson的李哥类，用来json和对象的相互转化</span><br><span class="line">                out.write(new ObjectMapper().writeValueAsString(RespBean.error(&quot;验证码错误&quot;)));</span><br><span class="line">                out.flush();</span><br><span class="line">                out.close();</span><br><span class="line">                return;</span><br><span class="line">            &#125;else &#123;</span><br><span class="line">                filterChain.doFilter(req,resp);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            filterChain.doFilter(req,resp);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Cookie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/08/Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
-<p>识别返回用户包括三个步骤：</p>
-<ul>
-<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
-<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
-<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
-</ul>
-<p>cookie设置过程：</p>
-<ul>
-<li><strong>客户端发送一个http请求到服务器端</strong> </li>
-<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
-<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
-<li><strong>服务器端发送一个http响应到客户端</strong></li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
-<p>这里给一个Cookie响应头例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
-
-<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E5%B1%9E%E6%80%A7.png" alt></p>
-<p>使用：</p>
-<ol>
-<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置最大生命周期（以秒为单位）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>发送Cookie到HTTP响应头</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
-
-<p> 特点：</p>
-<ol>
-<li><p>这是浏览器端的数据存储技术</p>
-</li>
-<li><p>数据声明是在服务器</p>
-</li>
-<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
-<p>​                定时存储：到期之后才会没得</p>
-</li>
-</ol>
-<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/session.png" alt></p>
-<p>如图，浏览器中只有jessionId的键值对，cookie对象中也只有jessionid，用户信息均存在服务器中，用户下次发送请求中会携带jessionId，服务器会识别。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/session2.png" alt></p>
-<p>对比可知，cookie直接以 [{user:xavier},{gender:man}]的格式放在客户端cookie上的，而session是用[{“JsessionId:xxxx”}]的格式放在客户端cookie，然后在再次访问的时候运用读取JessionId的值即(xxxx)的方式在服务器域对象里面找到对应的数据，既 [{user:xavier},{gender:man}]。 </p>
-<p>特点：</p>
-<ol>
-<li>存储在服务器</li>
-<li>服务器进行创建</li>
-<li>依赖Cookie技术</li>
-<li>一次会话</li>
-<li>默认存储时间30分钟</li>
-</ol>
-<p>使用：</p>
-<ol>
-<li><p>创建session对象/获取session对象         </p>
-</li>
-<li><p>HttpSession hs=request.getSession()</p>
-<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
-<p>如果没有创建，那么新建一个</p>
-</li>
-<li><p>设置session存储时间 hs.invalidate( )</p>
-</li>
-<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
-<p>获取数据 hs.getAttribute(String name)</p>
-</li>
-</ol>
-<p>使用情景</p>
-<p>​         用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
-<p>注意</p>
-<p>​         JESSIONID是在浏览器中，关闭浏览器就没得了</p>
-<p>​         存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
-<p>作用域</p>
-<p>​          一次会话（即可以多次请求，主要session没失效）</p>
-<p>代码示例</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">    //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2632,7 +2759,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2687,7 +2814,9 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2740,7 +2869,9 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

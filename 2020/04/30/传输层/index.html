@@ -112,13 +112,13 @@
   </script>
 
 
-  <meta name="description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP协议特点 面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部 序号（seq）：TCP连接中传送的字节">
+  <meta name="description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
 <meta name="keywords" content="计算机网络">
 <meta property="og:type" content="article">
 <meta property="og:title" content="传输层">
 <meta property="og:url" content="http://yoursite.com/2020/04/30/传输层/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP协议特点 面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部 序号（seq）：TCP连接中传送的字节">
+<meta property="og:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png">
@@ -131,10 +131,10 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-05-07T14:13:02.628Z">
+<meta property="og:updated_time" content="2020-10-12T07:46:43.164Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="传输层">
-<meta name="twitter:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP协议特点 面向连接 提供可靠交付服务 全双工通信 发送方，接收方都有缓存来存放数据 面向字节流   TCP报文首部 序号（seq）：TCP连接中传送的字节">
+<meta name="twitter:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
 <meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png">
 
 
@@ -500,7 +500,11 @@
 <li>无拥塞控制，适合实时应用，如网络开会</li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png" alt></p>
-<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
+<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><p>TCP连接</p>
+<p>每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80</p>
+<p>每一个TCP连接唯一地被通信两端（即两个套接字）所确定。即：</p>
+<p>TCP连接::={socket1，socket2}={（IP1：port1），（IP2：port2）}</p>
+<h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
 <li>面向连接</li>
 <li>提供可靠交付服务</li>
 <li>全双工通信 发送方，接收方都有缓存来存放数据</li>
@@ -530,12 +534,7 @@
 <p>round2：服务器端返回确认，ACK=1，seq=v，ack=u+1,此时处于半关闭状态</p>
 <p>round3：服务器端发送连接释放报文，关闭TCP连接，FIN=1，ACK=1，seq=w，ack=u+1</p>
 <p>round4：客户端返回确认报文段，结束</p>
-<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>为了防止历史连接，2次就不能最后发送RST报文给服务端</p>
-<ul>
-<li>一个旧（不是需要的）的SYN报文先于最新的（需要的）SYN报文到达服务端</li>
-<li>服务端回一个报文给客户端</li>
-<li>客户端判断自身的上下文（序列号过期或超时），判断这是个历史连接，发送一个RST报文给我服务端</li>
-</ul>
+<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>假设客户端请求建立连接，发给服务器SYN包等待服务器确认，服务器收到确认后，如果是两次握手，假设服务器给客户端在第二次握手时发送数据，数据从服务器发出，服务器认为连接已经建立，但在发送数据的过程中数据丢失，客户端认为连接没有建立，会进行重传。假设每次发送的数据一直在丢失，客户端一直SYN，服务器就会产生多个无效连接，占用资源，这个时候服务器可能会挂掉。这个现象就是我们听过的“SYN的洪水攻击”。<br>总结：第三次握手是为了防止：如果客户端迟迟没有收到服务器返回确认报文，这时会放弃连接，重新启动一条连接请求，但问题是：服务器不知道客户端没有收到，所以他会收到两个连接，浪费连接开销。如果每次都是这样，就会浪费多个连接开销 </p>
 <h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
 <p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
 <h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
@@ -737,7 +736,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -792,7 +791,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -845,7 +846,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

@@ -380,6 +380,1181 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/mysql锁及mvcc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/15/mysql锁及mvcc/" class="post-title-link" itemprop="url">mysql锁及mvcc</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-15 13:09:07" itemprop="dateCreated datePublished" datetime="2020-09-15T13:09:07+08:00">2020-09-15</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="锁的分类"><a href="#锁的分类" class="headerlink" title="锁的分类"></a>锁的分类</h2><ul>
+<li><p>无锁</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 明确指定主键，但不存在该主键的值(没有数据，当然不会有锁)</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="number">-1</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>表锁</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 主键不明确</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">name</span>=<span class="string">'Mouse'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&lt;&gt;<span class="string">'3'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span> <span class="keyword">LIKE</span> <span class="string">'3'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>行锁</p>
+<p>加锁的方式：<strong>自动加锁</strong>。对于UPDATE、DELETE和INSERT语句，InnoDB会自动给涉及数据集加排他锁；对于<strong>普通SELECT</strong>语句，InnoDB<strong>不会加</strong>任何锁；当然我们也可以显示的加锁 </p>
+<p>假设有个表 products ，字段id、name、type，<strong>id</strong>是主键。 <strong>只有「明确」指定主键，才会执行锁，否则将会执行表锁</strong> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 明确指定主键</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="number">3</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="number">3</span> <span class="keyword">AND</span> <span class="keyword">type</span>=<span class="number">1</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="行锁算法（机制）"><a href="#行锁算法（机制）" class="headerlink" title="行锁算法（机制）"></a>行锁算法（机制）</h2><ul>
+<li><p>普通行锁：对于键值在条件范围内，且存在的记录，使用” Record Lock “，即普通的行锁机制</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">'3'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>间隙锁：对于键值在条件范围内但并<strong>不存在</strong>的记录，叫做” 间隙（GAP) “，InnoDB会对这个“间隙”加锁，这种锁机制就是所谓的” Gap Lock “(间隙锁)；</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#products表内并没有id=10，假如有一个9，会将9之后的锁住</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&gt;<span class="string">'10'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>（行&amp;间隙） 对于<strong>存在于不存在</strong>的数据同时加锁，则称为” Next-Key Lock “ </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#假设有一个id=7，7就是存在的，(5,7),(7,10)不存在，7存在</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&gt;<span class="string">'5'</span> <span class="keyword">and</span> <span class="keyword">id</span>&lt;<span class="string">'10'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="行表锁具体应用"><a href="#行表锁具体应用" class="headerlink" title="行表锁具体应用"></a>行表锁具体应用</h2><p>共享锁&amp;排他锁</p>
+<p><strong>行锁和表锁是锁粒度的概念，共享锁和排它锁是他们的具体实现</strong> </p>
+<p>共享锁：读锁</p>
+<p>只能读，不能写</p>
+<p>表锁：写锁</p>
+<p>连读都不行</p>
+<h2 id="表锁算法"><a href="#表锁算法" class="headerlink" title="表锁算法"></a>表锁算法</h2><p>意向锁</p>
+<ul>
+<li>当一个事务在需要获取资源的锁定时，如果该资源已经被排他锁占用，则数据库会自动给该事务申请一个该表的意向锁  </li>
+</ul>
+<p>详细看这篇博客</p>
+<p>自增锁</p>
+<ul>
+<li>事务插入自增类型的列时获取自增锁 </li>
+</ul>
+<h2 id="锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><a href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果" class="headerlink" title="锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"></a>锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</h2><ul>
+<li><p><strong>读未提交</strong>(Read Uncommitted) ： 此时select语句不加任何锁。此时并发最高，但会产生<strong>脏读</strong> </p>
+<p><strong>脏读</strong>：读取到尚未提交的数据</p>
+</li>
+<li><p><strong>读提交</strong>(Read Committed, RC) ：会出现<strong>不可重复读</strong>问题</p>
+<p>普通select语句是<strong>快照读</strong>（MVCC的内容，所以是搭配使用）</p>
+<p>update语句、delete语句、显示加锁的select语句（select … in share mode 或者 select … for update），使用<strong>当前读</strong>， 毕竟这些操作都要读取当前数据最新版本嘛 </p>
+<p><strong>不可重复读</strong>： 事务A首先读取了一条数据，然后执行逻辑的时候，事务B将这条数据改变了，然后事务A再次读取的时候，发现数据不匹配了，就是所谓的不可重复读了 </p>
+</li>
+<li><p><strong>可重复读</strong>(Repeated Read, RR) ：会出现<strong>幻读</strong>问题</p>
+<p>普通select语句也是<strong>快照读</strong> （和RC有区别的）</p>
+<p>update语句、delete语句、显示加锁的select语句（select … in share mode 或者 select … for update），使用<strong>当前读</strong></p>
+<p><strong>幻读</strong>： 事务A首先根据条件索引得到N条数据，然后事务B改变了这N条数据之外的M条或者增添了M条符合事务A搜索条件的数据，导致事务A再次搜索发现有N+M条数据了，就产生了幻读</p>
+<p><strong>不可重复读和幻读区别</strong>：一个是修改（update），一个是增加（insert）数据</p>
+</li>
+<li><p><strong>串行化</strong>(Serializable) : 此时所有select语句都会被<strong>隐式加锁</strong>：select … in share mode. </p>
+</li>
+</ul>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MVCC多版本并发控制，是现代数据库（包括 <code>MySQL</code>、<code>Oracle</code>、<code>PostgreSQL</code> 等）引擎实现中常用的处理<strong>读写冲突</strong>的手段 </p>
+<p>可以认为MVCC是行级锁的一个变种，但是它在很多情况下避免了加锁操作，因此开销更低。大多数的MVCC都实现了<strong>非阻塞的读操作，写操作也只锁定必要的行</strong> </p>
+<p><strong>对数据库的任何修改的提交都不会直接覆盖之前的数据，而是产生一个新的版本与老版本共存，使得读取时可以完全不加锁</strong>。这样读某一个数据时，事务可以根据隔离级别选择要读取哪个版本的数据。过程中完全不需要加锁。<br>这样，实现两个隔离级别就非常容易： </p>
+<ul>
+<li>Read Committed - 一个事务读取数据时总是读这个数据最近一次被commit的版本 </li>
+<li>Repeatable Read - 一个事务读取数据时总是读取当前事务开始之前最后一次被commit的版本 </li>
+</ul>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>对于使用<code>InnoDB</code>存储引擎的表来说，它的聚簇索引记录中都包含两个必要的隐藏列 </p>
+<ul>
+<li><p>trx_id ：事务ID</p>
+</li>
+<li><p>roll_pointer ：回滚指针</p>
+<p>每次对某条聚簇索引记录进行改动时，都会把旧的版本写入到<code>undo日志</code>中，然后这个隐藏列就相当于一个指针，可以通过它来找到该记录修改前的信息 </p>
+</li>
+</ul>
+<h4 id="3个概念"><a href="#3个概念" class="headerlink" title="3个概念"></a><strong>3个概念</strong></h4><ul>
+<li><p>快照读</p>
+<p><strong>select</strong>时的读就是快照读，对于RC，RR是有区别的，因而产生ReadView的时机也不一样</p>
+</li>
+<li><p>当前读</p>
+<p><strong>更新数据</strong>时，都是先读后写，而这个读，就是当前读。读取数据时，读取该条数据的<strong>已经提交的</strong>最新的事务，生成的 readView </p>
+</li>
+<li><p>ReadView</p>
+<p>Read View就是事务进行<strong>快照读</strong>操作的时候生产的<strong>读视图</strong>(Read View)，在该事务执行的快照读的那一刻，会生成数据库系统当前的一个快照，记录并维护系统当前活跃事务的ID </p>
+<ul>
+<li>m_ids：表示在生成ReadView时当前系统中活跃的读写事务的事务id列表。</li>
+<li>min_trx_id：表示在生成ReadView时当前系统中活跃的读写事务中最小的事务id，也就是m_ids中的最小值。</li>
+<li>max_trx_id：表示生成ReadView时系统中应该分配给下一个事务的id值。</li>
+<li>creator_trx_id：表示生成该ReadView的事务的事务id</li>
+</ul>
+</li>
+</ul>
+<h4 id="RC情况下"><a href="#RC情况下" class="headerlink" title="RC情况下"></a>RC情况下</h4><p>假设数据库内一张表t包含一条记录，插入该记录的事务id为80</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Transaction 100</span><br><span class="line">BEGIN;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;关羽&apos; WHERE id = 1;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;张飞&apos; WHERE id = 1;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Transaction 200</span><br><span class="line">BEGIN;</span><br><span class="line"> </span><br><span class="line"># 更新了一些别的表的记录</span><br></pre></td></tr></table></figure>
+
+<p>此时id为1的记录的版本链</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%811.png" alt></p>
+<p> 假设现在有一个使用<code>READ COMMITTED</code>隔离级别的事务开始执行，<strong>注意100没提交</strong> </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用READ COMMITTED隔离级别的事务</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment"># SELECT1：Transaction 100、200未提交</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>; <span class="comment"># 得到的列c的值为'刘备'</span></span><br></pre></td></tr></table></figure>
+
+<p> 这个<code>SELECT1</code>的执行过程如下 </p>
+<ul>
+<li><p>在执行<code>SELECT</code>语句时会先生成一个<code>ReadView</code>，<code>ReadView</code>的<code>m_ids</code>列表的内容就是<code>[100, 200]</code>。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;关羽&#39;</code>，该版本的<code>trx_id</code>值也为<code>100</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;刘备&#39;</code>，该版本的<code>trx_id</code>值为<code>80</code>，小于<code>m_ids</code>列表中最小的事务id<code>100</code>，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;刘备&#39;</code>的记录</p>
+<p>之后，我们把事务id为<code>100</code>的事务提交一下 </p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Transaction 100</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'关羽'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'张飞'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+
+<p>再到事务id为<code>200</code>的事务中更新一下表<code>t</code>中<code>id</code>为1的记录 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Transaction 200</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 更新了一些别的表的记录</span></span><br><span class="line">...</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'赵云'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">UPDATE</span> t <span class="keyword">SET</span> c = <span class="string">'诸葛亮'</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>此刻，表<code>t</code>中<code>id</code>为<code>1</code>的记录的版本链 ，<strong>100提交，200未提交</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%812.png" alt></p>
+<p> 再到刚才使用<code>READ COMMITTED</code>隔离级别的事务中继续查找这个id为<code>1</code>的记录 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SELECT2：Transaction 100提交，Transaction 200未提交</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="number">1</span>; <span class="comment"># 得到的列c的值为'张飞</span></span><br></pre></td></tr></table></figure>
+
+<p> 这个<code>SELECT2</code>的执行过程如下 </p>
+<ul>
+<li><p>在执行<code>SELECT</code>语句时会先生成一个<code>ReadView</code>，<code>ReadView</code>的<code>m_ids</code>列表的内容就是<code>[200]</code>（事务id为<code>100</code>的那个事务已经提交了，所以生成快照时就没有它了）。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;诸葛亮&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;赵云&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，比<code>m_ids</code>列表中最小的事务id<code>200</code>还要小，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;张飞&#39;</code>的记录。</p>
+<p><strong>总结一下就是：使用READ COMMITTED隔离级别的事务在每次查询开始时都会生成一个独立的ReadView</strong> </p>
+</li>
+</ul>
+<h4 id="RR情况下（-在第一次读取数据时生成一个ReadView-）"><a href="#RR情况下（-在第一次读取数据时生成一个ReadView-）" class="headerlink" title="RR情况下（ 在第一次读取数据时生成一个ReadView ）"></a>RR情况下（ <strong>在第一次读取数据时生成一个ReadView</strong> ）</h4><p>还是之前的情况</p>
+<p>这个<code>SELECT1</code>的执行过程如下（<strong>100未提交</strong>） </p>
+<ul>
+<li><p>在执行<code>SELECT</code>语句时会先生成一个<code>ReadView</code>，<code>ReadView</code>的<code>m_ids</code>列表的内容就是<code>[100, 200]</code>。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;关羽&#39;</code>，该版本的<code>trx_id</code>值也为<code>100</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;刘备&#39;</code>，该版本的<code>trx_id</code>值为<code>80</code>，小于<code>m_ids</code>列表中最小的事务id<code>100</code>，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;刘备&#39;</code>的记录</p>
+<p>这个<code>SELECT2</code>的执行过程如下 <strong>（100提交，200提交）</strong></p>
+</li>
+<li><p>因为之前已经生成过<code>ReadView</code>了，所以此时直接复用之前的<code>ReadView</code>，之前的<code>ReadView</code>中的<code>m_ids</code>列表就是<code>[100, 200]</code>。</p>
+</li>
+<li><p>然后从版本链中挑选可见的记录，从图中可以看出，最新版本的列<code>c</code>的内容是<code>&#39;诸葛亮&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，在<code>m_ids</code>列表内，所以不符合可见性要求，根据<code>roll_pointer</code>跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;赵云&#39;</code>，该版本的<code>trx_id</code>值为<code>200</code>，也在<code>m_ids</code>列表内，所以也不符合要求，继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;张飞&#39;</code>，该版本的<code>trx_id</code>值为<code>100</code>，而<code>m_ids</code>列表中是包含值为<code>100</code>的事务id的，所以该版本也不符合要求，同理下一个列<code>c</code>的内容是<code>&#39;关羽&#39;</code>的版本也不符合要求。继续跳到下一个版本。</p>
+</li>
+<li><p>下一个版本的列<code>c</code>的内容是<code>&#39;刘备&#39;</code>，该版本的<code>trx_id</code>值为<code>80</code>，<code>80</code>小于<code>m_ids</code>列表中最小的事务id<code>100</code>，所以这个版本是符合要求的，最后返回给用户的版本就是这条列<code>c</code>为<code>&#39;刘备&#39;</code>的记录</p>
+<p><strong>也就是说两次<code>SELECT</code>查询得到的结果是重复的，记录的列<code>c</code>值都是<code>&#39;刘备&#39;</code>，这就是<code>可重复读</code>的含义</strong> </p>
+</li>
+</ul>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p> <a href="https://blog.csdn.net/qq_24313635/article/details/102888242" target="_blank" rel="noopener">https://blog.csdn.net/qq_24313635/article/details/102888242</a> </p>
+<p> <a href="https://blog.csdn.net/zcl_love_wx/article/details/83305645" target="_blank" rel="noopener">https://blog.csdn.net/zcl_love_wx/article/details/83305645</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/09/新生代为啥要分三块区域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/09/新生代为啥要分三块区域/" class="post-title-link" itemprop="url">新生代为啥要分三块区域</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-09 16:50:20" itemprop="dateCreated datePublished" datetime="2020-09-09T16:50:20+08:00">2020-09-09</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>java虚拟机根据对象生命周期的不同把堆内存划分为几块，一般分为新生代、老年代和永久代（对HotSpot虚拟机而言） </p>
+<h2 id="为什么堆内存要分区呢"><a href="#为什么堆内存要分区呢" class="headerlink" title="为什么堆内存要分区呢"></a>为什么堆内存要分区呢</h2><p>给堆内存分代是为了提高对象内存分配和垃圾回收的效率。试想一下，如果堆内存没有区域划分，所有的新创建的对象和生命周期很长的对象放在一起，随着程序的执行，堆内存需要频繁进行垃圾收集，而每次回收都要遍历所有的对象，遍历这些对象所花费的时间代价是巨大的，会严重影响我们的GC效率，这简直太可怕了。</p>
+<p> 有了内存分代，情况就不同了，新创建的对象会在新生代中分配内存，经过多次回收仍然存活下来的对象存放在老年代中 ， 新生代中的对象存活时间短，只需要在新生代区域中频繁进行GC，老年代中对象生命周期长，内存回收的频率相对较低，不需要频繁进行回收 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E4%BB%A3.jpg" alt></p>
+<h2 id="为什么Survivor不是0块"><a href="#为什么Survivor不是0块" class="headerlink" title="为什么Survivor不是0块"></a>为什么Survivor不是0块</h2><p>Survivor如果是0的话，那在eden中垃圾回收之后存活的对象都会进入老生代，这样老生代的内存空间很快就被占满了，从而触发最耗时的 Full GC </p>
+<h2 id="为什么Survivor不是1块"><a href="#为什么Survivor不是1块" class="headerlink" title="为什么Survivor不是1块"></a>为什么Survivor不是1块</h2><p>如果 Survivor 分区是 1 个的话，假设我们把两个区域分为 1:1，那么任何时候都有一半的内存空间是闲置的，显然空间利用率太低 </p>
+<p>但如果设置内存空间的比例是 8:2 ，只是看起来似乎“很好”，假设新生代的内存为 100 MB（ Survivor 大小为 20 MB ），现在有 70 MB 对象进行垃圾回收之后，剩余活跃的对象为 15 MB 进入 Survivor 区，这个时候新生代可用的内存空间只剩了 5 MB，这样很快又要进行垃圾回收操作 </p>
+<h2 id="堆内存分3块有什么好处"><a href="#堆内存分3块有什么好处" class="headerlink" title="堆内存分3块有什么好处"></a>堆内存分3块有什么好处</h2><p>HotSpot将新生代划分为三块，一块较大的Eden空间和两块较小的Survivor空间，默认比例为8：1：1。划分的目的是因为HotSpot采用复制算法来回收新生代，设置这个比例是为了充分利用内存空间，减少浪费。新生成的对象在Eden区分配（大对象除外，大对象直接进入老年代），当Eden区没有足够的空间进行分配时，虚拟机将发起一次Minor GC。 </p>
+<p>GC开始时，对象只会存在于Eden区和From Survivor区，To Survivor区是空的（作为保留区域）。GC进行时，Eden区中所有存活的对象都会被复制到To Survivor区，而在From Survivor区中，仍存活的对象会根据它们的年龄值决定去向，年龄值达到年龄阀值（默认为15，新生代中的对象每熬过一轮垃圾回收，年龄值就加1，GC分代年龄存储在对象的header中）的对象会被移到老年代中，没有达到阀值的对象会被复制到To Survivor区。接着清空Eden区和From Survivor区，新生代中存活的对象都在To Survivor区。接着， From Survivor区和To Survivor区会交换它们的角色，也就是新的To Survivor区就是上次GC清空的From Survivor区，新的From Survivor区就是上次GC的To Survivor区，总之，不管怎样都会保证To Survivor区在一轮GC后是空的 </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/29/vue-cli3构建Vue项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/07/29/vue-cli3构建Vue项目/" class="post-title-link" itemprop="url">vue-cli3构建Vue项目</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-29 17:33:11" itemprop="dateCreated datePublished" datetime="2020-07-29T17:33:11+08:00">2020-07-29</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/仿牛客项目/" itemprop="url" rel="index"><span itemprop="name">仿牛客项目</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>vue-cli3构建Vue项目</p>
+<p>shift+右键打开shell，使用create vue 项目名指令</p>
+<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-1.png" alt></p>
+<p>选择manually select，使用空格选择</p>
+<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-2.png" alt></p>
+<p>这里没有选择使用历史模式</p>
+<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-3.png" alt></p>
+<p>选择在package.json中放配置，不作为未来工程的一个模板</p>
+<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-4.png" alt></p>
+<p>进入有package.json的文件夹，运行npm run serve启动</p>
+<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-5.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/26/剑指offer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/07/26/剑指offer/" class="post-title-link" itemprop="url">剑指offer</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-26 13:01:29" itemprop="dateCreated datePublished" datetime="2020-07-26T13:01:29+08:00">2020-07-26</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/剑指offer/" itemprop="url" rel="index"><span itemprop="name">剑指offer</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>[TOC]</p>
+<h2 id="快慢指针"><a href="#快慢指针" class="headerlink" title="快慢指针"></a>快慢指针</h2><h3 id="精选top287-寻找重复数"><a href="#精选top287-寻找重复数" class="headerlink" title="精选top287.寻找重复数"></a>精选top287.寻找重复数</h3><p>给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,3,4,2,2]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>把数组当成链表，0-nums[0]-nums[nums[0]],这样因为有重复数字，会出现环</li>
+<li>快指针走2步，慢指针走1步，当快指针与慢指针相遇时，假设慢指针n步，则快指针2n步</li>
+<li>slow走了n步，在环内走了n-m步，所以需要再走m步到环的入口</li>
+<li>但我们不知道m具体多少，所以需要新指针从0开始和slow一起走，直到相遇</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findDuplicate</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//把数组当成链表，0-nums[0]-nums[nums[0]],这样因为有重复数字，会出现环</span></span><br><span class="line">        <span class="keyword">int</span> slow=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> fast=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> last=<span class="number">0</span>;</span><br><span class="line">        <span class="comment">//快指针走2步，慢指针走1步，当快指针与慢指针相遇时，假设慢指针n步，则快指针2n步，所以n%c==0</span></span><br><span class="line">        <span class="comment">//slow走了n步，在环内走了n-m步，所以需要再走m步到环的入口</span></span><br><span class="line">        <span class="comment">//但我们不知道m具体多少，所以需要新指针从0开始和slow一起走，直到相遇</span></span><br><span class="line">        slow=nums[slow];</span><br><span class="line">        fast=nums[nums[fast]];</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            slow=nums[slow];</span><br><span class="line">            fast=nums[nums[fast]];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(slow!=last)&#123;</span><br><span class="line">            last=nums[last];</span><br><span class="line">            slow=nums[slow];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> slow;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="精选top141-环形链表"><a href="#精选top141-环形链表" class="headerlink" title="精选top141.环形链表"></a>精选top141.环形链表</h3><p><strong>给定一个链表，判断链表中是否有环</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [3,2,0,-4], pos = 1</span><br><span class="line">输出：true</span><br><span class="line">解释：链表中有一个环，其尾部连接到第二个节点。</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>快慢指针，存在环必会相遇</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">//快指针选2步，更多步的话可能会跳过快指针</span></span><br><span class="line">    <span class="comment">//只比慢指针慢一步的话，必然相遇</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasCycle</span><span class="params">(ListNode head)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head==<span class="keyword">null</span>||head.next==<span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        ListNode slow=head;</span><br><span class="line">        ListNode fast=head.next;</span><br><span class="line">        <span class="keyword">while</span>(slow!=fast)&#123;</span><br><span class="line">            <span class="keyword">if</span>(fast==<span class="keyword">null</span>||fast.next==<span class="keyword">null</span>)</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            slow=slow.next;</span><br><span class="line">            fast=fast.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="异或等位运算"><a href="#异或等位运算" class="headerlink" title="异或等位运算"></a>异或等位运算</h2><h3 id="65-不用加减乘除做加法"><a href="#65-不用加减乘除做加法" class="headerlink" title="65.不用加减乘除做加法"></a>65.不用加减乘除做加法</h3><p>写一个函数，求两个整数之和，要求在函数体内不得使用 “+”、“-”、“*”、“/” 四则运算符号。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: a = 1, b = 1</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>将2个数相加转换二进制相加，即会产生进位与非进位，转换成进位+非进位，除非加完进位等于0了，循环结束，否则会一直有进位来循环</li>
+<li>进位呢相当于与操作，即2个同为1才为1，当然在与操作的基础上还得左移一位,1+1</li>
+<li>非进位呢相当于异或操作，即不同为1，相同为0，0+1,1+0,0+0</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    //思路：将2个数相加转换二进制相加，即会产生进位与非进位，转换成进位+非进位，除非加完进位等于0了，循环结束，否则会一直有进位来循环</span><br><span class="line">    //进位呢相当于与操作，即2个同为1才为1，当然在与操作的基础上还得左移一位,1+1</span><br><span class="line">    //非进位呢相当于异或操作，即不同为1，相同为0，0+1,1+0,0+0</span><br><span class="line">    public int add(int a, int b) &#123;</span><br><span class="line">        while(b!=0)&#123;</span><br><span class="line">            int c=(a&amp;b)&lt;&lt;1;</span><br><span class="line">            //b保存进位</span><br><span class="line">            a=a^b;</span><br><span class="line">            //a保存非进位</span><br><span class="line">            b=c;</span><br><span class="line">        &#125;</span><br><span class="line">        return a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="56-1数组中数字出现的字数"><a href="#56-1数组中数字出现的字数" class="headerlink" title="56-1数组中数字出现的字数"></a>56-1数组中数字出现的字数</h3><p> 一个整型数组 <code>nums</code> 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。 </p>
+<p><strong>解题思路</strong></p>
+<p>异或：相同为0，不同为1</p>
+<p>与：同为1才是1，否则是0</p>
+<p>只有2个不一样的值，对所有数据进行异或操作，最后的结果就是这两个不一样数字异或的结果。所以考虑通过这个结果将3个不一样的数字分开到2组，实际上异或的结果值中肯定有1位是1，我们选择最低位的1（因为容易找），除了这个1其余为0，将数组所有数字和结果进行与操作，相同数字我们很容易放到一边，因为2个不同数字进行异或结果的那个1意味着在这一位上2个数字是不一样的，那进行与操作分类是也会被分到2组</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] singleNumbers(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> x=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="comment">//找到最近的一个1的位数</span></span><br><span class="line">            x=x^i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> flag=x&amp;(-x);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>((flag&amp;i)==<span class="number">0</span>)&#123;</span><br><span class="line">                res[<span class="number">0</span>]^=i;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                res[<span class="number">1</span>]^=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="56-2数组中数字出现的字数II"><a href="#56-2数组中数字出现的字数II" class="headerlink" title="56-2数组中数字出现的字数II"></a>56-2数组中数字出现的字数II</h3><p>在一个数组 <code>nums</code> 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [3,4,3,3]</span><br><span class="line">输出：4</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li><p>通过<strong>与运算</strong>可以获得每个数字最后一位的值，然后<strong>无符号右移</strong>看第二位数字</p>
+</li>
+<li><p>最终将所有数字每位之和放在一个32位的数组里面，将数组中每一个数字<strong>%3</strong>的结果就是只出现一次的数字</p>
+</li>
+<li><p>最后将counts数组中的数进行<strong>或操作</strong>得到结果res</p>
+<p><strong>代码</strong></p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int singleNumber(int[] nums) &#123;</span><br><span class="line">        int[] counts=new int[32];</span><br><span class="line">        for(int num:nums)&#123;</span><br><span class="line">            for(int j=0;j&lt;counts.length;j++)&#123;</span><br><span class="line">                //通过与操作判断每一个数字的每一位，1就是1，0还是0</span><br><span class="line">                //int 4个字节，每个字节8位</span><br><span class="line">                //32位数字来保存所有数字每位之和，出现3次的最后%3结果是0</span><br><span class="line">                counts[j]+=num&amp;1;</span><br><span class="line">                //无符号右移</span><br><span class="line">                num&gt;&gt;&gt;=1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        for(int i=0;i&lt;32;i++)&#123;</span><br><span class="line">            counts[i]%=3;</span><br><span class="line">        &#125;</span><br><span class="line">        int res=0;</span><br><span class="line">        for(int m=0;m&lt;32;m++)&#123;</span><br><span class="line">            res&lt;&lt;=1;</span><br><span class="line">            res|=counts[31-m];</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用到栈的题目"><a href="#用到栈的题目" class="headerlink" title="用到栈的题目"></a>用到栈的题目</h2><p><strong>操作</strong></p>
+<ul>
+<li><p>入栈stack.push() / stack.add()返回值类型boolean    </p>
+</li>
+<li><p>出栈stack.pop()返回值类型元素类型  </p>
+</li>
+<li><p>取栈顶值stack.peek()</p>
+</li>
+</ul>
+<h3 id="27请完成一个函数，输入一个二叉树，该函数输出它的镜像"><a href="#27请完成一个函数，输入一个二叉树，该函数输出它的镜像" class="headerlink" title="27请完成一个函数，输入一个二叉树，该函数输出它的镜像"></a>27请完成一个函数，输入一个二叉树，该函数输出它的镜像</h3><p>思路二：从上到下依次交换每个节点的左右子节点，借助栈来保存树的每个结点进行遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public TreeNode mirrorTree(TreeNode root) &#123;</span><br><span class="line">        if(root==null)</span><br><span class="line">          return root;</span><br><span class="line">        Stack&lt;TreeNode&gt;stack=new Stack&lt;&gt;();</span><br><span class="line">        stack.push(root);</span><br><span class="line">        while(!stack.isEmpty())&#123;</span><br><span class="line">            TreeNode node=stack.pop();</span><br><span class="line">            if(node.left!=null)</span><br><span class="line">              stack.push(node.left);</span><br><span class="line">            if(node.right!=null)</span><br><span class="line">              stack.push(node.right);</span><br><span class="line">            TreeNode temp=new TreeNode();</span><br><span class="line">            temp=node.left;</span><br><span class="line">            node.left=node.right;</span><br><span class="line">            node.right=temp;</span><br><span class="line">        &#125;</span><br><span class="line">        return root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="字符串类题目"><a href="#字符串类题目" class="headerlink" title="字符串类题目"></a>字符串类题目</h2><h3 id="58-翻转单词顺序"><a href="#58-翻转单词顺序" class="headerlink" title="58.翻转单词顺序"></a>58.翻转单词顺序</h3><p>输入一个英文句子，翻转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student. “，则输出”student. a am I”。</p>
+<p>思路：charAt（）得到特定位置字符，substring（int beginIndex，int endIndex）截取字符串，添加到StringBuilder中去</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">reverseWords</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//删除单元格</span></span><br><span class="line">        s=s.trim();</span><br><span class="line">        <span class="keyword">int</span> j=s.length()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> i=j;</span><br><span class="line">        StringBuilder str=<span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="keyword">while</span>(i&gt;=<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="comment">//注意这里的空字符串，中间有空格</span></span><br><span class="line">            <span class="keyword">while</span>(i&gt;=<span class="number">0</span> &amp;&amp; s.charAt(i)!=<span class="string">' '</span>)&#123;</span><br><span class="line">                i--;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//截取字符串，这里的j+1为结束索引，不过不会取的</span></span><br><span class="line">            str.append(s.substring(i+<span class="number">1</span>,j+<span class="number">1</span>)+<span class="string">" "</span>);</span><br><span class="line">            <span class="keyword">while</span>(i&gt;=<span class="number">0</span>&amp;&amp;s.charAt(i)==<span class="string">' '</span>)&#123;</span><br><span class="line">                --i;</span><br><span class="line">            &#125;</span><br><span class="line">            j=i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> str.toString().trim();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="58-左旋转字符串"><a href="#58-左旋转字符串" class="headerlink" title="58.左旋转字符串"></a>58.左旋转字符串</h3><p>字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串”abcdefg”和数字2，该函数将返回左旋转两位得到的结果”cdefgab”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: s = &quot;abcdefg&quot;, k = 2</span><br><span class="line">输出: &quot;cdefgab&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>subString（）2段子字符串拼接+</li>
+<li>StringBuilder.append()  charAt()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public String reverseLeftWords(String s, int n) &#123;</span><br><span class="line">        StringBuilder str=new StringBuilder();</span><br><span class="line">        for(int i=n;i&lt;s.length();i++)&#123;</span><br><span class="line">            str.append(s.charAt(i));</span><br><span class="line">        &#125;</span><br><span class="line">        for(int j=0;j&lt;n;j++)&#123;</span><br><span class="line">            str.append(s.charAt(j));</span><br><span class="line">        &#125;</span><br><span class="line">        return str.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h2><h3 id="53-II-0-0-n-1缺失的数字"><a href="#53-II-0-0-n-1缺失的数字" class="headerlink" title="53-II.0 0~n-1缺失的数字"></a>53-II.0 0~n-1缺失的数字</h3><p>一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [0,1,3]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>将数组分成2块，值与索引相等的一块，不等的一块</li>
+<li>如果不等，nums[m]=m ，则 “右子数组的首位元素” 一定在闭区间[m+1,high];如果相等，则左数组的首位元素一定在[low,m-1]</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="comment">//将数组分成2块，值与索引相等的一块，不等的一块</span></span><br><span class="line">    <span class="comment">//如果不等，nums[m]=m ，则 “右子数组的首位元素” 一定在闭区间[m+1,high];如果相等，则左数组的首位元素一定在[low,m-1]</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">missingNumber</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> low=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> high=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(low&lt;=high)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid=(high+low)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid]==mid)&#123;</span><br><span class="line">                low=mid+<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                high=mid-<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> low;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-旋转数组最小数字"><a href="#11-旋转数组最小数字" class="headerlink" title="11.旋转数组最小数字"></a>11.旋转数组最小数字</h3><p>把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1</p>
+<p>思路：一般排序数组都可采用二分法查找，二分法取中位数，此题中如果mid小于right，说明mid在右数组中；mid大于right，说明mid在右边；mid=right，则mid可能在左数组，也可能在右数组，比如33313和3411</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minArray</span><span class="params">(<span class="keyword">int</span>[] numbers)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(numbers.length==<span class="number">0</span>)</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> left=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> right=numbers.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;right)&#123;</span><br><span class="line">            <span class="keyword">int</span> m=left+(right-left)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(numbers[m]&lt;numbers[right])&#123;</span><br><span class="line">                right=m;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(numbers[m]&gt;numbers[right])&#123;</span><br><span class="line">                left=m+<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//numbers[m]=numbers[j],j可以直接-1，剪了之后还会有m在</span></span><br><span class="line">                right-=<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> numbers[left];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="53-1-在排序数组中查找数字"><a href="#53-1-在排序数组中查找数字" class="headerlink" title="53-1 在排序数组中查找数字"></a>53-1 在排序数组中查找数字</h3><p>统计一个数字在排序数组中出现的次数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [5,7,7,8,8,10], target = 8</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>还是二分查找，只不过关注左右边界，right-left-1就是答案</li>
+<li>当nums[mid]&gt;=target时，i=mid+1，这样i就在最后一个target后面一个位置</li>
+<li>当nums[mid]&lt;=target时，j=mid-1，这样j就在第一个target前一个位置</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid=(i+j)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid]&lt;=target)&#123;</span><br><span class="line">                i=mid+<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                j=mid-<span class="number">1</span>;</span><br><span class="line">            &#125; </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//上面循环的时候每次有mid=target，i就mid+1，所以i一定在最后一个target之后</span></span><br><span class="line">        <span class="keyword">int</span> right=i;</span><br><span class="line">        <span class="keyword">if</span>(j&gt;<span class="number">0</span>&amp;&amp;nums[j]!=target)</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        i=<span class="number">0</span>;</span><br><span class="line">        j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//与上面同理，j始终会在target前一个位置，所以返回左边界为j</span></span><br><span class="line">        <span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid=(i+j)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid]&gt;=target)&#123;</span><br><span class="line">                j=mid-<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                i=mid+<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> left=j;</span><br><span class="line">        <span class="keyword">return</span> right-left-<span class="number">1</span>; </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><h3 id="56-和为s的两个数字"><a href="#56-和为s的两个数字" class="headerlink" title="56.和为s的两个数字"></a>56.和为s的两个数字</h3><p>输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [2,7,11,15], target = 9</span><br><span class="line">输出：[2,7] 或者 [7,2]</span><br></pre></td></tr></table></figure>
+
+<p><strong>初始化</strong>：i，j分别指向数组两端</p>
+<p><strong>循环搜索</strong>：当双指针相遇时跳出循环</p>
+<ul>
+<li>若nums[i]+nums[j]&gt;target，j–</li>
+<li>若nums[i]+nums[j]&lt;target，i++</li>
+<li>若nums[i]+nums[j]=target，nums[j]和nums[j即为所求</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i]+nums[j]&gt;target)&#123;</span><br><span class="line">                --j;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[i]+nums[j]&lt;target)&#123;</span><br><span class="line">                ++i;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                res[<span class="number">0</span>]=nums[i];</span><br><span class="line">                res[<span class="number">1</span>]=nums[j];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="精选top26-删除排序数组重复的选项"><a href="#精选top26-删除排序数组重复的选项" class="headerlink" title="精选top26.删除排序数组重复的选项"></a>精选top26.删除排序数组重复的选项</h3><p>给定一个排序数组，你需要在<strong><a href="http://baike.baidu.com/item/原地算法" target="_blank" rel="noopener"> 原地</a></strong> 删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">给定数组 nums = [1,1,2], </span><br><span class="line"></span><br><span class="line">函数应该返回新的长度 2, 并且原数组 nums 的前两个元素被修改为 1, 2。 </span><br><span class="line"></span><br><span class="line">你不需要考虑数组中超出新长度后面的元素。</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>双指针，i慢指针，j快指针，j遇到重复的就往后走，遇到不一样的就把值赋给i+1的位置，这样最终返回i+1即可</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">removeDuplicates</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;nums.length;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[i]!=nums[j])&#123;</span><br><span class="line">                i+=<span class="number">1</span>;</span><br><span class="line">                nums[i]=nums[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> i+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h2><h3 id="48-最长不含重复字符的子字符串"><a href="#48-最长不含重复字符的子字符串" class="headerlink" title="48.最长不含重复字符的子字符串"></a>48.最长不含重复字符的子字符串</h3><p> 请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3 </span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>j用来遍历字符串，窗口区间采用【i，j】，res=max(res,j-i+1)，hashmap用来存储每个字符的位置，当j遍历到相同字符时，改变左边界i，i=max(i，map.get(ch)+1)，为什么要取max呢</p>
+<p>比如abba，当j到2时，i也变为2，当j继续往下走，到3时，如果还是+1这种，i反而成了1，此时bb重复了</p>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int lengthOfLongestSubstring(String s) &#123;</span><br><span class="line">        Map&lt;Character,Integer&gt;map=new HashMap&lt;&gt;();</span><br><span class="line">        int i=0;</span><br><span class="line">        int res=0;</span><br><span class="line">        for(int j=0;j&lt;s.length();j++)&#123;</span><br><span class="line">            char ch=s.charAt(j);</span><br><span class="line">            if(map.containsKey(ch))</span><br><span class="line">              i=Math.max(map.get(ch)+1,i);</span><br><span class="line">            map.put(ch,j);</span><br><span class="line">            res=Math.max(res,j-i+1);</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="57-和为s的连续正数序列"><a href="#57-和为s的连续正数序列" class="headerlink" title="57.和为s的连续正数序列"></a>57.和为s的连续正数序列</h3><p>输入一个正整数 <code>target</code> ，输出所有和为 <code>target</code> 的连续正整数序列（至少含有两个数）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：target = 9</span><br><span class="line">输出：[[2,3,4],[4,5]]</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>采用滑动窗口，即【a,b】的形式，如果【a,b】的和&gt;target，则需要左边界向右移一位；如果sum&lt;target，需要右边界向右移一位；如果相等，将数字存入List&lt;int[ ]&gt;中。需要特别注意的是<strong>滑动窗口只能向右滑</strong></p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[][] findContinuousSequence(<span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="comment">//滑动窗口，【a,b】,初始【1，1】</span></span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> j=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> sum=<span class="number">1</span>;</span><br><span class="line">        List&lt;<span class="keyword">int</span>[]&gt;list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=target/<span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(sum&gt;target)&#123;</span><br><span class="line">                sum-=i;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(sum&lt;target)&#123;</span><br><span class="line">                j++;</span><br><span class="line">                sum+=j;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[j-i+<span class="number">1</span>];</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> k=i;k&lt;=j;k++)&#123;</span><br><span class="line">                    res[k-i]=k;</span><br><span class="line">                &#125;</span><br><span class="line">                list.add(res);</span><br><span class="line">                sum-=i;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list.toArray(<span class="keyword">new</span> <span class="keyword">int</span>[list.size()][]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="利用哈希"><a href="#利用哈希" class="headerlink" title="利用哈希"></a>利用哈希</h2><h3 id="35-复杂链表的复制"><a href="#35-复杂链表的复制" class="headerlink" title="35.复杂链表的复制"></a>35.复杂链表的复制</h3><p>请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]</span><br><span class="line">输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>题目要求就是复制一个一模一样的链表</li>
+<li>常理我们会写只有next指针的链表的复制，我们复制所有结点并连接起来</li>
+<li>链接完就想接下来要链接random，要连random就要找到原来一样的head，怎么快速找到，用map</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public Node copyRandomList(Node head) &#123;</span><br><span class="line">        if(head==null)</span><br><span class="line">          return null;</span><br><span class="line">        Map&lt;Node,Node&gt;map=new HashMap&lt;&gt;();</span><br><span class="line">        //2个链表，所以需要两个遍历指针</span><br><span class="line">        Node temp1=head;</span><br><span class="line">        Node res=new Node(head.val);</span><br><span class="line">        Node temp2=res;</span><br><span class="line">        map.put(head,res);</span><br><span class="line">        //第一步复制所有节点连接起来</span><br><span class="line">        while(temp1.next!=null)&#123;</span><br><span class="line">            temp2.next=new Node(temp1.next.val);</span><br><span class="line">            temp2=temp2.next;</span><br><span class="line">            temp1=temp1.next;</span><br><span class="line">            map.put(temp1,temp2);</span><br><span class="line">        &#125;</span><br><span class="line">        //链接完就想接下来要链接random，要连random就要找到原来一样的结点，h.random对应的结点s,也就是h2.random对应的s2</span><br><span class="line">        //怎么找到s2，用map取出h.random就是s2</span><br><span class="line">        temp1=head;</span><br><span class="line">        temp2=res;</span><br><span class="line">        while(temp1!=null)&#123;</span><br><span class="line">            if(temp1.random!=null)</span><br><span class="line">              temp2.random=map.get(temp1.random);</span><br><span class="line">            temp1=temp1.next;</span><br><span class="line">            temp2=temp2.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="50-第一个只出现一次的字符"><a href="#50-第一个只出现一次的字符" class="headerlink" title="50.第一个只出现一次的字符"></a>50.第一个只出现一次的字符</h3><p>在字符串 s 中找出第一个只出现一次的字符。如果没有，返回一个单空格。 s 只包含小写字母。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;abaccdeff&quot;</span><br><span class="line">返回 &quot;b&quot;</span><br><span class="line"></span><br><span class="line">s = &quot;&quot; </span><br><span class="line">返回 &quot; &quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>建立一个HashMap，键值对分别为字符和boolean，第一轮遍历字符数组，将每个字符以及之前的是否存储过存入map，前面有则为false，否则true，第二轮将每个字符到map中去查找出来，value为true既是第一个只出现一次的字符</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">char</span> <span class="title">firstUniqChar</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">char</span>[]sc=s.toCharArray();</span><br><span class="line">        HashMap&lt;Character,Boolean&gt;map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> a:sc)&#123;</span><br><span class="line">            map.put(a,!map.containsKey(a));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> b:sc)&#123;</span><br><span class="line">            <span class="keyword">if</span>(map.get(b))</span><br><span class="line">              <span class="keyword">return</span> b;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">' '</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="39-数组中出现超过一半的数字"><a href="#39-数组中出现超过一半的数字" class="headerlink" title="39.数组中出现超过一半的数字"></a>39.数组中出现超过一半的数字</h3><p>数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [1, 2, 3, 2, 2, 2, 5, 4, 2]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>利用hashmap存储每个数字的出现次数，在进行一轮查找即可，但效率不高</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">majorityElement</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Integer&gt;map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!map.containsKey(i))&#123;</span><br><span class="line">                map.put(i,<span class="number">1</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                map.put(i,map.get(i)+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(map.get(j)&gt;nums.length/<span class="number">2</span>)</span><br><span class="line">              <span class="keyword">return</span> j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h2><h3 id="精选top5-最长回文串"><a href="#精选top5-最长回文串" class="headerlink" title="精选top5.最长回文串"></a>精选top5.最长回文串</h3><p>给定一个字符串 <code>s</code>，找到 <code>s</code> 中最长的回文子串。你可以假设 <code>s</code> 的最大长度为 1000。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;babad&quot;</span><br><span class="line">输出: &quot;bab&quot;</span><br><span class="line">注意: &quot;aba&quot; 也是一个有效答案。</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>通过l即字符串长度从0开始遍历</p>
+<ul>
+<li><p>状态定义：dp[i] [j]代表字符串中下表i-j的最大回文串</p>
+</li>
+<li><p>初始状态：l=1 dp一定为true l=2 si=sj时为true</p>
+</li>
+<li><p>转移方程： P(i,j)=P(i+1,j−1)∧(Si==Sj) </p>
+</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n=s.length();</span><br><span class="line">        <span class="keyword">boolean</span>[][] dp=<span class="keyword">new</span> <span class="keyword">boolean</span>[n][n];</span><br><span class="line">        String ans=<span class="string">""</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> l=<span class="number">0</span>;l&lt;n;l++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i+l&lt;n;i++)&#123;</span><br><span class="line">                <span class="keyword">int</span> j=i+l;</span><br><span class="line">                <span class="keyword">if</span>(l==<span class="number">0</span>)&#123;</span><br><span class="line">                    dp[i][j]=<span class="keyword">true</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(l==<span class="number">1</span>)&#123;</span><br><span class="line">                    dp[i][j]=(s.charAt(i)==s.charAt(j));</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    dp[i][j]=(s.charAt(i)==s.charAt(j)&amp;&amp;dp[i+<span class="number">1</span>][j-<span class="number">1</span>]);</span><br><span class="line">                &#125;                  </span><br><span class="line">                <span class="comment">//只有子串更长了才更新</span></span><br><span class="line">                <span class="keyword">if</span>(dp[i][j]&amp;&amp;l+<span class="number">1</span>&gt;ans.length())</span><br><span class="line">                  ans=s.substring(i,j+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="63-股票的最大利润"><a href="#63-股票的最大利润" class="headerlink" title="63.股票的最大利润"></a>63.股票的最大利润</h3><p>假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？ </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: [7,1,5,3,6,4]</span><br><span class="line">输出: 5</span><br><span class="line">解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。</span><br><span class="line">     注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>状态定义 dp[i]：以price[i]结尾的子数组的最大利润</li>
+<li>转移方程：dp[i]=max(dp[i-1],price-min(price[0:4]))</li>
+<li>初始状态：dp[0]=0</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int maxProfit(int[] prices) &#123;</span><br><span class="line">        if(prices.length==0)</span><br><span class="line">          return 0;</span><br><span class="line">        int profit=0;</span><br><span class="line">        int cost=prices[0];</span><br><span class="line">        for(int i:prices)&#123;</span><br><span class="line">            cost=Math.min(i,cost);</span><br><span class="line">            profit=Math.max(profit,i-cost);</span><br><span class="line">        &#125;</span><br><span class="line">        return profit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="60-n个骰子的点数"><a href="#60-n个骰子的点数" class="headerlink" title="60.n个骰子的点数"></a>60.n个骰子的点数</h3><p> 把n个骰子扔在地上，所有骰子朝上一面的点数之和为s。输入n，打印出s的所有可能的值出现的概率 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: 1</span><br><span class="line">输出: [0.16667,0.16667,0.16667,0.16667,0.16667,0.16667]</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>状态定义 dp[i] [j] 表示投掷完i枚骰子后，点数j的出现次数</li>
+<li>转移方程 dp[i] [j]=dp[i-1] [j-k] k从1-6，j-k必须小于i-1</li>
+<li>初始状态 dp[1] [j]=1 j从1-6 </li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span>[] twoSum(<span class="keyword">int</span> n) &#123;</span><br><span class="line">        <span class="keyword">int</span>[][] dp=<span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>][<span class="number">6</span>*n+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> t=<span class="number">1</span>;t&lt;=<span class="number">6</span>;t++)&#123;</span><br><span class="line">            dp[<span class="number">1</span>][t]=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i;j&lt;=<span class="number">6</span>*n;j++)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">1</span>;k&lt;=<span class="number">6</span>;k++)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(j-k&lt;i-<span class="number">1</span>)</span><br><span class="line">                      <span class="keyword">break</span>;</span><br><span class="line">                    dp[i][j]+=dp[i-<span class="number">1</span>][j-k];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">double</span> total=Math.pow((<span class="keyword">double</span>)<span class="number">6</span>,(<span class="keyword">double</span>)n);</span><br><span class="line">        <span class="keyword">double</span>[]res=<span class="keyword">new</span> <span class="keyword">double</span>[<span class="number">5</span>*n+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> m=n;m&lt;=<span class="number">6</span>*n;m++)&#123;</span><br><span class="line">            res[m-n]=(<span class="keyword">double</span>)dp[n][m]/total;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="47-礼物的最大价值"><a href="#47-礼物的最大价值" class="headerlink" title="47.礼物的最大价值"></a>47.礼物的最大价值</h3><p>在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移动一格、直到到达棋盘的右下角。给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">输入: </span><br><span class="line">[</span><br><span class="line">  [1,3,1],</span><br><span class="line">  [1,5,1],</span><br><span class="line">  [4,2,1]</span><br><span class="line">]</span><br><span class="line">输出: 12</span><br><span class="line">解释: 路径 1→3→5→2→1 可以拿到最多价值的礼物</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>状态定义 dp[i] [j]  代表从棋盘的左上角开始，到达单元格（i，j）时能拿到礼物的最大累计价值</li>
+<li>状态转移 dp[i] [j]  grid[i] [j]=max(grid[i-1] [j-1]+grid[i-1] [j]，grid[i-1] [j-1]+grid[i] [j-1])</li>
+<li>初始状态 dp[0] [0]=grid[0] [0]</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxValue</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> m=grid.length;</span><br><span class="line">        <span class="keyword">int</span> n=grid[<span class="number">0</span>].length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(i==<span class="number">0</span>&amp;&amp;j==<span class="number">0</span>)</span><br><span class="line">                  <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">if</span>(j==<span class="number">0</span>)&#123;</span><br><span class="line">                    grid[i][j]+=grid[i-<span class="number">1</span>][j];</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(i==<span class="number">0</span>)&#123;</span><br><span class="line">                    grid[i][j]+=grid[i][j-<span class="number">1</span>];</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    grid[i][j]+=Math.max(grid[i-<span class="number">1</span>][j],grid[i][j-<span class="number">1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> grid[m-<span class="number">1</span>][n-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="46-把数字翻译成字符串"><a href="#46-把数字翻译成字符串" class="headerlink" title="46.把数字翻译成字符串"></a>46.把数字翻译成字符串</h3><p>给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 12258</span><br><span class="line">输出: 5</span><br><span class="line">解释: 12258有5种不同的翻译，分别是&quot;bccfi&quot;, &quot;bwfi&quot;, &quot;bczi&quot;, &quot;mcfi&quot;和&quot;mzi&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>状态定义 dp[i]代表以i结尾的数字的翻译方法</li>
+<li>转移方程 如果第i和i-1个数字可以被翻译，则dp[i]=dp[i-1]+dp[i-2]；否则，dp[i]=dp[i-1]</li>
+<li>初始状态 dp[0]=1 dp[1]=1，dp[0]可由dp[2]</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">translateNum</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">        String s=String.valueOf(num);</span><br><span class="line">        <span class="comment">//数字第一位对应着dp[1]，所以还有个dp[0]</span></span><br><span class="line">        <span class="keyword">int</span>[]dp=<span class="keyword">new</span> <span class="keyword">int</span>[s.length()+<span class="number">1</span>]; </span><br><span class="line">        <span class="comment">//dp[0]由dp[2]求得，因为2位树肯定是在10-25之间，所以dp[2]=2,dp[0]=1</span></span><br><span class="line">        dp[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">        dp[<span class="number">1</span>]=<span class="number">1</span>; </span><br><span class="line">        <span class="comment">//字符串下表为0-length-1,而转移方程是i-1，i-2位，所以i需要从2到length</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=s.length();i++)&#123;</span><br><span class="line">            String a=s.substring(i-<span class="number">2</span>,i);</span><br><span class="line">            <span class="keyword">if</span>(a.compareTo(<span class="string">"10"</span>)&gt;=<span class="number">0</span>&amp;&amp;a.compareTo(<span class="string">"25"</span>)&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">                dp[i]=dp[i-<span class="number">1</span>]+dp[i-<span class="number">2</span>];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                dp[i]=dp[i-<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//dp数组是从0-length</span></span><br><span class="line">        <span class="keyword">return</span> dp[s.length()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="14-I-剪绳子I"><a href="#14-I-剪绳子I" class="headerlink" title="14-I 剪绳子I"></a>14-I 剪绳子I</h3><p>给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m-1] 。请问 k[0]<em>k[1]</em>…*k[m-1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2</span><br><span class="line">输出: 1</span><br><span class="line">解释: 2 = 1 + 1, 1 × 1 = 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>状态定义 dp[i] 长度为i的绳子最大乘积</li>
+<li>初始状态 dp[1]=1 dp[2]=1</li>
+<li>状态转移 dp[i]=Math.max(dp[i],Math.max(dp[i-j]<em>j,(i-j)</em>j));</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cuttingRope</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] dp=<span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        dp[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">        dp[<span class="number">2</span>]=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">3</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;i;j++)&#123;</span><br><span class="line">                <span class="comment">//Math.max只能比较两个，所以后面才要再使用一次max</span></span><br><span class="line">                <span class="comment">//这里的dp[i]起到一个保存相同总长,不同切法,乘积最大值的作用.确保把内循环不同切法得到的乘积的最大值保存下来.</span></span><br><span class="line">                dp[i]=Math.max(dp[i],Math.max(dp[i-j]*j,(i-j)*j));</span><br><span class="line">            &#125;     </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="回溯法"><a href="#回溯法" class="headerlink" title="回溯法"></a>回溯法</h2><h3 id="12-矩阵中的路径"><a href="#12-矩阵中的路径" class="headerlink" title="12.矩阵中的路径"></a>12.矩阵中的路径</h3><p>请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一格开始，每一步可以在矩阵中向左、右、上、下移动一格。如果一条路径经过了矩阵的某一格，那么该路径不能再次进入该格子。例如，在下面的3×4的矩阵中包含一条字符串“bfce”的路径（路径中的字母用加粗标出）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot;</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li><p>递归工作  将board[i] [j]值保存在temp，修改为‘/‘字符，递归遍历其上下左右四个结点，将递归结果保存res，最后将board[i] [j]值恢复</p>
+</li>
+<li><p>终止条件</p>
+<ul>
+<li>返回false： ① 行或列索引越界 <strong>或</strong> ② 当前矩阵元素与目标字符不同 <strong>或</strong> ③ 当前矩阵元素已访问过</li>
+<li>返回true：字符串 <code>word</code> 已全部匹配，即 <code>k = len(word) - 1</code>   </li>
+</ul>
+</li>
+<li><p>递归参数 </p>
+<p> 当前元素在矩阵 <code>board</code> 中的行列索引 <code>i</code> 和 <code>j</code> ，当前目标字符在 <code>word</code> 中的索引 <code>k</code> </p>
+</li>
+</ul>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public boolean exist(char[][] board, String word) &#123;</span><br><span class="line">        char[] a=word.toCharArray();</span><br><span class="line">        //每个结点开始试过去</span><br><span class="line">        for(int i=0;i&lt;board.length;i++)&#123;</span><br><span class="line">            for(int j=0;j&lt;board[0].length;j++)&#123;</span><br><span class="line">                if(DFS(board,a,i,j,0))</span><br><span class="line">                  return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    boolean DFS(char[][]b,char[]s,int i,int j,int k)&#123;</span><br><span class="line">        //终止条件</span><br><span class="line">        if(i&gt;=b.length||i&lt;0||j&gt;=b[0].length||j&lt;0||b[i][j]!=s[k])</span><br><span class="line">          return false;</span><br><span class="line">        if(k==s.length-1)</span><br><span class="line">          return true;</span><br><span class="line">        //标记访问过的元素</span><br><span class="line">        char temp=b[i][j];</span><br><span class="line">        b[i][j]=&apos;/&apos;;</span><br><span class="line">        boolean res=DFS(b,s,i+1,j,k+1)||DFS(b,s,i,j+1,k+1)||DFS(b,s,i-1,j,k+1)||DFS(b,s,i,j-1,k+1);</span><br><span class="line">        b[i][j]=temp;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="深度（广度遍历）"><a href="#深度（广度遍历）" class="headerlink" title="深度（广度遍历）"></a>深度（广度遍历）</h2><h3 id="13-机器人的运动范围"><a href="#13-机器人的运动范围" class="headerlink" title="13.机器人的运动范围"></a>13.机器人的运动范围</h3><p>地上有一个m行n列的方格，从坐标 [0,0] 到坐标 [m-1,n-1] 。一个机器人从坐标 [0, 0] 的格子开始移动，它每次可以向左、右、上、下移动一格（不能移动到方格外），也不能进入行坐标和列坐标的数位之和大于k的格子。例如，当k为18时，机器人能够进入方格 [35, 37] ，因为3+5+3+7=18。但它不能进入方格 [35, 38]，因为3+5+3+8=19。请问该机器人能够到达多少个格子？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：m = 2, n = 3, k = 1</span><br><span class="line">输出：3</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>递归参数：i为横坐标，j为纵坐标，si为横坐标数位和，sj为纵坐标数位和</p>
+<p>采用广度遍历需要借助visited[]数组，哪些结点需要跳过，i&gt;m，j&gt;n，si+sj&gt;k，以及已经访问过的数组</p>
+<p>linkedlist是一个双向链表，add在链尾加元素，poll在链头取元素</p>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int movingCount(int m, int n, int k) &#123;</span><br><span class="line">        boolean[][] visited = new boolean[m][n];</span><br><span class="line">        int res = 0;</span><br><span class="line">        Queue&lt;int[]&gt; queue= new LinkedList&lt;int[]&gt;();</span><br><span class="line">        queue.add(new int[] &#123; 0, 0, 0, 0 &#125;);</span><br><span class="line">        while(queue.size() &gt; 0) &#123;</span><br><span class="line">            int[] x = queue.poll();</span><br><span class="line">            int i = x[0], j = x[1], si = x[2], sj = x[3];</span><br><span class="line">            if(i &gt;= m|| j &gt;= n || k &lt; si + sj || visited[i][j]) continue;</span><br><span class="line">            visited[i][j] = true;</span><br><span class="line">            res ++;</span><br><span class="line">            queue.add(new int[] &#123; i + 1, j, (i + 1) % 10 != 0 ? si + 1 : si - 8, sj &#125;);</span><br><span class="line">            queue.add(new int[] &#123; i, j + 1, si, (j + 1) % 10 != 0 ? sj + 1 : sj - 8 &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="贪心法"><a href="#贪心法" class="headerlink" title="贪心法"></a>贪心法</h2><h3 id="14-II-剪绳子"><a href="#14-II-剪绳子" class="headerlink" title="14-II 剪绳子"></a>14-II 剪绳子</h3><p>给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m - 1] 。请问 k[0]<em>k[1]</em>…*k[m - 1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<p>答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: 2</span><br><span class="line">输出: 1</span><br><span class="line">解释: 2 = 1 + 1, 1 × 1 = 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<ul>
+<li>若切分方案合理，绳子段切分的越多，乘积越大 </li>
+<li>为使乘积最大，只有长度为 22 和 33 的绳子不应再切分，且 3比 2 更优 </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>绳子切分方案</strong></th>
+<th><strong>乘积</strong></th>
+<th><strong>结论</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2=1+1</td>
+<td>1×1=1</td>
+<td>2 不应切分</td>
+</tr>
+<tr>
+<td>3=1+2</td>
+<td>1×2=2</td>
+<td>3 不应切分</td>
+</tr>
+<tr>
+<td>4=2+2=1+3</td>
+<td>2×2=4&gt;1×3=3</td>
+<td>4 和 2 等价，且 2+2 比 1+3 更优</td>
+</tr>
+<tr>
+<td>5=2+3=1+4</td>
+<td>2×3=6&gt;1×4=4</td>
+<td>5 应切分为 2+3</td>
+</tr>
+<tr>
+<td>6=3+3=2+2+2</td>
+<td>3×3=9&gt;2×2×2=8</td>
+<td>6 应切分为 3+3，进而<strong>推出 3 比 2 更优</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cuttingRope</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">3</span>) <span class="keyword">return</span> n - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">long</span> res=<span class="number">1L</span>;</span><br><span class="line">        <span class="keyword">int</span> p=(<span class="keyword">int</span>)<span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line">        <span class="comment">//贪心算法，优先切三，其次切二</span></span><br><span class="line">        <span class="keyword">while</span>(n&gt;<span class="number">4</span>)&#123;</span><br><span class="line">            res=res*<span class="number">3</span>%p;</span><br><span class="line">            n-=<span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出来循环只有三种情况，分别是n=2、3、4</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)(res*n%p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="链表遍历"><a href="#链表遍历" class="headerlink" title="链表遍历"></a>链表遍历</h2><h3 id="精选top19-删除链表的倒数第n个结点"><a href="#精选top19-删除链表的倒数第n个结点" class="headerlink" title="精选top19 删除链表的倒数第n个结点"></a>精选top19 删除链表的倒数第n个结点</h3><p> 给定一个链表，删除链表的倒数第 <em>n</em> 个节点，并且返回链表的头结点 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 n = 2.</span><br><span class="line"></span><br><span class="line">当删除了倒数第二个节点后，链表变为 1-&gt;2-&gt;3-&gt;5</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>删除倒数第n个，也就是删除l-(n-1)个结点，那就找到l-n个结点完成删除</p>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    //求倒数第n个相当于求l-(n-1)个，也就是找到l-(n-1)-1即l-n</span><br><span class="line">    public ListNode removeNthFromEnd(ListNode head, int n) &#123;</span><br><span class="line">        ListNode dummy=new ListNode(0);</span><br><span class="line">        dummy.next=head;</span><br><span class="line">        ListNode first=head;</span><br><span class="line">        int count=0;</span><br><span class="line">        int length=0;</span><br><span class="line">        //遍历到最后的元素，求链表长度</span><br><span class="line">        while(first!=null)&#123;</span><br><span class="line">            length+=1;</span><br><span class="line">            first=first.next;</span><br><span class="line">        &#125;</span><br><span class="line">        //从头开始遍历</span><br><span class="line">        first=dummy;</span><br><span class="line">        //找l-(n-1)个，也就是找到l-(n-1)-1即l-n，这样才能删除</span><br><span class="line">        while(!(count==length-n))&#123;</span><br><span class="line">            count+=1;</span><br><span class="line">            first=first.next;</span><br><span class="line">        &#125;</span><br><span class="line">        first.next=first.next.next;</span><br><span class="line">        return dummy.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/23/单例模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1516,7 +2691,11 @@
 <li>无拥塞控制，适合实时应用，如网络开会</li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png" alt></p>
-<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
+<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><p>TCP连接</p>
+<p>每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80</p>
+<p>每一个TCP连接唯一地被通信两端（即两个套接字）所确定。即：</p>
+<p>TCP连接::={socket1，socket2}={（IP1：port1），（IP2：port2）}</p>
+<h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
 <li>面向连接</li>
 <li>提供可靠交付服务</li>
 <li>全双工通信 发送方，接收方都有缓存来存放数据</li>
@@ -1546,12 +2725,7 @@
 <p>round2：服务器端返回确认，ACK=1，seq=v，ack=u+1,此时处于半关闭状态</p>
 <p>round3：服务器端发送连接释放报文，关闭TCP连接，FIN=1，ACK=1，seq=w，ack=u+1</p>
 <p>round4：客户端返回确认报文段，结束</p>
-<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>为了防止历史连接，2次就不能最后发送RST报文给服务端</p>
-<ul>
-<li>一个旧（不是需要的）的SYN报文先于最新的（需要的）SYN报文到达服务端</li>
-<li>服务端回一个报文给客户端</li>
-<li>客户端判断自身的上下文（序列号过期或超时），判断这是个历史连接，发送一个RST报文给我服务端</li>
-</ul>
+<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>假设客户端请求建立连接，发给服务器SYN包等待服务器确认，服务器收到确认后，如果是两次握手，假设服务器给客户端在第二次握手时发送数据，数据从服务器发出，服务器认为连接已经建立，但在发送数据的过程中数据丢失，客户端认为连接没有建立，会进行重传。假设每次发送的数据一直在丢失，客户端一直SYN，服务器就会产生多个无效连接，占用资源，这个时候服务器可能会挂掉。这个现象就是我们听过的“SYN的洪水攻击”。<br>总结：第三次握手是为了防止：如果客户端迟迟没有收到服务器返回确认报文，这时会放弃连接，重新启动一条连接请求，但问题是：服务器不知道客户端没有收到，所以他会收到两个连接，浪费连接开销。如果每次都是这样，就会浪费多个连接开销 </p>
 <h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
 <p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
 <h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
@@ -1585,774 +2759,6 @@
 <p>快重传就是冗余重传，收到3个冗余确认重传</p>
 <p>快恢复指的是出现拥塞后不用回到开始的状态，直接从新的阈值开始</p>
 
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/hashmap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/28/hashmap/" class="post-title-link" itemprop="url">hashmap</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-28 12:58:48" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:48+08:00">2020-04-28</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/网络层/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/28/网络层/" class="post-title-link" itemprop="url">网络层</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-28 12:58:28" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:28+08:00">2020-04-28</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%821.png" alt></p>
-<p>版本：IPv4/IPv6</p>
-<p>首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B）</p>
-<p>总长度：首部+数据(链路层有最小和最大长度)</p>
-<p>标识：同一个数据报分片用同一个标识   </p>
-<p>标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片</p>
-<p>片偏移：某片在原分组的位置</p>
-<p>生存时间：每经过一个路由器TTL-1</p>
-<p>首部检验和：只检验首部，因为首部中的标志，片偏移等是会变的</p>
-<h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p>像每个人都有身份证，IP地址可以唯一标识一个路由器，主机的接口</p>
-<p>分类的IP地址</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%822.png" alt></p>
-<p>A，B，C类地址网络号中依次有1位，2位，3位用来标识，网络号依次占8，16，24位</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%823.png" alt></p>
-<h2 id="网络地址转换NAT"><a href="#网络地址转换NAT" class="headerlink" title="网络地址转换NAT"></a>网络地址转换NAT</h2><p>路由器对目的地址是私有IP地址的数据报一律不转发</p>
-<p>网络地址转换NAT在专用网连接到因特网的路由器上安装NAT软件，安装了NAT软件的路由器叫做NAT路由器</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%824.png" alt></p>
-<h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><p>分类的IP地址存在问题：比如一个单位申请了一个B类IP，但是实际在用的并不多，会造成资源浪费问题。划分子网还能提高灵活性，比如一个单位要新开一个部门，没划分子网的话得重新去申请一个IP</p>
-<h3 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%827.png" alt></p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%825.png" alt></p>
-<p>划分子网后对外仍表现为一个网络</p>
-<h3 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h3><p>路由器需要根据收到的IP找到相应子网</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%826.png" alt></p>
-<p>除了主机号其余为0，通过IP地址与子网掩码进行与操作，就能得到子网网络地址</p>
-<h2 id="无分类编址CIDR"><a href="#无分类编址CIDR" class="headerlink" title="无分类编址CIDR"></a>无分类编址CIDR</h2><p>以前的一个子网的子网掩码是一样的，如果子网掩码不固定长度，那子网下的主机数更灵活（比如如果部门人比较多，那就可以让子网掩码短一点，这样主机数可以更多）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%828.png" alt></p>
-<p>网络前缀相同的组成一个网络块</p>
-<p>128.14.35.7/20一个地址块的IP地址</p>
-<p>最小IP地址10000000 00001110 00100000 00000000</p>
-<p>最大IP地址10000000 00001110 00101111 11111111</p>
-<p>子网掩码   11111111 11111111 11110000 00000000</p>
-<h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址，如下图的mac6，但是你可能不知道mac6是什么，这就需要arp了</p>
-<p>ARP协议可以完成主机或路由器IP地址到mac地址的映射</p>
-<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），没有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
-<p>例子</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png" alt></p>
-<p>应用层发送一个pdf文件，传输层分成123，对123分为加首部（如果123长度过大，还要分片）</p>
-<p>主机1发送文件到主机5，首先在1所在局域网广播一个ARP请求分组，因为5不在同一个局域网，对应的mac地址为mac6，在数据链路层传输后到达路由器，解封装，再封装（路由器只有3层，最高到网络层），封装后源mac地址为mac7，目标mac为mac8，同理到mac9直至最高的主机5IP.</p>
-<h2 id="ICMP协议（网际控制报文协议）"><a href="#ICMP协议（网际控制报文协议）" class="headerlink" title="ICMP协议（网际控制报文协议）"></a>ICMP协议（网际控制报文协议）</h2><p>目的：进行差错报告</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8210.png" alt></p>
-<p>类型：ICMP报文有不同类型</p>
-<p>检验和：检查发过来的IP数据报的首部和<strong>数据部分，区别于IP地址的首部检验和</strong></p>
-<p>ICMP报文是作为返回的IP数据报的数据部分</p>
-<p>ICMP差错报告报文的数据部分由收到的IP数据报的首部+IP数据报数据部分前8个字节组成</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
-<h2 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h2><h3 id="IPv6格式"><a href="#IPv6格式" class="headerlink" title="IPv6格式"></a>IPv6格式</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png" alt></p>
-<h3 id="与IPv4区别"><a href="#与IPv4区别" class="headerlink" title="与IPv4区别"></a>与IPv4区别</h3><ul>
-<li>IPv4 32位，IPv6 128位</li>
-<li>IPv4总长度取消，改为有效载荷长度</li>
-<li>IPv4生存时间取消，改为下一个首部</li>
-<li>IPv4首部长度是4B倍数，IPv6基本单位必须是40B</li>
-<li>IPv4路由器和主机均可分片，IPv6只能主机分片</li>
-</ul>
-<h2 id="RIP协议"><a href="#RIP协议" class="headerlink" title="RIP协议"></a>RIP协议</h2><p>RIP是一种基于距离向量的协议，每一个路由器都维护到每一个目的网络的最短距离</p>
-<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
-<li>只和相邻路由器交换信息</li>
-<li>交换的信息是自己的路由表</li>
-<li>每30秒交换一次路由表</li>
-<li>一条路由最多包含15个路由器，距离为16代表不可达，所以适合小型网络</li>
-</ul>
-<h3 id="基本过程："><a href="#基本过程：" class="headerlink" title="基本过程："></a>基本过程：</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png" alt></p>
-<ul>
-<li>对相邻路由器x发来的RIP报文，修改报文每一项，把下一跳地址改为x，距离+1</li>
-<li>如果R1没有目标为net3的表项，则把修改完的表项插入</li>
-<li>有net3，如果下一跳为x，则进行更新（毕竟30秒交换一次，保持最新的）；如果下一跳不为x，则比较距离，挑小的</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/数据链路层/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/24/数据链路层/" class="post-title-link" itemprop="url">数据链路层</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-24 16:24:23" itemprop="dateCreated datePublished" datetime="2020-04-24T16:24:23+08:00">2020-04-24</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="数据链路层作用"><a href="#数据链路层作用" class="headerlink" title="数据链路层作用"></a>数据链路层作用</h2><p>将网络层的IP数据包封装成帧，可靠的传输到相邻结点的目标机网络层。用 MAC 地址访问媒介，并进行错误检测与修正 </p>
-<h2 id="封装成帧与透明传输"><a href="#封装成帧与透明传输" class="headerlink" title="封装成帧与透明传输"></a>封装成帧与透明传输</h2><p>封装成帧就是在IP数据报前后添加首部和尾部，构成一个帧。首部和尾部往往包含多个控制信息，它们有一个很重要的作用：帧定界</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%821.png" alt></p>
-<p>透明传输：不管传输的数据是怎么样的比特组合，都应当可以在链路上传输。</p>
-<p>问题来了：当所传数据中的比特组合和控制信息完全一样时，必须采取措施，使接收方不会以为这就是控制信息，保证透明传输。</p>
-<h3 id="字符计数法"><a href="#字符计数法" class="headerlink" title="字符计数法"></a>字符计数法</h3><p>帧首部使用一个计数字段（第一个字符）来表明帧内字符数</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%822.png" alt></p>
-<p>缺陷：例如第一个字符5出错了变成了4，那后面到3结束，第二个帧从4开始，即一步错步步错，一锅端了</p>
-<h3 id="字符填充法"><a href="#字符填充法" class="headerlink" title="字符填充法"></a>字符填充法</h3><p>这里开始的SOH和结尾的EOT为帧的首尾。发送时添加转义字符ESC，接受时再去掉ESC即可。<strong>注意这里的SOH，EOT和ESC均为8位的二进制数，例如10010010等</strong>。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%823.png" alt></p>
-<h3 id="零比特填充法"><a href="#零比特填充法" class="headerlink" title="零比特填充法"></a>零比特填充法</h3><p>这里的首部和尾部是一样的，字符填充不一定一样。</p>
-<p>发送时如果有连续5个1，就在后面加一个0，这样就保证首尾（因为有6个1）不会和数据报中有一样的</p>
-<p>接受时遇到5个连续的1再去掉后面的0</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%824.png" alt></p>
-<h3 id="违规编码法"><a href="#违规编码法" class="headerlink" title="违规编码法"></a>违规编码法</h3><p>曼彻斯特法只会出现”高-低”，”低-高“，因而可以用”高-高“，”低-低“来作为帧的开始或结尾</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8218.png" alt></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>计数填充计数字段脆弱（容易出现灾难性后果），字符填充复杂和不兼容性，普遍使用的是零比特填充和曼彻斯特编码</p>
-<h2 id="差错控制"><a href="#差错控制" class="headerlink" title="差错控制"></a>差错控制</h2><p>差错是由传输过程中的噪声产生的</p>
-<ul>
-<li>全局性：线路电气特性产生的随机噪声</li>
-<li>局部性：外界造成的短暂噪声</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%825.png" alt></p>
-<p>链路层如图所示，如果出错没有控制，那从路由器中一直传，资源浪费严重</p>
-<h3 id="检错控制"><a href="#检错控制" class="headerlink" title="检错控制"></a>检错控制</h3><h4 id="奇偶校验码"><a href="#奇偶校验码" class="headerlink" title="奇偶校验码"></a>奇偶校验码</h4><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%826.png" alt></p>
-<p>但是存在问题</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%827.png" alt></p>
-<p>这一题，1100101采用奇校验，则需要前面加个1，5个1，A，B，C都是4个1，说明出错了，D5个1就看不出来，不一定出错。<strong>缺陷：只能检验出一半错误</strong></p>
-<h4 id="CRC循环冗余码"><a href="#CRC循环冗余码" class="headerlink" title="CRC循环冗余码"></a>CRC循环冗余码</h4><p>最终发送的数据=要发送的数据+冗余码</p>
-<ul>
-<li>加0，生成多项式的阶数</li>
-<li>求余</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%828.png" alt></p>
-<p>接收端同样需要除以多项式，余数为0，则正确，不为0，则错误</p>
-<h3 id="纠错控制"><a href="#纠错控制" class="headerlink" title="纠错控制"></a>纠错控制</h3><p>海明码（太牛批了）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%829.png" alt></p>
-<p>1.确定校验码位数</p>
-<p>假设要发送的数据101101，数据位数6，对应校验位4位</p>
-<p>2.确定校验码位置</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8210.png" alt></p>
-<p>3.求出校验码的值</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8211.png" alt></p>
-<p>例如P1⊕D1⊕D2⊕D4⊕D5=0，得到P1=0，规则：就是看位，P1看第一位为1，对应的D1,D2,D4,D5第一位为1；P2看第二位，对应有D1,D3,D4,D6</p>
-<p>最终101101的海明码0010011101</p>
-<p>4.检错并纠错</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8212.png" alt></p>
-<p>D2出错，接收方进行异或操作，例如P1⊕D1⊕D2⊕D4⊕D5=0，得到二进制序列0101为5，得到错误的位数</p>
-<h2 id="链路层设备"><a href="#链路层设备" class="headerlink" title="链路层设备"></a>链路层设备</h2><h3 id="mac地址"><a href="#mac地址" class="headerlink" title="mac地址"></a>mac地址</h3><p>计算机与外界局域网的连接是通过通信适配器，适配器上有处理器和存储器（ROM,RAM）,RAM上有mac地址（物理地址）</p>
-<h3 id="帧格式"><a href="#帧格式" class="headerlink" title="帧格式"></a>帧格式</h3><p><strong>数据46-1500字节</strong></p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8213.png" alt></p>
-<h3 id="物理层扩展以太网"><a href="#物理层扩展以太网" class="headerlink" title="物理层扩展以太网"></a>物理层扩展以太网</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8214.png" alt></p>
-<h3 id="链路层扩展以太网"><a href="#链路层扩展以太网" class="headerlink" title="链路层扩展以太网"></a>链路层扩展以太网</h3><p>主要是网桥和交换机</p>
-<p>网桥</p>
-<p>网桥根据mac帧的目标地址进行转发，当网桥收到帧时，并不向所有接口转发，而是根据目标mac地址确定转发到哪个接口（转发表）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8215.png" alt></p>
-<p>交换机–多接口网桥<br><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8216.png" alt></p>
-<h3 id="冲突域和广播域"><a href="#冲突域和广播域" class="headerlink" title="冲突域和广播域"></a>冲突域和广播域</h3><p>冲突域：域内每一个结点都能收到发送的帧，冲突域内相互交互会引起冲突，比如ab打电话同时讲话不就听不清了。</p>
-<p>广播域：发一个消息大家伙都能听见（老师在教室讲话所有人都能听见），交换机可以隔离冲突域</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%8217.png" alt></p>
-<p>交换机每一个端口就是一个冲突域</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/19/虚拟机类加载机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/19/虚拟机类加载机制/" class="post-title-link" itemprop="url">虚拟机类加载机制</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-19 18:25:15" itemprop="dateCreated datePublished" datetime="2020-04-19T18:25:15+08:00">2020-04-19</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm虚拟机/" itemprop="url" rel="index"><span itemprop="name">jvm虚拟机</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
           
         
       
@@ -2447,7 +2853,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2502,7 +2908,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2555,7 +2963,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
