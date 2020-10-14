@@ -122,7 +122,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%811.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%812.png">
-<meta property="og:updated_time" content="2020-10-10T13:10:15.787Z">
+<meta property="og:updated_time" content="2020-10-14T04:26:51.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql锁及mvcc">
 <meta name="twitter:description" content="锁的分类 无锁 12# 明确指定主键，但不存在该主键的值(没有数据，当然不会有锁)SELECT * FROM products WHERE id=-1 FOR UPDATE;  表锁 1234# 主键不明确SELECT * FROM products WHERE name=&apos;Mouse&apos; FOR UPDATE;SELECT * FROM products WHERE id&amp;lt;&amp;gt;&apos;3&apos; F">
@@ -573,6 +573,11 @@
 </ul>
 </li>
 </ul>
+<h4 id="ReadView是如何工作的？"><a href="#ReadView是如何工作的？" class="headerlink" title="ReadView是如何工作的？"></a><strong>ReadView是如何工作的？</strong></h4><ul>
+<li>如果被访问版本的trx_id属性值与ReadView中的creator_trx_id值相同，意味着当前事务在访问它自己修改过的记录，所以该版本可以被当前事务访问。</li>
+<li>如果被访问版本的trx_id属性值小于ReadView中的min_trx_id值，或者不在m_ids中，表明生成该版本的事务在当前事务生成ReadView前已经提交，所以该版本可以被当前事务访问</li>
+</ul>
+<p>m_ids里的事务就是还未提交的，之前的就代表提交了，提交了就可以被访问</p>
 <h4 id="RC情况下"><a href="#RC情况下" class="headerlink" title="RC情况下"></a>RC情况下</h4><p>假设数据库内一张表t包含一条记录，插入该记录的事务id为80</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Transaction 100</span><br><span class="line">BEGIN;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;关羽&apos; WHERE id = 1;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;张飞&apos; WHERE id = 1;</span><br></pre></td></tr></table></figure>
 
@@ -812,7 +817,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">68</span>
+                    <span class="site-state-item-count">69</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1028,7 +1033,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的分类"><span class="nav-number">1.</span> <span class="nav-text">锁的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行锁算法（机制）"><span class="nav-number">2.</span> <span class="nav-text">行锁算法（机制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行表锁具体应用"><span class="nav-number">3.</span> <span class="nav-text">行表锁具体应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表锁算法"><span class="nav-number">4.</span> <span class="nav-text">表锁算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><span class="nav-number">5.</span> <span class="nav-text">锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC"><span class="nav-number">6.</span> <span class="nav-text">MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">6.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3个概念"><span class="nav-number">6.1.1.</span> <span class="nav-text">3个概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC情况下"><span class="nav-number">6.1.2.</span> <span class="nav-text">RC情况下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RR情况下（-在第一次读取数据时生成一个ReadView-）"><span class="nav-number">6.1.3.</span> <span class="nav-text">RR情况下（ 在第一次读取数据时生成一个ReadView ）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">7.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的分类"><span class="nav-number">1.</span> <span class="nav-text">锁的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行锁算法（机制）"><span class="nav-number">2.</span> <span class="nav-text">行锁算法（机制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行表锁具体应用"><span class="nav-number">3.</span> <span class="nav-text">行表锁具体应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表锁算法"><span class="nav-number">4.</span> <span class="nav-text">表锁算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><span class="nav-number">5.</span> <span class="nav-text">锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC"><span class="nav-number">6.</span> <span class="nav-text">MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">6.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3个概念"><span class="nav-number">6.1.1.</span> <span class="nav-text">3个概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReadView是如何工作的？"><span class="nav-number">6.1.2.</span> <span class="nav-text">ReadView是如何工作的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC情况下"><span class="nav-number">6.1.3.</span> <span class="nav-text">RC情况下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RR情况下（-在第一次读取数据时生成一个ReadView-）"><span class="nav-number">6.1.4.</span> <span class="nav-text">RR情况下（ 在第一次读取数据时生成一个ReadView ）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">7.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>

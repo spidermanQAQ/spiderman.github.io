@@ -380,6 +380,155 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/意向锁/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/09/15/意向锁/" class="post-title-link" itemprop="url">意向锁</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-09-15 15:00:09" itemprop="dateCreated datePublished" datetime="2020-09-15T15:00:09+08:00">2020-09-15</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/15/mysql锁及mvcc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -573,6 +722,11 @@
 </ul>
 </li>
 </ul>
+<h4 id="ReadView是如何工作的？"><a href="#ReadView是如何工作的？" class="headerlink" title="ReadView是如何工作的？"></a><strong>ReadView是如何工作的？</strong></h4><ul>
+<li>如果被访问版本的trx_id属性值与ReadView中的creator_trx_id值相同，意味着当前事务在访问它自己修改过的记录，所以该版本可以被当前事务访问。</li>
+<li>如果被访问版本的trx_id属性值小于ReadView中的min_trx_id值，或者不在m_ids中，表明生成该版本的事务在当前事务生成ReadView前已经提交，所以该版本可以被当前事务访问</li>
+</ul>
+<p>m_ids里的事务就是还未提交的，之前的就代表提交了，提交了就可以被访问</p>
 <h4 id="RC情况下"><a href="#RC情况下" class="headerlink" title="RC情况下"></a>RC情况下</h4><p>假设数据库内一张表t包含一条记录，插入该记录的事务id为80</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Transaction 100</span><br><span class="line">BEGIN;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;关羽&apos; WHERE id = 1;</span><br><span class="line"> </span><br><span class="line">UPDATE t SET c = &apos;张飞&apos; WHERE id = 1;</span><br></pre></td></tr></table></figure>
 
@@ -1263,7 +1417,16 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid=(i+j)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid]&lt;=target)&#123;</span><br><span class="line">                i=mid+<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                j=mid-<span class="number">1</span>;</span><br><span class="line">            &#125; </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//上面循环的时候每次有mid=target，i就mid+1，所以i一定在最后一个target之后</span></span><br><span class="line">        <span class="keyword">int</span> right=i;</span><br><span class="line">        <span class="keyword">if</span>(j&gt;<span class="number">0</span>&amp;&amp;nums[j]!=target)</span><br><span class="line">          <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        i=<span class="number">0</span>;</span><br><span class="line">        j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//与上面同理，j始终会在target前一个位置，所以返回左边界为j</span></span><br><span class="line">        <span class="keyword">while</span>(i&lt;=j)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid=(i+j)/<span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid]&gt;=target)&#123;</span><br><span class="line">                j=mid-<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                i=mid+<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> left=j;</span><br><span class="line">        <span class="keyword">return</span> right-left-<span class="number">1</span>; </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><h3 id="56-和为s的两个数字"><a href="#56-和为s的两个数字" class="headerlink" title="56.和为s的两个数字"></a>56.和为s的两个数字</h3><p>输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可</p>
+<h2 id="双指针"><a href="#双指针" class="headerlink" title="双指针"></a>双指针</h2><h3 id="21-调整数组顺序使奇数位于偶数前面"><a href="#21-调整数组顺序使奇数位于偶数前面" class="headerlink" title="21.调整数组顺序使奇数位于偶数前面"></a>21.调整数组顺序使奇数位于偶数前面</h3><p> 输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,2,3,4]</span><br><span class="line">输出：[1,3,2,4] </span><br><span class="line">注：[3,1,2,4] 也是正确的答案之一</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>i，j数组两端，分别向中间遍历，i遇到偶数停下，j遇到奇数停下</p>
+<p>怎么判断奇偶：和1进行&amp;操作，奇数结果为1，偶数结果为0</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] exchange(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp;</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j=nums.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i&lt;j)&#123;</span><br><span class="line">            <span class="keyword">while</span>(i&lt;j&amp;&amp;(nums[i]&amp;<span class="number">1</span>)==<span class="number">1</span>) ++i;</span><br><span class="line">            <span class="keyword">while</span>(i&lt;j&amp;&amp;(nums[j]&amp;<span class="number">1</span>)==<span class="number">0</span>) --j;</span><br><span class="line">            temp=nums[i];</span><br><span class="line">            nums[i]=nums[j];</span><br><span class="line">            nums[j]=temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> nums;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="56-和为s的两个数字"><a href="#56-和为s的两个数字" class="headerlink" title="56.和为s的两个数字"></a>56.和为s的两个数字</h3><p>输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好是s。如果有多对数字的和等于s，则输出任意一对即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [2,7,11,15], target = 9</span><br><span class="line">输出：[2,7] 或者 [7,2]</span><br></pre></td></tr></table></figure>
 
 <p><strong>初始化</strong>：i，j分别指向数组两端</p>
@@ -1328,7 +1491,14 @@
 <p>利用hashmap存储每个数字的出现次数，在进行一轮查找即可，但效率不高</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">majorityElement</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        HashMap&lt;Integer,Integer&gt;map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!map.containsKey(i))&#123;</span><br><span class="line">                map.put(i,<span class="number">1</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                map.put(i,map.get(i)+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(map.get(j)&gt;nums.length/<span class="number">2</span>)</span><br><span class="line">              <span class="keyword">return</span> j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h2><h3 id="精选top5-最长回文串"><a href="#精选top5-最长回文串" class="headerlink" title="精选top5.最长回文串"></a>精选top5.最长回文串</h3><p>给定一个字符串 <code>s</code>，找到 <code>s</code> 中最长的回文子串。你可以假设 <code>s</code> 的最大长度为 1000。 </p>
+<h2 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h2><h3 id="42-连续子数组的和"><a href="#42-连续子数组的和" class="headerlink" title="42.连续子数组的和"></a>42.连续子数组的和</h3><p> 输入一个整型数组，数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: nums = [-2,1,-3,4,-1,2,1,-5,4]</span><br><span class="line">输出: 6</span><br><span class="line">解释: 连续子数组 [4,-1,2,1] 的和最大，为 6</span><br></pre></td></tr></table></figure>
+
+<p><strong>思路</strong></p>
+<p>dp[i]代表以nums[i]为结尾的子数组之和</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[]dp=<span class="keyword">new</span> <span class="keyword">int</span>[nums.length];</span><br><span class="line">        dp[<span class="number">0</span>]=nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> res=dp[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(dp[i-<span class="number">1</span>]&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                dp[i]=dp[i-<span class="number">1</span>]+nums[i];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                dp[i]=nums[i];</span><br><span class="line">            &#125;</span><br><span class="line">            res=Math.max(res,dp[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="精选top5-最长回文串"><a href="#精选top5-最长回文串" class="headerlink" title="精选top5.最长回文串"></a>精选top5.最长回文串</h3><p>给定一个字符串 <code>s</code>，找到 <code>s</code> 中最长的回文子串。你可以假设 <code>s</code> 的最大长度为 1000。 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;babad&quot;</span><br><span class="line">输出: &quot;bab&quot;</span><br><span class="line">注意: &quot;aba&quot; 也是一个有效答案。</span><br></pre></td></tr></table></figure>
 
 <p><strong>思路</strong></p>
@@ -1493,7 +1663,7 @@
 <p><strong>代码</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    //求倒数第n个相当于求l-(n-1)个，也就是找到l-(n-1)-1即l-n</span><br><span class="line">    public ListNode removeNthFromEnd(ListNode head, int n) &#123;</span><br><span class="line">        ListNode dummy=new ListNode(0);</span><br><span class="line">        dummy.next=head;</span><br><span class="line">        ListNode first=head;</span><br><span class="line">        int count=0;</span><br><span class="line">        int length=0;</span><br><span class="line">        //遍历到最后的元素，求链表长度</span><br><span class="line">        while(first!=null)&#123;</span><br><span class="line">            length+=1;</span><br><span class="line">            first=first.next;</span><br><span class="line">        &#125;</span><br><span class="line">        //从头开始遍历</span><br><span class="line">        first=dummy;</span><br><span class="line">        //找l-(n-1)个，也就是找到l-(n-1)-1即l-n，这样才能删除</span><br><span class="line">        while(!(count==length-n))&#123;</span><br><span class="line">            count+=1;</span><br><span class="line">            first=first.next;</span><br><span class="line">        &#125;</span><br><span class="line">        first.next=first.next.next;</span><br><span class="line">        return dummy.next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
+<h3 id><a href="#" class="headerlink" title=" "></a> </h3>
           
         
       
@@ -2565,246 +2735,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/30/传输层/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/30/传输层/" class="post-title-link" itemprop="url">传输层</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-30 13:56:34" itemprop="dateCreated datePublished" datetime="2020-04-30T13:56:34+08:00">2020-04-30</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠</p>
-<p>UDP主要特点：</p>
-<ul>
-<li>无连接，减少发送数据前的时延</li>
-<li>使用最大努力交付，不可靠</li>
-<li>面向报文，适合一次传送少量数据的应用</li>
-<li>无拥塞控制，适合实时应用，如网络开会</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png" alt></p>
-<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><p>TCP连接</p>
-<p>每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80</p>
-<p>每一个TCP连接唯一地被通信两端（即两个套接字）所确定。即：</p>
-<p>TCP连接::={socket1，socket2}={（IP1：port1），（IP2：port2）}</p>
-<h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
-<li>面向连接</li>
-<li>提供可靠交付服务</li>
-<li>全双工通信 发送方，接收方都有缓存来存放数据</li>
-<li>面向字节流</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png" alt></p>
-<h3 id="TCP报文首部"><a href="#TCP报文首部" class="headerlink" title="TCP报文首部"></a>TCP报文首部</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%823.png" alt></p>
-<p>序号（seq）：TCP连接中传送的字节都有自己的编号，序号是本报文段发送数据的第一个字节的编号（发送端的）</p>
-<p>确认号（ack）：对应序号，指接收端希望获得的下个报文段的第一个字节的编号（接收端）</p>
-<p>六个控制位：</p>
-<ul>
-<li>URG（紧急位）：URG=1代表有紧急数据，不需要通过缓存，直接发送</li>
-<li>ACK（确认位）：ACK=1代表确认位有效，和ack一般一起出场</li>
-<li>SYN（同步位）：SYN=1表明这是一个请求/连接接收报文</li>
-<li>FIN（中止位）：FIN=1表示发送端数据已经发送完，请求断开连接</li>
-</ul>
-<p>检验位：检验首部+数据</p>
-<h3 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h3><p>TCP连接传输分3个阶段：连接建立——发送数据——连接释放</p>
-<p>TCP连接建立（3次握手）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%824.png" alt></p>
-<p>round1：发送方发送连接请求报文段，SYN=1，seq=x（随机）</p>
-<p>round2：接收方返回确认报文段，SYN=1，ACK=1，seq=y(随机)，ack=x+1</p>
-<p>round3：服务器返回确认的确认，ACK=1，seq=x+1，ack=y+1</p>
-<p>TCP连接释放（4次握手）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%825.png" alt></p>
-<p>round1：客户端发送连接释放报文，关闭TCP连接，FIN=1，seq=u</p>
-<p>round2：服务器端返回确认，ACK=1，seq=v，ack=u+1,此时处于半关闭状态</p>
-<p>round3：服务器端发送连接释放报文，关闭TCP连接，FIN=1，ACK=1，seq=w，ack=u+1</p>
-<p>round4：客户端返回确认报文段，结束</p>
-<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>假设客户端请求建立连接，发给服务器SYN包等待服务器确认，服务器收到确认后，如果是两次握手，假设服务器给客户端在第二次握手时发送数据，数据从服务器发出，服务器认为连接已经建立，但在发送数据的过程中数据丢失，客户端认为连接没有建立，会进行重传。假设每次发送的数据一直在丢失，客户端一直SYN，服务器就会产生多个无效连接，占用资源，这个时候服务器可能会挂掉。这个现象就是我们听过的“SYN的洪水攻击”。<br>总结：第三次握手是为了防止：如果客户端迟迟没有收到服务器返回确认报文，这时会放弃连接，重新启动一条连接请求，但问题是：服务器不知道客户端没有收到，所以他会收到两个连接，浪费连接开销。如果每次都是这样，就会浪费多个连接开销 </p>
-<h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
-<p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
-<h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
-<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>TCP默认使用累计重传</p>
-<p>这里123到达TCP缓存后，456因为网络问题尚未到达，78也已经到达，此时接收端的报文段首部确认号字段依然为4</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png" alt></p>
-<h3 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h3><p>超时重传</p>
-<p>TCP的发送端在规定时间内没有收到确认就要重传已发送的报文段</p>
-<p>冗余重传</p>
-<p>当收到比期望报文序号大的报文时，发送一个冗余ACK，指明下一个期待的序号</p>
-<p>例如发送端已经发送12345报文</p>
-<p>接收端收到1，返回1的确认</p>
-<p>接收端收到3，返回1的确认</p>
-<p>接收端收到4，任然返回1的确认</p>
-<p>接收端收掉5，依旧返回1的确认</p>
-<p>发送方收到3次冗余，知道2号报文丢失，重传报文</p>
-<h2 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h2><p>流量控制：让发送方发送的慢点，好让接收方来得及接收</p>
-<p>TCP利用滑动窗口实现流量控制，发送窗口取决于接收窗口和拥塞窗口</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%828.png" alt></p>
-<h2 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h2><p>拥塞原因：对资源的需求总和大于可用资源</p>
-<p>拥塞控制和流量控制的区别可用理解为目标停车场停不下了和路上堵车的区别</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png" alt></p>
-<p>解决办法：</p>
-<ul>
-<li>慢开始 拥塞避免</li>
-<li>快重传 快恢复</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png" alt></p>
-<p> 一个传输轮次就是一个往返时间，可以理解为一个回来可以传输的字节有多少个。一开始一个来回1个，然会2个，4个…知道16这个阈值开始拥塞避免增长的慢点，毕竟按前面的指数增长越来越夸张，到达24后出现拥塞，此时立刻返回到1这个状态，再来一遍，不过阈值会有所减少</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png" alt></p>
-<p>快重传就是冗余重传，收到3个冗余确认重传</p>
-<p>快恢复指的是出现拥塞后不用回到开始的状态，直接从新的阈值开始</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2853,7 +2783,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">68</span>
+                    <span class="site-state-item-count">69</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
