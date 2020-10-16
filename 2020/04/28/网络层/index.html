@@ -133,7 +133,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8212.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-05-24T02:33:17.452Z">
+<meta property="og:updated_time" content="2020-10-16T05:22:01.750Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络层">
 <meta name="twitter:description" content="IP数据报格式 版本：IPv4/IPv6 首部长度：单位为4B，最少为5（毕竟首部固定部分就有20B） 总长度：首部+数据(链路层有最小和最大长度) 标识：同一个数据报分片用同一个标识    标志：3位，只有2位有效 ，中间位DF=1，禁止分片，=0允许分片，最低位MF=1，后面还有分片，=0最后一个分片 片偏移：某片在原分组的位置 生存时间：每经过一个路由器TTL-1 首部检验和：只检验首部，因">
@@ -508,8 +508,9 @@
 <p>A，B，C类地址网络号中依次有1位，2位，3位用来标识，网络号依次占8，16，24位</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%823.png" alt></p>
 <h2 id="网络地址转换NAT"><a href="#网络地址转换NAT" class="headerlink" title="网络地址转换NAT"></a>网络地址转换NAT</h2><p>路由器对目的地址是私有IP地址的数据报一律不转发</p>
-<p>网络地址转换NAT在专用网连接到因特网的路由器上安装NAT软件，安装了NAT软件的路由器叫做NAT路由器</p>
+<p>网络地址转换NAT在专用网连接到因特网的路由器上安装NAT软件，安装了NAT软件的路由器叫做NAT路由器，它至少有一个外部全球Ip地址</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%824.png" alt></p>
+<p>这里专用网192.168.0.0下的主机要和互联网进行数据交换，就需要用NAT路由器的IP地址作为一个代表。具体实现就依靠NAT转换表</p>
 <h2 id="子网划分和子网掩码"><a href="#子网划分和子网掩码" class="headerlink" title="子网划分和子网掩码"></a>子网划分和子网掩码</h2><p>分类的IP地址存在问题：比如一个单位申请了一个B类IP，但是实际在用的并不多，会造成资源浪费问题。划分子网还能提高灵活性，比如一个单位要新开一个部门，没划分子网的话得重新去申请一个IP</p>
 <h3 id="子网划分"><a href="#子网划分" class="headerlink" title="子网划分"></a>子网划分</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%827.png" alt></p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%825.png" alt></p>
@@ -526,11 +527,11 @@
 <p>子网掩码   11111111 11111111 11110000 00000000</p>
 <h2 id="ARP协议"><a href="#ARP协议" class="headerlink" title="ARP协议"></a>ARP协议</h2><p>在实际网络的链路上传输数据帧时，最终必须使用mac地址，如下图的mac6，但是你可能不知道mac6是什么，这就需要arp了</p>
 <p>ARP协议可以完成主机或路由器IP地址到mac地址的映射</p>
-<p>基本过程：检查<strong>ARP高速缓存</strong>，有对应表项就写入mac地址（目标地址在一个局域网），没有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
+<p>基本过程：检查<strong>ARP高速缓存</strong>（高速缓存保存的是局域网内的IP与mac地址映射），有对应表项就写入mac地址（目标地址在一个局域网），没有则用FF-FF-FF-FF-FF-FF代替（目标地址不在局域网）。封装成帧后广播ARP分组，局域网内都能收到。目的主机收到后会单播一个响应分组，源主机收到后将此写入ARP高速缓存</p>
 <p>例子</p>
 <p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%829.png" alt></p>
 <p>应用层发送一个pdf文件，传输层分成123，对123分为加首部（如果123长度过大，还要分片）</p>
-<p>主机1发送文件到主机5，首先在1所在局域网广播一个ARP请求分组，因为5不在同一个局域网，对应的mac地址为mac6，在数据链路层传输后到达路由器，解封装，再封装（路由器只有3层，最高到网络层），封装后源mac地址为mac7，目标mac为mac8，同理到mac9直至最高的主机5IP.</p>
+<p>主机1发送文件到主机5，先让IP5与子网掩码与以下看一下在不在一个局域网内，在1所在局域网广播一个ARP请求分组，因为5不在同一个局域网，所以局域网会单播一个分组回来，此时对应的mac地址为mac6，在数据链路层传输后到达路由器，解封装，再封装（路由器只有3层，最高到网络层），封装后源mac地址为mac7，目标mac为mac8，同理到mac9直至最高的主机5IP.</p>
 <h2 id="ICMP协议（网际控制报文协议）"><a href="#ICMP协议（网际控制报文协议）" class="headerlink" title="ICMP协议（网际控制报文协议）"></a>ICMP协议（网际控制报文协议）</h2><p>目的：进行差错报告</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BD%91%E7%BB%9C%E5%B1%8210.png" alt></p>
 <p>类型：ICMP报文有不同类型</p>
@@ -728,7 +729,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

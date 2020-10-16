@@ -120,7 +120,7 @@
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="[TOC] 快慢指针精选top287.寻找重复数给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数 12输入: [1,3,4,2,2]输出: 2  思路  把数组当成链表，0-nums[0]-nums[nums[0]],这样因为有重复数字，会出现环 快指针走2步，慢指针走1步，当快">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-10-14T12:32:29.662Z">
+<meta property="og:updated_time" content="2020-10-15T03:06:54.362Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="剑指offer">
 <meta name="twitter:description" content="[TOC] 快慢指针精选top287.寻找重复数给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数 12输入: [1,3,4,2,2]输出: 2  思路  把数组当成链表，0-nums[0]-nums[nums[0]],这样因为有重复数字，会出现环 快指针走2步，慢指针走1步，当快">
@@ -513,10 +513,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    //思路：将2个数相加转换二进制相加，即会产生进位与非进位，转换成进位+非进位，除非加完进位等于0了，循环结束，否则会一直有进位来循环</span><br><span class="line">    //进位呢相当于与操作，即2个同为1才为1，当然在与操作的基础上还得左移一位,1+1</span><br><span class="line">    //非进位呢相当于异或操作，即不同为1，相同为0，0+1,1+0,0+0</span><br><span class="line">    public int add(int a, int b) &#123;</span><br><span class="line">        while(b!=0)&#123;</span><br><span class="line">            int c=(a&amp;b)&lt;&lt;1;</span><br><span class="line">            //b保存进位</span><br><span class="line">            a=a^b;</span><br><span class="line">            //a保存非进位</span><br><span class="line">            b=c;</span><br><span class="line">        &#125;</span><br><span class="line">        return a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="56-1数组中数字出现的字数"><a href="#56-1数组中数字出现的字数" class="headerlink" title="56-1数组中数字出现的字数"></a>56-1数组中数字出现的字数</h3><p> 一个整型数组 <code>nums</code> 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [4,1,4,6]</span><br><span class="line">输出：[1,6] 或 [6,1]</span><br></pre></td></tr></table></figure>
+
 <p><strong>解题思路</strong></p>
 <p>异或：相同为0，不同为1</p>
 <p>与：同为1才是1，否则是0</p>
 <p>只有2个不一样的值，对所有数据进行异或操作，最后的结果就是这两个不一样数字异或的结果。所以考虑通过这个结果将3个不一样的数字分开到2组，实际上异或的结果值中肯定有1位是1，我们选择最低位的1（因为容易找），除了这个1其余为0，将数组所有数字和结果进行与操作，相同数字我们很容易放到一边，因为2个不同数字进行异或结果的那个1意味着在这一位上2个数字是不一样的，那进行与操作分类是也会被分到2组</p>
+<p>x&amp;(-x)可以确定最低位的1，为啥？</p>
+<p>-x是x符号位不变，其余取反+1，这样进行与操作时，x中最低位的1，前面是0，最低位取反就是0，+1最低位就是1，这样&amp;就是1了</p>
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] singleNumbers(<span class="keyword">int</span>[] nums) &#123;</span><br><span class="line">        <span class="keyword">int</span>[] res=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">int</span> x=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="comment">//找到最近的一个1的位数</span></span><br><span class="line">            x=x^i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> flag=x&amp;(-x);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>((flag&amp;i)==<span class="number">0</span>)&#123;</span><br><span class="line">                res[<span class="number">0</span>]^=i;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                res[<span class="number">1</span>]^=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1002,7 +1006,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

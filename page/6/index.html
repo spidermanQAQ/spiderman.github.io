@@ -380,6 +380,193 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/mybatisCRUD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/14/mybatisCRUD/" class="post-title-link" itemprop="url">mybatisCRUD</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-14 13:04:30" itemprop="dateCreated datePublished" datetime="2019-10-14T13:04:30+08:00">2019-10-14</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="基本的CRUD"><a href="#基本的CRUD" class="headerlink" title="基本的CRUD"></a>基本的CRUD</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p><strong>接口类代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//用户持久层接口</span><br><span class="line">public interface IUserDao &#123;</span><br><span class="line"></span><br><span class="line">    //查询所有</span><br><span class="line">    List&lt;User&gt; findAll();</span><br><span class="line"></span><br><span class="line">    //保存用户</span><br><span class="line">    void saveUser(User user);</span><br><span class="line"></span><br><span class="line">    //更新</span><br><span class="line">    void updateUser(User user);</span><br><span class="line"></span><br><span class="line">    //删除</span><br><span class="line">    void deleteUser(Integer userId);</span><br><span class="line"></span><br><span class="line">    User findById(Integer userId);</span><br><span class="line"></span><br><span class="line">    //模糊查询</span><br><span class="line">    List&lt;User&gt;findByName(String username);</span><br><span class="line"></span><br><span class="line">    //查询总用户数</span><br><span class="line">    int findTotal();</span><br><span class="line"></span><br><span class="line">    //根据queryvo中的条件查询用火狐</span><br><span class="line">    List&lt;User&gt; findUserByVo(QueryVo vo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>mapper代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">        PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;mapper namespace=&quot;top.zoick.dao.IUserDao&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--配置查询结果的列名和实体类的属性名的对应关系--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;userMap&quot; type=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--主键字段的对应--&gt;</span><br><span class="line">        &lt;id property=&quot;userId&quot; column=&quot;id&quot;&gt;&lt;/id&gt;</span><br><span class="line">        &lt;!--非主键字段的对应--&gt;</span><br><span class="line">        &lt;result property=&quot;userName&quot; column=&quot;username&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userAddress&quot; column=&quot;address&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userSex&quot; column=&quot;sex&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userBirthday&quot; column=&quot;birthday&quot;&gt;&lt;/result&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    &lt;!--配置查询所有  其中id不能乱写必须是dao接口中的方法  resultType写的是实体类的全路径--&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        &lt;!--实体类中的属性名和数据库表中元素名字匹配不上时，使用别名即可匹配。id为数据库中表的列名，userId为实体类中属性名--&gt;</span><br><span class="line">        &lt;!--select id as userId,username as userName,address as userAddress ,sex as userSex, birthday as userBirthday from user--&gt;</span><br><span class="line">        select * from user</span><br><span class="line">&lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--保存用户--&gt;</span><br><span class="line">    &lt;insert id=&quot;saveUser&quot; parameterType=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--配置插入操作后，获取插入数据的id--&gt;</span><br><span class="line">            &lt;!--keyProperty对应实体类属性名:id，keyColumn对应于数据库:id resultType为数据类型，order为在这条insert sql语句执行前还是执行后做--&gt;</span><br><span class="line">        &lt;selectKey keyProperty=&quot;userId&quot; keyColumn=&quot;id&quot; resultType=&quot;int&quot; order=&quot;AFTER&quot;&gt;</span><br><span class="line">            select last_insert_id();</span><br><span class="line">        &lt;/selectKey&gt;</span><br><span class="line">        insert into user (username,address,sex,birthday) values (#&#123;userName&#125;,#&#123;userAddress&#125;,#&#123;userSex&#125;,#&#123;userBirthday&#125;)</span><br><span class="line">    &lt;/insert&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--更新用户--&gt;</span><br><span class="line">    &lt;update id=&quot;updateUser&quot; parameterType=&quot;usER&quot;&gt;</span><br><span class="line">        update user set username=#&#123;userName&#125;,address=#&#123;userAddress&#125;,sex=#&#123;userSex&#125;,birthday=#&#123;userBirthday&#125; where id=#&#123;userId&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--删除用户--&gt;</span><br><span class="line">    &lt;!--当参数值为基本类型或者基本类型包装类时，SQL语句中的占位符可以随意写--&gt;</span><br><span class="line">    &lt;delete id=&quot;deleteUser&quot; parameterType=&quot;Integer&quot;&gt;</span><br><span class="line">        delete from user where id = #&#123;anyzhanweifu&#125;</span><br><span class="line">    &lt;/delete&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--根据id查询用户--&gt;</span><br><span class="line">    &lt;select id=&quot;findByID&quot; parameterType=&quot;INT&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user where id = #&#123;uuuuuuid&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--根据名称模糊查询--&gt;</span><br><span class="line">    &lt;select id=&quot;findByName&quot; parameterType=&quot;String&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user where username like #&#123;namenamenamename&#125;</span><br><span class="line">        &lt;!--select * from user where username like &apos;%$&#123;value&#125;%&apos;--&gt;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--查询记录的总用户条数--&gt;</span><br><span class="line">    &lt;select id=&quot;findTotal&quot; resultType=&quot;Integer&quot;&gt;</span><br><span class="line">        select count(id) from user</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--根据QueryVo的条件查询用户--&gt;</span><br><span class="line">    &lt;select id=&quot;findUserByVo&quot; parameterType=&quot;top.zoick.domain.QueryVo&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user where username like #&#123;user.username&#125;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试类代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line">public class MybatisTest &#123;</span><br><span class="line"></span><br><span class="line">    private InputStream in;</span><br><span class="line">    private SqlSession sqlSession;</span><br><span class="line">    private IUserDao userDao;</span><br><span class="line"></span><br><span class="line">    @Before//用于在测试方法执行之前执行</span><br><span class="line">    public void init() throws Exception &#123;</span><br><span class="line">        //1.读取配置文件</span><br><span class="line">        in = Resources.getResourceAsStream(&quot;SqlMapConfig.xml&quot;);</span><br><span class="line">        //2.创建SqlSessionFactory工厂</span><br><span class="line">        SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(in);</span><br><span class="line">        //3.使用工厂生产SqlSession对象</span><br><span class="line">        sqlSession = factory.openSession();</span><br><span class="line">        //4.使用SqlSession创建Dao接口的代理对象</span><br><span class="line">        userDao = sqlSession.getMapper(IUserDao.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @After//用于在测试方法执行之后执行</span><br><span class="line">    public void destory() throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        //提交事务</span><br><span class="line">        sqlSession.commit();</span><br><span class="line"></span><br><span class="line">        //6.释放资源</span><br><span class="line">        sqlSession.close();</span><br><span class="line">        in.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试查询所有</span><br><span class="line">     *</span><br><span class="line">     * @throws IOException</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindALl() throws Exception &#123;</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        List&lt;User&gt; users = userDao.findAll();</span><br><span class="line">        for (User user : users) &#123;</span><br><span class="line">            System.out.println(user);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试保存操作</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testSave() throws Exception &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUserName(&quot;modify user&quot;);</span><br><span class="line">        user.setUserAddress(&quot;天津&quot;);</span><br><span class="line">        user.setUserBirthday(new Date());</span><br><span class="line">        user.setUserSex(&quot;男&quot;);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;保存操作之前：&quot; + user);</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        userDao.saveUser(user);</span><br><span class="line">        System.out.println(&quot;保存操作之后：&quot; + user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试更新操作</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testUpdate() throws Exception &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUserId(51);</span><br><span class="line">        user.setUserName(&quot;mybatis updateUser&quot;);</span><br><span class="line">        user.setUserAddress(&quot;天津1&quot;);</span><br><span class="line">        user.setUserBirthday(new Date());</span><br><span class="line">        user.setUserSex(&quot;男&quot;);</span><br><span class="line">        //5.使用代理对象执行方法</span><br><span class="line">        userDao.updateUser(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试删除</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testDelete() throws Exception &#123;</span><br><span class="line">        //5.执行删除方法</span><br><span class="line">        userDao.deleteUser(51);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试根据id查询用户</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindById() throws Exception &#123;</span><br><span class="line">        //5.执行查询一个</span><br><span class="line">        User user = userDao.findByID(42);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试名称模糊查询用户信息</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindByName() throws Exception &#123;</span><br><span class="line">        //5.执行模糊查询</span><br><span class="line">        List&lt;User&gt; user = userDao.findByName(&quot;%彭%&quot;);</span><br><span class="line">//        List&lt;User&gt; user = userDao.findByName(&quot;彭&quot;);</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试查询用户条数</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindTotal() throws Exception &#123;</span><br><span class="line">        init();</span><br><span class="line">        //执行查询总记录条数</span><br><span class="line">        Integer number = userDao.findTotal();</span><br><span class="line">        System.out.println(&quot;总记录条数为：&quot; + number);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试使用QueryVo作为查询条件</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testFindUserByVo() throws Exception &#123;</span><br><span class="line">        QueryVo vo = new QueryVo();</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setUserName(&quot;%彭%&quot;);</span><br><span class="line">        vo.setUser(user);</span><br><span class="line"></span><br><span class="line">        List&lt;User&gt; users = userDao.findUserByVo(vo);</span><br><span class="line">        for (User u : users) &#123;</span><br><span class="line">            System.out.println(u);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><h4 id="数据库表名和实体类属性名不一致"><a href="#数据库表名和实体类属性名不一致" class="headerlink" title="数据库表名和实体类属性名不一致"></a>数据库表名和实体类属性名不一致</h4><p>1.起别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--配置查询所有  其中id不能乱写必须是dao接口中的方法  resultType写的是实体类的全路径--&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultType=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--实体类中的属性名和数据库表中元素名字匹配不上时，使用别名即可匹配。id为数据库中表的列名，userId为实体类中属性名--&gt;</span><br><span class="line">        select id as userId,username as userName,address as userAddress ,sex as userSex, birthday as userBirthday from user</span><br><span class="line">    &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.配置查询结果的列名和实体类的属性名的对应关系</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> &lt;!--配置查询结果的列名和实体类的属性名的对应关系--&gt;</span><br><span class="line">    &lt;resultMap id=&quot;userMap&quot; type=&quot;top.zoick.domain.User&quot;&gt;</span><br><span class="line">        &lt;!--主键字段的对应--&gt;</span><br><span class="line">        &lt;id property=&quot;userId&quot; column=&quot;id&quot;&gt;&lt;/id&gt;</span><br><span class="line">        &lt;!--非主键字段的对应--&gt;</span><br><span class="line">        &lt;result property=&quot;userName&quot; column=&quot;username&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userAddress&quot; column=&quot;address&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userSex&quot; column=&quot;sex&quot;&gt;&lt;/result&gt;</span><br><span class="line">        &lt;result property=&quot;userBirthday&quot; column=&quot;bithday&quot;&gt;&lt;/result&gt;</span><br><span class="line">    &lt;/resultMap&gt;</span><br><span class="line"></span><br><span class="line">再在查询的sql语句的xml中加入配置</span><br><span class="line">  &lt;select id=&quot;findAll&quot; resultMap=&quot;userMap&quot;&gt;</span><br><span class="line">        select * from user</span><br><span class="line">  &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置别名"><a href="#配置别名" class="headerlink" title="配置别名"></a>配置别名</h4><p>作用：mapper.xml里面例如parameterType=””就不用写全限定类名，写别名即可</p>
+<p> 1.使用typeAliases配置别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--使用typeAliases配置别名，他只能配置domain中类的别名--&gt;</span><br><span class="line">  &lt;typeAliases&gt;</span><br><span class="line">     &lt;!--typeAlias用于配置别名，type属性指定的是实体类中的全限定类名。alias属性指定别名，当指定了别名后不在区分大小写--&gt;</span><br><span class="line">      &lt;typeAlias type=&quot;top.zoick.domain.User&quot; alias=&quot;user&quot;&gt;&lt;/typeAlias&gt;</span><br><span class="line">  &lt;/typeAliases&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.使用package配置别名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;typeAliases&gt;</span><br><span class="line">    &lt;!--用于指定要配置别名的包，当指定后，该包下的实体类都会注册别名，并且类名就是别名，不再区分大小写--&gt;</span><br><span class="line">        &lt;package name=&quot;top.zoick.domain&quot;/&gt;</span><br><span class="line">&lt;/typeAliases&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="OGNL表达式"><a href="#OGNL表达式" class="headerlink" title="OGNL表达式"></a>OGNL表达式</h4><p>Object Graphic Navigation Language<br>对象 　　图　　　导航 　　　语言<br>它是通过对象的取值方法来获取数据。·在写法上把get给省略了<br>比如:我们获取用户的名称<br>　　　　类中的写法:user.getUsername,<br>　　　　OGNL表达式写法:user.username<br>mybatis中为什么能直接写username,而不用user.呢:<br>　　　　因为在parameterType中已经提供了属性所属的类, 所以此时不需要写对象名</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/28/static-instanceof-转型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2521,193 +2708,6 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/spring概念/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/16/spring概念/" class="post-title-link" itemprop="url">ApplicationContext</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-16 20:01:31" itemprop="dateCreated datePublished" datetime="2019-09-16T20:01:31+08:00">2019-09-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p> ApplicationContext是spring的容器接口，通过idea我们来看一下其继承关系</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ApplicationContext1.png" alt></p>
-<h2 id="BeanFactory和ApplicatonContext区别"><a href="#BeanFactory和ApplicatonContext区别" class="headerlink" title="BeanFactory和ApplicatonContext区别"></a>BeanFactory和ApplicatonContext区别</h2><p>BeanFactory才是spring的顶层接口，ApplicatonContext是其子接口，主要区别</p>
-<ul>
-<li><p>ApplicationContext：只要一读取配置文件，默认情况下就会创建对象（立即加载）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService);</span><br><span class="line"></span><br><span class="line">结果：在执行完ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);就输出了“对象被加载了”，即读取完配置文件对象就被加载</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>BeanFactory什么时候要用对象才创建（延迟加载）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">IAcountService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  System.out.println(<span class="string">"对象加载了"</span>);</span><br><span class="line">&#125;        </span><br><span class="line"></span><br><span class="line">Resource resource = <span class="keyword">new</span> ClassPathResource(<span class="string">"bean.xml"</span>);</span><br><span class="line">BeanFactory beanFactory=<span class="keyword">new</span> XmlBeanFactory(resource);</span><br><span class="line">IAcountService acountService1=(IAcountService)beanFactory.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService1);</span><br><span class="line">结果：执行System.out.println(acountService1);才输出了“对象被加载了”</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="ApplicationContext接口3个实现类"><a href="#ApplicationContext接口3个实现类" class="headerlink" title="ApplicationContext接口3个实现类"></a>ApplicationContext接口3个实现类</h2><ul>
-<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
-<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
-<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
-</ul>
-<p>ClassPathXmlApplicationContext基本使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext ac=new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        IAcountService acountService1=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>AnnotationConfigApplicationContext基本使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration//相当于原来的bean.xml</span><br><span class="line">@ComponentScan(basePackages = &quot;com.xjh&quot;)//相当于&lt;context:component-scan&gt;&lt;/&gt;</span><br><span class="line">public class springConfig &#123;</span><br><span class="line">    @Bean(name = &quot;IAcountService&quot;)</span><br><span class="line">    public IAcountService getBean()&#123;</span><br><span class="line">        return new IAcountService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ApplicationContext ac=new AnnotationConfigApplicationContext(springConfig.class);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(&quot;IAcountService&quot;)</span><br><span class="line">System.out.println(acountService);</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2756,7 +2756,7 @@ System.out.println(c1==Pair.class); // true</code></pre><p>Pair是一个泛型�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

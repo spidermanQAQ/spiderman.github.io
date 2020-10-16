@@ -380,6 +380,193 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/spring概念/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/16/spring概念/" class="post-title-link" itemprop="url">ApplicationContext</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-16 20:01:31" itemprop="dateCreated datePublished" datetime="2019-09-16T20:01:31+08:00">2019-09-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p> ApplicationContext是spring的容器接口，通过idea我们来看一下其继承关系</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ApplicationContext1.png" alt></p>
+<h2 id="BeanFactory和ApplicatonContext区别"><a href="#BeanFactory和ApplicatonContext区别" class="headerlink" title="BeanFactory和ApplicatonContext区别"></a>BeanFactory和ApplicatonContext区别</h2><p>BeanFactory才是spring的顶层接口，ApplicatonContext是其子接口，主要区别</p>
+<ul>
+<li><p>ApplicationContext：只要一读取配置文件，默认情况下就会创建对象（立即加载）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService);</span><br><span class="line"></span><br><span class="line">结果：在执行完ApplicationContext ac=<span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"bean.xml"</span>);就输出了“对象被加载了”，即读取完配置文件对象就被加载</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>BeanFactory什么时候要用对象才创建（延迟加载）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">IAcountService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  System.out.println(<span class="string">"对象加载了"</span>);</span><br><span class="line">&#125;        </span><br><span class="line"></span><br><span class="line">Resource resource = <span class="keyword">new</span> ClassPathResource(<span class="string">"bean.xml"</span>);</span><br><span class="line">BeanFactory beanFactory=<span class="keyword">new</span> XmlBeanFactory(resource);</span><br><span class="line">IAcountService acountService1=(IAcountService)beanFactory.getBean(<span class="string">"IAcountService"</span>);</span><br><span class="line">System.out.println(acountService1);</span><br><span class="line">结果：执行System.out.println(acountService1);才输出了“对象被加载了”</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="ApplicationContext接口3个实现类"><a href="#ApplicationContext接口3个实现类" class="headerlink" title="ApplicationContext接口3个实现类"></a>ApplicationContext接口3个实现类</h2><ul>
+<li>ClassPathXmlApplicationContext：它是从类的根路径下加载配置文件</li>
+<li>FileSystemXmlApplicationContext：它是从磁盘路径上加载配置文件</li>
+<li>AnnotationConfigApplicationContext：读取注解创建容器</li>
+</ul>
+<p>ClassPathXmlApplicationContext基本使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext ac=new ClassPathXmlApplicationContext(&quot;bean.xml&quot;);</span><br><span class="line">        IAcountService acountService1=(IAcountService) ac.getBean(&quot;IAcountService&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>AnnotationConfigApplicationContext基本使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration//相当于原来的bean.xml</span><br><span class="line">@ComponentScan(basePackages = &quot;com.xjh&quot;)//相当于&lt;context:component-scan&gt;&lt;/&gt;</span><br><span class="line">public class springConfig &#123;</span><br><span class="line">    @Bean(name = &quot;IAcountService&quot;)</span><br><span class="line">    public IAcountService getBean()&#123;</span><br><span class="line">        return new IAcountService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ApplicationContext ac=new AnnotationConfigApplicationContext(springConfig.class);</span><br><span class="line">IAcountService acountService=(IAcountService)ac.getBean(&quot;IAcountService&quot;)</span><br><span class="line">System.out.println(acountService);</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/16/序列化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2457,7 +2644,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

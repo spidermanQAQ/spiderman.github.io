@@ -112,30 +112,18 @@
   </script>
 
 
-  <meta name="description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
-<meta name="keywords" content="计算机网络">
+  <meta name="description" content="构造器能否override，为什么？   构造器不能被继承 所以不能被 override 但可以被重载 overload   为什么java是跨平台的？  java有虚拟机（JVM），JAVA程序不是直接在电脑上运行的，是在虚拟机上进行的，每个系统平台都是有自己的虚拟机（JVM），所以JAVA语言能跨平台  多态两种讲一下？多态怎么实现  多态有两种：类内部之间的多态和类之间的多态   Java">
+<meta name="keywords" content="java基础">
 <meta property="og:type" content="article">
-<meta property="og:title" content="传输层">
-<meta property="og:url" content="http://yoursite.com/2020/04/30/传输层/index.html">
+<meta property="og:title" content="java基础面试题">
+<meta property="og:url" content="http://yoursite.com/2020/10/15/java基础面试题/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
+<meta property="og:description" content="构造器能否override，为什么？   构造器不能被继承 所以不能被 override 但可以被重载 overload   为什么java是跨平台的？  java有虚拟机（JVM），JAVA程序不是直接在电脑上运行的，是在虚拟机上进行的，每个系统平台都是有自己的虚拟机（JVM），所以JAVA语言能跨平台  多态两种讲一下？多态怎么实现  多态有两种：类内部之间的多态和类之间的多态   Java">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%823.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%824.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%825.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%828.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-10-12T07:46:43.164Z">
+<meta property="og:updated_time" content="2020-10-15T06:58:07.198Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="传输层">
-<meta name="twitter:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png">
+<meta name="twitter:title" content="java基础面试题">
+<meta name="twitter:description" content="构造器能否override，为什么？   构造器不能被继承 所以不能被 override 但可以被重载 overload   为什么java是跨平台的？  java有虚拟机（JVM），JAVA程序不是直接在电脑上运行的，是在虚拟机上进行的，每个系统平台都是有自己的虚拟机（JVM），所以JAVA语言能跨平台  多态两种讲一下？多态怎么实现  多态有两种：类内部之间的多态和类之间的多态   Java">
 
 
 
@@ -143,7 +131,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2020/04/30/传输层/">
+  <link rel="canonical" href="http://yoursite.com/2020/10/15/java基础面试题/">
 
 
 
@@ -153,7 +141,7 @@
   };
 </script>
 
-  <title>传输层 | 万乔少女的梦QAQ</title>
+  <title>java基础面试题 | 万乔少女的梦QAQ</title>
   
 
 
@@ -393,7 +381,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/30/传输层/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/15/java基础面试题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -410,7 +398,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">传输层
+          <h1 class="post-title" itemprop="name headline">java基础面试题
 
               
             
@@ -436,7 +424,7 @@
                 
               
 
-              <time title="创建时间：2020-04-30 13:56:34" itemprop="dateCreated datePublished" datetime="2020-04-30T13:56:34+08:00">2020-04-30</time>
+              <time title="创建时间：2020-10-15 13:20:44" itemprop="dateCreated datePublished" datetime="2020-10-15T13:20:44+08:00">2020-10-15</time>
             </span>
           
 
@@ -451,7 +439,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
 
                 
                 
@@ -491,82 +479,27 @@
       
 
       
-        <h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠</p>
-<p>UDP主要特点：</p>
+        <ol>
+<li><p>构造器能否override，为什么？ </p>
+<p> 构造器不能被继承 所以不能被 override 但可以被重载 overload </p>
+</li>
+<li><p>为什么java是跨平台的？ </p>
+<p>java有虚拟机（JVM），JAVA程序不是直接在电脑上运行的，是在虚拟机上进行的，每个系统平台都是有自己的虚拟机（JVM），所以JAVA语言能跨平台</p>
+</li>
+<li><p>多态两种讲一下？多态怎么实现 </p>
+<p>多态有两种：类内部之间的多态和类之间的多态 </p>
 <ul>
-<li>无连接，减少发送数据前的时延</li>
-<li>使用最大努力交付，不可靠</li>
-<li>面向报文，适合一次传送少量数据的应用</li>
-<li>无拥塞控制，适合实时应用，如网络开会</li>
+<li>Java的方法重载（类内部之间的多态）：就是在类中可以创建多个方法，它们具有相同的名字，但可具有不同的参数列表、返回值类型 </li>
+<li>Java的方法重写（父类与子类之间的多态）：子类可继承父类中的方法，但有时子类并不想原封不动地继承父类的方法，而是想作一定的修改，这就需要采用方法的重写 </li>
 </ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%821.png" alt></p>
-<h2 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h2><p>TCP连接</p>
-<p>每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80</p>
-<p>每一个TCP连接唯一地被通信两端（即两个套接字）所确定。即：</p>
-<p>TCP连接::={socket1，socket2}={（IP1：port1），（IP2：port2）}</p>
-<h3 id="TCP协议特点"><a href="#TCP协议特点" class="headerlink" title="TCP协议特点"></a>TCP协议特点</h3><ul>
-<li>面向连接</li>
-<li>提供可靠交付服务</li>
-<li>全双工通信 发送方，接收方都有缓存来存放数据</li>
-<li>面向字节流</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%822.png" alt></p>
-<h3 id="TCP报文首部"><a href="#TCP报文首部" class="headerlink" title="TCP报文首部"></a>TCP报文首部</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%823.png" alt></p>
-<p>序号（seq）：TCP连接中传送的字节都有自己的编号，序号是本报文段发送数据的第一个字节的编号（发送端的）</p>
-<p>确认号（ack）：对应序号，指接收端希望获得的下个报文段的第一个字节的编号（接收端）</p>
-<p>六个控制位：</p>
-<ul>
-<li>URG（紧急位）：URG=1代表有紧急数据，不需要通过缓存，直接发送</li>
-<li>ACK（确认位）：ACK=1代表确认位有效，和ack一般一起出场</li>
-<li>SYN（同步位）：SYN=1表明这是一个请求/连接接收报文</li>
-<li>FIN（中止位）：FIN=1表示发送端数据已经发送完，请求断开连接</li>
-</ul>
-<p>检验位：检验首部+数据</p>
-<h3 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h3><p>TCP连接传输分3个阶段：连接建立——发送数据——连接释放</p>
-<p>TCP连接建立（3次握手）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%824.png" alt></p>
-<p>round1：发送方发送连接请求报文段，SYN=1，seq=x（随机）</p>
-<p>round2：接收方返回确认报文段，SYN=1，ACK=1，seq=y(随机)，ack=x+1</p>
-<p>round3：服务器返回确认的确认，ACK=1，seq=x+1，ack=y+1</p>
-<p>TCP连接释放（4次握手）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%825.png" alt></p>
-<p>round1：客户端发送连接释放报文，关闭TCP连接，FIN=1，seq=u</p>
-<p>round2：服务器端返回确认，ACK=1，seq=v，ack=u+1,此时处于半关闭状态</p>
-<p>round3：服务器端发送连接释放报文，关闭TCP连接，FIN=1，ACK=1，seq=w，ack=u+1</p>
-<p>round4：客户端返回确认报文段，结束</p>
-<h3 id="为什么建立连接要3次握手呢？"><a href="#为什么建立连接要3次握手呢？" class="headerlink" title="为什么建立连接要3次握手呢？"></a>为什么建立连接要3次握手呢？</h3><p>假设客户端请求建立连接，发给服务器SYN包等待服务器确认，服务器收到确认后，如果是两次握手，假设服务器给客户端在第二次握手时发送数据，数据从服务器发出，服务器认为连接已经建立，但在发送数据的过程中数据丢失，客户端认为连接没有建立，会进行重传。假设每次发送的数据一直在丢失，客户端一直SYN，服务器就会产生多个无效连接，占用资源，这个时候服务器可能会挂掉。这个现象就是我们听过的“SYN的洪水攻击”。<br>总结：第三次握手是为了防止：如果客户端迟迟没有收到服务器返回确认报文，这时会放弃连接，重新启动一条连接请求，但问题是：服务器不知道客户端没有收到，所以他会收到两个连接，浪费连接开销。如果每次都是这样，就会浪费多个连接开销 </p>
-<h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
-<p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
-<h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
-<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>TCP默认使用累计重传</p>
-<p>这里123到达TCP缓存后，456因为网络问题尚未到达，78也已经到达，此时接收端的报文段首部确认号字段依然为4</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png" alt></p>
-<h3 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h3><p>超时重传</p>
-<p>TCP的发送端在规定时间内没有收到确认就要重传已发送的报文段</p>
-<p>冗余重传</p>
-<p>当收到比期望报文序号大的报文时，发送一个冗余ACK，指明下一个期待的序号</p>
-<p>例如发送端已经发送12345报文</p>
-<p>接收端收到1，返回1的确认</p>
-<p>接收端收到3，返回1的确认</p>
-<p>接收端收到4，任然返回1的确认</p>
-<p>接收端收掉5，依旧返回1的确认</p>
-<p>发送方收到3次冗余，知道2号报文丢失，重传报文</p>
-<h2 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h2><p>流量控制：让发送方发送的慢点，好让接收方来得及接收</p>
-<p>TCP利用滑动窗口实现流量控制，发送窗口取决于接收窗口和拥塞窗口</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%828.png" alt></p>
-<h2 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h2><p>拥塞原因：对资源的需求总和大于可用资源</p>
-<p>拥塞控制和流量控制的区别可用理解为目标停车场停不下了和路上堵车的区别</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png" alt></p>
-<p>解决办法：</p>
-<ul>
-<li>慢开始 拥塞避免</li>
-<li>快重传 快恢复</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png" alt></p>
-<p> 一个传输轮次就是一个往返时间，可以理解为一个回来可以传输的字节有多少个。一开始一个来回1个，然会2个，4个…知道16这个阈值开始拥塞避免增长的慢点，毕竟按前面的指数增长越来越夸张，到达24后出现拥塞，此时立刻返回到1这个状态，再来一遍，不过阈值会有所减少</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png" alt></p>
-<p>快重传就是冗余重传，收到3个冗余确认重传</p>
-<p>快恢复指的是出现拥塞后不用回到开始的状态，直接从新的阈值开始</p>
+</li>
+<li><p>匿名类知道么，说一说？静态内部类和非静态内部类的区别？ </p>
+<p>匿名类可以解决接口和子类，就是不需要创建子类对象或者接口实现对象了，直接new 接口名称(){}即可，{}就是匿名内部类</p>
+<p><a href="https://www.cnblogs.com/xf-686/archive/2019/06/27/11098274.html" target="_blank" rel="noopener">https://www.cnblogs.com/xf-686/archive/2019/06/27/11098274.html</a> ，就是静态内部类创建对象不需要外部类，而非静态内部类创建对象需要先外部类对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建静态内部类实例</span></span><br><span class="line">staticInnerClass sic = <span class="keyword">new</span> OutClass.staticInnerClass();</span><br><span class="line">sic.showMsg()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建非静态内部类实例,需要先创建外部类的实例 OutClass().new</span></span><br><span class="line">InnerClass ic = <span class="keyword">new</span> OutClass().new InnerClass();</span><br><span class="line">ic.disPlayMsg();</span><br></pre></td></tr></table></figure>
+</li>
+<li></li>
+</ol>
 
       
     </div>
@@ -640,7 +573,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+            <a href="/tags/java基础/" rel="tag"># java基础</a>
           
         </div>
       
@@ -653,8 +586,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/04/28/hashmap/" rel="next" title="hashmap">
-                <i class="fa fa-chevron-left"></i> hashmap
+              <a href="/2020/10/14/mysql面试题/" rel="next" title="mysql面试题">
+                <i class="fa fa-chevron-left"></i> mysql面试题
               </a>
             
           </div>
@@ -662,10 +595,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/01/redis主从复制/" rel="prev" title="redis主从复制">
-                redis主从复制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -709,17 +638,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -941,23 +861,6 @@
         </div>
       </div>
 
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP协议"><span class="nav-number">1.</span> <span class="nav-text">UDP协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.</span> <span class="nav-text">TCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP协议特点"><span class="nav-number">2.1.</span> <span class="nav-text">TCP协议特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP报文首部"><span class="nav-number">2.2.</span> <span class="nav-text">TCP报文首部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP连接管理"><span class="nav-number">2.3.</span> <span class="nav-text">TCP连接管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么建立连接要3次握手呢？"><span class="nav-number">2.4.</span> <span class="nav-text">为什么建立连接要3次握手呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP可靠传输"><span class="nav-number">3.</span> <span class="nav-text">TCP可靠传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序号"><span class="nav-number">3.1.</span> <span class="nav-text">序号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认"><span class="nav-number">3.2.</span> <span class="nav-text">确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重传"><span class="nav-number">3.3.</span> <span class="nav-text">重传</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP流量控制"><span class="nav-number">4.</span> <span class="nav-text">TCP流量控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP拥塞控制"><span class="nav-number">5.</span> <span class="nav-text">TCP拥塞控制</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
       
 
       
