@@ -113,14 +113,14 @@
 
 
   <meta name="description" content="说一下数据库隔离级别，如何实现可重复读 https://spidermanqaq.github.io/2020/09/15/mysql%E9%94%81%E5%8F%8Amvcc/    手动创建数据库和插入数据并查询每一科最高分数的学生姓名，一开始只写出来每科分数最大的学生姓名  1SELECT s.sid AS studentId,c.cid AS courseId,grade FROM s">
-<meta name="keywords" content="mysql">
+<meta name="keywords" content="面试题">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql面试题">
 <meta property="og:url" content="http://yoursite.com/2020/10/14/mysql面试题/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
 <meta property="og:description" content="说一下数据库隔离级别，如何实现可重复读 https://spidermanqaq.github.io/2020/09/15/mysql%E9%94%81%E5%8F%8Amvcc/    手动创建数据库和插入数据并查询每一科最高分数的学生姓名，一开始只写出来每科分数最大的学生姓名  1SELECT s.sid AS studentId,c.cid AS courseId,grade FROM s">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-10-14T12:32:33.341Z">
+<meta property="og:updated_time" content="2020-10-17T05:47:42.748Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql面试题">
 <meta name="twitter:description" content="说一下数据库隔离级别，如何实现可重复读 https://spidermanqaq.github.io/2020/09/15/mysql%E9%94%81%E5%8F%8Amvcc/    手动创建数据库和插入数据并查询每一科最高分数的学生姓名，一开始只写出来每科分数最大的学生姓名  1SELECT s.sid AS studentId,c.cid AS courseId,grade FROM s">
@@ -439,7 +439,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试题/" itemprop="url" rel="index"><span itemprop="name">面试题</span></a></span>
 
                 
                 
@@ -498,7 +498,7 @@
 <p>假设我们有两列a,b，a和b是联合索引，他的顺序是a,b，我们在where语句中调用a=? and b=?的时候就会走联合索引，如果调用where a = ?的时候也会走索引，但是当我们使用where b = ?的时候就不会走这个联合索引 </p>
 </li>
 <li><p>聚集索引</p>
-<p> InnoDB表数据文件本身就是主索引 ， 叶节点包含了完整的数据记录 ， 这种索引叫做聚集索引 </p>
+<p> 其中聚集索引表示表中存储的数据按照索引的顺序存储，检索效率比非聚集索引高，但对数据更新影响较大。非聚集索引表示数据存储在一个地方，索引存储在另一个地方，索引带有指针指向数据的存储位置，非聚集索引检索效率比聚集索引低，但对数据更新影响较小。</p>
 <p> <a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/theory-of-mysql-index.html</a> </p>
 </li>
 <li></li>
@@ -576,7 +576,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/mysql/" rel="tag"># mysql</a>
+            <a href="/tags/面试题/" rel="tag"># 面试题</a>
           
         </div>
       
@@ -663,7 +663,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">70</span>
+                    <span class="site-state-item-count">73</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -720,7 +720,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -775,7 +777,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

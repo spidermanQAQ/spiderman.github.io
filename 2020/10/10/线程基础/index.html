@@ -121,7 +121,7 @@
 <meta property="og:description" content="创建线程的方式 继承Thread，重写run方法，调用start启动 123456789101112public class test02 extends Thread &amp;#123;    @Override    public void run() &amp;#123;        for (int i=0;i&amp;lt;20;i++)&amp;#123;            //重写run方法">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/2020/10/10/线程基础/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81.jpg">
-<meta property="og:updated_time" content="2020-10-10T07:44:21.119Z">
+<meta property="og:updated_time" content="2020-10-18T06:45:42.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程基础">
 <meta name="twitter:description" content="创建线程的方式 继承Thread，重写run方法，调用start启动 123456789101112public class test02 extends Thread &amp;#123;    @Override    public void run() &amp;#123;        for (int i=0;i&amp;lt;20;i++)&amp;#123;            //重写run方法">
@@ -488,6 +488,14 @@
 <li><p>实现Runnable接口，重写run方法，将实现接口的类丢入thread，调用start启动</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class test01 implements Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(&quot;test01启动&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">new Thread(new test01()).start();</span><br></pre></td></tr></table></figure>
 
+
+</li>
+</ul>
+<ul>
+<li><p>线程池</p>
+<p>Executors线程池工厂类，用于创建线程；ExecutorService真正的线程池接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService= Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line"><span class="comment">//关闭连接</span></span><br><span class="line">executorService.shutdown();</span><br></pre></td></tr></table></figure>
+
 </li>
 </ul>
 <h3 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h3><p><img src="/2020/10/10/线程基础/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81.jpg" alt></p>
@@ -670,7 +678,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">70</span>
+                    <span class="site-state-item-count">73</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -727,7 +735,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -782,7 +792,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
