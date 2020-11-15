@@ -380,6 +380,194 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/15/深克隆与浅克隆/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/11/15/深克隆与浅克隆/" class="post-title-link" itemprop="url">深克隆与浅克隆</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-11-15 13:49:35" itemprop="dateCreated datePublished" datetime="2020-11-15T13:49:35+08:00">2020-11-15</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java面试题/" itemprop="url" rel="index"><span itemprop="name">java面试题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="深克隆，浅克隆概念"><a href="#深克隆，浅克隆概念" class="headerlink" title="深克隆，浅克隆概念"></a>深克隆，浅克隆概念</h2><p>浅克隆</p>
+<p>把原型对象中成员变量为值类型的属性都复制给克隆对象，把原型对象中成员变量为引用类型的引用地址也复制给克隆对象；简单来说就是浅克隆只会复制原型对象，但不会复制它所引用的对象</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%85%8B%E9%9A%861.png" alt></p>
+<p>深克隆</p>
+<p>原型对象中的所有类型，无论是值类型还是引用类型，都复制一份给克隆对象，也就是说深克隆会把原型对象和<strong>原型对象所引用的对象</strong>，都复制一份给克隆对象</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%85%8B%E9%9A%862.png" alt></p>
+<h2 id="java实现克隆"><a href="#java实现克隆" class="headerlink" title="java实现克隆"></a>java实现克隆</h2><p>在 Java 语言中要实现克隆则需要实现 Cloneable 接口，并重写 Object 类中的 clone() 方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">public class CloneExample &#123;</span><br><span class="line">    public static void main(String[] args) throws CloneNotSupportedException &#123;</span><br><span class="line">        // 创建被赋值对象</span><br><span class="line">        People p1 = new People();</span><br><span class="line">        p1.setId(1);</span><br><span class="line">        p1.setName(&quot;Java&quot;);</span><br><span class="line">        // 克隆 p1 对象</span><br><span class="line">        People p2 = (People) p1.clone();</span><br><span class="line">        // 打印名称</span><br><span class="line">        System.out.println(&quot;p2:&quot; + p2.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    static class People implements Cloneable &#123;</span><br><span class="line">        // 属性</span><br><span class="line">        private Integer id;</span><br><span class="line">        private String name;</span><br><span class="line">        /**</span><br><span class="line">         * 重写 clone 方法</span><br><span class="line">         * @throws CloneNotSupportedException</span><br><span class="line">         */</span><br><span class="line">        @Override</span><br><span class="line">        protected Object clone() throws CloneNotSupportedException &#123;</span><br><span class="line">            return super.clone();</span><br><span class="line">        &#125;</span><br><span class="line">        public Integer getId() &#123;</span><br><span class="line">            return id;</span><br><span class="line">        &#125;</span><br><span class="line">        public void setId(Integer id) &#123;</span><br><span class="line">            this.id = id;</span><br><span class="line">        &#125;</span><br><span class="line">        public String getName() &#123;</span><br><span class="line">            return name;</span><br><span class="line">        &#125;</span><br><span class="line">        public void setName(String name) &#123;</span><br><span class="line">            this.name = name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Arrays-copyOf-是深克隆还是浅克隆？"><a href="#Arrays-copyOf-是深克隆还是浅克隆？" class="headerlink" title="Arrays.copyOf() 是深克隆还是浅克隆？"></a>Arrays.copyOf() 是深克隆还是浅克隆？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">People[] o1 = &#123;new People(1, &quot;Java&quot;)&#125;;</span><br><span class="line">People[] o2 = Arrays.copyOf(o1, o1.length);</span><br><span class="line">// 修改原型对象的第一个元素的值</span><br><span class="line">o1[0].setName(&quot;Jdk&quot;);</span><br><span class="line">System.out.println(&quot;o1:&quot; + o1[0].getName());</span><br><span class="line">System.out.println(&quot;o2:&quot; + o2[0].getName());</span><br><span class="line"></span><br><span class="line">o1:Jdk</span><br><span class="line">o2:Jdk</span><br></pre></td></tr></table></figure>
+
+<p>所以Arrays.copyOf() 是浅克隆，修改了原型对象的第一个属性，克隆对象也被修改了</p>
+<h2 id="深克隆实现方式（这里只介绍两种）"><a href="#深克隆实现方式（这里只介绍两种）" class="headerlink" title="深克隆实现方式（这里只介绍两种）"></a>深克隆实现方式（这里只介绍两种）</h2><ul>
+<li>所有对象都实现克隆方法</li>
+<li>通过构造方法实现深克隆</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Address address; <span class="comment">// 包含 Address 引用对象</span></span><br><span class="line">    <span class="comment">// 忽略构造方法、set、get 方法</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 地址类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Address</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// 忽略构造方法、set、get 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="所有对象都实现克隆方法"><a href="#所有对象都实现克隆方法" class="headerlink" title="所有对象都实现克隆方法"></a>所有对象都实现克隆方法</h3><p>这种方式我们需要修改 People 和 Address 类，让它们都实现 Cloneable 的接口，让所有的引用对象都实现克隆，从而实现 People 类的深克隆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">public class CloneExample1 &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws CloneNotSupportedException &#123;</span><br><span class="line">        Address address = new Address(&quot;南京&quot;);</span><br><span class="line">        Person person1 = new Person(&quot;小李&quot;,address);</span><br><span class="line">        Person clone = person1.clone();</span><br><span class="line">        person1.getAddress().setCity(&quot;北京&quot;);</span><br><span class="line">        System.out.println(clone.getAddress().getCity());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    static class Person implements Cloneable&#123;</span><br><span class="line">        private String name;</span><br><span class="line">        private Address address;</span><br><span class="line"></span><br><span class="line">        public Person(String name, Address address) &#123;</span><br><span class="line">            this.name = name;</span><br><span class="line">            this.address = address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Address getAddress() &#123;</span><br><span class="line">            return address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void setAddress(Address address) &#123;</span><br><span class="line">            this.address = address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Person clone( ) throws CloneNotSupportedException &#123;</span><br><span class="line">            Person clonePerson = (Person) super.clone();</span><br><span class="line">            clonePerson.setAddress(this.address.clone());</span><br><span class="line">            return clonePerson;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class Address implements Cloneable&#123;</span><br><span class="line">        private String city;</span><br><span class="line"></span><br><span class="line">        public Address(String city) &#123;</span><br><span class="line">            this.city = city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public String getCity() &#123;</span><br><span class="line">            return city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void setCity(String city) &#123;</span><br><span class="line">            this.city = city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Address clone() throws CloneNotSupportedException &#123;</span><br><span class="line">            return ((Address) super.clone());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：南京</span><br></pre></td></tr></table></figure>
+
+<h3 id="通过构造方法实现深克隆"><a href="#通过构造方法实现深克隆" class="headerlink" title="通过构造方法实现深克隆"></a>通过构造方法实现深克隆</h3><p>如果构造器的参数为基本数据类型或字符串类型则直接赋值，如果是对象类型，则需要重新 new 一个对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CloneExample2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Address address = <span class="keyword">new</span> Address(<span class="string">"南京"</span>);</span><br><span class="line">        Person person1 = <span class="keyword">new</span> Person(<span class="string">"小李"</span>, address);</span><br><span class="line">        Person person2=<span class="keyword">new</span> Person(person1.getName(),<span class="keyword">new</span> Address(person1.getAddress().getCity()));</span><br><span class="line">        person1.getAddress().setCity(<span class="string">"北京"</span>);</span><br><span class="line">        System.out.println(person2.getAddress().getCity());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line">        <span class="keyword">private</span> Address address;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, Address address)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">            <span class="keyword">this</span>.address = address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Address <span class="title">getAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAddress</span><span class="params">(Address address)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.address = address;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Address</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> String city;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Address</span><span class="params">(String city)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.city = city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getCity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCity</span><span class="params">(String city)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.city = city;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/27/redis持久化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1993,194 +2181,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/22/DNS解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/09/22/DNS解析/" class="post-title-link" itemprop="url">DNS解析</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-09-22 15:33:37" itemprop="dateCreated datePublished" datetime="2020-09-22T15:33:37+08:00">2020-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="域名服务器类型"><a href="#域名服务器类型" class="headerlink" title="域名服务器类型"></a>域名服务器类型</h2><ul>
-<li>根域名服务器：所有域名服务器都知道所有顶级域名服务器的域名和IP地址</li>
-<li>顶级域名服务器：这些域名服务器负责管理在该顶级域名服务器注册的所有二级域名</li>
-<li>权限域名服务器：负责一个区的域名服务器，当一个权限域名服务器还不能给出最后的查询回答时，就会告诉发出查询请求的DNS客户，下一步应当去找哪一个权限服务器</li>
-<li>本地域名服务器：当一个主机发出DNS查询请求时，这个查询请求就会发送到本地域名服务器。每一个互联网服务提供者ISP，或一个大学，甚至一个大学里的系，都可以拥有一个本地域名服务器。当所要查询的主机也属于同一个本地ISP时，该本地域名服务器就能立刻将查询的主机名转换成IP地址，而不需要再去询问其他域名服务器</li>
-</ul>
-<h2 id="域名解析过程"><a href="#域名解析过程" class="headerlink" title="域名解析过程"></a>域名解析过程</h2><h3 id="主机向本地域名服务器"><a href="#主机向本地域名服务器" class="headerlink" title="主机向本地域名服务器"></a>主机向本地域名服务器</h3><p>主机向本地域名服务器一般采用<strong>递归查询</strong>。所谓递归查询就是：如果主机所询问的本地域名服务器不知道要被查询的域名的IP地址，那么本地域名服务器会以DNS客户的身份向其他根域名服务器继续发出查询报文</p>
-<h3 id="本地域名服务器向根域名服务器"><a href="#本地域名服务器向根域名服务器" class="headerlink" title="本地域名服务器向根域名服务器"></a>本地域名服务器向根域名服务器</h3><p>本地域名服务器向根域名服务器的查询一般是<strong>迭代查询</strong>。迭代查询：当根域名服务器收到本地域名服务器发出的迭代查询请求报文时，要么给出IP，要么告诉本地域名服务器你下一步应该向哪个域名服务器查询。因为根域名服务器保存着<strong>顶级域名服务器</strong>的域名和IP地址，所以一般会让本地域名服务器去查询顶级域名服务器，还没查到的话顶级域名服务器再去权限域名服务器</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/1600762453040.jpg" alt></p>
-<h2 id="解析实例"><a href="#解析实例" class="headerlink" title="解析实例"></a>解析实例</h2><p>假定m.xyz.com的主机想知道另一台主机y.abc.com的IP地址</p>
-<ul>
-<li>主机m.xyz.com先向其本地域名服务器dns.xyz.com进行递归查询</li>
-<li>本地域名服务器采用迭代查询。它先向一个根域名服务器查询</li>
-<li>根域名服务器告诉本地域名服务器，下一次应查询的顶级域名服务器dns.com的IP地址</li>
-<li>本地域名服务i去向顶级域名服务器dns.com查询</li>
-<li>顶级域名服务器告诉本地域名服务器下一次应该查询的权限域名服务器dns.abc.com的IP地址</li>
-<li>本地域名服务器向权限域名服务器dns.abc.com进行查询</li>
-<li>权限域名服务器dns.abc.com告诉本地域名服务器，所查询的主机的IP地址</li>
-<li>本地域名服务器最后把查询结果告诉主机</li>
-</ul>
-<p>注意在查询过程中都是使用的<strong>UDP用户数据报</strong>的报文</p>
-<p>为了提高DNS查询效率，减轻根域名服务器的负荷和减少互联网上的DNS查询报文数量，在域名服务器中广泛使用了<strong>高速缓存</strong>。高速缓存用来存放最近查询过的域名以及从何处获得域名映射信息的记录。</p>
-<p>例如前面的例子，已经有用户查询过y.abc.com的IP，那么本地域名服务器就不必向根域名服务器重新查询，直接把高速缓存的结果给用户；又或者本地域名服务器没有y.abc.com的IP地址，保存着顶级域名服务器的地址dns.com，那么本地域名服务器可以不想根域名服务器请求，而是直接向com顶级域名服务器发送查询报文</p>
-<h2 id="为什么使用UDP"><a href="#为什么使用UDP" class="headerlink" title="为什么使用UDP"></a>为什么使用UDP</h2><p>客户端向DNS服务器查询域名，一般返回的内容都不超过512字节（udp报文最大512字节，tcp报文不止512字节），用UDP传输即可。不用经过TCP三次握手，这样DNS服务器负载更低，响应更快 </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2229,7 +2229,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-count">73</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2288,7 +2288,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2347,7 +2349,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">23</span>
+                      
+                    
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
