@@ -380,6 +380,209 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/19/mysql与B-树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/11/19/mysql与B-树/" class="post-title-link" itemprop="url">B+树,索引,主键</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-11-19 20:11:09" itemprop="dateCreated datePublished" datetime="2020-11-19T20:11:09+08:00">2020-11-19</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql面试题/" itemprop="url" rel="index"><span itemprop="name">mysql面试题</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="局部性原理与磁盘预读"><a href="#局部性原理与磁盘预读" class="headerlink" title="局部性原理与磁盘预读"></a>局部性原理与磁盘预读</h2><p>磁盘本身存取就比主存慢很多，为了提高效率，要尽量减少磁盘I/O。为了达到这个目的，磁盘往往不是严格按需读取，而是每次都会<strong>预读</strong>，即使只需要一个字节，磁盘也会从这个位置开始，顺序向后读取一定长度的数据放入内存，预读的长度一般为页（page）的整倍数。页是计算机管理存储器的逻辑块，硬件及操作系统往往将主存和磁盘存储区分割为连续的大小相等的块，每个存储块称为一页。</p>
+<p>这样做的理论依据是计算机科学中著名的<strong>局部性原理</strong>：</p>
+<ul>
+<li><p>当一个数据被用到时，其附近的数据也通常会马上被使</p>
+</li>
+<li><p>程序运行期间所需要的数据通常比较集中</p>
+</li>
+</ul>
+<h2 id="mysql使用B-树的优点"><a href="#mysql使用B-树的优点" class="headerlink" title="mysql使用B+树的优点"></a>mysql使用B+树的优点</h2><ul>
+<li>索引往往以索引文件的形式存储的磁盘上，这样的话，索引查找过程中就要产生磁盘I/O ；磁盘往往不是严格按需读取，而是每次都会预读 </li>
+<li>而B+树将一个节点的大小设为等于一个页，这样每个节点只需要一次I/O就可以完全载入；</li>
+<li>B/B+树一次最多需要h-1次I/O，B/B+树相比于红黑树，h要小得多（对于一个出度为d的B树，h上限为logd N+1/2）,一般出度会很大，因此h非常小（<strong>比红黑树2好</strong>）</li>
+<li>B+树内节点去掉了data域，一个页内存放更多的key，一次读入的关键字就更多，相应I/O也更少</li>
+<li>mysql的B+树在原来的基础上增加了顺序访问指针，每个叶子节点指向相邻叶子结点，这样增加了区间访问的性能，例如访问key从18-49的数据，只需从18开始，沿着结点和顺序指针找就行了，提高了区间查找效率（<strong>比B树好</strong>）</li>
+</ul>
+<h2 id="MyISAM索引实现"><a href="#MyISAM索引实现" class="headerlink" title="MyISAM索引实现"></a>MyISAM索引实现</h2><p>MyISAM引擎使用B+Tree作为索引结构，<strong>叶节点的data域存放的是数据记录的地址</strong> </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/B%2B%E6%A0%91%EF%BC%8C%E7%B4%A2%E5%BC%951.png" alt></p>
+<p>在MyISAM中，主索引和辅助索引（Secondary key）在结构上没有任何区别，只是主索引要求key是唯一的，而辅助索引的key可以重复 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/B%2B%E6%A0%91%EF%BC%8C%E7%B4%A2%E5%BC%952.png" alt></p>
+<p>MyISAM索引文件和数据文件是分离的，这样的索引方式称为<strong>非聚集索引</strong></p>
+<h2 id="InnoDB索引实现"><a href="#InnoDB索引实现" class="headerlink" title="InnoDB索引实现"></a>InnoDB索引实现</h2><p>InnoDB的数据文件本身就是索引文件，表数据文件本身就是按B+Tree组织的一个索引结构，即主索引，这棵树的叶节点data域保存了完整的数据记录 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/B%2B%E6%A0%91%EF%BC%8C%E7%B4%A2%E5%BC%953.png" alt></p>
+<p>InnoDB的辅助索引data域存储相应记录<strong>主键</strong>的值而不是地址 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/B%2B%E6%A0%91%EF%BC%8C%E7%B4%A2%E5%BC%954.png" alt></p>
+<p>对于InnoDB的索引，叶节点包含了完整的数据记录。这种索引叫做<strong>聚集索引</strong> </p>
+<h2 id="索引是不是越多越好？"><a href="#索引是不是越多越好？" class="headerlink" title="索引是不是越多越好？"></a>索引是不是越多越好？</h2><p>索引文件本身要消耗存储空间，同时索引会加重插入、删除和修改记录时的负担，另外，MySQL在运行时也要消耗资源维护索引，因此索引并不是越多越好。一般两种情况下不建议建索引</p>
+<ul>
+<li>表记录比较少，例如一两千条甚至只有几百条记录的表，没必要建索引 </li>
+<li>索引的选择性较低。所谓索引的选择性，是指不重复的索引值与表记录的比值 ， 选择性越高的索引价值越大 </li>
+</ul>
+<h2 id="InnoDB的主键选择"><a href="#InnoDB的主键选择" class="headerlink" title="InnoDB的主键选择"></a>InnoDB的主键选择</h2><p>在使用InnoDB存储引擎时，如果没有特别的需要，请永远使用一个<strong>与业务无关的自增字段</strong>作为主键 </p>
+<p>InnoDB使用聚集索引，数据记录本身被存于主索引（一颗B+Tree）的叶子节点上，这就要求 各条数据记录按主键顺序存放 ；</p>
+<p>如果表使用自增主键，那么每次插入新的记录，记录就会顺序添加到当前索引节点的后续位置，当一页写满，就会自动开辟一个新的页 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/B%2B%E6%A0%91%EF%BC%8C%E7%B4%A2%E5%BC%955.png" alt></p>
+<p>如果使用非自增主键（如果身份证号或学号等），由于每次插入主键的值近似于随机，因此每次新纪录都要被插到现有索引页得中间某个位置 ，此时MySQL不得不为了将新记录插到合适位置而移动数据， 频繁的移动、分页操作造成了大量的碎片 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/B%2B%E6%A0%91%EF%BC%8C%E7%B4%A2%E5%BC%956.png" alt></p>
+<h2 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h2><p>查询从索引的最左前列开始并且不跳过索引中的列， 遇到范围查询，范围列可以用到索引（必须是最左前缀），但是范围列后面的列无法用到索引 </p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p> <a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/theory-of-mysql-index.html</a> </p>
+<p> <a href="https://www.cnblogs.com/shuxiaosheng/p/12976922.html" target="_blank" rel="noopener">https://www.cnblogs.com/shuxiaosheng/p/12976922.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/15/ThreadLocal/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1485,194 +1688,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/14/mysql面试题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/10/14/mysql面试题/" class="post-title-link" itemprop="url">mysql面试题</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-10-14 11:59:37" itemprop="dateCreated datePublished" datetime="2020-10-14T11:59:37+08:00">2020-10-14</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试题/" itemprop="url" rel="index"><span itemprop="name">面试题</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>说一下数据库隔离级别，如何实现可重复读 <a href="https://spidermanqaq.github.io/2020/09/15/mysql锁及mvcc/" target="_blank" rel="noopener">https://spidermanqaq.github.io/2020/09/15/mysql%E9%94%81%E5%8F%8Amvcc/</a>  </p>
-</li>
-<li><p>手动创建数据库和插入数据并查询每一科最高分数的学生姓名，一开始只写出来每科分数最大的学生姓名 </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> s.sid <span class="keyword">AS</span> studentId,c.cid <span class="keyword">AS</span> courseId,grade <span class="keyword">FROM</span> student s,course c,grade g <span class="keyword">WHERE</span> s.sid=g.sid <span class="keyword">AND</span> c.cid=g.cid <span class="keyword">AND</span> grade <span class="keyword">IN</span>(<span class="keyword">SELECT</span> <span class="keyword">MAX</span>(grade)<span class="keyword">FROM</span> grade <span class="keyword">GROUP</span> <span class="keyword">BY</span> cid)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>b+树查询记录的过程 </p>
-<p>单元素查询：从根结点开始，一级一级往下找到叶子结点之后，遍历结点内关键字查找</p>
-<p>范围查询：查询到下届后，使用 顺序访问指针 访问相邻叶子几点</p>
-<p><a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/theory-of-mysql-index.html</a> </p>
-</li>
-<li><p>hash索引和b+树索引的区别 </p>
-<p>b+树可以进性范围查询，hash不行</p>
-</li>
-<li><p>联合索引的最左侧原则 </p>
-<p>在检索数据时从联合索引的最左边开始匹配 </p>
-<p>假设我们有两列a,b，a和b是联合索引，他的顺序是a,b，我们在where语句中调用a=? and b=?的时候就会走联合索引，如果调用where a = ?的时候也会走索引，但是当我们使用where b = ?的时候就不会走这个联合索引 </p>
-</li>
-<li><p>聚集索引</p>
-<p> 其中聚集索引表示表中存储的数据按照索引的顺序存储，检索效率比非聚集索引高，但对数据更新影响较大。非聚集索引表示数据存储在一个地方，索引存储在另一个地方，索引带有指针指向数据的存储位置，非聚集索引检索效率比聚集索引低，但对数据更新影响较小。</p>
-<p> <a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/theory-of-mysql-index.html</a> </p>
-</li>
-<li></li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/12/强软弱虚四种引用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2316,7 +2331,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">21</span>
+                      
+                    
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2373,7 +2390,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">22</span>
+                      
+                    
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
