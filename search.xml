@@ -98,7 +98,7 @@
     <url>%2F2020%2F10%2F12%2F%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E9%9D%A2%E8%AF%95%E9%A2%98%2F</url>
     <content type="text"><![CDATA[1.TCP和UDP的区别 2.在PC浏览器的地址栏输入一串URL，然后按Enter键这个页面渲染出来，这个过程中都发生了什么事? 3.http和https区别？]]></content>
       <categories>
-        <category>面试题</category>
+        <category>计算机网络面试题</category>
       </categories>
       <tags>
         <tag>面试题</tag>
@@ -124,17 +124,6 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[锁升级]]></title>
-    <url>%2F2020%2F09%2F21%2F%E9%94%81%E5%8D%87%E7%BA%A7%2F</url>
-    <content type="text"><![CDATA[初始状态：无锁态]]></content>
-      <categories>
-        <category>高并发</category>
-      </categories>
-      <tags>
-        <tag>高并发</tag>
       </tags>
   </entry>
   <entry>
@@ -765,17 +754,6 @@
       </categories>
       <tags>
         <tag>LaTex</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[docker学习（1）]]></title>
-    <url>%2F2019%2F07%2F17%2Fdocker1%2F</url>
-    <content type="text"><![CDATA[docker学习（1）最近在学docker相关的东西，正好写几篇博客巩记录下。 docker背景一款产品从开发到上线，从操作系统，到运行环境，再到应用配置 。因而当从一台电脑部署到另一台电脑时，环境配置会很麻烦，什么都要重来一次，费力费时。很多人想到，能不能从根本上解决问题，软件可以带环境安装？也就是说，安装的时候，把原始环境一模一样地复制过来。开发人员利用 Docker 可以消除协作编码时“在我的机器上可正常工作”的问题。 docker三要素用一张总的架构图来有一个直观的了解。Docker 本身是一个容器运行载体或称之为管理引擎。我们把应用程序和配置依赖打包好形成一个可交付的运行环境，这个打包好的运行环境就似乎 image镜像文件。只有通过这个镜像文件才能生成 Docker 容器。image 文件可以看作是容器的模板。Docker 根据 image 文件生成容器的实例。同一个 image 文件，可以生成多个同时运行的容器实例。 镜像（docker images）Docker 镜像（Image）就是一个只读的模板。镜像可以用来创建 Docker 容器，一个镜像可以创建很多容器。 容器（container）Docker 利用容器（Container）独立运行的一个或一组应用。容器是用镜像创建的运行实例 。一个镜像可以创建多个容器。 仓库（registery）仓库（Repository）是集中存放镜像文件的场所。 例如dockerhub就是最大的docker仓库。 docker优点docker优点简洁来说就是：“一次封装，多出运行”。用户只要配置好了环境，换到别的电脑上直接部署就完事了，很方便。]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker1</tag>
       </tags>
   </entry>
 </search>

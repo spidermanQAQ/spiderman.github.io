@@ -380,197 +380,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/09/import组件注册/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/09/import组件注册/" class="post-title-link" itemprop="url">@import组件注册</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-09 10:40:02" itemprop="dateCreated datePublished" datetime="2020-04-09T10:40:02+08:00">2020-04-09</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>给容器中注册组件主要有以下几种方式</p>
-<ul>
-<li>包扫描+组件标注注解（@Component、@Service、@Controller、@Repository），主要是自己写的类</li>
-<li>@Bean，导入的第三方包里面的组件</li>
-<li>@Import，快速给容器中导入一个组件</li>
-</ul>
-<p>今天就来具体聊聊<code>@Import</code>注解，这个注解有3三种使用方式</p>
-<h2 id="Import-类名"><a href="#Import-类名" class="headerlink" title="Import(类名)"></a>Import(类名)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@Import(&#123;Color.class&#125;)</span><br><span class="line">public class myConfig &#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编写测试类测试一下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class myTest &#123;</span><br><span class="line"></span><br><span class="line">        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(myConfig.class);</span><br><span class="line"></span><br><span class="line">        @Test</span><br><span class="line">        public void testImport()&#123;</span><br><span class="line">            printBeans(annotationConfigApplicationContext);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private void printBeans(AnnotationConfigApplicationContext annotationConfigApplicationContext)&#123;</span><br><span class="line">            String[] beanDefinitionNames = annotationConfigApplicationContext.getBeanDefinitionNames();</span><br><span class="line">            for(String name:beanDefinitionNames)&#123;</span><br><span class="line">                System.out.println(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>测试结果可以看到person已经注入容器中去</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/import%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C1.png" alt></p>
-<h2 id="ImportSelector：返回需要导入的组件的全类名的数组"><a href="#ImportSelector：返回需要导入的组件的全类名的数组" class="headerlink" title="ImportSelector：返回需要导入的组件的全类名的数组"></a>ImportSelector：返回需要导入的组件的全类名的数组</h2><p>通过 import 一个实现了 ImportSelector 接口的类来注册组件，ImportSelector  返回要注册的组件全类名，这种方式也是springboot自动配置所采用的方式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@Import(&#123;Color.class,MyImportSelector.class&#125;)</span><br><span class="line">public class myConfig &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class MyImportSelector implements ImportSelector &#123;</span><br><span class="line">    public String[] selectImports(AnnotationMetadata annotationMetadata) &#123;</span><br><span class="line">        return new String[]&#123;&quot;com.xjh.model.Blue&quot;,&quot;import com.xjh.model.Yellow;&quot;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>同样进行测试，测试结果表明Blue和Yellow也都注入了容器</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/import%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C2.png" alt></p>
-<h2 id="ImportBeanDefinitionRegistrar：手动注册bean"><a href="#ImportBeanDefinitionRegistrar：手动注册bean" class="headerlink" title="ImportBeanDefinitionRegistrar：手动注册bean"></a>ImportBeanDefinitionRegistrar：手动注册bean</h2><p>实现 ImportBeanDefinitionRegistrar 接口，调用 registerBeanDefinition 注册</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class MyImportBeanDefinitionRegister implements ImportBeanDefinitionRegistrar &#123;</span><br><span class="line">    //BeanDefinitionRegistry组件注册类，把要添加到容器的bean手动通过beanDefinitionRegistry.registerBeanDefinition手动注册进来</span><br><span class="line">    public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) &#123;</span><br><span class="line">        //组件bean定义信息，包括bean类型。。。</span><br><span class="line">        RootBeanDefinition beanDefinition = new RootBeanDefinition(car.class);</span><br><span class="line">        //注册组件，car为组件名</span><br><span class="line">        beanDefinitionRegistry.registerBeanDefinition(&quot;car&quot;,beanDefinition);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@Import(&#123;Color.class,MyImportSelector.class, MyImportBeanDefinitionRegister.class&#125;)</span><br><span class="line">public class myConfig &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/import%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C3.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/08/springboot自动配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2507,6 +2316,270 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/mysql优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/12/mysql优化/" class="post-title-link" itemprop="url">mysql优化-基础</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-12 15:24:39" itemprop="dateCreated datePublished" datetime="2019-11-12T15:24:39+08:00">2019-11-12</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>MYSQL逻辑分层 </p>
+<ul>
+<li>连接层 ： 提供与客户端连接的服务。当客户端发出一个请求后（如增删改查的SQL语句），首先到达该层，将服务器与客户端建立连接。 </li>
+<li>服务层 ：提供各种用户使用的接口并且对sql进行优化</li>
+<li>引擎层 ：提供存储数据的方式</li>
+<li>存储层：具体存储数据</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql1.png" alt></p>
+<p>引擎</p>
+<p>InnoDB(默认) ：事务优先 （适合高并发操作；行锁：一次锁一行）<br>MyISAM ：性能优先  （表锁：一次锁一张表）</p>
+<p>查询数据库引擎：  </p>
+<p>支持哪些引擎？ show engines ;</p>
+<p>查看当前使用的引擎   show variables like ‘%storage_engine%’ ;</p>
+<p>指定数据库对象的引擎：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">create table tb(</span><br><span class="line">	id int(4) auto_increment ,</span><br><span class="line">	name varchar(5),</span><br><span class="line">	dept varchar(5) ,</span><br><span class="line">	primary key(id)		</span><br><span class="line">)ENGINE=MyISAM AUTO_INCREMENT=1</span><br><span class="line"> DEFAULT CHARSET=utf8   ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h2><p>原因：性能低、执行时间太长、等待时间太长、SQL语句欠佳（连接查询）、索引失效、服务器参数设置不合理（缓冲、线程数）</p>
+<p>SQL执行及解析过程<br>    编写过程：<br>        select dinstinct  ..from  ..join ..on ..where ..group by …having ..order by ..limit ..</p>
+<p>​    解析过程：<br>​        from .. on.. join ..where ..group by ….having …select dinstinct ..order by limit … </p>
+<p>SQL优化（主要就是在优化索引）</p>
+<p>​    索引： 相当于书的目录<br>​    索引： index是帮助MYSQL高效获取数据的数据结构。索引是数据结构（树：B树(默认)、Hash树…）</p>
+<p>索引的弊端</p>
+<ul>
+<li>索引本身很大， 可以存放在内存/硬盘（通常为硬盘）</li>
+<li>索引不是所有情况均适用： a.少量数据  b.频繁更新的字段   c.很少使用的字段</li>
+<li>索引会降低增删改的效率（增删改  查）实际上查是最主要的，所以利大于弊 </li>
+</ul>
+<p>优势提高查询效率（降低IO使用率）</p>
+<ul>
+<li>降低IO使用率</li>
+<li>降低CPU使用率 （…order by age desc,因为 B树索引 本身就是一个 好排序的结构，因此在排序时  可以直接使用）</li>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><p>索引是一种数据结构，通过索引可以提高查询效率</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql2.png" alt></p>
+<p>实际上b树并不是2叉，应该为多路平衡树，这里只是便于理解</p>
+<p>关于B树和B+树看这篇博客， <a href="https://zhuanlan.zhihu.com/p/54102723" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/54102723</a> </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql3.png" alt></p>
+<p><strong>分类与使用</strong></p>
+<ul>
+<li>主键索引：  不能重复。id    不能是null</li>
+<li>唯一索引  ：不能重复。id    可以是null</li>
+<li>单值索引  ： 单列， age ;一个表可以多个单值索引,name。</li>
+<li>复合索引  ：多个列构成的索引 （相当于 二级目录 ：  z: zhao）  (name,age)   (a,b,c,d）</li>
+</ul>
+<p><strong>创建索引</strong></p>
+<p> 方式一：<br>        create 索引类型  索引名  on 表(字段)<br>        单值索引：<br>        create index   dept_index on  tb(dept);<br>        唯一索引：<br>        create unique index  name_index on tb(name) ;<br>        复合索引<br>        create index dept_name_index on tb(dept,name);</p>
+<p>方式二：alter table 表名 索引类型  索引名（字段）</p>
+<p>​        单值：</p>
+<p>​        alter table tb add index dept_index(dept) ;<br>​        唯一：<br>​        alter table tb add unique index name_index(name);<br>​        复合索引<br>​        alter table tb add index dept_name_index(dept,name);<br>​        注意：如果一个字段是primary key，则改字段默认就是 主键索引</p>
+<p><strong>删除索引</strong>：    </p>
+<p>drop index 索引名 on 表名 ;<br>drop index name_index on tb ;</p>
+<p><strong>查询索引</strong>：</p>
+<p>show index from 表名 ;</p>
+<p>show index from 表名 \G  </p>
+<h2 id="SQL性能问题"><a href="#SQL性能问题" class="headerlink" title="SQL性能问题"></a>SQL性能问题</h2><h3 id="分析SQL的执行计划"><a href="#分析SQL的执行计划" class="headerlink" title="分析SQL的执行计划"></a>分析SQL的执行计划</h3><p>explain 可以模拟SQL优化器执行SQL语句，从而让开发人员 知道自己编写的SQL状况</p>
+<p>b.MySQL查询优化其会干扰我们的优化</p>
+<p>查询执行计划：  explain +SQL语句     explain  select  * from tb ;</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql4.png" alt></p>
+<ul>
+<li><p>id:  id值相同，从上往下 顺序执行</p>
+<p>​      id值不同：id值越大越优先查询 (本质：在嵌套子查询时，先查内层 再查外层)</p>
+</li>
+<li><p>select_type:查询类型</p>
+<p>​      PRIMARY:包含子查询SQL中的主查询 （最外层）</p>
+<p>​      SUBQUERY：包含子查询SQL中的子查询 （非最外层）</p>
+<p>​      simple:简单查询（不包含子查询、union）</p>
+<p>​      derived:衍生查询(使用到了临时表)</p>
+</li>
+<li><p>type:索引类型</p>
+</li>
+<li><p>possible_keys ：可能用到的索引，是一种预测，不准</p>
+</li>
+<li><p>key ：实际使用到的索引</p>
+</li>
+<li><p>key_len ：索引的长度           用于判断复合索引是否被完全使用</p>
+</li>
+<li><p>ref : 注意与type中的ref值区分       指明当前表所参照的字段 </p>
+</li>
+<li><p>rows: 被索引优化查询的 数据个数 (实际通过索引而查询到的数据个数)</p>
+</li>
+<li><p>Extra</p>
+</li>
+</ul>
+<p><strong>using filesort</strong> ： 性能消耗大；需要“额外”的一次排序（查询）  。常见于 order by 语句中。<strong>排序会先进行先查询</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT a1 FROM test02 WHERE a1 =&apos;&apos; ORDER BY a2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-1.png" alt></p>
+<p>where对a1进行了查询，order by需要先查询再排序，所以多了额外一次</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT a1 FROM test02 WHERE a1 =&apos;a&apos; ORDER BY a1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-2.png" alt></p>
+<p>where查a1，order by就不需要查</p>
+<p><strong>using temporary</strong>:性能损耗大 ，用到了临时表。一般出现在group by 语句中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1 from test02 where a1 in (&apos;1&apos;,&apos;2&apos;,&apos;3&apos;) group by a1 </span><br><span class="line">explain select a1 from test02 where a1 in (&apos;1&apos;,&apos;2&apos;,&apos;3&apos;) group by a2 ; --using temporary a2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>using index :性能提升; 索引覆盖（覆盖索引）。原因：不读取原文件，只从索引文件中获取数据 （不需要回表查询）</li>
+<li>using where （需要回表查询）</li>
+<li>impossible where ： where子句永远为false</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2555,7 +2628,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">74</span>
+                    <span class="site-state-item-count">72</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2614,9 +2687,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2673,11 +2744,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
