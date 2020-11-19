@@ -131,7 +131,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-11-11T13:04:14.916Z">
+<meta property="og:updated_time" content="2020-11-19T08:28:44.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="传输层">
 <meta name="twitter:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
@@ -552,22 +552,46 @@
 <p>接收端收掉5，依旧返回1的确认</p>
 <p>发送方收到3次冗余，知道2号报文丢失，重传报文</p>
 <h2 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h2><p>流量控制：让发送方发送的慢点，好让接收方来得及接收</p>
+<p>主要思路：让发送方知道自己的接受能力</p>
 <p>TCP利用滑动窗口实现流量控制，发送窗口取决于接收窗口和拥塞窗口</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%828.png" alt></p>
-<p>TCP为每个连接设立一个持续计时器，只要发送方收到零窗口通知，就启动持续计时器</p>
+<p>当接收方发生了零窗口后一段时间，有了空间后通知发送方的报文丢失了，发送方一直等待接受方的非零窗口通知，接收方一直等待发送方发送数据，这就死锁了，怎么办呢？</p>
+<p>TCP为每个连接设立一个持续计时器，只要发送方收到零窗口通知，就启动持续计时器，到时了就发送一个零窗口探测报文，询问能否发送数据，可以，接收方告诉此时窗口的大小；不可以，就刷新计时器</p>
 <h2 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h2><p>拥塞原因：对资源的需求总和大于可用资源</p>
 <p>拥塞控制和流量控制的区别可用理解为目标停车场停不下了和路上堵车的区别</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png" alt></p>
+<p>拥塞控制是为了防止过多的包注入网络，造成网络负载过大，网络拥塞的情况</p>
 <p>解决办法：</p>
 <ul>
 <li>慢开始 拥塞避免</li>
 <li>快重传 快恢复</li>
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png" alt></p>
-<p> 一个传输轮次就是一个往返时间，可以理解为一个回来可以传输的字节有多少个。一开始一个来回1个，然会2个，4个…知道16这个阈值开始拥塞避免增长的慢点，毕竟按前面的指数增长越来越夸张，到达24后出现拥塞，此时立刻返回到1这个状态，再来一遍，不过阈值会有所减少</p>
+<p>慢开始就是在tcp连接刚建立时，一点点增加拥塞窗口cwnd的值，试探网络的承受能力</p>
+<h3 id="慢开始算法"><a href="#慢开始算法" class="headerlink" title="慢开始算法"></a>慢开始算法</h3><ul>
+<li>连接刚建立时，cwnd初始化为1</li>
+<li>每收到一个ACK，cwnd+1</li>
+<li>每经过一个往返延迟时间，cwnd就X2</li>
+<li>达到阈值，进入拥塞避免算法</li>
+</ul>
+<h3 id="拥塞避免算法"><a href="#拥塞避免算法" class="headerlink" title="拥塞避免算法"></a>拥塞避免算法</h3><ul>
+<li>每收到一个ACK，窗口+1</li>
+<li>每当过了一个RTT，cwnd加1</li>
+</ul>
+<p>一般来说TCP默认认为网络丢包是网络出现拥塞导致的，所以以丢包作为网络出现拥塞的信号；</p>
+<p>而丢包有2种判定方式</p>
+<ul>
+<li>超时重传，发送一个数据后就启动超时计数器，一定时间内没用收到ACK，就重发</li>
+<li>收到3个重复ACK报文</li>
+</ul>
+<p>之前的TCP算法认为一旦丢包，问题非常严重，直接从头开始，会让网络不太稳定</p>
+<p>优化后的TCP算法，使用了快重传和快恢复</p>
+<h3 id="快重传算法"><a href="#快重传算法" class="headerlink" title="快重传算法"></a>快重传算法</h3><p>发送端收到3个ACK报文后就可断定报文丢失了，此时立即重传丢失的报文而不用等重传计时器</p>
+<h3 id="快恢复算法"><a href="#快恢复算法" class="headerlink" title="快恢复算法"></a>快恢复算法</h3><ul>
+<li>接收端收到3个重复确认后进行乘法减小，即让新的阈值等于门限的一半，以防止网络拥塞</li>
+<li>让cwnd也为门限的一半，开始进行拥塞避免</li>
+</ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png" alt></p>
-<p>快重传就是冗余重传，收到3个冗余确认重传</p>
-<p>快恢复指的是出现拥塞后不用回到开始的状态，直接从新的阈值开始</p>
 
       
     </div>
@@ -737,7 +761,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-count">71</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -957,7 +981,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP协议"><span class="nav-number">1.</span> <span class="nav-text">UDP协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.</span> <span class="nav-text">TCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP协议特点"><span class="nav-number">2.1.</span> <span class="nav-text">TCP协议特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP报文首部"><span class="nav-number">2.2.</span> <span class="nav-text">TCP报文首部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP连接管理"><span class="nav-number">2.3.</span> <span class="nav-text">TCP连接管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么建立连接要3次握手呢？"><span class="nav-number">2.4.</span> <span class="nav-text">为什么建立连接要3次握手呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP可靠传输"><span class="nav-number">3.</span> <span class="nav-text">TCP可靠传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序号"><span class="nav-number">3.1.</span> <span class="nav-text">序号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认"><span class="nav-number">3.2.</span> <span class="nav-text">确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重传"><span class="nav-number">3.3.</span> <span class="nav-text">重传</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP流量控制"><span class="nav-number">4.</span> <span class="nav-text">TCP流量控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP拥塞控制"><span class="nav-number">5.</span> <span class="nav-text">TCP拥塞控制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP协议"><span class="nav-number">1.</span> <span class="nav-text">UDP协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.</span> <span class="nav-text">TCP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP协议特点"><span class="nav-number">2.1.</span> <span class="nav-text">TCP协议特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP报文首部"><span class="nav-number">2.2.</span> <span class="nav-text">TCP报文首部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP连接管理"><span class="nav-number">2.3.</span> <span class="nav-text">TCP连接管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么建立连接要3次握手呢？"><span class="nav-number">2.4.</span> <span class="nav-text">为什么建立连接要3次握手呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP可靠传输"><span class="nav-number">3.</span> <span class="nav-text">TCP可靠传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序号"><span class="nav-number">3.1.</span> <span class="nav-text">序号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认"><span class="nav-number">3.2.</span> <span class="nav-text">确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重传"><span class="nav-number">3.3.</span> <span class="nav-text">重传</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP流量控制"><span class="nav-number">4.</span> <span class="nav-text">TCP流量控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP拥塞控制"><span class="nav-number">5.</span> <span class="nav-text">TCP拥塞控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#慢开始算法"><span class="nav-number">5.1.</span> <span class="nav-text">慢开始算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拥塞避免算法"><span class="nav-number">5.2.</span> <span class="nav-text">拥塞避免算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快重传算法"><span class="nav-number">5.3.</span> <span class="nav-text">快重传算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快恢复算法"><span class="nav-number">5.4.</span> <span class="nav-text">快恢复算法</span></a></li></ol></li></ol></div>
             
 
           </div>
