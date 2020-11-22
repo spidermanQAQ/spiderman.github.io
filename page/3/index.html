@@ -380,6 +380,239 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/rabbitmq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/06/16/rabbitmq/" class="post-title-link" itemprop="url">rabbitmq</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-16 16:38:58" itemprop="dateCreated datePublished" datetime="2020-06-16T16:38:58+08:00">2020-06-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/rabbitmq/" itemprop="url" rel="index"><span itemprop="name">rabbitmq</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="RabbitMq"><a href="#RabbitMq" class="headerlink" title="RabbitMq"></a><strong>RabbitMq</strong></h2><p>RabbitMQ是一个实现了AMQP（Advanced Message Queuing Protocol）高级消息队列协议的消息队列服务 </p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/rabbitmq1.png" alt></p>
+<ul>
+<li><p>publisher：生产者，即数据的发送方，会发送一个实现了<strong>序列化</strong>的<strong>Message</strong>对象进行消息传递，Message包括 payload（有效载荷）和label（标签），payload顾名思义就是传输的数据，label是exchange的名字或者说是一个tag，它描述了payload，而且RabbitMQ也是通过这个label来决定把这个Message发给哪个Consumer </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY_NAME,emp,<span class="keyword">new</span> CorrelationData(msgId));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CorrelationData</span><span class="params">(String id)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">this</span>.id = id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的convertAndSend方法会将emp对象转换为Message发送，CorrelationData只有一个id属性可用来保证可靠消息，以后再说</p>
+</li>
+<li><p>broker： 接收和分发消息的应用 （rabbitmq服务器）</p>
+</li>
+<li><p>exchange：交换机， 根据分发规则，匹配查询表中的routing key，分发消息到queue中去。常用的类型有：direct (point-to-point), topic (publish-subscribe) and fanout (multicast) </p>
+</li>
+<li><p>binding： exchange和queue之间的虚拟连接，binding中可以包含routing key</p>
+</li>
+<li><p>queue：队列</p>
+</li>
+<li><p>Connection： publisher／consumer和broker之间的TCP连接 </p>
+</li>
+<li><p>Channel： 如果每一次访问RabbitMQ都建立一个Connection，在消息量大的时候建立TCP Connection的开销将是巨大的，效率也较低。Channel是在connection</p>
+</li>
+<li><p>内部建立的逻辑连接，如果应用程序支持多线程，通常每个thread创建单独的channel进行通讯，AMQP method包含了channel id帮助客户端和message broker识别channel，所以channel之间是完全隔离的 </p>
+</li>
+</ul>
+<p>exchange类型</p>
+<ul>
+<li><p>Direct exchange 直接转发路由</p>
+<p>将消息的routing key和binding中的routing key比照，匹配则发到对应的队列</p>
+</li>
+<li><p>Fanout exchange 复制分发路由</p>
+<p>不需要routkey，当exchange收到消息后，将消息复制多份转发给与自己绑定的消息队列 </p>
+</li>
+<li><p>topic exchange 通配路由</p>
+<p>根据routing key，及通配规则，Topic exchange将分发到目标queue中。 </p>
+</li>
+</ul>
+<h3 id="可靠消息"><a href="#可靠消息" class="headerlink" title="可靠消息"></a>可靠消息</h3><p>在使用 <strong>RabbitMQ</strong> 的时候，作为消息发送方希望杜绝任何消息丢失或者投递失败场景。<strong>RabbitMQ</strong> 为我们提供了两个选项用来控制消息的投递可靠性模式。 </p>
+<p>消息传递路径为</p>
+<p> <strong><em>producer-&gt;rabbitmq broker cluster-&gt;exchange-&gt;queue-&gt;consumer</em></strong> </p>
+<ul>
+<li><p><strong>message</strong> 从 <strong>producer</strong> 到 <strong>rabbitmq broker cluster</strong> 则会返回一个 <strong>confirmCallback</strong> </p>
+<p>开启配置（这边的思路是发送者发送完消息会在数据库中记录下消息id，状态，创建时间等信息，发送成功则confirmcallback并修改数据库表的信息，发送失败则通过定时任务进行重发）</p>
+<p>常规配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">Queue <span class="title">mailQueue</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Queue(MailConstants.MAIL_QUEUE_NAME,<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">DirectExchange <span class="title">directExchange</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DirectExchange(MailConstants.MAIL_EXCHANGE_NAME,<span class="keyword">true</span>,<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">Binding <span class="title">binding</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BindingBuilder.bind(mailQueue()).to(directExchange()).with(MailConstants.MAIL_ROUTING_KEY_NAME);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.publisher-confirms=true</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">RabbitTemplate <span class="title">rabbitTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">    RabbitTemplate rabbitTemplate=<span class="keyword">new</span> RabbitTemplate(cachingConnectionFactory);</span><br><span class="line">    <span class="comment">//保证消息到broker</span></span><br><span class="line">    rabbitTemplate.setConfirmCallback((data,ack,cause)-&gt;&#123;</span><br><span class="line">        String msgId = data.getId();</span><br><span class="line">        <span class="keyword">if</span> (ack)&#123;</span><br><span class="line">            logger.info(<span class="string">"发送成功"</span>);</span><br><span class="line">            mailSendLogService.updateMailSendLog(msgId,<span class="number">1</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"发送失败"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">//保证消息到queue</span></span><br><span class="line">    rabbitTemplate.setReturnCallback((msg,repCode,repText,exchange,routingKey)-&gt;&#123;</span><br><span class="line">        logger.info(<span class="string">"发送失败"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> rabbitTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//0为初始值，10偏移量，第一位秒，分，小时，日，月，星期（1，2）</span></span><br><span class="line"><span class="meta">@Scheduled</span>(cron = <span class="string">"0/10 * * * * ?"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reSend</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;MailSendLog&gt;logs= mailSendLogService.getMailByStatus();</span><br><span class="line">    logs.forEach(mailSendLog -&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (mailSendLog.getCount() &gt;= <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="comment">//重发超过三次就失败，改数据库表的状态为2</span></span><br><span class="line">            mailSendLogService.updateMailSendLog(mailSendLog.getMsgId(),<span class="number">2</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            mailSendLogService.updateMailCount(mailSendLog.getMsgId(),<span class="keyword">new</span> Date());</span><br><span class="line">            Employee emp=employeeService.getEmployeeById(mailSendLog.getEmpId());</span><br><span class="line">            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY_NAME,emp,<span class="keyword">new</span> CorrelationData(mailSendLog.getMsgId()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>message</strong> 从 <strong>exchange-&gt;queue</strong> 投递失败则会返回一个 <strong>returnCallback</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.publisher-returns=true</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//保证消息到queue</span><br><span class="line">rabbitTemplate.setReturnCallback((msg,repCode,repText,exchange,routingKey)-&gt;&#123;</span><br><span class="line">    logger.info(&quot;发送失败&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="解决幂等性问题"><a href="#解决幂等性问题" class="headerlink" title="解决幂等性问题"></a>解决幂等性问题</h3><p>幂等性指的是消费者已经接受的消息，下次就不用再发了</p>
+<p>例如消费者接收消息后在返回ack的过程中，出现了故障，此时可能队列那边又会重新发送一遍，这样就出现了重复消费</p>
+<p>这里的思路是：消费者接收逻辑执行完后将消息的msgId存入redis中，发送channel.ack确认，下次如果有相同的消息即msgId一样就通过再channel.ack告诉消息中间件已经确认收到了，此时不需要在进行消费逻辑直接return结束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.listener.simple.acknowledge-mode=manual</span><br><span class="line">spring.rabbitmq.listener.simple.prefetch=100</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailserverApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(MailserverApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">Queue <span class="title">queue</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(<span class="string">"javaboy.mail"</span>) ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener</span>(queues = <span class="string">"javaboy.mail"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handler</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Employee employee = (Employee) message.getPayload();</span><br><span class="line">        MessageHeaders headers = message.getHeaders();</span><br><span class="line">        Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);</span><br><span class="line">        String msgId = (String) headers.get(<span class="string">"spring_returned_message_correlation"</span>);</span><br><span class="line">        <span class="keyword">if</span>(redisTemplate.opsForHash().entries(<span class="string">"mail_log"</span>).containsKey(msgId))&#123;</span><br><span class="line">            logger.info(<span class="string">"消息被消费"</span>);</span><br><span class="line">            channel.basicAck(tag,<span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        logger.info(employee.toString());</span><br><span class="line">        MimeMessage mimeMessage = javaMailSender.createMimeMessage();</span><br><span class="line">        MimeMessageHelper mimeMessageHelper = <span class="keyword">new</span> MimeMessageHelper(mimeMessage);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            mimeMessageHelper.setTo(employee.getEmail());</span><br><span class="line">            mimeMessageHelper.setFrom(mailProperties.getUsername());</span><br><span class="line">            mimeMessageHelper.setSubject(<span class="string">"入职欢迎"</span>);</span><br><span class="line">            mimeMessageHelper.setSentDate(<span class="keyword">new</span> Date());</span><br><span class="line">            Context context=<span class="keyword">new</span> Context();</span><br><span class="line">            context.setVariable(<span class="string">"name"</span>,employee.getName());</span><br><span class="line">            context.setVariable(<span class="string">"posName"</span>,employee.getPosition().getName());</span><br><span class="line">            context.setVariable(<span class="string">"joblevelName"</span>,employee.getJobLevel().getName());</span><br><span class="line">            context.setVariable(<span class="string">"departmentName"</span>,employee.getDepartment().getName());</span><br><span class="line">            String mail = templateEngine.process(<span class="string">"mail"</span>, context);</span><br><span class="line">            mimeMessageHelper.setText(mail,<span class="keyword">true</span>);</span><br><span class="line">            javaMailSender.send(mimeMessage);</span><br><span class="line">            redisTemplate.opsForHash().put(<span class="string">"mail_log"</span>,msgId,<span class="string">"javaboy"</span>);</span><br><span class="line">            channel.basicAck(tag,<span class="keyword">false</span>);</span><br><span class="line">            logger.info(msgId+<span class="string">"邮件发送成功"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MessagingException e) &#123;</span><br><span class="line">            channel.basicNack(tag,<span class="keyword">false</span>,<span class="keyword">true</span>);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            logger.error(<span class="string">"发送失败"</span>+e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p> <a href="https://zhuanlan.zhihu.com/p/63700605" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/63700605</a> </p>
+<p> <a href="https://www.cnblogs.com/frankyou/p/5283539.html" target="_blank" rel="noopener">https://www.cnblogs.com/frankyou/p/5283539.html</a> </p>
+<p> <a href="https://www.cnblogs.com/wangiqngpei557/p/9381478.html" target="_blank" rel="noopener">https://www.cnblogs.com/wangiqngpei557/p/9381478.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/对象内存/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2220,189 +2453,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/04/如何安全删除集合元素/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/04/如何安全删除集合元素/" class="post-title-link" itemprop="url">如何安全删除集合元素</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-04 13:32:48" itemprop="dateCreated datePublished" datetime="2020-04-04T13:32:48+08:00">2020-04-04</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>删除集合的元素，如果采用下面的方法，可以吗</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class deleteElement &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list=new ArrayList();</span><br><span class="line">        list.add(&quot;小明&quot;);</span><br><span class="line">        list.add(&quot;小李&quot;);</span><br><span class="line">        list.add(&quot;小红&quot;);</span><br><span class="line">        list.add(&quot;小王&quot;);</span><br><span class="line">        for (String s:list)&#123;</span><br><span class="line">            if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">                list.remove(s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行时异常</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A6%82%E4%BD%95%E5%AE%89%E5%85%A8%E5%88%A0%E9%99%A4%E9%9B%86%E5%90%88%E5%85%83%E7%B4%A01.png" alt></p>
-<p>为什么呢？</p>
-<p>增强for循环本质上也是通过迭代器实现的</p>
-<p>arraylist等集合都已经实现了Iterator接口，那我们来看看其中的源码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">       <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">RandomAccess</span>, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;  </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> Itr();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> cursor;       <span class="comment">// index of next element to return</span></span><br><span class="line">       <span class="keyword">int</span> lastRet = -<span class="number">1</span>; <span class="comment">// index of last element returned; -1 if no such</span></span><br><span class="line">       <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">       Itr() &#123;&#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> cursor != size;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">       <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           checkForComodification();</span><br><span class="line">           <span class="keyword">int</span> i = cursor;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">           Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           cursor = i + <span class="number">1</span>;</span><br><span class="line">           <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">           checkForComodification();</span><br><span class="line"></span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">               cursor = lastRet;</span><br><span class="line">               lastRet = -<span class="number">1</span>;</span><br><span class="line">               expectedModCount = modCount;</span><br><span class="line">           &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachRemaining</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> E&gt; consumer)</span> </span>&#123;</span><br><span class="line">           Objects.requireNonNull(consumer);</span><br><span class="line">           <span class="keyword">final</span> <span class="keyword">int</span> size = ArrayList.<span class="keyword">this</span>.size;</span><br><span class="line">           <span class="keyword">int</span> i = cursor;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= size) &#123;</span><br><span class="line">               <span class="keyword">return</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">final</span> Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= elementData.length) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">while</span> (i != size &amp;&amp; modCount == expectedModCount) &#123;</span><br><span class="line">               consumer.accept((E) elementData[i++]);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">// update once at end of iteration to reduce heap write traffic</span></span><br><span class="line">           cursor = i;</span><br><span class="line">           lastRet = i - <span class="number">1</span>;</span><br><span class="line">           checkForComodification();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>arraylist通过size属性来维护状态，而Iterator是通过 <strong>cursor</strong> 来维护状态。当你使用集合的remove删除元素时，迭代器的cursor并不能同步更新，从而报错，只有采用迭代的remove方法使元素列表发生变化时，它会更新cursor来同步这一变化。 为了防止状态不一致可能引发的无法设想的后果，Iterator会经常做checkForComodification检查，以防有变。 </p>
-<p>当然你可以采用遍历集合的方式来删，但并不推荐</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">    String s = list.get(i);</span><br><span class="line">    if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">        list.remove(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确姿势</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class deleteElement &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list=new ArrayList();</span><br><span class="line">        list.add(&quot;小明&quot;);</span><br><span class="line">        list.add(&quot;小李&quot;);</span><br><span class="line">        list.add(&quot;小红&quot;);</span><br><span class="line">        list.add(&quot;小王&quot;);</span><br><span class="line">        Iterator&lt;String&gt; iterator = list.iterator();</span><br><span class="line">        while (iterator.hasNext())&#123;</span><br><span class="line">            String s = iterator.next();</span><br><span class="line">            if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">                iterator.remove();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[小明, 小红, 小王]</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2451,7 +2501,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
