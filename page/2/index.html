@@ -380,194 +380,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/22/DNS解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/09/22/DNS解析/" class="post-title-link" itemprop="url">DNS解析</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-09-22 15:33:37" itemprop="dateCreated datePublished" datetime="2020-09-22T15:33:37+08:00">2020-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="域名服务器类型"><a href="#域名服务器类型" class="headerlink" title="域名服务器类型"></a>域名服务器类型</h2><ul>
-<li>根域名服务器：所有域名服务器都知道所有顶级域名服务器的域名和IP地址</li>
-<li>顶级域名服务器：这些域名服务器负责管理在该顶级域名服务器注册的所有二级域名</li>
-<li>权限域名服务器：负责一个区的域名服务器，当一个权限域名服务器还不能给出最后的查询回答时，就会告诉发出查询请求的DNS客户，下一步应当去找哪一个权限服务器</li>
-<li>本地域名服务器：当一个主机发出DNS查询请求时，这个查询请求就会发送到本地域名服务器。每一个互联网服务提供者ISP，或一个大学，甚至一个大学里的系，都可以拥有一个本地域名服务器。当所要查询的主机也属于同一个本地ISP时，该本地域名服务器就能立刻将查询的主机名转换成IP地址，而不需要再去询问其他域名服务器</li>
-</ul>
-<h2 id="域名解析过程"><a href="#域名解析过程" class="headerlink" title="域名解析过程"></a>域名解析过程</h2><h3 id="主机向本地域名服务器"><a href="#主机向本地域名服务器" class="headerlink" title="主机向本地域名服务器"></a>主机向本地域名服务器</h3><p>主机向本地域名服务器一般采用<strong>递归查询</strong>。所谓递归查询就是：如果主机所询问的本地域名服务器不知道要被查询的域名的IP地址，那么本地域名服务器会以DNS客户的身份向其他根域名服务器继续发出查询报文</p>
-<h3 id="本地域名服务器向根域名服务器"><a href="#本地域名服务器向根域名服务器" class="headerlink" title="本地域名服务器向根域名服务器"></a>本地域名服务器向根域名服务器</h3><p>本地域名服务器向根域名服务器的查询一般是<strong>迭代查询</strong>。迭代查询：当根域名服务器收到本地域名服务器发出的迭代查询请求报文时，要么给出IP，要么告诉本地域名服务器你下一步应该向哪个域名服务器查询。因为根域名服务器保存着<strong>顶级域名服务器</strong>的域名和IP地址，所以一般会让本地域名服务器去查询顶级域名服务器，还没查到的话顶级域名服务器再去权限域名服务器</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/1600762453040.jpg" alt></p>
-<h2 id="解析实例"><a href="#解析实例" class="headerlink" title="解析实例"></a>解析实例</h2><p>假定m.xyz.com的主机想知道另一台主机y.abc.com的IP地址</p>
-<ul>
-<li>主机m.xyz.com先向其本地域名服务器dns.xyz.com进行递归查询</li>
-<li>本地域名服务器采用迭代查询。它先向一个根域名服务器查询</li>
-<li>根域名服务器告诉本地域名服务器，下一次应查询的顶级域名服务器dns.com的IP地址</li>
-<li>本地域名服务i去向顶级域名服务器dns.com查询</li>
-<li>顶级域名服务器告诉本地域名服务器下一次应该查询的权限域名服务器dns.abc.com的IP地址</li>
-<li>本地域名服务器向权限域名服务器dns.abc.com进行查询</li>
-<li>权限域名服务器dns.abc.com告诉本地域名服务器，所查询的主机的IP地址</li>
-<li>本地域名服务器最后把查询结果告诉主机</li>
-</ul>
-<p>注意在查询过程中都是使用的<strong>UDP用户数据报</strong>的报文</p>
-<p>为了提高DNS查询效率，减轻根域名服务器的负荷和减少互联网上的DNS查询报文数量，在域名服务器中广泛使用了<strong>高速缓存</strong>。高速缓存用来存放最近查询过的域名以及从何处获得域名映射信息的记录。</p>
-<p>例如前面的例子，已经有用户查询过y.abc.com的IP，那么本地域名服务器就不必向根域名服务器重新查询，直接把高速缓存的结果给用户；又或者本地域名服务器没有y.abc.com的IP地址，保存着顶级域名服务器的地址dns.com，那么本地域名服务器可以不想根域名服务器请求，而是直接向com顶级域名服务器发送查询报文</p>
-<h2 id="为什么使用UDP"><a href="#为什么使用UDP" class="headerlink" title="为什么使用UDP"></a>为什么使用UDP</h2><p>客户端向DNS服务器查询域名，一般返回的内容都不超过512字节（udp报文最大512字节，tcp报文不止512字节），用UDP传输即可。不用经过TCP三次握手，这样DNS服务器负载更低，响应更快 </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/19/向下转型与向上转型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -628,7 +440,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试常问/" itemprop="url" rel="index"><span itemprop="name">面试常问</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
 
                 
                 
@@ -2975,6 +2787,229 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/redis主从复制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/06/01/redis主从复制/" class="post-title-link" itemprop="url">redis主从复制</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-01 09:16:56" itemprop="dateCreated datePublished" datetime="2020-06-01T09:16:56+08:00">2020-06-01</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="单机redis存在问题"><a href="#单机redis存在问题" class="headerlink" title="单机redis存在问题"></a>单机redis存在问题</h3><ul>
+<li>机器故障：单机redis出现故障会对业务造成毁灭性打击</li>
+<li>容量瓶颈：需要不断升内存</li>
+</ul>
+<p>将数据复制多个副本保存在不同的服务器上，<strong>链接在一起</strong>，并保证数据是否<strong>同步</strong>的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif" alt></p>
+<p>一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接</p>
+<h3 id="主从复制搭建"><a href="#主从复制搭建" class="headerlink" title="主从复制搭建"></a>主从复制搭建</h3><p>进入redis目录，分别建立（vim会直接新建文件）<strong>redis6379.conf，redis6380.conf， redis6381.conf</strong></p>
+<p>以<strong>redis6380.conf</strong>为例进行配置                 一个配置完cp命令复制就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">include /opt/redis-5.0.9/redis.conf       #拷贝redis目录下的redis配置文件</span><br><span class="line">port 6380</span><br><span class="line">pidfile /var/run/redis6380.conf</span><br><span class="line">dbfilename dump6380.rdb</span><br><span class="line">slaveof 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p>配置完后，分别启动</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis5.png" alt></p>
+<p>通过命令查看进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep redis</span><br></pre></td></tr></table></figure>
+
+<p>开启3个客户端，通过info replication查看信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 6379  #6380/6381</span><br><span class="line">info replication #6379端口的的role:master 6380/6381 role:slave</span><br></pre></td></tr></table></figure>
+
+<p>分别set可以发现，主服务器可以读写，而从服务器只能读不能写</p>
+<h3 id="主从复制原理-建立连接"><a href="#主从复制原理-建立连接" class="headerlink" title="主从复制原理-建立连接"></a>主从复制原理-建立连接</h3><p>指令就1条</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof master_ip master_port</span><br></pre></td></tr></table></figure>
+
+<p>3种方式连接</p>
+<ul>
+<li>发送命令 <code>slaveof master_ip master_port</code> </li>
+<li>启动时使用参数<code>--slaveof master_ip master_port</code> （redis-cli -p xxxx –slaveof）</li>
+<li>服务器配置 <code>slaveof master_ip master_port</code> （修改配置文件）</li>
+</ul>
+<h3 id="主从复制原理-数据同步"><a href="#主从复制原理-数据同步" class="headerlink" title="主从复制原理-数据同步"></a>主从复制原理-数据同步</h3><p> 具体执行的方式是：从节点向主节点发送psync命令（Redis2.8以前是sync命令），开始同步。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png" alt></p>
+<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a><strong>全量复制</strong></h4><p>用于初次复制或其他无法进行部分复制的情况，将主节点中的所有数据都发送给从节点，是一个非常重型的操作 </p>
+<ul>
+<li>从节点判断无法进行部分复制，向主节点发送全量复制的请求；或从节点发送部分复制的请求，但主节点判断无法进行部分复制；具体判断过程需要在讲述了部分复制原理后再介绍。</li>
+<li>主节点收到全量复制的命令后，执行bgsave，在后台生成RDB文件，并使用一个缓冲区（称为复制缓冲区）记录从现在开始执行的所有写命令</li>
+<li>主节点的bgsave执行完成后，将RDB文件发送给从节点；<strong>从节点首先清除自己的旧数据，然后载入接收的RDB文件</strong>，将数据库状态更新至主节点执行bgsave时的数据库状态</li>
+<li>主节点将前述复制缓冲区中的所有写命令发送给从节点，从节点执行这些写命令，将数据库状态更新至主节点的最新状态</li>
+<li>如果从节点开启了AOF，则会触发bgrewriteaof的执行，从而保证AOF文件更新至主节点的最新状态</li>
+</ul>
+<h4 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a><strong>部分复制</strong></h4><p>用于网络中断等情况后的复制，只将中断期间主节点执行的写命令发送给从节点，与全量复制相比更加高效 </p>
+<p>部分复制依赖于下面三个主要概念</p>
+<p><strong>复制偏移量</strong></p>
+<p>主节点和从节点分别维护一个复制偏移量（offset），代表的是<strong>主节点向从节点传递的字节数</strong>；主节点每次向从节点传播N个字节数据时，主节点的offset增加N；从节点每次收到主节点传来的N个字节数据时，从节点的offset增加N。</p>
+<p>offset用于判断主从节点的数据库状态是否一致：如果二者offset相同，则一致；如果offset不同，则不一致，此时可以根据两个offset找出从节点缺少的那部分数据。例如，如果主节点的offset是1000，而从节点的offset是500，那么部分复制就需要将offset为501-1000的数据传递给从节点。而offset为501-1000的数据存储的位置，就是下面要介绍的复制积压缓冲区。</p>
+<p><strong>复制积压缓冲区</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis3.png" alt></p>
+<p>复制积压缓冲区是由主节点维护的、固定长度的、先进先出(FIFO)队列，默认大小1MB；当主节点开始有从节点时创建，其作用是备份主节点最近发送给从节点的数据。注意，无论主节点有一个还是多个从节点，都只需要一个复制积压缓冲区。</p>
+<p>在<strong>命令传播阶段</strong>，主节点除了将写命令发送给从节点，还会发送一份给复制积压缓冲区，作为写命令的备份；除了存储写命令，复制积压缓冲区中还存储了其中的每个字节对应的复制偏移量（offset）。由于复制积压缓冲区定长且是先进先出，所以它保存的是主节点最近执行的写命令；时间较早的写命令会被挤出缓冲区</p>
+<p><strong>服务器运行ID(runid)</strong></p>
+<p>主从节点初次复制时，主节点将自己的runid发送给从节点，从节点将这个runid保存起来；当断线重连时，从节点会将这个runid发送给主节点；主节点根据runid判断能否进行部分复制：</p>
+<ul>
+<li>如果从节点保存的runid与主节点现在的runid相同，说明主从节点之前同步过，主节点会继续尝试使用部分复制(到底能不能部分复制还要看offset和复制积压缓冲区的情况)；</li>
+<li>如果从节点保存的runid与主节点现在的runid不同，说明从节点在断线前同步的Redis节点并不是当前的主节点，只能进行全量复制</li>
+</ul>
+<h3 id="主从复制原理-命令传播阶段"><a href="#主从复制原理-命令传播阶段" class="headerlink" title="主从复制原理-命令传播阶段"></a>主从复制原理-命令传播阶段</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png" alt></p>
+<h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>master 通过ping指令看slave是否连接着，一般10秒一次</p>
+<h4 id="REPLCONF-ACK"><a href="#REPLCONF-ACK" class="headerlink" title="REPLCONF ACK"></a>REPLCONF ACK</h4><p><strong>从节点会向主节点发送REPLCONF ACK命令</strong>，频率是每秒1次；命令格式为：REPLCONF ACK {offset}，其中offset指从节点保存的复制偏移量</p>
+<p>检测命令丢失：从节点发送了自身的offset，主节点会与自己的offset对比，如果从节点数据缺失（如网络丢包），主节点会推送缺失的数据（这里也会利用复制积压缓冲区） </p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p> <a href="https://www.cnblogs.com/kismetv/p/9236731.html" target="_blank" rel="noopener">https://www.cnblogs.com/kismetv/p/9236731.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -3023,7 +3058,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3078,13 +3113,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3137,13 +3166,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

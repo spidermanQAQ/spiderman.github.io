@@ -380,303 +380,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/16/mysql优化-索引/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/16/mysql优化-索引/" class="post-title-link" itemprop="url">mysql优化-索引</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-16 21:15:11" itemprop="dateCreated datePublished" datetime="2019-11-16T21:15:11+08:00">2019-11-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="单表优化"><a href="#单表优化" class="headerlink" title="单表优化"></a>单表优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE book</span><br><span class="line">(</span><br><span class="line">	bid INT(4) PRIMARY KEY,</span><br><span class="line">	NAME VARCHAR(20) NOT NULL,</span><br><span class="line">	authorid INT(4) NOT NULL,</span><br><span class="line">	publicid INT(4) NOT NULL,</span><br><span class="line">	typeid INT(4) NOT NULL </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO book VALUES(1,&apos;tjava&apos;,1,1,2) ;</span><br><span class="line">INSERT INTO book VALUES(2,&apos;tc&apos;,2,1,2) ;</span><br><span class="line">INSERT INTO book VALUES(3,&apos;wx&apos;,3,2,1) ;</span><br><span class="line">INSERT INTO book VALUES(4,&apos;math&apos;,4,2,3) ;</span><br></pre></td></tr></table></figure>
-
-<p>查询authorid=1且 typeid为2或3的bid</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT bid FROM book WHERE typeid IN(2,3) AND authorid=1  ORDER BY typeid</span><br></pre></td></tr></table></figure>
-
-<p> <strong>优化：加索引</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE book ADD INDEX idx_bta (bid,typeid,authorid)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%957.png" alt></p>
-<p><strong>索引一旦进行 升级优化，需要将之前废弃的索引删掉，防止干扰。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX idx_bta ON book</span><br></pre></td></tr></table></figure>
-
-<p><strong>根据SQL实际解析的顺序，调整索引的顺序</strong><br>alter table book add index idx_tab (typeid,authorid,bid); –虽然可以回表查询bid，但是将bid放到索引中可以提升使用using index ;</p>
-<p><strong>总结</strong></p>
-<p>a.最佳左前缀，保持索引的定义和使用的顺序一致性  </p>
-<p>b.索引需要逐步优化  </p>
-<p>c.将含In的范围查询 放到where条件的最后，防止失效。</p>
-<pre><code>本例中同时出现了Using where（需要回原表）; Using index（不需要回原表）：原因，where  authorid=1 and  typeid in(2,3)中authorid在索引(authorid,typeid,bid)中，因此不需要回原表（直接在索引表中能查到）；而typeid虽然也在索引(authorid,typeid,bid)中，但是含in的范围查询已经使该typeid索引失效，因此相当于没有typeid这个索引，所以需要回原表（using where）；
-例如以下没有了In，则不会出现using where
-explain select bid from book where  authorid=1 and  typeid =3 order by typeid desc ;
-
-还可以通过key_len证明In可以使索引失效。</code></pre><h2 id="两表优化"><a href="#两表优化" class="headerlink" title="两表优化"></a>两表优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE teacher2</span><br><span class="line">(</span><br><span class="line">	tid INT(4) PRIMARY KEY,</span><br><span class="line">	cid INT(4) NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO teacher2 VALUES(1,2);</span><br><span class="line">INSERT INTO teacher2 VALUES(2,1);</span><br><span class="line">INSERT INTO teacher2 VALUES(3,3);</span><br><span class="line"></span><br><span class="line">CREATE TABLE course2</span><br><span class="line">(</span><br><span class="line">	cid INT(4) ,</span><br><span class="line">	cname VARCHAR(20)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO course2 VALUES(1,&apos;java&apos;);</span><br><span class="line">INSERT INTO course2 VALUES(2,&apos;python&apos;);</span><br><span class="line">INSERT INTO course2 VALUES(3,&apos;kotlin&apos;);</span><br></pre></td></tr></table></figure>
-
-<p>左连接：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT *FROM teacher2 t LEFT OUTER JOIN course2 c ON t.cid=c.cid WHERE c.cname=&apos;java&apos;;</span><br></pre></td></tr></table></figure>
-
-<p>索引往哪张表加？  </p>
-<ul>
-<li><p>小表驱动大表</p>
-</li>
-<li><p>索引建立经常使用的字段上  本题 t.cid=c.cid可知，t.cid字段使用频繁，因此给该字段加索引</p>
-<p>[一般情况对于左外连接，给左表加索引；右外连接，给右表加索引]</p>
-</li>
-</ul>
-<pre><code>select ...where 小表.x10=大表.x300 ;
-for(int i=0;i&lt;小表.length10;i++)
-{
-    for(int j=0;j&lt;大表.length300;j++)
-    {
-        ...
-    }
-}
-
-
-select ...where 大表.x300=小表.x10 ;
-for(int i=0;i&lt;大表.length300;i++)
-{
-    for(int j=0;j&lt;小表.length10;j++)
-    {
-        ...
-    }
-}</code></pre><p>–以上2个FOR循环，最终都会循环3000次；但是 对于双层循环来说：一般建议 将数据小的循环 放外层；数据大的循环放内存。</p>
-<pre><code>--当编写 ..on t.cid=c.cid 时，将数据量小的表 放左边（假设此时t表数据量小）
-
-alter table teacher2 add index index_teacher2_cid(cid) ;
-alter table course2 add index index_course2_cname(cname);
-
-
-Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接缓存。</code></pre><h2 id="三张表优化A-B-C"><a href="#三张表优化A-B-C" class="headerlink" title="三张表优化A B C"></a>三张表优化A B C</h2><p>a.小表驱动大表  </p>
-<p>b.索引建立在经常查询的字段上</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test03</span><br><span class="line">(</span><br><span class="line">  a1 INT(4) NOT NULL,</span><br><span class="line">  a2 INT(4) NOT NULL,</span><br><span class="line">  a3 INT(4) NOT NULL,</span><br><span class="line">  a4 INT(4) NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">ALTER TABLE test03 ADD INDEX idx_a1_a2_a3_4(a1,a2,a3,a4)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a2=2 and a3=3 and a4 =4 ; --推荐写法，因为 索引的使用顺序（where后面的顺序） 和 复合索引的顺序一致</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96%E2%80%94%E7%B4%A2%E5%BC%953.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a4=1 and a3=2 and a2=3 and a1 =4 ; --虽然编写的顺序 和索引顺序不一致，但是 sql在真正执行前 经过了SQL优化器的调整，结果与上条SQL是一致的。</span><br><span class="line">--以上 2个SQL，使用了 全部的复合索引</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%954.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a2=2 and a4=4 order by a3; </span><br><span class="line">--以上SQL用到了a1 a2两个索引，该两个字段 不需要回表查询using index ;而a4因为跨列使用，造成了该索引失效，需要回表查询 因此是using where</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%955.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a4=4 order by a3; </span><br><span class="line">--以上SQL出现了 using filesort(文件内排序，“多了一次额外的查找/排序”) ：不要跨列使用( where和order by 拼起来，不要跨列使用)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%956.png" alt></p>
-<pre><code>explain select a1,a2,a3,a4 from test03 where a1=1 and a4=4 order by a2 , a3; --不会using filesort</code></pre><p>总结</p>
-<ul>
-<li>如果 (a,b,c,d)复合索引  和使用的顺序全部一致(且不跨列使用)，则复合索引全部使用。如果部分一致(且不跨列使用)，则使用部分索引</li>
-<li>where和order by 拼起来，不要跨列使用 </li>
-</ul>
-<h2 id="避免索引失效的一些原则"><a href="#避免索引失效的一些原则" class="headerlink" title="避免索引失效的一些原则"></a>避免索引失效的一些原则</h2><ul>
-<li><p>复合索引<br>复合索引，不要跨列或无序使用（最佳左前缀原则）<br>复合索引，尽量使用全索引匹配</p>
-</li>
-<li><p>不要在索引上进行任何操作（计算、函数、类型转换），否则索引失效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE book</span><br><span class="line">  (</span><br><span class="line">  	bid INT(4) PRIMARY KEY,</span><br><span class="line">  	NAME VARCHAR(20) NOT NULL,</span><br><span class="line">  	authorid INT(4) NOT NULL,</span><br><span class="line">  	publicid INT(4) NOT NULL,</span><br><span class="line">  	typeid INT(4) NOT NULL </span><br><span class="line">  );</span><br><span class="line">  </span><br><span class="line">  INSERT INTO book VALUES(1,&apos;tjava&apos;,1,1,2) ;</span><br><span class="line">  INSERT INTO book VALUES(2,&apos;tc&apos;,2,1,2) ;</span><br><span class="line">  INSERT INTO book VALUES(3,&apos;wx&apos;,3,2,1) ;</span><br><span class="line">  INSERT INTO book VALUES(4,&apos;math&apos;,4,2,3) ;</span><br><span class="line">  SELECT *FROM book</span><br><span class="line">  ALTER TABLE book ADD INDEX index_fuhe(authorid,typeid)</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid=1 AND typeid=2 --用到了2个索引</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid=1 AND typeid*2=2--用到了a1个索引</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid*2=1 AND typeid*2=2--到了0个索引,原因：对于复合索引，如果左边失效，右侧全部失效。(a,b,c)，例如如果 b失效，则b c同时失效</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%951.png" alt></p>
-<p>  <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%952.png" alt></p>
-<ul>
-<li><p>复合索引不能使用不等于（!=  &lt;&gt;）或is null (is not null)，否则自身以及右侧所有全部失效。<br>复合索引中如果有&gt;，则自身和右侧索引全部失效。</p>
-</li>
-<li><p>尽量使用索引覆盖（using index）</p>
-<p>select a,b,c from xx..where a=  .. and b =.. ;</p>
-</li>
-<li><p>like尽量以“常量”开头，不要以’%’开头，否则索引失效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from xx where name like &apos;%x%&apos; ; --name索引失效</span><br><span class="line"></span><br><span class="line">explain select * from teacher  where tname like &apos;%x%&apos;; --tname索引失效</span><br><span class="line"></span><br><span class="line">explain select * from teacher  where tname like &apos;x%&apos;;</span><br><span class="line"> </span><br><span class="line">explain select tname from teacher  where tname like &apos;%x%&apos;; --如果必须使用like &apos;%x%&apos;进行模糊查询，可以使用索引覆盖 挽救一部分。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>尽量不要使用类型转换（显示、隐式），否则索引失效</p>
-<p>explain select * from teacher where tname =’’ or tcid &gt;1 ; –将or左侧的tname 失效</p>
-</li>
-<li><p>尽量不要使用or，否则索引失效</p>
-<p>explain select * from teacher where tname =’’ or tcid &gt;1 ; –将or左侧的tname 失效</p>
-<p>  explain select * from book where authorid = 1 and typeid =2 ;</p>
-<p>  – SQL优化，是一种概率层面的优化。至于是否实际使用了我们的优化，需要通过explain进行推测。</p>
-<p>  explain select * from book where authorid != 1 and typeid =2 ;<br>  explain select * from book where authorid != 1 and typeid !=2 ;<br>  体验概率情况(&lt; &gt; =)：原因是服务层中有SQL优化器，可能会影响我们的优化。<br>  drop index idx_typeid on book;<br>  drop index idx_authroid on book;<br>  alter table book add index idx_book_at (authorid,typeid);<br>  explain select * from book where authorid = 1 and typeid =2 ;–复合索引at全部使用<br>  explain select * from book where authorid &gt; 1 and typeid =2 ; –复合索引中如果有&gt;，则自身和右侧索引全部失效。<br>  explain select * from book where authorid = 1 and typeid &gt;2 ;–复合索引at全部使用<br>  —-明显的概率问题—<br>  explain select * from book where authorid &lt; 1 and typeid =2 ;–复合索引at只用到了1个索引<br>  explain select * from book where authorid &lt; 4 and typeid =2 ;–复合索引全部失效</p>
-<p>  –我们学习索引优化 ，是一个大部分情况适用的结论，但由于SQL优化器等原因  该结论不是100%正确。<br>  –一般而言， 范围查询（&gt; &lt;  in），之后的索引失效。</p>
-</li>
-</ul>
-<h2 id="一些其他的优化方法"><a href="#一些其他的优化方法" class="headerlink" title="一些其他的优化方法"></a>一些其他的优化方法</h2><ul>
-<li><p>exist和in</p>
-<p>select ..from table where 字段 exist (子查询) ;<br>select ..from table where 字段 in  (子查询) ;</p>
-<p>如果主查询的数据集大，则使用in   ,效率高。如果子查询的数据集大，则使用exist,效率高。</p>
-<p>exist语法： 将主查询的结果，放到子查需结果中进行条件校验（看子查询是否有数据，如果有数据 则校验成功)，如果复合校验，则保留数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select tname from teacher where exists (select * from teacher) ; </span><br><span class="line">--等价于select tname from teacher</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>order by 优化</p>
-<p>使用oder by过程中会出现using filesort（额外依次排序） 底层有两种算法：双路排序、单路排序 （根据IO的次数）</p>
-<ol>
-<li><p>MySQL4.1之前 默认使用 双路排序；双路：扫描2次磁盘（1：从磁盘读取<strong>排序字段</strong> ,对排序字段进行排序（在buffer中进行的排序）   2：扫描<strong>其他</strong>字段  也就是一次扫要排序的字段，一次扫要找的字段</p>
-</li>
-<li><p>MySQL4.1之后 默认使用 单路排序  ： 只读取一次（将所有字段放入buffer扫描）</p>
-<p>存在隐患：如果数据量很大，buffer中可能放不下，此时会进行分片读取，分多次读取</p>
-</li>
-</ol>
-<p><strong>单路排序比双路排序会占用更多的buffer</strong></p>
-<p>set max_length_for_sort_data可设置buffer大小，如果max_length_for_sort_data值太低，则mysql会自动从 单路-&gt;双路   （太低：需要排序的列的总大小超过了max_length_for_sort_data定义的字节数）</p>
-<p>提高order by策略：</p>
-<p>a.选择使用单路、双路 ；调整buffer的容量大小；<br>b.避免select * …<br>c.复合索引不要跨列使用 ，避免using filesort<br>d.保证全部的排序字段 排序的一致性（都是升序 或 降序）</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/15/mysql优化-锁/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3210,6 +2913,219 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/spring boot入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/17/spring boot入门/" class="post-title-link" itemprop="url">spring boot入门</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-17 16:20:08" itemprop="dateCreated datePublished" datetime="2019-10-17T16:20:08+08:00">2019-10-17</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring-boot/" itemprop="url" rel="index"><span itemprop="name">spring boot</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="spring-boot诞生的背景"><a href="#spring-boot诞生的背景" class="headerlink" title="spring boot诞生的背景"></a>spring boot诞生的背景</h2><p> 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置 </p>
+<ul>
+<li><p>随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错 </p>
+</li>
+<li><p>xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的配置是不断重复的。也就是说在这个web项目里面这样配置，挪到另一个项目里面这部分配置仍然相同 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ba6ad7fd3388f98bfc326f00b33de814_868x905.png" alt></p>
+</li>
+</ul>
+<p>举一个例子:自己接电线与标准化插座<br>Spring Boot的配置方式，就像是插头插座，就是这个标准。你第三方开源类库想接入进来，你就做一个starter的适配。spring MVC方式就像是手动接电线，很灵活，但是不同的人接出来的效果千差万别，而且很容易出错。Spring boot虽然灵活性不如Spring MVC的方式，你也不太清楚插座里面的线路是什么样，但就是方便易用 </p>
+<h2 id="spring-boot-改变了什么"><a href="#spring-boot-改变了什么" class="headerlink" title="spring boot 改变了什么"></a>spring boot 改变了什么</h2><p> Spring Boot 的目标不在于为已解决的问题领域提供新的解决方案，而是为平台带来另一种新的开发体验，从而简化对这些已有技术的使用 </p>
+<ul>
+<li>使配置变简单</li>
+<li>使监控变简单</li>
+<li>使部署变简单</li>
+<li>使开发变简单</li>
+</ul>
+<h2 id="Spring-Boot主要特性"><a href="#Spring-Boot主要特性" class="headerlink" title="Spring Boot主要特性"></a>Spring Boot主要特性</h2><ul>
+<li>遵循“约定优于配置”的原则，简化配置</li>
+<li>可以完全脱离XML配置文件,采用注解配置和java Config</li>
+<li>内嵌Servlet容器，应用可用jar包执行：java -jar</li>
+<li>快速完成项目搭建、整合第三方类库，方便易用</li>
+<li>提供了starter POM, 能够非常方便的进行包管理, 简化包管理配置</li>
+<li>与Spring cloud天然集成，spring boot是目前java体系内实现微服务最佳方案</li>
+</ul>
+<h2 id="Spring-Boot集成第三方类库的步骤"><a href="#Spring-Boot集成第三方类库的步骤" class="headerlink" title="Spring Boot集成第三方类库的步骤"></a>Spring Boot集成第三方类库的步骤</h2><ol>
+<li>通过maven引入springboot-XXXX-starter</li>
+<li>修改ymal或properties全局统一配置文件</li>
+<li>加入一个Java Config。这个属于个性化配置，如果使用通用配置，这一步不需要。</li>
+</ol>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="Spring-Boot-、-Spring-MVC-、Spring对比"><a href="#Spring-Boot-、-Spring-MVC-、Spring对比" class="headerlink" title="Spring Boot 、 Spring MVC 、Spring对比"></a>Spring Boot 、 Spring MVC 、Spring对比</h3><p><strong>Spring 框架</strong></p>
+<p>Spring框架最核心的特性就是依赖注入DI（Dependency Injecttion）和控制反转IOC（Inversion Of Control）。如果你能够合理的使用DI和IOC，可以开发出松耦合、扩展性好的的应用程序。</p>
+<p><strong>Spring MVC</strong></p>
+<p>Spring MVC提供了一种友好的方式来开发Web应用程序。 通过使用诸如Dispatcher Servlet，ModelAndView和View Resolver，可以轻松开发Web应用程序</p>
+<p><strong>Spring Boot</strong></p>
+<p>Spring 和 Spring MVC最大的弊病在于存在大量的配置，并且这些配置在不同的项目中具有很高的相似性。从而导致重复配置，繁琐而且杂乱！</p>
+<p>Spring Boot期望通过结合自动配置和starters来解决了这个问题。 另外，Spring Boot还提供了一些功能，可以更快地构建可用于生产环境的应用程序 </p>
+<h3 id="Spring-Boot-自动配置"><a href="#Spring-Boot-自动配置" class="headerlink" title="Spring Boot 自动配置"></a>Spring Boot 自动配置</h3><p>Spring和Spring MVC应用程序里面有大量的XML或Java Bean配置。Spring Boot为解决这个问题，提供一种新的解决方案，新的思维方式。</p>
+<p>springboot思考的方式：是不是可以更加智能一点，当Spring中加入一些新的jar包，可以自动的配置一些bean。 比如：Spring MVC JAR位于类路径中时，自动配置Dispatcher Servlet。当然，当这些自动的默认配置不符合我们的要求的时候，我们可以修改。</p>
+<h3 id="什么是Spring-Boot-Starter？"><a href="#什么是Spring-Boot-Starter？" class="headerlink" title="什么是Spring Boot Starter？"></a>什么是Spring Boot Starter？</h3><p>Spring Boot Starter是一组被依赖第三方类库的集合。</p>
+<p>如果你要开发一个web应用程序，就通过包管理工具(如maven)引入spring-boot-starter-web就可以了，而不用分别引入下面这么多依赖类库，spring-boot-starter-web一次性帮你引入下面的这些常用类库。</p>
+<ul>
+<li>Spring — spring 核心, beans, context上下文, AOP面向切面</li>
+<li>Web MVC — Spring MVC</li>
+<li>Jackson — JSON数据的序列化与反序列化</li>
+<li>Validation — Hibernate参数校验及校验API</li>
+<li>嵌入式 Servlet Container — Tomcat</li>
+<li>日志框架Logging — logback, slf4j</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E5%85%A5%E9%97%A83.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -3258,7 +3174,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3313,13 +3229,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3372,13 +3282,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                     
                       
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
