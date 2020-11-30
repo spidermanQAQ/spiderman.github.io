@@ -380,652 +380,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/rabbitmq/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/06/16/rabbitmq/" class="post-title-link" itemprop="url">rabbitmq</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-06-16 16:38:58" itemprop="dateCreated datePublished" datetime="2020-06-16T16:38:58+08:00">2020-06-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/rabbitmq/" itemprop="url" rel="index"><span itemprop="name">rabbitmq</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="RabbitMq"><a href="#RabbitMq" class="headerlink" title="RabbitMq"></a><strong>RabbitMq</strong></h2><p>RabbitMQ是一个实现了AMQP（Advanced Message Queuing Protocol）高级消息队列协议的消息队列服务 </p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/rabbitmq1.png" alt></p>
-<ul>
-<li><p>publisher：生产者，即数据的发送方，会发送一个实现了<strong>序列化</strong>的<strong>Message</strong>对象进行消息传递，Message包括 payload（有效载荷）和label（标签），payload顾名思义就是传输的数据，label是exchange的名字或者说是一个tag，它描述了payload，而且RabbitMQ也是通过这个label来决定把这个Message发给哪个Consumer </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY_NAME,emp,<span class="keyword">new</span> CorrelationData(msgId));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CorrelationData</span><span class="params">(String id)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">this</span>.id = id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里的convertAndSend方法会将emp对象转换为Message发送，CorrelationData只有一个id属性可用来保证可靠消息，以后再说</p>
-</li>
-<li><p>broker： 接收和分发消息的应用 （rabbitmq服务器）</p>
-</li>
-<li><p>exchange：交换机， 根据分发规则，匹配查询表中的routing key，分发消息到queue中去。常用的类型有：direct (point-to-point), topic (publish-subscribe) and fanout (multicast) </p>
-</li>
-<li><p>binding： exchange和queue之间的虚拟连接，binding中可以包含routing key</p>
-</li>
-<li><p>queue：队列</p>
-</li>
-<li><p>Connection： publisher／consumer和broker之间的TCP连接 </p>
-</li>
-<li><p>Channel： 如果每一次访问RabbitMQ都建立一个Connection，在消息量大的时候建立TCP Connection的开销将是巨大的，效率也较低。Channel是在connection</p>
-</li>
-<li><p>内部建立的逻辑连接，如果应用程序支持多线程，通常每个thread创建单独的channel进行通讯，AMQP method包含了channel id帮助客户端和message broker识别channel，所以channel之间是完全隔离的 </p>
-</li>
-</ul>
-<p>exchange类型</p>
-<ul>
-<li><p>Direct exchange 直接转发路由</p>
-<p>将消息的routing key和binding中的routing key比照，匹配则发到对应的队列</p>
-</li>
-<li><p>Fanout exchange 复制分发路由</p>
-<p>不需要routkey，当exchange收到消息后，将消息复制多份转发给与自己绑定的消息队列 </p>
-</li>
-<li><p>topic exchange 通配路由</p>
-<p>根据routing key，及通配规则，Topic exchange将分发到目标queue中。 </p>
-</li>
-</ul>
-<h3 id="可靠消息"><a href="#可靠消息" class="headerlink" title="可靠消息"></a>可靠消息</h3><p>在使用 <strong>RabbitMQ</strong> 的时候，作为消息发送方希望杜绝任何消息丢失或者投递失败场景。<strong>RabbitMQ</strong> 为我们提供了两个选项用来控制消息的投递可靠性模式。 </p>
-<p>消息传递路径为</p>
-<p> <strong><em>producer-&gt;rabbitmq broker cluster-&gt;exchange-&gt;queue-&gt;consumer</em></strong> </p>
-<ul>
-<li><p><strong>message</strong> 从 <strong>producer</strong> 到 <strong>rabbitmq broker cluster</strong> 则会返回一个 <strong>confirmCallback</strong> </p>
-<p>开启配置（这边的思路是发送者发送完消息会在数据库中记录下消息id，状态，创建时间等信息，发送成功则confirmcallback并修改数据库表的信息，发送失败则通过定时任务进行重发）</p>
-<p>常规配置</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">Queue <span class="title">mailQueue</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Queue(MailConstants.MAIL_QUEUE_NAME,<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">DirectExchange <span class="title">directExchange</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DirectExchange(MailConstants.MAIL_EXCHANGE_NAME,<span class="keyword">true</span>,<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">Binding <span class="title">binding</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BindingBuilder.bind(mailQueue()).to(directExchange()).with(MailConstants.MAIL_ROUTING_KEY_NAME);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.publisher-confirms=true</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">RabbitTemplate <span class="title">rabbitTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">    RabbitTemplate rabbitTemplate=<span class="keyword">new</span> RabbitTemplate(cachingConnectionFactory);</span><br><span class="line">    <span class="comment">//保证消息到broker</span></span><br><span class="line">    rabbitTemplate.setConfirmCallback((data,ack,cause)-&gt;&#123;</span><br><span class="line">        String msgId = data.getId();</span><br><span class="line">        <span class="keyword">if</span> (ack)&#123;</span><br><span class="line">            logger.info(<span class="string">"发送成功"</span>);</span><br><span class="line">            mailSendLogService.updateMailSendLog(msgId,<span class="number">1</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"发送失败"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">//保证消息到queue</span></span><br><span class="line">    rabbitTemplate.setReturnCallback((msg,repCode,repText,exchange,routingKey)-&gt;&#123;</span><br><span class="line">        logger.info(<span class="string">"发送失败"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> rabbitTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//0为初始值，10偏移量，第一位秒，分，小时，日，月，星期（1，2）</span></span><br><span class="line"><span class="meta">@Scheduled</span>(cron = <span class="string">"0/10 * * * * ?"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reSend</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;MailSendLog&gt;logs= mailSendLogService.getMailByStatus();</span><br><span class="line">    logs.forEach(mailSendLog -&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (mailSendLog.getCount() &gt;= <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="comment">//重发超过三次就失败，改数据库表的状态为2</span></span><br><span class="line">            mailSendLogService.updateMailSendLog(mailSendLog.getMsgId(),<span class="number">2</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            mailSendLogService.updateMailCount(mailSendLog.getMsgId(),<span class="keyword">new</span> Date());</span><br><span class="line">            Employee emp=employeeService.getEmployeeById(mailSendLog.getEmpId());</span><br><span class="line">            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY_NAME,emp,<span class="keyword">new</span> CorrelationData(mailSendLog.getMsgId()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>message</strong> 从 <strong>exchange-&gt;queue</strong> 投递失败则会返回一个 <strong>returnCallback</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.publisher-returns=true</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//保证消息到queue</span><br><span class="line">rabbitTemplate.setReturnCallback((msg,repCode,repText,exchange,routingKey)-&gt;&#123;</span><br><span class="line">    logger.info(&quot;发送失败&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="解决幂等性问题"><a href="#解决幂等性问题" class="headerlink" title="解决幂等性问题"></a>解决幂等性问题</h3><p>幂等性指的是消费者已经接受的消息，下次就不用再发了</p>
-<p>例如消费者接收消息后在返回ack的过程中，出现了故障，此时可能队列那边又会重新发送一遍，这样就出现了重复消费</p>
-<p>这里的思路是：消费者接收逻辑执行完后将消息的msgId存入redis中，发送channel.ack确认，下次如果有相同的消息即msgId一样就通过再channel.ack告诉消息中间件已经确认收到了，此时不需要在进行消费逻辑直接return结束</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.listener.simple.acknowledge-mode=manual</span><br><span class="line">spring.rabbitmq.listener.simple.prefetch=100</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailserverApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(MailserverApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">Queue <span class="title">queue</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(<span class="string">"javaboy.mail"</span>) ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener</span>(queues = <span class="string">"javaboy.mail"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handler</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Employee employee = (Employee) message.getPayload();</span><br><span class="line">        MessageHeaders headers = message.getHeaders();</span><br><span class="line">        Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);</span><br><span class="line">        String msgId = (String) headers.get(<span class="string">"spring_returned_message_correlation"</span>);</span><br><span class="line">        <span class="keyword">if</span>(redisTemplate.opsForHash().entries(<span class="string">"mail_log"</span>).containsKey(msgId))&#123;</span><br><span class="line">            logger.info(<span class="string">"消息被消费"</span>);</span><br><span class="line">            channel.basicAck(tag,<span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        logger.info(employee.toString());</span><br><span class="line">        MimeMessage mimeMessage = javaMailSender.createMimeMessage();</span><br><span class="line">        MimeMessageHelper mimeMessageHelper = <span class="keyword">new</span> MimeMessageHelper(mimeMessage);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            mimeMessageHelper.setTo(employee.getEmail());</span><br><span class="line">            mimeMessageHelper.setFrom(mailProperties.getUsername());</span><br><span class="line">            mimeMessageHelper.setSubject(<span class="string">"入职欢迎"</span>);</span><br><span class="line">            mimeMessageHelper.setSentDate(<span class="keyword">new</span> Date());</span><br><span class="line">            Context context=<span class="keyword">new</span> Context();</span><br><span class="line">            context.setVariable(<span class="string">"name"</span>,employee.getName());</span><br><span class="line">            context.setVariable(<span class="string">"posName"</span>,employee.getPosition().getName());</span><br><span class="line">            context.setVariable(<span class="string">"joblevelName"</span>,employee.getJobLevel().getName());</span><br><span class="line">            context.setVariable(<span class="string">"departmentName"</span>,employee.getDepartment().getName());</span><br><span class="line">            String mail = templateEngine.process(<span class="string">"mail"</span>, context);</span><br><span class="line">            mimeMessageHelper.setText(mail,<span class="keyword">true</span>);</span><br><span class="line">            javaMailSender.send(mimeMessage);</span><br><span class="line">            redisTemplate.opsForHash().put(<span class="string">"mail_log"</span>,msgId,<span class="string">"javaboy"</span>);</span><br><span class="line">            channel.basicAck(tag,<span class="keyword">false</span>);</span><br><span class="line">            logger.info(msgId+<span class="string">"邮件发送成功"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MessagingException e) &#123;</span><br><span class="line">            channel.basicNack(tag,<span class="keyword">false</span>,<span class="keyword">true</span>);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            logger.error(<span class="string">"发送失败"</span>+e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p> <a href="https://zhuanlan.zhihu.com/p/63700605" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/63700605</a> </p>
-<p> <a href="https://www.cnblogs.com/frankyou/p/5283539.html" target="_blank" rel="noopener">https://www.cnblogs.com/frankyou/p/5283539.html</a> </p>
-<p> <a href="https://www.cnblogs.com/wangiqngpei557/p/9381478.html" target="_blank" rel="noopener">https://www.cnblogs.com/wangiqngpei557/p/9381478.html</a> </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/对象内存/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/06/16/对象内存/" class="post-title-link" itemprop="url">对象内存</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-06-16 16:21:48" itemprop="dateCreated datePublished" datetime="2020-06-16T16:21:48+08:00">2020-06-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="对象内存"><a href="#对象内存" class="headerlink" title="对象内存"></a>对象内存</h2><h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><p>对象的内存布局可分为3部分：对象头，对象实例数据和对齐填充（padding）</p>
-<p>对象头又包括2部分信息</p>
-<ul>
-<li>Mark Word：存储一些对象自身数据，比如哈希码，Gc分代年龄，锁状态等，一般64位虚拟机就占8字节，32位占4字节</li>
-<li>对象类型数据（引用）：指向方法区的.class，确定这个对象是哪个类的实例</li>
-</ul>
-<p>对象实例数据：包括成员变量等</p>
-<p>对齐填充：可有可不有，满足是8字节的整数倍时为0，不满足时进行填充</p>
-<h3 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h3><p>两种方式</p>
-<ul>
-<li><p>句柄访问：堆内划分出一块内存作为句柄，包括指向<strong>对象实例数据</strong>和<strong>对象类型数据</strong>的<strong>指针</strong></p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%981.jpg" alt></p>
-</li>
-<li><p>直接访问</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%982.jpg" alt></p>
-</li>
-</ul>
-<h3 id="new-Object-占多少字节"><a href="#new-Object-占多少字节" class="headerlink" title="new Object()占多少字节"></a>new Object()占多少字节</h3><p>普通对象和数组在内存布局是不一样的</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%983.png" alt></p>
-<p>对象头8字节</p>
-<p>类型指针8字节，但一般开启了压缩为4字节</p>
-<p>实例数据暂时没有，为0字节</p>
-<p>此时一共12字节，需要填充4字节，所以一共占16字节</p>
-<p>ps：如果关闭了压缩，则类型指针8字节，一共16字节，不需要填充</p>
-<h3 id="查看是否压缩指针"><a href="#查看是否压缩指针" class="headerlink" title="查看是否压缩指针"></a>查看是否压缩指针</h3><p>通过java -XX:+PrintCommandLineFlags -version查看指向java命令时默认带着的参数</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png" alt></p>
-<p>-XX:+UseCompressedClassPointers：这个就是指压缩了指针，<strong>64位jvm虚拟机</strong>默认指针是64位，压缩到4个字节</p>
-<p>-XX:+UseCompressedOops：和上面的并不一样，它指的是例如一个对象内部有一个String成员变量指向了另一个对象，此时也会压缩，也是4个字节</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/GC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/06/16/GC/" class="post-title-link" itemprop="url">GC</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-06-16 16:21:14" itemprop="dateCreated datePublished" datetime="2020-06-16T16:21:14+08:00">2020-06-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="GC看这篇就够了"><a href="#GC看这篇就够了" class="headerlink" title="GC看这篇就够了"></a>GC看这篇就够了</h2><h3 id="什么是垃圾"><a href="#什么是垃圾" class="headerlink" title="什么是垃圾"></a>什么是垃圾</h3><p>不再被使用的对象就是垃圾</p>
-<h3 id="怎么定位垃圾"><a href="#怎么定位垃圾" class="headerlink" title="怎么定位垃圾"></a>怎么定位垃圾</h3><ul>
-<li><p>引用计数算法（reference counting）</p>
-<p>可对象增加一个引用计数器，每有一个地方引用它时，计数加1，引用失效就减一，归零就代表这个对象不被使用，作为垃圾清除</p>
-<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc1.png" alt></p>
-<p><strong>但是这种方式存在问题</strong>，解决不了循环依赖的情况。比如说a，b相互引用对方，而实际上两个对象都已经不再被使用了，但此时计数器依然为1，这样就无法垃圾收集器收集了</p>
-</li>
-<li><p>可达性分析</p>
-<p>通过一系列GC Roots做为起点，从这些节点往下搜索，搜索走过的路径称为引用链，如果一个对象到GC Roots没有引用链则是垃圾</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc2.jpg" alt></p>
-</li>
-</ul>
-<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="标记-清除"><a href="#标记-清除" class="headerlink" title="标记-清除"></a>标记-清除</h4><p>先标记需要回收的对象，然后进行清除</p>
-<p>问题：会造成内存碎片</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc3.png" alt></p>
-<h4 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h4><p>将内存一分为二，每次只使用一半，当这一块使用完，将其中存活者的对象复制到另一块中去，然后把使用的内存空间进行清理。也就是每次只清理整个半区（实际情况不是对半分，后面再说）</p>
-<p>优点：避免了碎片</p>
-<p>缺点：每次只使用一半内存</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc4.png" alt></p>
-<h4 id="标记-整理"><a href="#标记-整理" class="headerlink" title="标记-整理"></a>标记-整理</h4><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc5.png" alt></p>
-<p>标记还是一样，只是不直接对垃圾（可回收对象）进行回收，而是先整理，将存活对象移到一端，将端边界以外的内存进行清理</p>
-<h3 id="堆内存逻辑分区"><a href="#堆内存逻辑分区" class="headerlink" title="堆内存逻辑分区"></a>堆内存逻辑分区</h3><p>堆内存逻辑上分为新生代和老年代。新生代使用复制算法，老年代使用标记整理算法。</p>
-<p>新生代又分为eden和survivor，每次使用eden和一个survivor，回收时将eden和survivor中存活的对象复制到另一个survivor中去，一个eden和一个survivor的比例为8：1，这样就只会有10%的内存被浪费</p>
-<p>经过多次回收还存活的对象会进入到老年中去</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc6.png" alt></p>
-<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p>垃圾收集包括有Serial，ParNew，Parallel Scavenge，CMS等，通常组合使用，常用组合如下</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc7.png" alt></p>
-<h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>Serial收集器是一个单线程收集器，需要STW（stop the world），在进行垃圾回收的时候需要停掉正常工作的线程</p>
-<p>新生代叫做Serial（使用复制算法），回收老年代时叫做<strong>Serial Old</strong>（使用标记整理算法）</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc8.jpg" alt></p>
-<h4 id="ParNew（和CMS组合）"><a href="#ParNew（和CMS组合）" class="headerlink" title="ParNew（和CMS组合）"></a>ParNew（和CMS组合）</h4><p>ParNew就是Serial收集器的多线程版本，多个线程进行垃圾回收</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc9.jpg" alt></p>
-<h4 id="Parallel-Scanvenge-Parallel-Old（jdk默认的哦）"><a href="#Parallel-Scanvenge-Parallel-Old（jdk默认的哦）" class="headerlink" title="Parallel Scanvenge+Parallel Old（jdk默认的哦）"></a>Parallel Scanvenge+Parallel Old（jdk默认的哦）</h4><p>同样需要stop the world，卡顿时间长，和ParNew差不多，看下面的-XX:+UseParallelGC</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png" alt></p>
-<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>前面的都需要STW，卡顿时间较长，CMS的目标就是最短回收停顿时间</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc11.jpg" alt></p>
-<p>运行过程包括4个阶段</p>
-<ul>
-<li><p>初始标记</p>
-<p>这阶段标记的是GC roots后的第一个节点（没有标记全部），所以时间不长</p>
-</li>
-<li><p>并发标记</p>
-<p>之前只标记了最接近GC Roots的结点，这个阶段沿着引用链标记其他的结点，不过是和其他工作线程一起进行的（之所以CMS卡顿时间短就在于并发标记，原来并发标记这一部分和初始标记一起的，卡顿时间就长，现在和其他线程一起进行，所以时间大大减少）</p>
-</li>
-<li><p>重新标记</p>
-<p>并发标记时工作线程还是在运行的，还会产生垃圾或者引用的改变，所以需要重新标记。不过之前大部分垃圾已经找到了，重新标记的垃圾并不多，所以浪费的时间也不长</p>
-</li>
-<li><p>并发清除</p>
-<p>清理垃圾，和其他工线程一起进行，也正因为其他工作线程还在干活，所以会产生<strong>浮动垃圾</strong></p>
-</li>
-</ul>
-<p>CMS也存在问题</p>
-<ul>
-<li>浮动垃圾，并发清理时会出现新的垃圾，只能下次回收</li>
-<li>内存碎片化：CMS采用的是Mark-Sweep，这个算法上面讲了会产生很多的内存碎片，当碎片很多以至于从新生代来到老年代的存活对象都没放时，会进行Serial Old，即使用<strong>标记整理</strong>（Mark-Compact）来整理这些碎片，由于Serial Old是需要STW的，此时会非常卡</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc10.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/redis主从复制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1128,14 +482,27 @@
       
         
           
-            <h2 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h2><h3 id="单机redis存在问题"><a href="#单机redis存在问题" class="headerlink" title="单机redis存在问题"></a>单机redis存在问题</h3><ul>
+            <h3 id="单机redis存在问题"><a href="#单机redis存在问题" class="headerlink" title="单机redis存在问题"></a>单机redis存在问题</h3><ul>
 <li>机器故障：单机redis出现故障会对业务造成毁灭性打击</li>
 <li>容量瓶颈：需要不断升内存</li>
 </ul>
 <p>将数据复制多个副本保存在不同的服务器上，<strong>链接在一起</strong>，并保证数据是否<strong>同步</strong>的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务 </p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif" alt></p>
 <p>一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接</p>
-<h3 id="建立连接"><a href="#建立连接" class="headerlink" title="建立连接"></a>建立连接</h3><p>指令就1条</p>
+<h3 id="主从复制搭建"><a href="#主从复制搭建" class="headerlink" title="主从复制搭建"></a>主从复制搭建</h3><p>进入redis目录，分别建立（vim会直接新建文件）<strong>redis6379.conf，redis6380.conf， redis6381.conf</strong></p>
+<p>以<strong>redis6380.conf</strong>为例进行配置                 一个配置完cp命令复制就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">include /opt/redis-5.0.9/redis.conf       #拷贝redis目录下的redis配置文件</span><br><span class="line">port 6380</span><br><span class="line">pidfile /var/run/redis6380.conf</span><br><span class="line">dbfilename dump6380.rdb</span><br><span class="line">slaveof 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p>配置完后，分别启动</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis5.png" alt></p>
+<p>通过命令查看进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep redis</span><br></pre></td></tr></table></figure>
+
+<p>开启3个客户端，通过info replication查看信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 6379  #6380/6381</span><br><span class="line">info replication #6379端口的的role:master 6380/6381 role:slave</span><br></pre></td></tr></table></figure>
+
+<p>分别set可以发现，主服务器可以读写，而从服务器只能读不能写</p>
+<h3 id="主从复制原理-建立连接"><a href="#主从复制原理-建立连接" class="headerlink" title="主从复制原理-建立连接"></a>主从复制原理-建立连接</h3><p>指令就1条</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof master_ip master_port</span><br></pre></td></tr></table></figure>
 
 <p>3种方式连接</p>
@@ -1144,19 +511,36 @@
 <li>启动时使用参数<code>--slaveof master_ip master_port</code> （redis-cli -p xxxx –slaveof）</li>
 <li>服务器配置 <code>slaveof master_ip master_port</code> （修改配置文件）</li>
 </ul>
-<h3 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png" alt></p>
-<p>分2步</p>
+<h3 id="主从复制原理-数据同步"><a href="#主从复制原理-数据同步" class="headerlink" title="主从复制原理-数据同步"></a>主从复制原理-数据同步</h3><p> 具体执行的方式是：从节点向主节点发送psync命令（Redis2.8以前是sync命令），开始同步。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png" alt></p>
+<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a><strong>全量复制</strong></h4><p>用于初次复制或其他无法进行部分复制的情况，将主节点中的所有数据都发送给从节点，是一个非常重型的操作 </p>
 <ul>
-<li>全量复制：将master现有的数据通过rdb方式生成rdb文件，发送给slave，进行数据恢复</li>
-<li>部分复制：进行bgsave的过程中master还会进行别的操作，所以需要复制缓冲区通过aof把指令给slave，并重写</li>
+<li>从节点判断无法进行部分复制，向主节点发送全量复制的请求；或从节点发送部分复制的请求，但主节点判断无法进行部分复制；具体判断过程需要在讲述了部分复制原理后再介绍。</li>
+<li>主节点收到全量复制的命令后，执行bgsave，在后台生成RDB文件，并使用一个缓冲区（称为复制缓冲区）记录从现在开始执行的所有写命令</li>
+<li>主节点的bgsave执行完成后，将RDB文件发送给从节点；<strong>从节点首先清除自己的旧数据，然后载入接收的RDB文件</strong>，将数据库状态更新至主节点执行bgsave时的数据库状态</li>
+<li>主节点将前述复制缓冲区中的所有写命令发送给从节点，从节点执行这些写命令，将数据库状态更新至主节点的最新状态</li>
+<li>如果从节点开启了AOF，则会触发bgrewriteaof的执行，从而保证AOF文件更新至主节点的最新状态</li>
 </ul>
-<h3 id="命令传播阶段"><a href="#命令传播阶段" class="headerlink" title="命令传播阶段"></a>命令传播阶段</h3><h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>复制缓冲区有偏移量（offset）和字节值（需要同步的数据以字节存储在这部分）组成</p>
-<p>复制缓冲区大小需要合理，其结构为队列，先进先出，太小数据饱和会将前面的数据弹出，造成数据丢失</p>
+<h4 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a><strong>部分复制</strong></h4><p>用于网络中断等情况后的复制，只将中断期间主节点执行的写命令发送给从节点，与全量复制相比更加高效 </p>
+<p>部分复制依赖于下面三个主要概念</p>
+<p><strong>复制偏移量</strong></p>
+<p>主节点和从节点分别维护一个复制偏移量（offset），代表的是<strong>主节点向从节点传递的字节数</strong>；主节点每次向从节点传播N个字节数据时，主节点的offset增加N；从节点每次收到主节点传来的N个字节数据时，从节点的offset增加N。</p>
+<p>offset用于判断主从节点的数据库状态是否一致：如果二者offset相同，则一致；如果offset不同，则不一致，此时可以根据两个offset找出从节点缺少的那部分数据。例如，如果主节点的offset是1000，而从节点的offset是500，那么部分复制就需要将offset为501-1000的数据传递给从节点。而offset为501-1000的数据存储的位置，就是下面要介绍的复制积压缓冲区。</p>
+<p><strong>复制积压缓冲区</strong></p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis3.png" alt></p>
-<h4 id="命令传播"><a href="#命令传播" class="headerlink" title="命令传播"></a>命令传播</h4><p>该阶段主要还是slave发送指令，比对master缓冲区的偏移量和slave中保存的是否一致，不一致则将offset差值的数据通过socket传给slave，期间还有<strong>心跳机制</strong>保持双方的连通。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png" alt></p>
-<h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>slave发送 REPLCONF ACK {offset} 指令，既告诉master自己的偏移量，也可以看看判断master是否在线，1秒发一次</p>
-<p>master 通过ping指令看slave是否连接着，一般10秒一次</p>
+<p>复制积压缓冲区是由主节点维护的、固定长度的、先进先出(FIFO)队列，默认大小1MB；当主节点开始有从节点时创建，其作用是备份主节点最近发送给从节点的数据。注意，无论主节点有一个还是多个从节点，都只需要一个复制积压缓冲区。</p>
+<p>在<strong>命令传播阶段</strong>，主节点除了将写命令发送给从节点，还会发送一份给复制积压缓冲区，作为写命令的备份；除了存储写命令，复制积压缓冲区中还存储了其中的每个字节对应的复制偏移量（offset）。由于复制积压缓冲区定长且是先进先出，所以它保存的是主节点最近执行的写命令；时间较早的写命令会被挤出缓冲区</p>
+<p><strong>服务器运行ID(runid)</strong></p>
+<p>主从节点初次复制时，主节点将自己的runid发送给从节点，从节点将这个runid保存起来；当断线重连时，从节点会将这个runid发送给主节点；主节点根据runid判断能否进行部分复制：</p>
+<ul>
+<li>如果从节点保存的runid与主节点现在的runid相同，说明主从节点之前同步过，主节点会继续尝试使用部分复制(到底能不能部分复制还要看offset和复制积压缓冲区的情况)；</li>
+<li>如果从节点保存的runid与主节点现在的runid不同，说明从节点在断线前同步的Redis节点并不是当前的主节点，只能进行全量复制</li>
+</ul>
+<h3 id="主从复制原理-命令传播阶段"><a href="#主从复制原理-命令传播阶段" class="headerlink" title="主从复制原理-命令传播阶段"></a>主从复制原理-命令传播阶段</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png" alt></p>
+<h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>master 通过ping指令看slave是否连接着，一般10秒一次</p>
+<h4 id="REPLCONF-ACK"><a href="#REPLCONF-ACK" class="headerlink" title="REPLCONF ACK"></a>REPLCONF ACK</h4><p><strong>从节点会向主节点发送REPLCONF ACK命令</strong>，频率是每秒1次；命令格式为：REPLCONF ACK {offset}，其中offset指从节点保存的复制偏移量</p>
+<p>检测命令丢失：从节点发送了自身的offset，主节点会与自己的offset对比，如果从节点数据缺失（如网络丢包），主节点会推送缺失的数据（这里也会利用复制积压缓冲区） </p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p> <a href="https://www.cnblogs.com/kismetv/p/9236731.html" target="_blank" rel="noopener">https://www.cnblogs.com/kismetv/p/9236731.html</a> </p>
 
           
         
@@ -1423,155 +807,6 @@
 </ul>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png" alt></p>
 
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/28/hashmap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/28/hashmap/" class="post-title-link" itemprop="url">hashmap</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-28 12:58:48" itemprop="dateCreated datePublished" datetime="2020-04-28T12:58:48+08:00">2020-04-28</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
           
         
       
@@ -2453,6 +1688,787 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/04/如何安全删除集合元素/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/04/04/如何安全删除集合元素/" class="post-title-link" itemprop="url">如何安全删除集合元素</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-04-04 13:32:48" itemprop="dateCreated datePublished" datetime="2020-04-04T13:32:48+08:00">2020-04-04</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>删除集合的元素，如果采用下面的方法，可以吗</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class deleteElement &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list=new ArrayList();</span><br><span class="line">        list.add(&quot;小明&quot;);</span><br><span class="line">        list.add(&quot;小李&quot;);</span><br><span class="line">        list.add(&quot;小红&quot;);</span><br><span class="line">        list.add(&quot;小王&quot;);</span><br><span class="line">        for (String s:list)&#123;</span><br><span class="line">            if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">                list.remove(s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行时异常</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A6%82%E4%BD%95%E5%AE%89%E5%85%A8%E5%88%A0%E9%99%A4%E9%9B%86%E5%90%88%E5%85%83%E7%B4%A01.png" alt></p>
+<p>为什么呢？</p>
+<p>增强for循环本质上也是通过迭代器实现的</p>
+<p>arraylist等集合都已经实现了Iterator接口，那我们来看看其中的源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">       <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">RandomAccess</span>, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;  </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> Itr();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> cursor;       <span class="comment">// index of next element to return</span></span><br><span class="line">       <span class="keyword">int</span> lastRet = -<span class="number">1</span>; <span class="comment">// index of last element returned; -1 if no such</span></span><br><span class="line">       <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">       Itr() &#123;&#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> cursor != size;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">       <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           checkForComodification();</span><br><span class="line">           <span class="keyword">int</span> i = cursor;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">           Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           cursor = i + <span class="number">1</span>;</span><br><span class="line">           <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">           checkForComodification();</span><br><span class="line"></span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">               cursor = lastRet;</span><br><span class="line">               lastRet = -<span class="number">1</span>;</span><br><span class="line">               expectedModCount = modCount;</span><br><span class="line">           &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachRemaining</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> E&gt; consumer)</span> </span>&#123;</span><br><span class="line">           Objects.requireNonNull(consumer);</span><br><span class="line">           <span class="keyword">final</span> <span class="keyword">int</span> size = ArrayList.<span class="keyword">this</span>.size;</span><br><span class="line">           <span class="keyword">int</span> i = cursor;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= size) &#123;</span><br><span class="line">               <span class="keyword">return</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">final</span> Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= elementData.length) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">while</span> (i != size &amp;&amp; modCount == expectedModCount) &#123;</span><br><span class="line">               consumer.accept((E) elementData[i++]);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">// update once at end of iteration to reduce heap write traffic</span></span><br><span class="line">           cursor = i;</span><br><span class="line">           lastRet = i - <span class="number">1</span>;</span><br><span class="line">           checkForComodification();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>arraylist通过size属性来维护状态，而Iterator是通过 <strong>cursor</strong> 来维护状态。当你使用集合的remove删除元素时，迭代器的cursor并不能同步更新，从而报错，只有采用迭代的remove方法使元素列表发生变化时，它会更新cursor来同步这一变化。 为了防止状态不一致可能引发的无法设想的后果，Iterator会经常做checkForComodification检查，以防有变。 </p>
+<p>当然你可以采用遍历集合的方式来删，但并不推荐</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">    String s = list.get(i);</span><br><span class="line">    if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">        list.remove(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确姿势</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class deleteElement &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list=new ArrayList();</span><br><span class="line">        list.add(&quot;小明&quot;);</span><br><span class="line">        list.add(&quot;小李&quot;);</span><br><span class="line">        list.add(&quot;小红&quot;);</span><br><span class="line">        list.add(&quot;小王&quot;);</span><br><span class="line">        Iterator&lt;String&gt; iterator = list.iterator();</span><br><span class="line">        while (iterator.hasNext())&#123;</span><br><span class="line">            String s = iterator.next();</span><br><span class="line">            if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">                iterator.remove();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[小明, 小红, 小王]</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/05/搞清内存分配/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/12/05/搞清内存分配/" class="post-title-link" itemprop="url">搞清内存分配</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-05 12:47:45" itemprop="dateCreated datePublished" datetime="2019-12-05T12:47:45+08:00">2019-12-05</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="java中的内存划分"><a href="#java中的内存划分" class="headerlink" title="java中的内存划分"></a>java中的内存划分</h2><p>java的内存分为5个部分</p>
+<ul>
+<li>栈（Stack）：存放的都是方法的局部变量，<strong>方法的运行也是在栈中</strong></li>
+<li>堆（Heap）：<strong>凡是new出来的东西</strong>都在堆中，堆里面的东西都有一个地址值，堆内存里的数据都有默认值</li>
+<li>方法区（Method Area）：存储.class相关信息，包含方法的信息</li>
+<li>本地方法栈：与操作系统相关</li>
+<li>寄存器：与cpu相关</li>
+</ul>
+<h2 id="数组的内存图"><a href="#数组的内存图" class="headerlink" title="数组的内存图"></a>数组的内存图</h2><p><strong>数组属于引用变量</strong>，array[0]是通过地址值找到new 出的数组，访问对应索引得到的</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E7%BB%84%E5%86%85%E5%AD%98.png" alt></p>
+<h2 id="对象的内存图"><a href="#对象的内存图" class="headerlink" title="对象的内存图"></a>对象的内存图</h2><ul>
+<li>栈中遵循先进后出的原则</li>
+<li>方法的执行是在栈中</li>
+<li>成员方法在堆中存放的是地址值，指向方法区中的方法</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98.png" alt></p>
+<h2 id="字符串的常量池"><a href="#字符串的常量池" class="headerlink" title="字符串的常量池"></a>字符串的常量池</h2><h3 id="字符串内存图"><a href="#字符串内存图" class="headerlink" title="字符串内存图"></a>字符串内存图</h3><ul>
+<li>底层都是通过btye[]实现的</li>
+<li>str1和str2的地址值都是指向常量池中的字符串对象，是相同的</li>
+<li>str3通过new的方式。会在堆中创建一个字符串对象，是不同的对象，这也是通过构造函数和通过new方式创建字符串对象的区别</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98.png" alt></p>
+<h2 id="String类的构造方法创建对象的3种方式"><a href="#String类的构造方法创建对象的3种方式" class="headerlink" title="String类的构造方法创建对象的3种方式"></a>String类的构造方法创建对象的3种方式</h2><p>构造方法创建有3种形式</p>
+<ul>
+<li>public String() ：初始化新创建的 String对象，以使其表示空字符序列</li>
+<li>public String(char[] value) ：通过当前参数中的字符数组来构造新的String</li>
+<li>public String(byte[] bytes) ：通过使用平台的默认字符集解码当前参数中的字节数组来构造新的 String</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String s1=new String(&quot;abc&quot;);</span><br><span class="line">char[] chars=&#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;&#125;;</span><br><span class="line">String s2=new String(chars);</span><br><span class="line">byte[] bytes=&#123;97,98,99&#125;;</span><br><span class="line">String s3=new String(bytes);</span><br></pre></td></tr></table></figure>
+
+<h2 id="static的内存图"><a href="#static的内存图" class="headerlink" title="static的内存图"></a>static的内存图</h2><p>static修饰的内容：</p>
+<ul>
+<li>是随着类的加载而加载的，且只加载一次</li>
+<li>存储于一块固定的内存区域（<strong>静态区</strong>），所以，可以直接被类名调用</li>
+<li>它优先于对象存在，所以，可以被所有对象共享 </li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E9%9D%99%E6%80%81%E5%86%85%E5%AD%98.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/22/hashcode和equals/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/22/hashcode和equals/" class="post-title-link" itemprop="url">hashcode和equals</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-22 10:02:20" itemprop="dateCreated datePublished" datetime="2019-11-22T10:02:20+08:00">2019-11-22</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试常问/" itemprop="url" rel="index"><span itemprop="name">面试常问</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一道常问面试题"><a href="#一道常问面试题" class="headerlink" title="一道常问面试题"></a>一道常问面试题</h2><p>你重写过hashcode方法吗？答：没有</p>
+<p>你在用hashMap的时候，key的部分用过自定义对象吗？答：有</p>
+<p>这其实就自相矛盾了</p>
+<p>hash算法回顾</p>
+<p>hash在查找上效率很高，通过设计合适的hash函数，很多时候一下就能找到，例如6在如下hash表中直接定位到1的位置</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash1.png" alt></p>
+<p>就算发生冲突，也可用链地址法加以解决</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash2.png" alt></p>
+<h2 id="重写hashcode以及equals的必要性"><a href="#重写hashcode以及equals的必要性" class="headerlink" title="重写hashcode以及equals的必要性"></a>重写hashcode以及equals的必要性</h2><p><strong>2个基础知识</strong>：</p>
+<ul>
+<li>HashMap在存数据时，要先计算key类的hashcode方法返回hash值，默认使用Object的hashcode方法，返回对象地址</li>
+<li>如果自定义类不重写equals方法，默认会调用Object的equals方法，通过对象地址进行比较</li>
+</ul>
+<p>看下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public class Key &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    public Integer getKey()&#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Key(Integer id)&#123;</span><br><span class="line">        this.id=id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">/*    public int hashCode()&#123;</span><br><span class="line">        return id.hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean equals(Object o)&#123;</span><br><span class="line">        if (o==null)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            return this.getKey().equals(((Key)o).getKey());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;*/</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Judge &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Key key1 = new Key(1);</span><br><span class="line">        Key key2 = new Key(1);</span><br><span class="line"></span><br><span class="line">        HashMap&lt;Key, String&gt; hashMap = new HashMap&lt;&gt;();</span><br><span class="line">        hashMap.put(key1, &quot;我的id是1&quot;);</span><br><span class="line">        String value = hashMap.get(key2);</span><br><span class="line">        System.out.println(value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在注释掉hashcode和equals方法后输出为null，即取不出key2的值，为啥呢？</p>
+<p>在put时，会调用key1的默认hashcode方法，返回的是key1的地址，get的时候也会调用key2的hashcode方法，按照key2的地址进行查询，可能key1的地址1000，key2的地址为2000，也就自然查不到了</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash3.png" alt></p>
+<p>那接下来把hashcode的注释取消掉，结果还是null，为啥呢？</p>
+<p>现在重写了之后，get的时候都是按照id的hashcode来查，都是一样的，但是只是按照相同的hash值来找，找到对应位置后可能有很多对象在一条链上，毕竟是会有冲突的可能，get（key2），可事实上key2并没有存入map，只有key1，<strong>我们的本意是key1和key2的value值是一样的，通过key2也能拿到value值</strong>，现在的问题出在了key1和key2默认的equals的比较的是对象地址，并不一样。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash4.png" alt></p>
+<p>所以我们重写equals方法，只要id值一样，我们就算他们一样，这样key1和key2对象实际上就是相等的，通过hash值找到对应位置，再通过key2对象，就拿到了我们需要的值</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>参考了羊哥的博客，欢迎关注codesheep公众号，一个很nice的b站up主</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/17/序列化流/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/17/序列化流/" class="post-title-link" itemprop="url">序列化流</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-17 15:32:57" itemprop="dateCreated datePublished" datetime="2019-11-17T15:32:57+08:00">2019-11-17</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Java 提供了一种对象<strong>序列化</strong>的机制。用一个字节序列可以表示一个<strong>对象</strong>，该字节序列包含该<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的属性</code>等信息。字节序列写出到文件之后，相当于文件中<strong>持久保存</strong>了一个对象的信息。 </p>
+<p>反之，该字节序列还可以从文件中读取回来，重构对象，对它进行<strong>反序列化</strong>。<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的数据</code>信息，都可以用来在内存中创建对象。看图理解序列化： <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/3_xuliehua.jpg" alt></p>
+<h2 id="ObjectOutputStream类"><a href="#ObjectOutputStream类" class="headerlink" title="ObjectOutputStream类"></a>ObjectOutputStream类</h2><p><code>java.io.ObjectOutputStream</code> 类，将Java对象的原始数据类型写出到文件,实现对象的持久存储。</p>
+<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
+<li><code>public ObjectOutputStream(OutputStream out)</code>： 创建一个指定OutputStream的ObjectOutputStream。</li>
+</ul>
+<p>构造举例，代码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fileOut = <span class="keyword">new</span> FileOutputStream(<span class="string">"employee.txt"</span>);</span><br><span class="line">ObjectOutputStream out = <span class="keyword">new</span> ObjectOutputStream(fileOut);</span><br></pre></td></tr></table></figure>
+
+<h3 id="序列化操作"><a href="#序列化操作" class="headerlink" title="序列化操作"></a>序列化操作</h3><ol>
+<li>一个对象要想序列化，必须满足两个条件:</li>
+</ol>
+<ul>
+<li>该类必须实现<code>java.io.Serializable</code> 接口，<code>Serializable</code> 是一个标记接口，不实现此接口的类将不会使任何状态序列化或反序列化，会抛出<code>NotSerializableException</code> 。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Person&#123;"</span> +</span><br><span class="line">                <span class="string">"name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", age="</span> + age +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.写出对象方法</p>
+<ul>
+<li><code>public final void writeObject (Object obj)</code> : 将指定的对象写出。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xuliehua1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Person person=<span class="keyword">new</span> Person(<span class="string">"小李"</span>,<span class="number">18</span>);</span><br><span class="line">        ObjectOutputStream objectOutputStream=<span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"F:\\test\\test1\\a.txt"</span>));</span><br><span class="line">        objectOutputStream.writeObject(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ObjectInputStream类"><a href="#ObjectInputStream类" class="headerlink" title="ObjectInputStream类"></a>ObjectInputStream类</h2><p>ObjectInputStream反序列化流，将之前使用ObjectOutputStream序列化的原始数据恢复为对象。 </p>
+<h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
+<li><code>public ObjectInputStream(InputStream in)</code>： 创建一个指定InputStream的ObjectInputStream。</li>
+</ul>
+<p>如果能找到一个对象的class文件，我们可以进行反序列化操作，调用<code>ObjectInputStream</code>读取对象的方法：</p>
+<ul>
+<li><code>public final Object readObject ()</code> : 读取一个对象。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xuliehua2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">         ObjectInputStream objectInputStream=<span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"F:\\test\\test1\\a.txt"</span>));</span><br><span class="line">         Object o=objectInputStream.readObject();</span><br><span class="line">         System.out.println(o);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>对于JVM可以反序列化对象，它必须是能够找到class文件的类。如果找不到该类的class文件，则抛出一个 <code>ClassNotFoundException</code> 异常。</strong>  </p>
+<h2 id="transient关键字"><a href="#transient关键字" class="headerlink" title="transient关键字"></a>transient关键字</h2><p>transient关键字叫瞬态关键字，被该关键字修饰的变量无法被序列化</p>
+<h2 id="SerialVersionUID"><a href="#SerialVersionUID" class="headerlink" title="SerialVersionUID"></a>SerialVersionUID</h2><p><strong>另外，当JVM反序列化对象时，能找到class文件，但是class文件在序列化对象之后发生了修改，那么反序列化操作也会失败，抛出一个<code>InvalidClassException</code>异常。</strong>发生这个异常的原因如下：</p>
+<ul>
+<li>该类的序列版本号与从流中读取的类描述符的版本号不匹配 </li>
+<li>该类包含未知数据类型 </li>
+<li>该类没有可访问的无参数构造方法 </li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%812.png" alt></p>
+<p><code>Serializable</code> 接口给需要序列化的类，提供了一个序列版本号。<code>serialVersionUID</code> 该版本号的目的在于验证序列化的对象和对应类是否版本匹配。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">     <span class="comment">// 手动加入序列版本号，声明为常量</span></span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line">     <span class="keyword">public</span> String name;</span><br><span class="line">     <span class="keyword">public</span> String address;</span><br><span class="line">     <span class="comment">// 添加新的属性 ,重新编译, 可以反序列化,该属性赋为默认值.</span></span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">int</span> eid; </span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addressCheck</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         System.out.println(<span class="string">"Address  check : "</span> + name + <span class="string">" -- "</span> + address);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2501,7 +2517,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">70</span>
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2562,11 +2578,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>

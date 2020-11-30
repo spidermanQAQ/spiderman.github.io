@@ -525,6 +525,18 @@
 <p><strong>线程入列被挂起的前提条件是</strong>，前驱节点的状态为 SIGNAL，<strong>SIGNAL 状态的含义是后继节点处于等待状态，当前节点释放锁后将会唤醒后继节点</strong>。所以在上面这段代码中，会先判断前驱节点的状态，如果为 SIGNAL，则当前线程可以被挂起并返回 true；如果前驱节点的状态 &gt;0，则表示前驱节点取消了，这时候需要一直往前找，直到找到最近一个正常等待的前驱节点，然后把它作为自己的前驱节点；如果前驱节点正常（未取消），则修改前驱节点状态为 SIGNAL</p>
 <p>到这里整个加锁的流程就已经走完了，最后的情况是，没有拿到锁的线程会在队列中被挂起，直到拥有锁的线程释放锁之后，才会去唤醒其他的线程去获取锁资源</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized%20%E5%92%8C%20ReentrantLock1.png" alt></p>
+<p><strong>总结</strong></p>
+<ul>
+<li>一开始lock方法中compareAndSetState方法尝试将 state 值由 0 置换为 1，如果设置成功的话，则说明当前没有其他线程持有该锁，不用再去排队了，可直接占用该锁 </li>
+<li>否则，查看队列中是否有比它等待时间更久的线程，如果没有，就尝试一下是否能获取到锁，如果获取成功，则标记为已经被占用。如果获取锁失败，则调用 addWaiter 方法把线程包装成 Node 对象，同时放入到队列中</li>
+<li>在队列中通过一个for无限循环，获取前驱结点，如果前驱是head结点，则尝试获取锁，成功则将当前结点设置为head；失败则判断是否可以挂起，如果前驱结点是通知状态，可以挂起，如果是取消状态，将当前结点连接到最接近的非取消前驱，如果是其他状态，就把前驱设置为通知状态。</li>
+</ul>
+<h3 id="用过-CountDownLatch-么？什么场景下用的？-有没有可以改进的地方呢？"><a href="#用过-CountDownLatch-么？什么场景下用的？-有没有可以改进的地方呢？" class="headerlink" title="用过 CountDownLatch 么？什么场景下用的？ 有没有可以改进的地方呢？"></a>用过 CountDownLatch 么？什么场景下用的？ 有没有可以改进的地方呢？</h3><p><code>CountDownLatch</code> 的作用就是 允许 count 个线程阻塞在一个地方，直至所有线程的任务都执行完毕 </p>
+<p><strong>场景</strong></p>
+<p>CompletableFuture 的 runAsync 方法，这个方法会异步的去执行任务，每个任务返回一个 CompletableFuture 对象，</p>
+<p>CompletableFuture 的 allOf 方法的作用是把多个 task 汇总，然后可以根据需要去获取到传入参数的这些 task 的返回结果，或者等待它们都执行完毕等。</p>
+<p><strong>场景</strong></p>
+<p>最开始的时候是通过 <code>AttributeMap</code> 绑定到Channel上实现的， 每次都要调用 <code>channel.closeFuture().sync();</code> 阻塞来手动等待请求返回 ， 使用 <code>CompletableFuture</code> 包装返回结果 </p>
 
           
         
@@ -1139,9 +1151,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static class Entry extends WeakReference&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">    /** The value associated with this ThreadLocal. */</span><br><span class="line">    Object value;</span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        super(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>此时的k就是弱引用，一旦gc就被回收</p>
-<h3 id="Value-的泄漏"><a href="#Value-的泄漏" class="headerlink" title="Value 的泄漏"></a>Value 的泄漏</h3><p>ThreadLocal 的value使用了强引用，正常情况下线程终止，value是可以被回收的。但是如果线程生命周期很长，而ThreadLocal 以及对应的value早不用了，就可能出现内存泄漏</p>
-<p>jdk也有<strong>预案</strong>，在执行 ThreadLocal 的 set、remove、rehash 等方法时，它都会扫描 key 为 null 的 Entry，如果key为null，那就将value也变为null</p>
-<p><strong>但问题是</strong>：我ThreadLocal都不用了，又怎么会执行这些方法呢，所以要记得手动remove</p>
+<h3 id="Value-的泄漏"><a href="#Value-的泄漏" class="headerlink" title="Value 的泄漏"></a>Value 的泄漏</h3><p> ThreadLocalMap 中使⽤的 key 为 ThreadLocal 的弱引⽤,⽽ value 是强引⽤。所以，如果 ThreadLocal 没有被外部强引⽤的情况下，在垃圾回收的时候，key 会被清理掉，⽽ value 不会被 清理掉。这样⼀来， ThreadLocalMap 中就会出现key为null的Entry。假如我们不做任何措施的话， value 永远⽆法被GC 回收，这个时候就可能会产⽣内存泄露。ThreadLocalMap实现中已经考虑了这种 情况，在调⽤ set() 、 get() 、 remove() ⽅法的时候，会清理掉 key 为 null 的记录。使⽤完 ThreadLocal ⽅法后 最好⼿动调⽤ remove() ⽅法 </p>
 <h3 id="如何避免内存泄露"><a href="#如何避免内存泄露" class="headerlink" title="如何避免内存泄露"></a>如何避免内存泄露</h3><p>使用完了 ThreadLocal 之后，我们应该手动去调用它的 remove 方法</p>
 
           
@@ -1592,155 +1602,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/17/mybatis面试题/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/10/17/mybatis面试题/" class="post-title-link" itemprop="url">mybatis面试题</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-10-17 13:40:30" itemprop="dateCreated datePublished" datetime="2020-10-17T13:40:30+08:00">2020-10-17</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/15/java基础面试题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1801,7 +1662,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/面试题/" itemprop="url" rel="index"><span itemprop="name">面试题</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java面试题/" itemprop="url" rel="index"><span itemprop="name">java面试题</span></a></span>
 
                 
                 
@@ -1843,27 +1704,25 @@
       
         
           
-            <ol>
-<li><p>构造器能否override，为什么？ </p>
-<p> 构造器不能被继承 所以不能被 override 但可以被重载 overload </p>
-</li>
-<li><p>为什么java是跨平台的？ </p>
-<p>java有虚拟机（JVM），JAVA程序不是直接在电脑上运行的，是在虚拟机上进行的，每个系统平台都是有自己的虚拟机（JVM），所以JAVA语言能跨平台</p>
-</li>
-<li><p>多态两种讲一下？多态怎么实现 </p>
-<p>多态有两种：类内部之间的多态和类之间的多态 </p>
-<ul>
-<li>Java的方法重载（类内部之间的多态）：就是在类中可以创建多个方法，它们具有相同的名字，但可具有不同的参数列表、返回值类型 </li>
-<li>Java的方法重写（父类与子类之间的多态）：子类可继承父类中的方法，但有时子类并不想原封不动地继承父类的方法，而是想作一定的修改，这就需要采用方法的重写 </li>
-</ul>
-</li>
-<li><p>匿名类知道么，说一说？静态内部类和非静态内部类的区别？ </p>
-<p>匿名类可以解决接口和子类，就是不需要创建子类对象或者接口实现对象了，直接new 接口名称(){}即可，{}就是匿名内部类</p>
-<p><a href="https://www.cnblogs.com/xf-686/archive/2019/06/27/11098274.html" target="_blank" rel="noopener">https://www.cnblogs.com/xf-686/archive/2019/06/27/11098274.html</a> ，就是静态内部类创建对象不需要外部类，而非静态内部类创建对象需要先外部类对象</p>
+            <h3 id="构造器能否override，为什么？"><a href="#构造器能否override，为什么？" class="headerlink" title="构造器能否override，为什么？"></a>构造器能否override，为什么？</h3><p>构造器不能被继承 所以不能被 override 但可以被重载 overload </p>
+<h3 id="匿名类知道么，说一说？静态内部类和非静态内部类的区别？"><a href="#匿名类知道么，说一说？静态内部类和非静态内部类的区别？" class="headerlink" title="匿名类知道么，说一说？静态内部类和非静态内部类的区别？"></a>匿名类知道么，说一说？静态内部类和非静态内部类的区别？</h3><p>匿名类可以解决接口和子类，就是不需要创建子类对象或者接口实现对象了，直接new 接口名称(){}即可，{}就是匿名内部类</p>
+<p> <a href="https://www.cnblogs.com/xf-686/archive/2019/06/27/11098274.html" target="_blank" rel="noopener">https://www.cnblogs.com/xf-686/archive/2019/06/27/11098274.html</a> ，就是静态内部类创建对象不需要外部类，而非静态内部类创建对象需要先外部类对象</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建静态内部类实例</span></span><br><span class="line">staticInnerClass sic = <span class="keyword">new</span> OutClass.staticInnerClass();</span><br><span class="line">sic.showMsg()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建非静态内部类实例,需要先创建外部类的实例 OutClass().new</span></span><br><span class="line">InnerClass ic = <span class="keyword">new</span> OutClass().new InnerClass();</span><br><span class="line">ic.disPlayMsg();</span><br></pre></td></tr></table></figure>
-</li>
-<li></li>
-</ol>
+
+<h3 id="jdk动态代理和cglib动态代理"><a href="#jdk动态代理和cglib动态代理" class="headerlink" title="jdk动态代理和cglib动态代理"></a><strong>jdk动态代理和cglib动态代理</strong></h3><p>*<em>jdk代理 *</em></p>
+<ul>
+<li>被代理的类<code>需要实现某个接口</code></li>
+<li>代理某个方法需要实现<code>InvocationHandler</code>接口</li>
+<li>通过<code>Proxy.newProxyInstance</code>生成代理对象</li>
+</ul>
+<p>*<em>cglib代理 *</em></p>
+<ul>
+<li>被代理的类不需要实现接口，是通过实现子类的方式</li>
+<li>代理某个方法是通过实现MethodInterceptor接口</li>
+<li>Enhancer.create生成代理对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">JDKProxy</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> Object target; <span class="comment">// 代理对象</span></span><br><span class="line">        <span class="comment">// 获取到代理对象</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">getInstance</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.target = target;</span><br><span class="line">            <span class="comment">// 取得代理对象</span></span><br><span class="line">            <span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(),</span><br><span class="line">                    target.getClass().getInterfaces(), <span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 执行代理方法</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> proxy  代理对象</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> method 被代理方法</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> args   被代理方法的参数</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span></span></span><br><span class="line"><span class="function">                <span class="keyword">throws</span> InvocationTargetException, IllegalAccessException </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"动态代理之前的业务处理."</span>);</span><br><span class="line">            Object result = method.invoke(target, args); <span class="comment">// 执行调用方法（此方法执行前后，可以进行相关业务处理）</span></span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CGLibProxy</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> Object target; <span class="comment">// 代理对象</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">getInstance</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.target = target;</span><br><span class="line">            Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">            <span class="comment">// 设置父类为实例类</span></span><br><span class="line">            enhancer.setSuperclass(<span class="keyword">this</span>.target.getClass());</span><br><span class="line">            <span class="comment">// 回调方法</span></span><br><span class="line">            enhancer.setCallback(<span class="keyword">this</span>);</span><br><span class="line">            <span class="comment">// 创建代理对象</span></span><br><span class="line">            <span class="keyword">return</span> enhancer.create();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method,</span></span></span><br><span class="line"><span class="function"><span class="params">                                Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"方法调用前业务处理."</span>);</span><br><span class="line">            Object result = methodProxy.invokeSuper(o, objects); <span class="comment">// 执行方法调用</span></span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
 
           
         
@@ -2295,6 +2154,198 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/10/线程基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/10/10/线程基础/" class="post-title-link" itemprop="url">线程基础</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-10-10 13:42:11" itemprop="dateCreated datePublished" datetime="2020-10-10T13:42:11+08:00">2020-10-10</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/多线程/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="创建线程的方式"><a href="#创建线程的方式" class="headerlink" title="创建线程的方式"></a>创建线程的方式</h3><ul>
+<li><p>继承Thread，重写run方法，调用start启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class test02 extends Thread &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int i=0;i&lt;20;i++)&#123;</span><br><span class="line">            //重写run方法</span><br><span class="line">            System.out.println(&quot;test02:&quot;+i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">new test02().start();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现Runnable接口，重写run方法，将实现接口的类丢入thread，调用start启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class test01 implements Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(&quot;test01启动&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">new Thread(new test01()).start();</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>线程池</p>
+<p>Executors线程池工厂类，用于创建线程；ExecutorService真正的线程池接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService executorService= Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line">executorService.execute(<span class="keyword">new</span> test01());</span><br><span class="line"><span class="comment">//关闭连接</span></span><br><span class="line">executorService.shutdown();</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h3><p><img src="/2020/10/10/线程基础/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81.jpg" alt></p>
+<h3 id="线程方法"><a href="#线程方法" class="headerlink" title="线程方法"></a>线程方法</h3><ul>
+<li><p>线程礼让yield</p>
+<p>礼让不一定成功，<strong>取决于cpu调度</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test03</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"test03启动"</span>);</span><br><span class="line">        Thread.yield();</span><br><span class="line">        System.out.println(<span class="string">"test03结束"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test03启动</span><br><span class="line">test03启动</span><br><span class="line">test03结束</span><br><span class="line">test03结束</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>线程强制执行join</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Thread vip=<span class="keyword">new</span> Thread(<span class="keyword">new</span> test04(),<span class="string">"c"</span>);</span><br><span class="line">        vip.start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">100</span>;j++)&#123;</span><br><span class="line">            <span class="comment">//从main线程j=1就插入</span></span><br><span class="line">            <span class="keyword">if</span>(j==<span class="number">1</span>)&#123;</span><br><span class="line">                vip.join();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"main线程执行中:"</span>+j);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2343,7 +2394,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">70</span>
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2404,11 +2455,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
