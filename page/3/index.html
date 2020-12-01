@@ -380,6 +380,229 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/redis主从复制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/06/01/redis主从复制/" class="post-title-link" itemprop="url">redis主从复制</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-01 09:16:56" itemprop="dateCreated datePublished" datetime="2020-06-01T09:16:56+08:00">2020-06-01</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="单机redis存在问题"><a href="#单机redis存在问题" class="headerlink" title="单机redis存在问题"></a>单机redis存在问题</h3><ul>
+<li>机器故障：单机redis出现故障会对业务造成毁灭性打击</li>
+<li>容量瓶颈：需要不断升内存</li>
+</ul>
+<p>将数据复制多个副本保存在不同的服务器上，<strong>链接在一起</strong>，并保证数据是否<strong>同步</strong>的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif" alt></p>
+<p>一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接</p>
+<h3 id="主从复制搭建"><a href="#主从复制搭建" class="headerlink" title="主从复制搭建"></a>主从复制搭建</h3><p>进入redis目录，分别建立（vim会直接新建文件）<strong>redis6379.conf，redis6380.conf， redis6381.conf</strong></p>
+<p>以<strong>redis6380.conf</strong>为例进行配置                 一个配置完cp命令复制就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">include /opt/redis-5.0.9/redis.conf       #拷贝redis目录下的redis配置文件</span><br><span class="line">port 6380</span><br><span class="line">pidfile /var/run/redis6380.conf</span><br><span class="line">dbfilename dump6380.rdb</span><br><span class="line">slaveof 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p>配置完后，分别启动</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis5.png" alt></p>
+<p>通过命令查看进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep redis</span><br></pre></td></tr></table></figure>
+
+<p>开启3个客户端，通过info replication查看信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 6379  #6380/6381</span><br><span class="line">info replication #6379端口的的role:master 6380/6381 role:slave</span><br></pre></td></tr></table></figure>
+
+<p>分别set可以发现，主服务器可以读写，而从服务器只能读不能写</p>
+<h3 id="主从复制原理-建立连接"><a href="#主从复制原理-建立连接" class="headerlink" title="主从复制原理-建立连接"></a>主从复制原理-建立连接</h3><p>指令就1条</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof master_ip master_port</span><br></pre></td></tr></table></figure>
+
+<p>3种方式连接</p>
+<ul>
+<li>发送命令 <code>slaveof master_ip master_port</code> </li>
+<li>启动时使用参数<code>--slaveof master_ip master_port</code> （redis-cli -p xxxx –slaveof）</li>
+<li>服务器配置 <code>slaveof master_ip master_port</code> （修改配置文件）</li>
+</ul>
+<h3 id="主从复制原理-数据同步"><a href="#主从复制原理-数据同步" class="headerlink" title="主从复制原理-数据同步"></a>主从复制原理-数据同步</h3><p> 具体执行的方式是：从节点向主节点发送psync命令（Redis2.8以前是sync命令），开始同步。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png" alt></p>
+<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a><strong>全量复制</strong></h4><p>用于初次复制或其他无法进行部分复制的情况，将主节点中的所有数据都发送给从节点，是一个非常重型的操作 </p>
+<ul>
+<li>从节点判断无法进行部分复制，向主节点发送全量复制的请求；或从节点发送部分复制的请求，但主节点判断无法进行部分复制；具体判断过程需要在讲述了部分复制原理后再介绍。</li>
+<li>主节点收到全量复制的命令后，执行bgsave，在后台生成RDB文件，并使用一个缓冲区（称为复制缓冲区）记录从现在开始执行的所有写命令</li>
+<li>主节点的bgsave执行完成后，将RDB文件发送给从节点；<strong>从节点首先清除自己的旧数据，然后载入接收的RDB文件</strong>，将数据库状态更新至主节点执行bgsave时的数据库状态</li>
+<li>主节点将前述复制缓冲区中的所有写命令发送给从节点，从节点执行这些写命令，将数据库状态更新至主节点的最新状态</li>
+<li>如果从节点开启了AOF，则会触发bgrewriteaof的执行，从而保证AOF文件更新至主节点的最新状态</li>
+</ul>
+<h4 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a><strong>部分复制</strong></h4><p>用于网络中断等情况后的复制，只将中断期间主节点执行的写命令发送给从节点，与全量复制相比更加高效 </p>
+<p>部分复制依赖于下面三个主要概念</p>
+<p><strong>复制偏移量</strong></p>
+<p>主节点和从节点分别维护一个复制偏移量（offset），代表的是<strong>主节点向从节点传递的字节数</strong>；主节点每次向从节点传播N个字节数据时，主节点的offset增加N；从节点每次收到主节点传来的N个字节数据时，从节点的offset增加N。</p>
+<p>offset用于判断主从节点的数据库状态是否一致：如果二者offset相同，则一致；如果offset不同，则不一致，此时可以根据两个offset找出从节点缺少的那部分数据。例如，如果主节点的offset是1000，而从节点的offset是500，那么部分复制就需要将offset为501-1000的数据传递给从节点。而offset为501-1000的数据存储的位置，就是下面要介绍的复制积压缓冲区。</p>
+<p><strong>复制积压缓冲区</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis3.png" alt></p>
+<p>复制积压缓冲区是由主节点维护的、固定长度的、先进先出(FIFO)队列，默认大小1MB；当主节点开始有从节点时创建，其作用是备份主节点最近发送给从节点的数据。注意，无论主节点有一个还是多个从节点，都只需要一个复制积压缓冲区。</p>
+<p>在<strong>命令传播阶段</strong>，主节点除了将写命令发送给从节点，还会发送一份给复制积压缓冲区，作为写命令的备份；除了存储写命令，复制积压缓冲区中还存储了其中的每个字节对应的复制偏移量（offset）。由于复制积压缓冲区定长且是先进先出，所以它保存的是主节点最近执行的写命令；时间较早的写命令会被挤出缓冲区</p>
+<p><strong>服务器运行ID(runid)</strong></p>
+<p>主从节点初次复制时，主节点将自己的runid发送给从节点，从节点将这个runid保存起来；当断线重连时，从节点会将这个runid发送给主节点；主节点根据runid判断能否进行部分复制：</p>
+<ul>
+<li>如果从节点保存的runid与主节点现在的runid相同，说明主从节点之前同步过，主节点会继续尝试使用部分复制(到底能不能部分复制还要看offset和复制积压缓冲区的情况)；</li>
+<li>如果从节点保存的runid与主节点现在的runid不同，说明从节点在断线前同步的Redis节点并不是当前的主节点，只能进行全量复制</li>
+</ul>
+<h3 id="主从复制原理-命令传播阶段"><a href="#主从复制原理-命令传播阶段" class="headerlink" title="主从复制原理-命令传播阶段"></a>主从复制原理-命令传播阶段</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png" alt></p>
+<h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>master 通过ping指令看slave是否连接着，一般10秒一次</p>
+<h4 id="REPLCONF-ACK"><a href="#REPLCONF-ACK" class="headerlink" title="REPLCONF ACK"></a>REPLCONF ACK</h4><p><strong>从节点会向主节点发送REPLCONF ACK命令</strong>，频率是每秒1次；命令格式为：REPLCONF ACK {offset}，其中offset指从节点保存的复制偏移量</p>
+<p>检测命令丢失：从节点发送了自身的offset，主节点会与自己的offset对比，如果从节点数据缺失（如网络丢包），主节点会推送缺失的数据（这里也会利用复制积压缓冲区） </p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p> <a href="https://www.cnblogs.com/kismetv/p/9236731.html" target="_blank" rel="noopener">https://www.cnblogs.com/kismetv/p/9236731.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/30/传输层/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2246,303 +2469,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/16/mysql优化-索引/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/16/mysql优化-索引/" class="post-title-link" itemprop="url">mysql优化-索引</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-16 21:15:11" itemprop="dateCreated datePublished" datetime="2019-11-16T21:15:11+08:00">2019-11-16</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="单表优化"><a href="#单表优化" class="headerlink" title="单表优化"></a>单表优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE book</span><br><span class="line">(</span><br><span class="line">	bid INT(4) PRIMARY KEY,</span><br><span class="line">	NAME VARCHAR(20) NOT NULL,</span><br><span class="line">	authorid INT(4) NOT NULL,</span><br><span class="line">	publicid INT(4) NOT NULL,</span><br><span class="line">	typeid INT(4) NOT NULL </span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO book VALUES(1,&apos;tjava&apos;,1,1,2) ;</span><br><span class="line">INSERT INTO book VALUES(2,&apos;tc&apos;,2,1,2) ;</span><br><span class="line">INSERT INTO book VALUES(3,&apos;wx&apos;,3,2,1) ;</span><br><span class="line">INSERT INTO book VALUES(4,&apos;math&apos;,4,2,3) ;</span><br></pre></td></tr></table></figure>
-
-<p>查询authorid=1且 typeid为2或3的bid</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT bid FROM book WHERE typeid IN(2,3) AND authorid=1  ORDER BY typeid</span><br></pre></td></tr></table></figure>
-
-<p> <strong>优化：加索引</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE book ADD INDEX idx_bta (bid,typeid,authorid)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%957.png" alt></p>
-<p><strong>索引一旦进行 升级优化，需要将之前废弃的索引删掉，防止干扰。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX idx_bta ON book</span><br></pre></td></tr></table></figure>
-
-<p><strong>根据SQL实际解析的顺序，调整索引的顺序</strong><br>alter table book add index idx_tab (typeid,authorid,bid); –虽然可以回表查询bid，但是将bid放到索引中可以提升使用using index ;</p>
-<p><strong>总结</strong></p>
-<p>a.最佳左前缀，保持索引的定义和使用的顺序一致性  </p>
-<p>b.索引需要逐步优化  </p>
-<p>c.将含In的范围查询 放到where条件的最后，防止失效。</p>
-<pre><code>本例中同时出现了Using where（需要回原表）; Using index（不需要回原表）：原因，where  authorid=1 and  typeid in(2,3)中authorid在索引(authorid,typeid,bid)中，因此不需要回原表（直接在索引表中能查到）；而typeid虽然也在索引(authorid,typeid,bid)中，但是含in的范围查询已经使该typeid索引失效，因此相当于没有typeid这个索引，所以需要回原表（using where）；
-例如以下没有了In，则不会出现using where
-explain select bid from book where  authorid=1 and  typeid =3 order by typeid desc ;
-
-还可以通过key_len证明In可以使索引失效。</code></pre><h2 id="两表优化"><a href="#两表优化" class="headerlink" title="两表优化"></a>两表优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE teacher2</span><br><span class="line">(</span><br><span class="line">	tid INT(4) PRIMARY KEY,</span><br><span class="line">	cid INT(4) NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO teacher2 VALUES(1,2);</span><br><span class="line">INSERT INTO teacher2 VALUES(2,1);</span><br><span class="line">INSERT INTO teacher2 VALUES(3,3);</span><br><span class="line"></span><br><span class="line">CREATE TABLE course2</span><br><span class="line">(</span><br><span class="line">	cid INT(4) ,</span><br><span class="line">	cname VARCHAR(20)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO course2 VALUES(1,&apos;java&apos;);</span><br><span class="line">INSERT INTO course2 VALUES(2,&apos;python&apos;);</span><br><span class="line">INSERT INTO course2 VALUES(3,&apos;kotlin&apos;);</span><br></pre></td></tr></table></figure>
-
-<p>左连接：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT *FROM teacher2 t LEFT OUTER JOIN course2 c ON t.cid=c.cid WHERE c.cname=&apos;java&apos;;</span><br></pre></td></tr></table></figure>
-
-<p>索引往哪张表加？  </p>
-<ul>
-<li><p>小表驱动大表</p>
-</li>
-<li><p>索引建立经常使用的字段上  本题 t.cid=c.cid可知，t.cid字段使用频繁，因此给该字段加索引</p>
-<p>[一般情况对于左外连接，给左表加索引；右外连接，给右表加索引]</p>
-</li>
-</ul>
-<pre><code>select ...where 小表.x10=大表.x300 ;
-for(int i=0;i&lt;小表.length10;i++)
-{
-    for(int j=0;j&lt;大表.length300;j++)
-    {
-        ...
-    }
-}
-
-
-select ...where 大表.x300=小表.x10 ;
-for(int i=0;i&lt;大表.length300;i++)
-{
-    for(int j=0;j&lt;小表.length10;j++)
-    {
-        ...
-    }
-}</code></pre><p>–以上2个FOR循环，最终都会循环3000次；但是 对于双层循环来说：一般建议 将数据小的循环 放外层；数据大的循环放内存。</p>
-<pre><code>--当编写 ..on t.cid=c.cid 时，将数据量小的表 放左边（假设此时t表数据量小）
-
-alter table teacher2 add index index_teacher2_cid(cid) ;
-alter table course2 add index index_course2_cname(cname);
-
-
-Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接缓存。</code></pre><h2 id="三张表优化A-B-C"><a href="#三张表优化A-B-C" class="headerlink" title="三张表优化A B C"></a>三张表优化A B C</h2><p>a.小表驱动大表  </p>
-<p>b.索引建立在经常查询的字段上</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE test03</span><br><span class="line">(</span><br><span class="line">  a1 INT(4) NOT NULL,</span><br><span class="line">  a2 INT(4) NOT NULL,</span><br><span class="line">  a3 INT(4) NOT NULL,</span><br><span class="line">  a4 INT(4) NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">ALTER TABLE test03 ADD INDEX idx_a1_a2_a3_4(a1,a2,a3,a4)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a2=2 and a3=3 and a4 =4 ; --推荐写法，因为 索引的使用顺序（where后面的顺序） 和 复合索引的顺序一致</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96%E2%80%94%E7%B4%A2%E5%BC%953.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a4=1 and a3=2 and a2=3 and a1 =4 ; --虽然编写的顺序 和索引顺序不一致，但是 sql在真正执行前 经过了SQL优化器的调整，结果与上条SQL是一致的。</span><br><span class="line">--以上 2个SQL，使用了 全部的复合索引</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%954.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a2=2 and a4=4 order by a3; </span><br><span class="line">--以上SQL用到了a1 a2两个索引，该两个字段 不需要回表查询using index ;而a4因为跨列使用，造成了该索引失效，需要回表查询 因此是using where</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%955.png" alt></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select a1,a2,a3,a4 from test03 where a1=1 and a4=4 order by a3; </span><br><span class="line">--以上SQL出现了 using filesort(文件内排序，“多了一次额外的查找/排序”) ：不要跨列使用( where和order by 拼起来，不要跨列使用)</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%956.png" alt></p>
-<pre><code>explain select a1,a2,a3,a4 from test03 where a1=1 and a4=4 order by a2 , a3; --不会using filesort</code></pre><p>总结</p>
-<ul>
-<li>如果 (a,b,c,d)复合索引  和使用的顺序全部一致(且不跨列使用)，则复合索引全部使用。如果部分一致(且不跨列使用)，则使用部分索引</li>
-<li>where和order by 拼起来，不要跨列使用 </li>
-</ul>
-<h2 id="避免索引失效的一些原则"><a href="#避免索引失效的一些原则" class="headerlink" title="避免索引失效的一些原则"></a>避免索引失效的一些原则</h2><ul>
-<li><p>复合索引<br>复合索引，不要跨列或无序使用（最佳左前缀原则）<br>复合索引，尽量使用全索引匹配</p>
-</li>
-<li><p>不要在索引上进行任何操作（计算、函数、类型转换），否则索引失效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE book</span><br><span class="line">  (</span><br><span class="line">  	bid INT(4) PRIMARY KEY,</span><br><span class="line">  	NAME VARCHAR(20) NOT NULL,</span><br><span class="line">  	authorid INT(4) NOT NULL,</span><br><span class="line">  	publicid INT(4) NOT NULL,</span><br><span class="line">  	typeid INT(4) NOT NULL </span><br><span class="line">  );</span><br><span class="line">  </span><br><span class="line">  INSERT INTO book VALUES(1,&apos;tjava&apos;,1,1,2) ;</span><br><span class="line">  INSERT INTO book VALUES(2,&apos;tc&apos;,2,1,2) ;</span><br><span class="line">  INSERT INTO book VALUES(3,&apos;wx&apos;,3,2,1) ;</span><br><span class="line">  INSERT INTO book VALUES(4,&apos;math&apos;,4,2,3) ;</span><br><span class="line">  SELECT *FROM book</span><br><span class="line">  ALTER TABLE book ADD INDEX index_fuhe(authorid,typeid)</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid=1 AND typeid=2 --用到了2个索引</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid=1 AND typeid*2=2--用到了a1个索引</span><br><span class="line">  EXPLAIN SELECT *FROM book WHERE authorid*2=1 AND typeid*2=2--到了0个索引,原因：对于复合索引，如果左边失效，右侧全部失效。(a,b,c)，例如如果 b失效，则b c同时失效</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ul>
-<p>   <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%951.png" alt></p>
-<p>  <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E4%BC%98%E5%8C%96-%E7%B4%A2%E5%BC%952.png" alt></p>
-<ul>
-<li><p>复合索引不能使用不等于（!=  &lt;&gt;）或is null (is not null)，否则自身以及右侧所有全部失效。<br>复合索引中如果有&gt;，则自身和右侧索引全部失效。</p>
-</li>
-<li><p>尽量使用索引覆盖（using index）</p>
-<p>select a,b,c from xx..where a=  .. and b =.. ;</p>
-</li>
-<li><p>like尽量以“常量”开头，不要以’%’开头，否则索引失效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select * from xx where name like &apos;%x%&apos; ; --name索引失效</span><br><span class="line"></span><br><span class="line">explain select * from teacher  where tname like &apos;%x%&apos;; --tname索引失效</span><br><span class="line"></span><br><span class="line">explain select * from teacher  where tname like &apos;x%&apos;;</span><br><span class="line"> </span><br><span class="line">explain select tname from teacher  where tname like &apos;%x%&apos;; --如果必须使用like &apos;%x%&apos;进行模糊查询，可以使用索引覆盖 挽救一部分。</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>尽量不要使用类型转换（显示、隐式），否则索引失效</p>
-<p>explain select * from teacher where tname =’’ or tcid &gt;1 ; –将or左侧的tname 失效</p>
-</li>
-<li><p>尽量不要使用or，否则索引失效</p>
-<p>explain select * from teacher where tname =’’ or tcid &gt;1 ; –将or左侧的tname 失效</p>
-<p>  explain select * from book where authorid = 1 and typeid =2 ;</p>
-<p>  – SQL优化，是一种概率层面的优化。至于是否实际使用了我们的优化，需要通过explain进行推测。</p>
-<p>  explain select * from book where authorid != 1 and typeid =2 ;<br>  explain select * from book where authorid != 1 and typeid !=2 ;<br>  体验概率情况(&lt; &gt; =)：原因是服务层中有SQL优化器，可能会影响我们的优化。<br>  drop index idx_typeid on book;<br>  drop index idx_authroid on book;<br>  alter table book add index idx_book_at (authorid,typeid);<br>  explain select * from book where authorid = 1 and typeid =2 ;–复合索引at全部使用<br>  explain select * from book where authorid &gt; 1 and typeid =2 ; –复合索引中如果有&gt;，则自身和右侧索引全部失效。<br>  explain select * from book where authorid = 1 and typeid &gt;2 ;–复合索引at全部使用<br>  —-明显的概率问题—<br>  explain select * from book where authorid &lt; 1 and typeid =2 ;–复合索引at只用到了1个索引<br>  explain select * from book where authorid &lt; 4 and typeid =2 ;–复合索引全部失效</p>
-<p>  –我们学习索引优化 ，是一个大部分情况适用的结论，但由于SQL优化器等原因  该结论不是100%正确。<br>  –一般而言， 范围查询（&gt; &lt;  in），之后的索引失效。</p>
-</li>
-</ul>
-<h2 id="一些其他的优化方法"><a href="#一些其他的优化方法" class="headerlink" title="一些其他的优化方法"></a>一些其他的优化方法</h2><ul>
-<li><p>exist和in</p>
-<p>select ..from table where 字段 exist (子查询) ;<br>select ..from table where 字段 in  (子查询) ;</p>
-<p>如果主查询的数据集大，则使用in   ,效率高。如果子查询的数据集大，则使用exist,效率高。</p>
-<p>exist语法： 将主查询的结果，放到子查需结果中进行条件校验（看子查询是否有数据，如果有数据 则校验成功)，如果复合校验，则保留数据。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select tname from teacher where exists (select * from teacher) ; </span><br><span class="line">--等价于select tname from teacher</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>order by 优化</p>
-<p>使用oder by过程中会出现using filesort（额外依次排序） 底层有两种算法：双路排序、单路排序 （根据IO的次数）</p>
-<ol>
-<li><p>MySQL4.1之前 默认使用 双路排序；双路：扫描2次磁盘（1：从磁盘读取<strong>排序字段</strong> ,对排序字段进行排序（在buffer中进行的排序）   2：扫描<strong>其他</strong>字段  也就是一次扫要排序的字段，一次扫要找的字段</p>
-</li>
-<li><p>MySQL4.1之后 默认使用 单路排序  ： 只读取一次（将所有字段放入buffer扫描）</p>
-<p>存在隐患：如果数据量很大，buffer中可能放不下，此时会进行分片读取，分多次读取</p>
-</li>
-</ol>
-<p><strong>单路排序比双路排序会占用更多的buffer</strong></p>
-<p>set max_length_for_sort_data可设置buffer大小，如果max_length_for_sort_data值太低，则mysql会自动从 单路-&gt;双路   （太低：需要排序的列的总大小超过了max_length_for_sort_data定义的字节数）</p>
-<p>提高order by策略：</p>
-<p>a.选择使用单路、双路 ；调整buffer的容量大小；<br>b.避免select * …<br>c.复合索引不要跨列使用 ，避免using filesort<br>d.保证全部的排序字段 排序的一致性（都是升序 或 降序）</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2591,7 +2517,7 @@ Using join buffer:extra中的一个选项，作用：Mysql引擎使用了 连接
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

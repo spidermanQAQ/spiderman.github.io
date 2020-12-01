@@ -380,6 +380,219 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/spring boot入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/17/spring boot入门/" class="post-title-link" itemprop="url">spring boot入门</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-17 16:20:08" itemprop="dateCreated datePublished" datetime="2019-10-17T16:20:08+08:00">2019-10-17</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring-boot/" itemprop="url" rel="index"><span itemprop="name">spring boot</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="spring-boot诞生的背景"><a href="#spring-boot诞生的背景" class="headerlink" title="spring boot诞生的背景"></a>spring boot诞生的背景</h2><p> 在spring boot出现以前，使用spring框架的程序员是这样配置web应用环境的，需要大量的xml配置 </p>
+<ul>
+<li><p>随着web项目集成软件的不断增多，xml配置也不断的增多，xml配置文件也在不断地增多，项目的依赖管理也越发的复杂。spring框架也因此饱受争议，配置文件难以理解且容易出错 </p>
+</li>
+<li><p>xml配置文件不但复杂，而且绝大部分属于模板配置，也就是说有80%以上的配置是不断重复的。也就是说在这个web项目里面这样配置，挪到另一个项目里面这部分配置仍然相同 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ba6ad7fd3388f98bfc326f00b33de814_868x905.png" alt></p>
+</li>
+</ul>
+<p>举一个例子:自己接电线与标准化插座<br>Spring Boot的配置方式，就像是插头插座，就是这个标准。你第三方开源类库想接入进来，你就做一个starter的适配。spring MVC方式就像是手动接电线，很灵活，但是不同的人接出来的效果千差万别，而且很容易出错。Spring boot虽然灵活性不如Spring MVC的方式，你也不太清楚插座里面的线路是什么样，但就是方便易用 </p>
+<h2 id="spring-boot-改变了什么"><a href="#spring-boot-改变了什么" class="headerlink" title="spring boot 改变了什么"></a>spring boot 改变了什么</h2><p> Spring Boot 的目标不在于为已解决的问题领域提供新的解决方案，而是为平台带来另一种新的开发体验，从而简化对这些已有技术的使用 </p>
+<ul>
+<li>使配置变简单</li>
+<li>使监控变简单</li>
+<li>使部署变简单</li>
+<li>使开发变简单</li>
+</ul>
+<h2 id="Spring-Boot主要特性"><a href="#Spring-Boot主要特性" class="headerlink" title="Spring Boot主要特性"></a>Spring Boot主要特性</h2><ul>
+<li>遵循“约定优于配置”的原则，简化配置</li>
+<li>可以完全脱离XML配置文件,采用注解配置和java Config</li>
+<li>内嵌Servlet容器，应用可用jar包执行：java -jar</li>
+<li>快速完成项目搭建、整合第三方类库，方便易用</li>
+<li>提供了starter POM, 能够非常方便的进行包管理, 简化包管理配置</li>
+<li>与Spring cloud天然集成，spring boot是目前java体系内实现微服务最佳方案</li>
+</ul>
+<h2 id="Spring-Boot集成第三方类库的步骤"><a href="#Spring-Boot集成第三方类库的步骤" class="headerlink" title="Spring Boot集成第三方类库的步骤"></a>Spring Boot集成第三方类库的步骤</h2><ol>
+<li>通过maven引入springboot-XXXX-starter</li>
+<li>修改ymal或properties全局统一配置文件</li>
+<li>加入一个Java Config。这个属于个性化配置，如果使用通用配置，这一步不需要。</li>
+</ol>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="Spring-Boot-、-Spring-MVC-、Spring对比"><a href="#Spring-Boot-、-Spring-MVC-、Spring对比" class="headerlink" title="Spring Boot 、 Spring MVC 、Spring对比"></a>Spring Boot 、 Spring MVC 、Spring对比</h3><p><strong>Spring 框架</strong></p>
+<p>Spring框架最核心的特性就是依赖注入DI（Dependency Injecttion）和控制反转IOC（Inversion Of Control）。如果你能够合理的使用DI和IOC，可以开发出松耦合、扩展性好的的应用程序。</p>
+<p><strong>Spring MVC</strong></p>
+<p>Spring MVC提供了一种友好的方式来开发Web应用程序。 通过使用诸如Dispatcher Servlet，ModelAndView和View Resolver，可以轻松开发Web应用程序</p>
+<p><strong>Spring Boot</strong></p>
+<p>Spring 和 Spring MVC最大的弊病在于存在大量的配置，并且这些配置在不同的项目中具有很高的相似性。从而导致重复配置，繁琐而且杂乱！</p>
+<p>Spring Boot期望通过结合自动配置和starters来解决了这个问题。 另外，Spring Boot还提供了一些功能，可以更快地构建可用于生产环境的应用程序 </p>
+<h3 id="Spring-Boot-自动配置"><a href="#Spring-Boot-自动配置" class="headerlink" title="Spring Boot 自动配置"></a>Spring Boot 自动配置</h3><p>Spring和Spring MVC应用程序里面有大量的XML或Java Bean配置。Spring Boot为解决这个问题，提供一种新的解决方案，新的思维方式。</p>
+<p>springboot思考的方式：是不是可以更加智能一点，当Spring中加入一些新的jar包，可以自动的配置一些bean。 比如：Spring MVC JAR位于类路径中时，自动配置Dispatcher Servlet。当然，当这些自动的默认配置不符合我们的要求的时候，我们可以修改。</p>
+<h3 id="什么是Spring-Boot-Starter？"><a href="#什么是Spring-Boot-Starter？" class="headerlink" title="什么是Spring Boot Starter？"></a>什么是Spring Boot Starter？</h3><p>Spring Boot Starter是一组被依赖第三方类库的集合。</p>
+<p>如果你要开发一个web应用程序，就通过包管理工具(如maven)引入spring-boot-starter-web就可以了，而不用分别引入下面这么多依赖类库，spring-boot-starter-web一次性帮你引入下面的这些常用类库。</p>
+<ul>
+<li>Spring — spring 核心, beans, context上下文, AOP面向切面</li>
+<li>Web MVC — Spring MVC</li>
+<li>Jackson — JSON数据的序列化与反序列化</li>
+<li>Validation — Hibernate参数校验及校验API</li>
+<li>嵌入式 Servlet Container — Tomcat</li>
+<li>日志框架Logging — logback, slf4j</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/springboot%E5%85%A5%E9%97%A83.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/collection-迭代器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2325,230 +2538,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/AOP/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/22/AOP/" class="post-title-link" itemprop="url">AOP</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-22 15:36:36" itemprop="dateCreated datePublished" datetime="2019-09-22T15:36:36+08:00">2019-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="AOP相关概念"><a href="#AOP相关概念" class="headerlink" title="AOP相关概念"></a>AOP相关概念</h2><p>Joinpoint(连接点): 被拦截到的方法.</p>
-<p>Pointcut(切入点): 我们对其进行增强的方法.</p>
-<p>Advice(通知/增强): 对切入点进行的增强操作</p>
-<p>​       包括前置通知,后置通知,异常通知,最终通知,环绕通知</p>
-<p>Weaving(织入): 是指把增强应用到目标对象来创建新的代理对象的过程。</p>
-<p>Aspect(切面): 是切入点和通知的结合</p>
-<h2 id="使用XML配置AOP"><a href="#使用XML配置AOP" class="headerlink" title="使用XML配置AOP"></a>使用XML配置AOP</h2><ol>
-<li><p>在<code>bean.xml中引入约束</code>并将通知类注入Spring容器中</p>
-</li>
-<li><p>使用<code>&lt;aop:config&gt;</code>标签声明AOP配置,所有关于AOP配置的代码都写在<code>&lt;aop:config&gt;</code>标签内</p>
-</li>
-<li><p>使用<code>&lt;aop:aspect&gt;</code>标签配置切面,其属性如下</p>
-<ul>
-<li><code>id</code>: 指定切面的<code>id</code></li>
-<li><code>ref</code>: 引用通知类的<code>id</code></li>
-</ul>
-</li>
-<li><p>使用<code>&lt;aop:pointcut&gt;</code>标签配置切入点表达式,指定对哪些方法进行增强,其属性如下</p>
-</li>
-<li><p>使用<code>&lt;aop:xxx&gt;</code>标签配置对应类型的通知方法</p>
-<p>其属性如下:</p>
-<p>method: 指定通知类中的增强方法名.<br>ponitcut-ref: 指定切入点的表达式的id<br>poinitcut: 指定切入点表达式<br>其中pointcut-ref和pointref属性只能有其中一个</p>
-<p>具体的通知类型:</p>
-<p>aop:before：配置前置通知,指定的增强方法在切入点方法之前执行.<br>aop:after-returning：配置后置通知,指定的增强方法在切入点方法正常执行之后执行.<br>aop:afetr-throwing：配置异常通知,指定的增强方法在切入点方法产生异常后执行.<br>aop:after：配置最终通知,无论切入点方法执行时是否发生异常,指定的增强方法都会最后执行.<br>aop:around： 配置环绕通知,可以在代码中手动控制增强代码的执行时机.</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 配置Logger类，以后相当于事务控制类 --&gt;</span><br><span class="line">&lt;bean id=&quot;logger&quot; class=&quot;com.itheima.utils.Logger&quot;&gt;&lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--配置AOP--&gt;</span><br><span class="line">&lt;aop:config&gt;</span><br><span class="line">    &lt;!-- 配置切入点表达式 id属性用于指定表达式的唯一标识。expression属性用于指定表达式内容</span><br><span class="line">          此标签写在aop:aspect标签内部只能当前切面使用。</span><br><span class="line">          它还可以写在aop:aspect外面，此时就变成了所有切面可用</span><br><span class="line">      --&gt;</span><br><span class="line">    &lt;aop:pointcut id=&quot;pt1&quot; expression=&quot;execution(* com.itheima.service.impl.*.*(..))&quot;&gt;&lt;/aop:pointcut&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!--配置切面 --&gt;</span><br><span class="line">    &lt;aop:aspect id=&quot;logAdvice&quot; ref=&quot;logger&quot;&gt;</span><br><span class="line">        &lt;!-- 配置前置通知：在切入点方法执行之前执行</span><br><span class="line">        &lt;aop:before method=&quot;beforePrintLog&quot; pointcut-ref=&quot;pt1&quot; &gt;&lt;/aop:before&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置后置通知：在切入点方法正常执行之后值。它和异常通知永远只能执行一个</span><br><span class="line">        &lt;aop:after-returning method=&quot;afterReturningPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after-returning&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置异常通知：在切入点方法执行产生异常之后执行。它和后置通知永远只能执行一个</span><br><span class="line">        &lt;aop:after-throwing method=&quot;afterThrowingPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after-throwing&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置最终通知：无论切入点方法是否正常执行它都会在其后面执行</span><br><span class="line">        &lt;aop:after method=&quot;afterPrintLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:after&gt;--&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 配置环绕通知 详细的注释请看Logger类中--&gt;</span><br><span class="line">        &lt;aop:around method=&quot;aroundPringLog&quot; pointcut-ref=&quot;pt1&quot;&gt;&lt;/aop:around&gt;</span><br><span class="line">    &lt;/aop:aspect&gt;</span><br><span class="line">&lt;/aop:config&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="环绕通知"><a href="#环绕通知" class="headerlink" title="环绕通知"></a>环绕通知</h2><ol>
-<li><p><code>前置通知</code>,<code>后置通知</code>,<code>异常通知</code>,<code>最终通知</code>的执行顺序</p>
-<p>Spring是基于动态代理对方法进行增强的,<code>前置通知</code>,<code>后置通知</code>,<code>异常通知</code>,<code>最终通知</code>在增强方法中的执行时机如下:</p>
-<p><strong>类似于动态代理</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 增强方法</span><br><span class="line">@Override</span><br><span class="line">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable&#123;</span><br><span class="line">    Object rtValue = null;</span><br><span class="line">    try &#123;</span><br><span class="line">        // 执行前置通知</span><br><span class="line">        </span><br><span class="line">        // 执行原方法</span><br><span class="line">        rtValue = method.invoke(accountService, args); </span><br><span class="line">        </span><br><span class="line">        // 执行后置通知</span><br><span class="line">        return rtValue;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        // 执行异常通知</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        // 执行最终通知</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>环绕通知允许我们更自由地控制增强代码执行的时机</p>
-<p>Spring框架为我们提供一个接口ProceedingJoinPoint,它的实例对象可以作为环绕通知方法的参数,通过参数控制被增强方法的执行时机.</p>
-<p>ProceedingJoinPoint对象的getArgs()方法返回被拦截的参数<br>ProceedingJoinPoint对象的proceed()方法执行被拦截的方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 环绕通知方法,返回Object类型</span><br><span class="line">public Object printLogAround(ProceedingJoinPoint pjp) &#123;</span><br><span class="line">    Object rtValue = null;</span><br><span class="line">    try &#123;</span><br><span class="line">        Object[] args = pjp.getArgs();        </span><br><span class="line">        printLogBefore();			// 执行前置通知</span><br><span class="line">    	rtValue = pjp.proceed(args);// 执行被拦截方法</span><br><span class="line">        printLogAfterReturn();		// 执行后置通知</span><br><span class="line">    &#125;catch(Throwable e) &#123;</span><br><span class="line">        printLogAfterThrowing();	// 执行异常通知</span><br><span class="line">    &#125;finally &#123;</span><br><span class="line">        printLogAfter();			// 执行最终通知</span><br><span class="line">    &#125;</span><br><span class="line">    return rtValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h2 id="spring中对AOP的注解"><a href="#spring中对AOP的注解" class="headerlink" title="spring中对AOP的注解"></a>spring中对AOP的注解</h2><p><strong>用于声明切面的注解</strong></p>
-<p><code>@Aspect</code>: 声明当前类为通知类,该类定义了一个切面.相当于xml配置中的<code>&lt;aop:aspect&gt;</code>标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect</span><br><span class="line">public class Logger &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用于声明通知的注解</strong><br>@Before: 声明该方法为前置通知.相当于xml配置中的<a href="aop:before" target="_blank" rel="noopener">aop:before</a>标签<br>@AfterReturning: 声明该方法为后置通知.相当于xml配置中的<a href="aop:after-returning" target="_blank" rel="noopener">aop:after-returning</a>标签<br>@AfterThrowing: 声明该方法为异常通知.相当于xml配置中的<a href="aop:after-throwing" target="_blank" rel="noopener">aop:after-throwing</a>标签<br>@After: 声明该方法为最终通知.相当于xml配置中的<a href="aop:after" target="_blank" rel="noopener">aop:after</a>标签<br>@Around: 声明该方法为环绕通知.相当于xml配置中的<a href="aop:around" target="_blank" rel="noopener">aop:around</a>标签<br>属性:</p>
-<p>​      value: 用于指定切入点表达式或切入点表达式的引用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect	//表示当前类是一个通知类</span><br><span class="line">public class Logger &#123;</span><br><span class="line"></span><br><span class="line">    // 配置前置通知</span><br><span class="line">	@Before(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogBefore()&#123;</span><br><span class="line">        System.out.println(&quot;前置通知Logger类中的printLogBefore方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置后置通知</span><br><span class="line">    @AfterReturning(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;后置通知Logger类中的printLogAfterReturning方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 配置异常通知</span><br><span class="line">	@AfterThrowing(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;异常通知Logger类中的printLogAfterThrowing方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置最终通知</span><br><span class="line">    @After(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public void printLogAfter()&#123;</span><br><span class="line">        System.out.println(&quot;最终通知Logger类中的printLogAfter方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 配置环绕通知</span><br><span class="line">    @Around(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    public Object aroundPringLog(ProceedingJoinPoint pjp)&#123;</span><br><span class="line">        Object rtValue = null;</span><br><span class="line">        try&#123;</span><br><span class="line">            Object[] args = pjp.getArgs();	</span><br><span class="line">			printLogBefore();				// 执行前置通知</span><br><span class="line">            rtValue = pjp.proceed(args);	// 执行切入点方法</span><br><span class="line">			printLogAfterReturning();		// 执行后置通知</span><br><span class="line">            return rtValue;</span><br><span class="line">        &#125;catch (Throwable t)&#123;</span><br><span class="line">            printLogAfterThrowing();		// 执行异常通知</span><br><span class="line">            throw new RuntimeException(t);</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            printLogAfter();				// 执行最终通知</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用于指定切入点表达式的注解</strong></p>
-<p><code>@Pointcut</code>: 指定切入点表达式,其属性如下:</p>
-<ul>
-<li><code>value</code>: 指定表达式的内容</li>
-</ul>
-<p><code>@Pointcut</code>注解没有<code>id</code>属性,通过调用被注解的方法获取切入点表达式.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Component(&quot;logger&quot;)</span><br><span class="line">@Aspect	//表示当前类是一个通知类</span><br><span class="line">public class Logger &#123;</span><br><span class="line"></span><br><span class="line">    // 配置切入点表达式</span><br><span class="line">    @Pointcut(&quot;execution(* cn.maoritian.service.impl.*.*(..))&quot;)</span><br><span class="line">    private void pt1()&#123;&#125; </span><br><span class="line">    </span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">	@Before(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogBefore()&#123;</span><br><span class="line">        System.out.println(&quot;前置通知Logger类中的printLogBefore方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">    @AfterReturning(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogAfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;后置通知Logger类中的printLogAfterReturning方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 通过调用被注解的方法获取切入点表达式</span><br><span class="line">	@AfterThrowing(&quot;pt1()&quot;)</span><br><span class="line">    public void printLogAfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;异常通知Logger类中的printLogAfterThrowing方法开始记录日志了。。。&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="纯注解配置AOP"><a href="#纯注解配置AOP" class="headerlink" title="纯注解配置AOP"></a>纯注解配置AOP</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@ComponentScan(basePackages=&quot;cn.maoritian&quot;)</span><br><span class="line">@EnableAspectJAutoProxy			// 允许AOP</span><br><span class="line">public class SpringConfiguration &#123;</span><br><span class="line">    // 具体配置</span><br><span class="line">    //...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://blog.csdn.net/ncepu_Chen/article/details/94510298#SpringAOP_159" target="_blank" rel="noopener">https://blog.csdn.net/ncepu_Chen/article/details/94510298#SpringAOP_159</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2597,7 +2586,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

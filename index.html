@@ -380,6 +380,248 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/01/volatile详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/12/01/volatile详解/" class="post-title-link" itemprop="url">volatile详解</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-12-01 16:06:45" itemprop="dateCreated datePublished" datetime="2020-12-01T16:06:45+08:00">2020-12-01</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/多线程/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="volatile原理"><a href="#volatile原理" class="headerlink" title="volatile原理"></a>volatile原理</h2><p> volatile关键字主要⽤于解决变量在多个线程之间的可⻅性 </p>
+<ul>
+<li>当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存</li>
+<li>当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量</li>
+</ul>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在cpu上执行，所以<strong>java的并发机制依赖于JVM的实现和CPU指令</strong></p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>java代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">instance=new Singleton()</span><br></pre></td></tr></table></figure>
+
+<p>转化成汇编代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x01a3deld:movb ...lock add1 ..</span><br></pre></td></tr></table></figure>
+
+<p>volatile修饰的共享变量在进行写操作时会多出一个<strong>lock前缀指令</strong>，这个指令有2个作用</p>
+<ul>
+<li>将当前处理器缓存行的数据写回到系统内存</li>
+<li>写回操作会使其他cpu缓存了该内存地址的数据无效</li>
+</ul>
+<p>为了提高处理速度，内存不会直接和cpu进行通信，而是先将系统内存读到内部缓存（L1,L2）,但操作完不知道何时写回内存；</p>
+<p>用volatile修饰的变量进行写操作，JVM会向处理器发送一条Lock前缀指令，进行<strong>缓存锁定</strong>：如果访问的内存区域已经缓存在处理器内部，则不会声言LOCK#信号（总线锁），而是锁住这块内存区域的缓存并写回内存（缓存所），并使用<strong>缓存一致性</strong>来确保修改的原子性，缓存一致性：会阻止同时修改由两个以上处理器缓存的内存区域数据</p>
+<p>使用<strong>MESI控制协议</strong>维护内部缓存和其他处理器缓存的一致性，通过嗅探一个处理器来检测其他处理器打算写内存地址，而这个地址处于共享状态，那么正在嗅探的处理器将使它的缓存行无效，在下次访问相同内存地址时。强行进行缓存行填</p>
+<h3 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h3><p><strong>总线锁</strong></p>
+<p>使用处理器提供的LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求会被阻塞住，那么该处理器就能独占共享内存</p>
+<p><strong>缓存锁见上</strong></p>
+<h3 id="CPU-有多级缓存，导致读的数据过期"><a href="#CPU-有多级缓存，导致读的数据过期" class="headerlink" title="CPU 有多级缓存，导致读的数据过期"></a>CPU 有多级缓存，导致读的数据过期</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile3.png" alt></p>
+<p>线程间对于共享变量的<strong>可见性问题</strong>，并不是直接由多核引起的，而是由我们刚才讲到的这些 L3 缓存、L2 缓存、L1 缓存，也就是<strong>多级缓存</strong>引起的：每个核心在获取数据时，都会将数据从内存一层层往上读取，同样，后续对于数据的修改也是先写入到自己的 L1 缓存中，然后等待时机再逐层往下同步，直到最终刷回内存。</p>
+<p>假设 core 1 修改了变量 a 的值，并写入到了 core 1 的 L1 缓存里，但是还没来得及继续往下同步，由于 core 1 有它自己的的 L1 缓存，core 4 是无法直接读取 core 1 的 L1 缓存的值的，那么此时对于 core 4 而言，变量 a 的值就不是 core 1 修改后的最新的值，core 4 读取到的值可能是一个过期的值，从而引起多线程时可见性问题的发生。</p>
+<h3 id="JMM内存模型"><a href="#JMM内存模型" class="headerlink" title="JMM内存模型"></a>JMM内存模型</h3><p>JMM 定义了一套读写数据的规范，屏蔽了 L1 缓存、L2 缓存、L3 缓存，也就是多层缓存的这些底层细节。我们不再需要关心 L1 缓存、L2 缓存、L3 缓存等多层缓存的问题，我们只需要关心 JMM 抽象出来的主内存和工作内存的概念。</p>
+<p>线程之间的共享变量存储在主内存中，每个线程都有自己私有的本地内存，本地内存存储了该线程读/写共享变量的副本</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile4.png" alt></p>
+<h2 id="volatile两大功能"><a href="#volatile两大功能" class="headerlink" title="volatile两大功能"></a>volatile两大功能</h2><ul>
+<li>保证可见性</li>
+<li>禁止重排序</li>
+</ul>
+<p><strong>可见性依赖于happens-before原则</strong></p>
+<p>对一个 volatile 变量的写操作 happen-before 后面对该变量的读操作 ，happens-before原则是JMM呈现给程序员的视图，具体实现是通过禁止指令重排序实现的                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </p>
+<p><strong>禁止重排序则涉及重排序和内存屏障</strong></p>
+<p>重排序：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile1.png" alt></p>
+<p>  <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile2.png" alt>     </p>
+<p>禁止指令重排序是通过内存屏障实现的，JMM把内存屏障分为4类</p>
+<table>
+<thead>
+<tr>
+<th>屏障类型</th>
+<th>指令示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LoadLoad Barriers</td>
+<td>Load1;LoadLoad;Load2</td>
+<td>确保Load1数据的装载先于Load2及后序装载指令</td>
+</tr>
+<tr>
+<td>StoreStore Barriers</td>
+<td>Store1;StoreStore;Store2</td>
+<td>确保Store1数据对其他处理器可见（刷新到内存）先于Store2及后续存储指令</td>
+</tr>
+<tr>
+<td>LoadStore Barriers</td>
+<td>Load1;LoadStore;Store2</td>
+<td>确保Load1数据的装在先于Store2及后续存储指令</td>
+</tr>
+<tr>
+<td>StoreLoad Barriers</td>
+<td>Store1;StoreLoad;Load2</td>
+<td>确保Store1对其他处理器可见（刷新到主存）先于Load2及后续装在指令</td>
+</tr>
+</tbody></table>
+<p>为了实现volatile的内存语义，编译器在生成字节码时，会在指令序列中插入内存屏障类禁止特定类型的处理器重排序</p>
+<p>JMM保守策略下的内存屏障插入策略</p>
+<ul>
+<li>在每个volatile写操作前插入SS屏障</li>
+<li>在每个volatile写操作会插入SL屏障</li>
+<li>在每个volatile读操作后插入LL屏障</li>
+<li>在每个volatile读操作后插入LS屏障</li>
+</ul>
+<p>实际情况编译器可以省略不必要的屏障</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/22/synchronized-和-ReentrantLock/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2163,194 +2405,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/22/DNS解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/09/22/DNS解析/" class="post-title-link" itemprop="url">DNS解析</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-09-22 15:33:37" itemprop="dateCreated datePublished" datetime="2020-09-22T15:33:37+08:00">2020-09-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="域名服务器类型"><a href="#域名服务器类型" class="headerlink" title="域名服务器类型"></a>域名服务器类型</h2><ul>
-<li>根域名服务器：所有域名服务器都知道所有顶级域名服务器的域名和IP地址</li>
-<li>顶级域名服务器：这些域名服务器负责管理在该顶级域名服务器注册的所有二级域名</li>
-<li>权限域名服务器：负责一个区的域名服务器，当一个权限域名服务器还不能给出最后的查询回答时，就会告诉发出查询请求的DNS客户，下一步应当去找哪一个权限服务器</li>
-<li>本地域名服务器：当一个主机发出DNS查询请求时，这个查询请求就会发送到本地域名服务器。每一个互联网服务提供者ISP，或一个大学，甚至一个大学里的系，都可以拥有一个本地域名服务器。当所要查询的主机也属于同一个本地ISP时，该本地域名服务器就能立刻将查询的主机名转换成IP地址，而不需要再去询问其他域名服务器</li>
-</ul>
-<h2 id="域名解析过程"><a href="#域名解析过程" class="headerlink" title="域名解析过程"></a>域名解析过程</h2><h3 id="主机向本地域名服务器"><a href="#主机向本地域名服务器" class="headerlink" title="主机向本地域名服务器"></a>主机向本地域名服务器</h3><p>主机向本地域名服务器一般采用<strong>递归查询</strong>。所谓递归查询就是：如果主机所询问的本地域名服务器不知道要被查询的域名的IP地址，那么本地域名服务器会以DNS客户的身份向其他根域名服务器继续发出查询报文</p>
-<h3 id="本地域名服务器向根域名服务器"><a href="#本地域名服务器向根域名服务器" class="headerlink" title="本地域名服务器向根域名服务器"></a>本地域名服务器向根域名服务器</h3><p>本地域名服务器向根域名服务器的查询一般是<strong>迭代查询</strong>。迭代查询：当根域名服务器收到本地域名服务器发出的迭代查询请求报文时，要么给出IP，要么告诉本地域名服务器你下一步应该向哪个域名服务器查询。因为根域名服务器保存着<strong>顶级域名服务器</strong>的域名和IP地址，所以一般会让本地域名服务器去查询顶级域名服务器，还没查到的话顶级域名服务器再去权限域名服务器</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/1600762453040.jpg" alt></p>
-<h2 id="解析实例"><a href="#解析实例" class="headerlink" title="解析实例"></a>解析实例</h2><p>假定m.xyz.com的主机想知道另一台主机y.abc.com的IP地址</p>
-<ul>
-<li>主机m.xyz.com先向其本地域名服务器dns.xyz.com进行递归查询</li>
-<li>本地域名服务器采用迭代查询。它先向一个根域名服务器查询</li>
-<li>根域名服务器告诉本地域名服务器，下一次应查询的顶级域名服务器dns.com的IP地址</li>
-<li>本地域名服务i去向顶级域名服务器dns.com查询</li>
-<li>顶级域名服务器告诉本地域名服务器下一次应该查询的权限域名服务器dns.abc.com的IP地址</li>
-<li>本地域名服务器向权限域名服务器dns.abc.com进行查询</li>
-<li>权限域名服务器dns.abc.com告诉本地域名服务器，所查询的主机的IP地址</li>
-<li>本地域名服务器最后把查询结果告诉主机</li>
-</ul>
-<p>注意在查询过程中都是使用的<strong>UDP用户数据报</strong>的报文</p>
-<p>为了提高DNS查询效率，减轻根域名服务器的负荷和减少互联网上的DNS查询报文数量，在域名服务器中广泛使用了<strong>高速缓存</strong>。高速缓存用来存放最近查询过的域名以及从何处获得域名映射信息的记录。</p>
-<p>例如前面的例子，已经有用户查询过y.abc.com的IP，那么本地域名服务器就不必向根域名服务器重新查询，直接把高速缓存的结果给用户；又或者本地域名服务器没有y.abc.com的IP地址，保存着顶级域名服务器的地址dns.com，那么本地域名服务器可以不想根域名服务器请求，而是直接向com顶级域名服务器发送查询报文</p>
-<h2 id="为什么使用UDP"><a href="#为什么使用UDP" class="headerlink" title="为什么使用UDP"></a>为什么使用UDP</h2><p>客户端向DNS服务器查询域名，一般返回的内容都不超过512字节（udp报文最大512字节，tcp报文不止512字节），用UDP传输即可。不用经过TCP三次握手，这样DNS服务器负载更低，响应更快 </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2399,7 +2453,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

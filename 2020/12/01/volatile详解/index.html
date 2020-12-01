@@ -112,16 +112,23 @@
   </script>
 
 
-  <meta name="description" content="研狗一枚">
-<meta property="og:type" content="website">
-<meta property="og:title" content="万乔少女的梦QAQ">
-<meta property="og:url" content="http://yoursite.com/archives/2020/page/3/index.html">
+  <meta name="description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
+<meta name="keywords" content="多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="volatile详解">
+<meta property="og:url" content="http://yoursite.com/2020/12/01/volatile详解/index.html">
 <meta property="og:site_name" content="万乔少女的梦QAQ">
-<meta property="og:description" content="研狗一枚">
+<meta property="og:description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile3.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile4.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile1.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile2.png">
+<meta property="og:updated_time" content="2020-12-01T08:07:35.570Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="万乔少女的梦QAQ">
-<meta name="twitter:description" content="研狗一枚">
+<meta name="twitter:title" content="volatile详解">
+<meta name="twitter:description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile3.png">
 
 
 
@@ -129,7 +136,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/archives/2020/page/3/">
+  <link rel="canonical" href="http://yoursite.com/2020/12/01/volatile详解/">
 
 
 
@@ -139,7 +146,7 @@
   };
 </script>
 
-  <title>归档 | 万乔少女的梦QAQ</title>
+  <title>volatile详解 | 万乔少女的梦QAQ</title>
   
 
 
@@ -187,7 +194,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -293,7 +300,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -359,317 +366,321 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/01/volatile详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="万乔少女的梦QAQ">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
-         
+          <h1 class="post-title" itemprop="name headline">volatile详解
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
           
-        不错! 目前共计 63 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
+          
 
-        
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+              
+                
+              
 
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/06/01/redis主从复制/" itemprop="url">
+              <time title="创建时间：2020-12-01 16:06:45" itemprop="dateCreated datePublished" datetime="2020-12-01T16:06:45+08:00">2020-12-01</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/多线程/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
             
-              <span itemprop="name">redis主从复制</span>
             
-          </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-06-01T09:16:56+08:00" content="2020-06-01">
-          06-01
-        </time>
-      </div>
+          
+          
 
-    </header>
-  </article>
+          
 
+          
 
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/04/30/传输层/" itemprop="url">
-            
-              <span itemprop="name">传输层</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-30T13:56:34+08:00" content="2020-04-30">
-          04-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <h2 id="volatile原理"><a href="#volatile原理" class="headerlink" title="volatile原理"></a>volatile原理</h2><p> volatile关键字主要⽤于解决变量在多个线程之间的可⻅性 </p>
+<ul>
+<li>当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存</li>
+<li>当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量</li>
+</ul>
+<h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在cpu上执行，所以<strong>java的并发机制依赖于JVM的实现和CPU指令</strong></p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>java代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">instance=new Singleton()</span><br></pre></td></tr></table></figure>
 
-        
-        
+<p>转化成汇编代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x01a3deld:movb ...lock add1 ..</span><br></pre></td></tr></table></figure>
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/04/28/网络层/" itemprop="url">
-            
-              <span itemprop="name">网络层</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-28T12:58:28+08:00" content="2020-04-28">
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+<p>volatile修饰的共享变量在进行写操作时会多出一个<strong>lock前缀指令</strong>，这个指令有2个作用</p>
+<ul>
+<li>将当前处理器缓存行的数据写回到系统内存</li>
+<li>写回操作会使其他cpu缓存了该内存地址的数据无效</li>
+</ul>
+<p>为了提高处理速度，内存不会直接和cpu进行通信，而是先将系统内存读到内部缓存（L1,L2）,但操作完不知道何时写回内存；</p>
+<p>用volatile修饰的变量进行写操作，JVM会向处理器发送一条Lock前缀指令，进行<strong>缓存锁定</strong>：如果访问的内存区域已经缓存在处理器内部，则不会声言LOCK#信号（总线锁），而是锁住这块内存区域的缓存并写回内存（缓存所），并使用<strong>缓存一致性</strong>来确保修改的原子性，缓存一致性：会阻止同时修改由两个以上处理器缓存的内存区域数据</p>
+<p>使用<strong>MESI控制协议</strong>维护内部缓存和其他处理器缓存的一致性，通过嗅探一个处理器来检测其他处理器打算写内存地址，而这个地址处于共享状态，那么正在嗅探的处理器将使它的缓存行无效，在下次访问相同内存地址时。强行进行缓存行填</p>
+<h3 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h3><p><strong>总线锁</strong></p>
+<p>使用处理器提供的LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求会被阻塞住，那么该处理器就能独占共享内存</p>
+<p><strong>缓存锁见上</strong></p>
+<h3 id="CPU-有多级缓存，导致读的数据过期"><a href="#CPU-有多级缓存，导致读的数据过期" class="headerlink" title="CPU 有多级缓存，导致读的数据过期"></a>CPU 有多级缓存，导致读的数据过期</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile3.png" alt></p>
+<p>线程间对于共享变量的<strong>可见性问题</strong>，并不是直接由多核引起的，而是由我们刚才讲到的这些 L3 缓存、L2 缓存、L1 缓存，也就是<strong>多级缓存</strong>引起的：每个核心在获取数据时，都会将数据从内存一层层往上读取，同样，后续对于数据的修改也是先写入到自己的 L1 缓存中，然后等待时机再逐层往下同步，直到最终刷回内存。</p>
+<p>假设 core 1 修改了变量 a 的值，并写入到了 core 1 的 L1 缓存里，但是还没来得及继续往下同步，由于 core 1 有它自己的的 L1 缓存，core 4 是无法直接读取 core 1 的 L1 缓存的值的，那么此时对于 core 4 而言，变量 a 的值就不是 core 1 修改后的最新的值，core 4 读取到的值可能是一个过期的值，从而引起多线程时可见性问题的发生。</p>
+<h3 id="JMM内存模型"><a href="#JMM内存模型" class="headerlink" title="JMM内存模型"></a>JMM内存模型</h3><p>JMM 定义了一套读写数据的规范，屏蔽了 L1 缓存、L2 缓存、L3 缓存，也就是多层缓存的这些底层细节。我们不再需要关心 L1 缓存、L2 缓存、L3 缓存等多层缓存的问题，我们只需要关心 JMM 抽象出来的主内存和工作内存的概念。</p>
+<p>线程之间的共享变量存储在主内存中，每个线程都有自己私有的本地内存，本地内存存储了该线程读/写共享变量的副本</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile4.png" alt></p>
+<h2 id="volatile两大功能"><a href="#volatile两大功能" class="headerlink" title="volatile两大功能"></a>volatile两大功能</h2><ul>
+<li>保证可见性</li>
+<li>禁止重排序</li>
+</ul>
+<p><strong>可见性依赖于happens-before原则</strong></p>
+<p>对一个 volatile 变量的写操作 happen-before 后面对该变量的读操作 ，happens-before原则是JMM呈现给程序员的视图，具体实现是通过禁止指令重排序实现的                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </p>
+<p><strong>禁止重排序则涉及重排序和内存屏障</strong></p>
+<p>重排序：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile1.png" alt></p>
+<p>  <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile2.png" alt>     </p>
+<p>禁止指令重排序是通过内存屏障实现的，JMM把内存屏障分为4类</p>
+<table>
+<thead>
+<tr>
+<th>屏障类型</th>
+<th>指令示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LoadLoad Barriers</td>
+<td>Load1;LoadLoad;Load2</td>
+<td>确保Load1数据的装载先于Load2及后序装载指令</td>
+</tr>
+<tr>
+<td>StoreStore Barriers</td>
+<td>Store1;StoreStore;Store2</td>
+<td>确保Store1数据对其他处理器可见（刷新到内存）先于Store2及后续存储指令</td>
+</tr>
+<tr>
+<td>LoadStore Barriers</td>
+<td>Load1;LoadStore;Store2</td>
+<td>确保Load1数据的装在先于Store2及后续存储指令</td>
+</tr>
+<tr>
+<td>StoreLoad Barriers</td>
+<td>Store1;StoreLoad;Load2</td>
+<td>确保Store1对其他处理器可见（刷新到主存）先于Load2及后续装在指令</td>
+</tr>
+</tbody></table>
+<p>为了实现volatile的内存语义，编译器在生成字节码时，会在指令序列中插入内存屏障类禁止特定类型的处理器重排序</p>
+<p>JMM保守策略下的内存屏障插入策略</p>
+<ul>
+<li>在每个volatile写操作前插入SS屏障</li>
+<li>在每个volatile写操作会插入SL屏障</li>
+<li>在每个volatile读操作后插入LL屏障</li>
+<li>在每个volatile读操作后插入LS屏障</li>
+</ul>
+<p>实际情况编译器可以省略不必要的屏障</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/04/24/数据链路层/" itemprop="url">
-            
-              <span itemprop="name">数据链路层</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-24T16:24:23+08:00" content="2020-04-24">
-          04-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/04/09/import组件注册/" itemprop="url">
-            
-              <span itemprop="name">@import组件注册</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-09T10:40:02+08:00" content="2020-04-09">
-          04-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/04/08/springboot自动配置/" itemprop="url">
-            
-              <span itemprop="name">springboot自动配置</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-08T18:44:52+08:00" content="2020-04-08">
-          04-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2020/04/04/如何安全删除集合元素/" itemprop="url">
-            
-              <span itemprop="name">如何安全删除集合元素</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-04T13:32:48+08:00" content="2020-04-04">
-          04-04
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+<div>
+  
+    ﻿<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+    
+</div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div>求大佬赏饭.</div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/wechatpay.png" alt="spiderman 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/images/alipay.jpg" alt="spiderman 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/多线程/" rel="tag"># 多线程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/22/synchronized-和-ReentrantLock/" rel="next" title="synchronized 和 ReentrantLock">
+                <i class="fa fa-chevron-left"></i> synchronized 和 ReentrantLock
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2020/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/archives/2020/">1</a><a class="page-number" href="/archives/2020/page/2/">2</a><span class="page-number current">3</span>
-  </nav>
+  </article>
 
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -689,8 +700,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -909,6 +929,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile原理"><span class="nav-number">1.</span> <span class="nav-text">volatile原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编译过程"><span class="nav-number">1.1.</span> <span class="nav-text">编译过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">1.2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理器如何实现原子操作"><span class="nav-number">1.3.</span> <span class="nav-text">处理器如何实现原子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-有多级缓存，导致读的数据过期"><span class="nav-number">1.4.</span> <span class="nav-text">CPU 有多级缓存，导致读的数据过期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JMM内存模型"><span class="nav-number">1.5.</span> <span class="nav-text">JMM内存模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile两大功能"><span class="nav-number">2.</span> <span class="nav-text">volatile两大功能</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -1056,6 +1093,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
 
   <script src="/js/next-boot.js?v=7.2.0"></script>
 
@@ -1069,6 +1110,8 @@
 
   
 
+
+  
 
 
   
