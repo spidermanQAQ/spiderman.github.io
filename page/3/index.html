@@ -114,13 +114,13 @@
 
   <meta name="description" content="研狗一枚">
 <meta property="og:type" content="website">
-<meta property="og:title" content="万乔少女的梦QAQ">
+<meta property="og:title" content="XJH">
 <meta property="og:url" content="http://yoursite.com/page/3/index.html">
-<meta property="og:site_name" content="万乔少女的梦QAQ">
+<meta property="og:site_name" content="XJH">
 <meta property="og:description" content="研狗一枚">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="万乔少女的梦QAQ">
+<meta name="twitter:title" content="XJH">
 <meta name="twitter:description" content="研狗一枚">
 
 
@@ -139,7 +139,7 @@
   };
 </script>
 
-  <title>万乔少女的梦QAQ</title>
+  <title>XJH</title>
   
 
 
@@ -199,13 +199,13 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">万乔少女的梦QAQ</span>
+        <span class="site-title">XJH</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
     
       
-        <p class="site-subtitle">冲冲冲</p>
+        <p class="site-subtitle">欢迎来到我的博客</p>
       
     
     
@@ -380,6 +380,227 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/GC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/06/16/GC/" class="post-title-link" itemprop="url">GC</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-16 16:21:14" itemprop="dateCreated datePublished" datetime="2020-06-16T16:21:14+08:00">2020-06-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="GC看这篇就够了"><a href="#GC看这篇就够了" class="headerlink" title="GC看这篇就够了"></a>GC看这篇就够了</h2><h3 id="什么是垃圾"><a href="#什么是垃圾" class="headerlink" title="什么是垃圾"></a>什么是垃圾</h3><p>不再被使用的对象就是垃圾</p>
+<h3 id="怎么定位垃圾"><a href="#怎么定位垃圾" class="headerlink" title="怎么定位垃圾"></a>怎么定位垃圾</h3><ul>
+<li><p>引用计数算法（reference counting）</p>
+<p>可对象增加一个引用计数器，每有一个地方引用它时，计数加1，引用失效就减一，归零就代表这个对象不被使用，作为垃圾清除</p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc1.png" alt></p>
+<p><strong>但是这种方式存在问题</strong>，解决不了循环依赖的情况。比如说a，b相互引用对方，而实际上两个对象都已经不再被使用了，但此时计数器依然为1，这样就无法垃圾收集器收集了</p>
+</li>
+<li><p>可达性分析</p>
+<p>通过一系列GC Roots做为起点，从这些节点往下搜索，搜索走过的路径称为引用链，如果一个对象到GC Roots没有引用链则是垃圾</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc2.jpg" alt></p>
+</li>
+</ul>
+<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="标记-清除"><a href="#标记-清除" class="headerlink" title="标记-清除"></a>标记-清除</h4><p>先标记需要回收的对象，然后进行清除</p>
+<p>问题：会造成内存碎片</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc3.png" alt></p>
+<h4 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h4><p>将内存一分为二，每次只使用一半，当这一块使用完，将其中存活者的对象复制到另一块中去，然后把使用的内存空间进行清理。也就是每次只清理整个半区（实际情况不是对半分，后面再说）</p>
+<p>优点：避免了碎片</p>
+<p>缺点：每次只使用一半内存</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc4.png" alt></p>
+<h4 id="标记-整理"><a href="#标记-整理" class="headerlink" title="标记-整理"></a>标记-整理</h4><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc5.png" alt></p>
+<p>标记还是一样，只是不直接对垃圾（可回收对象）进行回收，而是先整理，将存活对象移到一端，将端边界以外的内存进行清理</p>
+<h3 id="堆内存逻辑分区"><a href="#堆内存逻辑分区" class="headerlink" title="堆内存逻辑分区"></a>堆内存逻辑分区</h3><p>堆内存逻辑上分为新生代和老年代。新生代使用复制算法，老年代使用标记整理算法。</p>
+<p>新生代又分为eden和survivor，每次使用eden和一个survivor，回收时将eden和survivor中存活的对象复制到另一个survivor中去，一个eden和一个survivor的比例为8：1，这样就只会有10%的内存被浪费</p>
+<p>经过多次回收还存活的对象会进入到老年中去</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc6.png" alt></p>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p>垃圾收集包括有Serial，ParNew，Parallel Scavenge，CMS等，通常组合使用，常用组合如下</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc7.png" alt></p>
+<h4 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h4><p>Serial收集器是一个单线程收集器，需要STW（stop the world），在进行垃圾回收的时候需要停掉正常工作的线程</p>
+<p>新生代叫做Serial（使用复制算法），回收老年代时叫做<strong>Serial Old</strong>（使用标记整理算法）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc8.jpg" alt></p>
+<h4 id="ParNew（和CMS组合）"><a href="#ParNew（和CMS组合）" class="headerlink" title="ParNew（和CMS组合）"></a>ParNew（和CMS组合）</h4><p>ParNew就是Serial收集器的多线程版本，多个线程进行垃圾回收</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc9.jpg" alt></p>
+<h4 id="Parallel-Scanvenge-Parallel-Old（jdk默认的哦）"><a href="#Parallel-Scanvenge-Parallel-Old（jdk默认的哦）" class="headerlink" title="Parallel Scanvenge+Parallel Old（jdk默认的哦）"></a>Parallel Scanvenge+Parallel Old（jdk默认的哦）</h4><p>同样需要stop the world，卡顿时间长，和ParNew差不多，看下面的-XX:+UseParallelGC</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png" alt></p>
+<h4 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h4><p>前面的都需要STW，卡顿时间较长，CMS的目标就是最短回收停顿时间</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc11.jpg" alt></p>
+<p>运行过程包括4个阶段</p>
+<ul>
+<li><p>初始标记</p>
+<p>这阶段标记的是GC roots后的第一个节点（没有标记全部），所以时间不长</p>
+</li>
+<li><p>并发标记</p>
+<p>之前只标记了最接近GC Roots的结点，这个阶段沿着引用链标记其他的结点，不过是和其他工作线程一起进行的（之所以CMS卡顿时间短就在于并发标记，原来并发标记这一部分和初始标记一起的，卡顿时间就长，现在和其他线程一起进行，所以时间大大减少）</p>
+</li>
+<li><p>重新标记</p>
+<p>并发标记时工作线程还是在运行的，还会产生垃圾或者引用的改变，所以需要重新标记。不过之前大部分垃圾已经找到了，重新标记的垃圾并不多，所以浪费的时间也不长</p>
+</li>
+<li><p>并发清除</p>
+<p>清理垃圾，和其他工线程一起进行，也正因为其他工作线程还在干活，所以会产生<strong>浮动垃圾</strong></p>
+</li>
+</ul>
+<p>CMS也存在问题</p>
+<ul>
+<li>浮动垃圾，并发清理时会出现新的垃圾，只能下次回收</li>
+<li>内存碎片化：CMS采用的是Mark-Sweep，这个算法上面讲了会产生很多的内存碎片，当碎片很多以至于从新生代来到老年代的存活对象都没放时，会进行Serial Old，即使用<strong>标记整理</strong>（Mark-Compact）来整理这些碎片，由于Serial Old是需要STW的，此时会非常卡</li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc10.png" alt></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/redis主从复制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -389,7 +610,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -612,7 +833,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -877,7 +1098,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -1108,7 +1329,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -1333,7 +1554,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -1524,7 +1745,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -1712,7 +1933,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -1895,7 +2116,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -2096,7 +2317,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
+      <meta itemprop="name" content="XJH">
     </span>
 
     
@@ -2260,215 +2481,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/17/序列化流/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="万乔少女的梦QAQ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/17/序列化流/" class="post-title-link" itemprop="url">序列化流</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-17 15:32:57" itemprop="dateCreated datePublished" datetime="2019-11-17T15:32:57+08:00">2019-11-17</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Java 提供了一种对象<strong>序列化</strong>的机制。用一个字节序列可以表示一个<strong>对象</strong>，该字节序列包含该<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的属性</code>等信息。字节序列写出到文件之后，相当于文件中<strong>持久保存</strong>了一个对象的信息。 </p>
-<p>反之，该字节序列还可以从文件中读取回来，重构对象，对它进行<strong>反序列化</strong>。<code>对象的数据</code>、<code>对象的类型</code>和<code>对象中存储的数据</code>信息，都可以用来在内存中创建对象。看图理解序列化： <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/3_xuliehua.jpg" alt></p>
-<h2 id="ObjectOutputStream类"><a href="#ObjectOutputStream类" class="headerlink" title="ObjectOutputStream类"></a>ObjectOutputStream类</h2><p><code>java.io.ObjectOutputStream</code> 类，将Java对象的原始数据类型写出到文件,实现对象的持久存储。</p>
-<h3 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
-<li><code>public ObjectOutputStream(OutputStream out)</code>： 创建一个指定OutputStream的ObjectOutputStream。</li>
-</ul>
-<p>构造举例，代码如下：  </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fileOut = <span class="keyword">new</span> FileOutputStream(<span class="string">"employee.txt"</span>);</span><br><span class="line">ObjectOutputStream out = <span class="keyword">new</span> ObjectOutputStream(fileOut);</span><br></pre></td></tr></table></figure>
-
-<h3 id="序列化操作"><a href="#序列化操作" class="headerlink" title="序列化操作"></a>序列化操作</h3><ol>
-<li>一个对象要想序列化，必须满足两个条件:</li>
-</ol>
-<ul>
-<li>该类必须实现<code>java.io.Serializable</code> 接口，<code>Serializable</code> 是一个标记接口，不实现此接口的类将不会使任何状态序列化或反序列化，会抛出<code>NotSerializableException</code> 。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Person&#123;"</span> +</span><br><span class="line">                <span class="string">"name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", age="</span> + age +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>2.写出对象方法</p>
-<ul>
-<li><code>public final void writeObject (Object obj)</code> : 将指定的对象写出。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xuliehua1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Person person=<span class="keyword">new</span> Person(<span class="string">"小李"</span>,<span class="number">18</span>);</span><br><span class="line">        ObjectOutputStream objectOutputStream=<span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"F:\\test\\test1\\a.txt"</span>));</span><br><span class="line">        objectOutputStream.writeObject(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="ObjectInputStream类"><a href="#ObjectInputStream类" class="headerlink" title="ObjectInputStream类"></a>ObjectInputStream类</h2><p>ObjectInputStream反序列化流，将之前使用ObjectOutputStream序列化的原始数据恢复为对象。 </p>
-<h3 id="构造方法-1"><a href="#构造方法-1" class="headerlink" title="构造方法"></a>构造方法</h3><ul>
-<li><code>public ObjectInputStream(InputStream in)</code>： 创建一个指定InputStream的ObjectInputStream。</li>
-</ul>
-<p>如果能找到一个对象的class文件，我们可以进行反序列化操作，调用<code>ObjectInputStream</code>读取对象的方法：</p>
-<ul>
-<li><code>public final Object readObject ()</code> : 读取一个对象。</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xuliehua2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">         ObjectInputStream objectInputStream=<span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"F:\\test\\test1\\a.txt"</span>));</span><br><span class="line">         Object o=objectInputStream.readObject();</span><br><span class="line">         System.out.println(o);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>对于JVM可以反序列化对象，它必须是能够找到class文件的类。如果找不到该类的class文件，则抛出一个 <code>ClassNotFoundException</code> 异常。</strong>  </p>
-<h2 id="transient关键字"><a href="#transient关键字" class="headerlink" title="transient关键字"></a>transient关键字</h2><p>transient关键字叫瞬态关键字，被该关键字修饰的变量无法被序列化</p>
-<h2 id="SerialVersionUID"><a href="#SerialVersionUID" class="headerlink" title="SerialVersionUID"></a>SerialVersionUID</h2><p><strong>另外，当JVM反序列化对象时，能找到class文件，但是class文件在序列化对象之后发生了修改，那么反序列化操作也会失败，抛出一个<code>InvalidClassException</code>异常。</strong>发生这个异常的原因如下：</p>
-<ul>
-<li>该类的序列版本号与从流中读取的类描述符的版本号不匹配 </li>
-<li>该类包含未知数据类型 </li>
-<li>该类没有可访问的无参数构造方法 </li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%BA%8F%E5%88%97%E5%8C%96%E6%B5%812.png" alt></p>
-<p><code>Serializable</code> 接口给需要序列化的类，提供了一个序列版本号。<code>serialVersionUID</code> 该版本号的目的在于验证序列化的对象和对应类是否版本匹配。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Employee</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line">     <span class="comment">// 手动加入序列版本号，声明为常量</span></span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;</span><br><span class="line">     <span class="keyword">public</span> String name;</span><br><span class="line">     <span class="keyword">public</span> String address;</span><br><span class="line">     <span class="comment">// 添加新的属性 ,重新编译, 可以反序列化,该属性赋为默认值.</span></span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">int</span> eid; </span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addressCheck</span><span class="params">()</span> </span>&#123;</span><br><span class="line">         System.out.println(<span class="string">"Address  check : "</span> + name + <span class="string">" -- "</span> + address);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2517,7 +2529,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">63</span>
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
