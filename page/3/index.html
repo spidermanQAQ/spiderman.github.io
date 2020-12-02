@@ -440,7 +440,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
 
                 
                 
@@ -493,6 +493,11 @@
 <p>通过一系列GC Roots做为起点，从这些节点往下搜索，搜索走过的路径称为引用链，如果一个对象到GC Roots没有引用链则是垃圾</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc2.jpg" alt></p>
 </li>
+</ul>
+<h3 id="哪些可以作为GC-Roots"><a href="#哪些可以作为GC-Roots" class="headerlink" title="哪些可以作为GC Roots"></a>哪些可以作为GC Roots</h3><ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中的静态变量引用的对象</li>
+<li>方法区中常量引用的对象</li>
 </ul>
 <h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="标记-清除"><a href="#标记-清除" class="headerlink" title="标记-清除"></a>标记-清除</h4><p>先标记需要回收的对象，然后进行清除</p>
 <p>问题：会造成内存碎片</p>

@@ -113,7 +113,7 @@
 
 
   <meta name="description" content="GC看这篇就够了什么是垃圾不再被使用的对象就是垃圾 怎么定位垃圾 引用计数算法（reference counting） 可对象增加一个引用计数器，每有一个地方引用它时，计数加1，引用失效就减一，归零就代表这个对象不被使用，作为垃圾清除   但是这种方式存在问题，解决不了循环依赖的情况。比如说a，b相互引用对方，而实际上两个对象都已经不再被使用了，但此时计数器依然为1，这样就无法垃圾收集器收集了">
-<meta name="keywords" content="jvm">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GC">
 <meta property="og:url" content="http://yoursite.com/2020/06/16/GC/index.html">
@@ -132,7 +132,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc11.jpg">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc10.png">
-<meta property="og:updated_time" content="2020-12-02T07:10:12.155Z">
+<meta property="og:updated_time" content="2020-12-02T07:55:35.034Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GC">
 <meta name="twitter:description" content="GC看这篇就够了什么是垃圾不再被使用的对象就是垃圾 怎么定位垃圾 引用计数算法（reference counting） 可对象增加一个引用计数器，每有一个地方引用它时，计数加1，引用失效就减一，归零就代表这个对象不被使用，作为垃圾清除   但是这种方式存在问题，解决不了循环依赖的情况。比如说a，b相互引用对方，而实际上两个对象都已经不再被使用了，但此时计数器依然为1，这样就无法垃圾收集器收集了">
@@ -452,7 +452,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/jvm/" itemprop="url" rel="index"><span itemprop="name">jvm</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
 
                 
                 
@@ -503,6 +503,11 @@
 <p>通过一系列GC Roots做为起点，从这些节点往下搜索，搜索走过的路径称为引用链，如果一个对象到GC Roots没有引用链则是垃圾</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/gc2.jpg" alt></p>
 </li>
+</ul>
+<h3 id="哪些可以作为GC-Roots"><a href="#哪些可以作为GC-Roots" class="headerlink" title="哪些可以作为GC Roots"></a>哪些可以作为GC Roots</h3><ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中的静态变量引用的对象</li>
+<li>方法区中常量引用的对象</li>
 </ul>
 <h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="标记-清除"><a href="#标记-清除" class="headerlink" title="标记-清除"></a>标记-清除</h4><p>先标记需要回收的对象，然后进行清除</p>
 <p>问题：会造成内存碎片</p>
@@ -622,7 +627,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/jvm/" rel="tag"># jvm</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -930,7 +935,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GC看这篇就够了"><span class="nav-number">1.</span> <span class="nav-text">GC看这篇就够了</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是垃圾"><span class="nav-number">1.1.</span> <span class="nav-text">什么是垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么定位垃圾"><span class="nav-number">1.2.</span> <span class="nav-text">怎么定位垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收算法"><span class="nav-number">1.3.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记-清除"><span class="nav-number">1.3.1.</span> <span class="nav-text">标记-清除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复制"><span class="nav-number">1.3.2.</span> <span class="nav-text">复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标记-整理"><span class="nav-number">1.3.3.</span> <span class="nav-text">标记-整理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆内存逻辑分区"><span class="nav-number">1.4.</span> <span class="nav-text">堆内存逻辑分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">1.5.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial"><span class="nav-number">1.5.1.</span> <span class="nav-text">Serial</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ParNew（和CMS组合）"><span class="nav-number">1.5.2.</span> <span class="nav-text">ParNew（和CMS组合）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Scanvenge-Parallel-Old（jdk默认的哦）"><span class="nav-number">1.5.3.</span> <span class="nav-text">Parallel Scanvenge+Parallel Old（jdk默认的哦）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMS"><span class="nav-number">1.5.4.</span> <span class="nav-text">CMS</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GC看这篇就够了"><span class="nav-number">1.</span> <span class="nav-text">GC看这篇就够了</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是垃圾"><span class="nav-number">1.1.</span> <span class="nav-text">什么是垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#怎么定位垃圾"><span class="nav-number">1.2.</span> <span class="nav-text">怎么定位垃圾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哪些可以作为GC-Roots"><span class="nav-number">1.3.</span> <span class="nav-text">哪些可以作为GC Roots</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收算法"><span class="nav-number">1.4.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记-清除"><span class="nav-number">1.4.1.</span> <span class="nav-text">标记-清除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复制"><span class="nav-number">1.4.2.</span> <span class="nav-text">复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标记-整理"><span class="nav-number">1.4.3.</span> <span class="nav-text">标记-整理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆内存逻辑分区"><span class="nav-number">1.5.</span> <span class="nav-text">堆内存逻辑分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">1.6.</span> <span class="nav-text">垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial"><span class="nav-number">1.6.1.</span> <span class="nav-text">Serial</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ParNew（和CMS组合）"><span class="nav-number">1.6.2.</span> <span class="nav-text">ParNew（和CMS组合）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Scanvenge-Parallel-Old（jdk默认的哦）"><span class="nav-number">1.6.3.</span> <span class="nav-text">Parallel Scanvenge+Parallel Old（jdk默认的哦）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMS"><span class="nav-number">1.6.4.</span> <span class="nav-text">CMS</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
