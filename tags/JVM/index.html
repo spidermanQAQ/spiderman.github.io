@@ -115,7 +115,7 @@
   <meta name="description" content="研狗一枚">
 <meta property="og:type" content="website">
 <meta property="og:title" content="XJH">
-<meta property="og:url" content="http://yoursite.com/tags/jvm/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/JVM/index.html">
 <meta property="og:site_name" content="XJH">
 <meta property="og:description" content="研狗一枚">
 <meta property="og:locale" content="zh-CN">
@@ -129,7 +129,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/tags/jvm/">
+  <link rel="canonical" href="http://yoursite.com/tags/JVM/">
 
 
 
@@ -139,7 +139,7 @@
   };
 </script>
 
-  <title>标签: jvm | XJH</title>
+  <title>标签: JVM | XJH</title>
   
 
 
@@ -392,7 +392,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>jvm<small>标签</small>
+        <h1>JVM<small>标签</small>
         </h1>
       </div>
 
@@ -404,17 +404,43 @@
 
       <h2 class="post-title">
         
-          <a class="post-title-link" href="/2020/10/12/强软弱虚四种引用/" itemprop="url">
+          <a class="post-title-link" href="/2020/09/09/新生代为啥要分三块区域/" itemprop="url">
             
-              <span itemprop="name">强软弱虚四种引用</span>
+              <span itemprop="name">新生代为啥要分三块区域</span>
             
           </a>
         
       </h2>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-10-12T20:36:06+08:00" content="2020-10-12">
-          10-12
+        <time class="post-time" itemprop="dateCreated" datetime="2020-09-09T16:50:20+08:00" content="2020-09-09">
+          09-09
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+          <a class="post-title-link" href="/2020/06/16/对象内存/" itemprop="url">
+            
+              <span itemprop="name">对象内存</span>
+            
+          </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2020-06-16T16:21:48+08:00" content="2020-06-16">
+          06-16
         </time>
       </div>
 
@@ -1120,86 +1146,6 @@
           } else {
             $('.search-icon').click(inputEventFunction);
             input.addEventListener('keypress', function (event) {
-              if (event.keyCode === 13) {
-                inputEventFunction();
-              }
-            });
-          }
-
-          // remove loading animation
-          $(".local-search-pop-overlay").remove();
-          $('body').css('overflow', '');
-
-          proceedsearch();
-        }
-      });
-    }
-
-    // handle and trigger popup window;
-    $('.popup-trigger').click(function(e) {
-      e.stopPropagation();
-      if (isfetched === false) {
-        searchFunc(path, 'local-search-input', 'local-search-result');
-      } else {
-        proceedsearch();
-      };
-    });
-
-    $('.popup-btn-close').click(onPopupClose);
-    $('.popup').click(function(e){
-      e.stopPropagation();
-    });
-    $(document).on('keyup', function (event) {
-      var shouldDismissSearchPopup = event.which === 27 &&
-        $('.search-popup').is(':visible');
-      if (shouldDismissSearchPopup) {
-        onPopupClose();
-      }
-    });
-  </script>
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-  
-
-<div class="bg_content">
-  <canvas id="canvas"></canvas>
-</div>
-
-</body>
-</html>
-
-<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
- ut.addEventListener('keypress', function (event) {
               if (event.keyCode === 13) {
                 inputEventFunction();
               }
