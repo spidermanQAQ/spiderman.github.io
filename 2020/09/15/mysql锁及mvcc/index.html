@@ -122,7 +122,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%811.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/mysql%E9%94%812.png">
-<meta property="og:updated_time" content="2020-10-14T04:26:51.208Z">
+<meta property="og:updated_time" content="2020-12-07T12:37:01.919Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql锁及mvcc">
 <meta name="twitter:description" content="锁的分类 无锁 12# 明确指定主键，但不存在该主键的值(没有数据，当然不会有锁)SELECT * FROM products WHERE id=-1 FOR UPDATE;  表锁 1234# 主键不明确SELECT * FROM products WHERE name=&apos;Mouse&apos; FOR UPDATE;SELECT * FROM products WHERE id&amp;lt;&amp;gt;&apos;3&apos; F">
@@ -503,26 +503,36 @@
 <li><p>间隙锁：对于键值在条件范围内但并<strong>不存在</strong>的记录，叫做” 间隙（GAP) “，InnoDB会对这个“间隙”加锁，这种锁机制就是所谓的” Gap Lock “(间隙锁)；</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#products表内并没有id=10，假如有一个9，会将9之后的锁住</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&gt;<span class="string">'10'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>（行&amp;间隙） 对于<strong>存在于不存在</strong>的数据同时加锁，则称为” Next-Key Lock “ </p>
+<li><p>（行&amp;间隙） 对于<strong>存在与不存在</strong>的数据同时加锁，则称为” Next-Key Lock “ </p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#假设有一个id=7，7就是存在的，(5,7),(7,10)不存在，7存在</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="keyword">id</span>&gt;<span class="string">'5'</span> <span class="keyword">and</span> <span class="keyword">id</span>&lt;<span class="string">'10'</span> <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<h2 id="行表锁具体应用"><a href="#行表锁具体应用" class="headerlink" title="行表锁具体应用"></a>行表锁具体应用</h2><p>共享锁&amp;排他锁</p>
-<p><strong>行锁和表锁是锁粒度的概念，共享锁和排它锁是他们的具体实现</strong> </p>
-<p>共享锁：读锁</p>
-<p>只能读，不能写</p>
-<p>表锁：写锁</p>
-<p>连读都不行</p>
-<h2 id="表锁算法"><a href="#表锁算法" class="headerlink" title="表锁算法"></a>表锁算法</h2><p>意向锁</p>
+<h2 id="表锁算法"><a href="#表锁算法" class="headerlink" title="表锁算法"></a>表锁算法</h2><p><strong>意向锁</strong></p>
+<p>意向锁在行锁之前添加，它的存在代表了行锁的存在，所以在添加表级排他锁时，不需要遍历每行就可以知道有没有行锁了</p>
+<p><strong>question</strong></p>
 <ul>
-<li>当一个事务在需要获取资源的锁定时，如果该资源已经被排他锁占用，则数据库会自动给该事务申请一个该表的意向锁  </li>
+<li><p><strong>事务</strong>A锁住了表中的<strong>一行</strong>，让这一行只能读，不能写。</p>
+</li>
+<li><p>之后，事务B申请<strong>整个表</strong>的写锁。</p>
+</li>
 </ul>
-<p>详细看这篇博客</p>
-<p>自增锁</p>
+<p>如果事务B申请成功，那么理论上它就能修改表中的任意一行，这与A持有的行锁是冲突的。</p>
+<p>数据库需要避免这种冲突，就是说要让B的申请被阻塞，直到A释放了行锁。</p>
+<p>数据库要怎么判断这个冲突呢？</p>
+<p>step1：判断表是否已被其他事务用表锁锁表<br>step2：判断表中的每一行是否已被行锁锁住。</p>
+<p>注意step2，这样的判断方法效率实在不高，因为需要遍历整个表。<br>于是就有了意向锁。</p>
+<p>在意向锁存在的情况下，事务A必须先申请表的意向共享锁，成功后再申请一行的行锁。</p>
+<p>在意向锁存在的情况下，上面的判断可以改成</p>
+<p>step1：不变<br>step2：发现表上有意向共享锁，说明表中有些行被共享行锁锁住了，因此，事务B申请表的写锁会被阻塞。<br>注意：申请意向锁的动作是数据库完成的，就是说，事务A申请一行的行锁的时候，数据库会自动先开始申请表的意向锁，不需要我们程序员使用代码来申请</p>
+<p><strong>自增锁</strong></p>
 <ul>
 <li>事务插入自增类型的列时获取自增锁 </li>
 </ul>
+<h2 id="行表锁具体应用"><a href="#行表锁具体应用" class="headerlink" title="行表锁具体应用"></a>行表锁具体应用</h2><p>共享锁&amp;排他锁</p>
+<p><strong>行锁和表锁是锁粒度的概念，共享锁和排它锁是他们的具体实现</strong> </p>
+<p>共享锁  允许一个事务去读，但不允许其他事务获取该行的排他锁  lock in share mode</p>
+<p>排他锁  允许持有排他锁的事务进行读写，不允许其他事务获取排他锁和共享锁  for update</p>
 <h2 id="锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><a href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果" class="headerlink" title="锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"></a>锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</h2><ul>
 <li><p><strong>读未提交</strong>(Read Uncommitted) ： 此时select语句不加任何锁。此时并发最高，但会产生<strong>脏读</strong> </p>
 <p><strong>脏读</strong>：读取到尚未提交的数据</p>
@@ -541,14 +551,13 @@
 <li><p><strong>串行化</strong>(Serializable) : 此时所有select语句都会被<strong>隐式加锁</strong>：select … in share mode. </p>
 </li>
 </ul>
-<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>MVCC多版本并发控制，是现代数据库（包括 <code>MySQL</code>、<code>Oracle</code>、<code>PostgreSQL</code> 等）引擎实现中常用的处理<strong>读写冲突</strong>的手段 </p>
-<p>可以认为MVCC是行级锁的一个变种，但是它在很多情况下避免了加锁操作，因此开销更低。大多数的MVCC都实现了<strong>非阻塞的读操作，写操作也只锁定必要的行</strong> </p>
+<h2 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h2><p>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制，在读操作时不用阻塞写操作，写操作时不用阻塞读操作;同时还能解决脏读，幻读，不可重复读的问题</p>
 <p><strong>对数据库的任何修改的提交都不会直接覆盖之前的数据，而是产生一个新的版本与老版本共存，使得读取时可以完全不加锁</strong>。这样读某一个数据时，事务可以根据隔离级别选择要读取哪个版本的数据。过程中完全不需要加锁。<br>这样，实现两个隔离级别就非常容易： </p>
 <ul>
 <li>Read Committed - 一个事务读取数据时总是读这个数据最近一次被commit的版本 </li>
 <li>Repeatable Read - 一个事务读取数据时总是读取当前事务开始之前最后一次被commit的版本 </li>
 </ul>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>对于使用<code>InnoDB</code>存储引擎的表来说，它的聚簇索引记录中都包含两个必要的隐藏列 </p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>对于使用<code>InnoDB</code>存储引擎的表来说，每条记录中都包含两个必要的隐藏列 </p>
 <ul>
 <li><p>trx_id ：事务ID</p>
 </li>
@@ -817,7 +826,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1025,7 +1034,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的分类"><span class="nav-number">1.</span> <span class="nav-text">锁的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行锁算法（机制）"><span class="nav-number">2.</span> <span class="nav-text">行锁算法（机制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行表锁具体应用"><span class="nav-number">3.</span> <span class="nav-text">行表锁具体应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表锁算法"><span class="nav-number">4.</span> <span class="nav-text">表锁算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><span class="nav-number">5.</span> <span class="nav-text">锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC"><span class="nav-number">6.</span> <span class="nav-text">MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">6.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3个概念"><span class="nav-number">6.1.1.</span> <span class="nav-text">3个概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReadView是如何工作的？"><span class="nav-number">6.1.2.</span> <span class="nav-text">ReadView是如何工作的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC情况下"><span class="nav-number">6.1.3.</span> <span class="nav-text">RC情况下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RR情况下（-在第一次读取数据时生成一个ReadView-）"><span class="nav-number">6.1.4.</span> <span class="nav-text">RR情况下（ 在第一次读取数据时生成一个ReadView ）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">7.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#锁的分类"><span class="nav-number">1.</span> <span class="nav-text">锁的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行锁算法（机制）"><span class="nav-number">2.</span> <span class="nav-text">行锁算法（机制）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表锁算法"><span class="nav-number">3.</span> <span class="nav-text">表锁算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行表锁具体应用"><span class="nav-number">4.</span> <span class="nav-text">行表锁具体应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果"><span class="nav-number">5.</span> <span class="nav-text">锁（搭配MVCC）在4种隔离级别下的运作-怎么实现隔离效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVCC"><span class="nav-number">6.</span> <span class="nav-text">MVCC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">6.1.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3个概念"><span class="nav-number">6.1.1.</span> <span class="nav-text">3个概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReadView是如何工作的？"><span class="nav-number">6.1.2.</span> <span class="nav-text">ReadView是如何工作的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC情况下"><span class="nav-number">6.1.3.</span> <span class="nav-text">RC情况下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RR情况下（-在第一次读取数据时生成一个ReadView-）"><span class="nav-number">6.1.4.</span> <span class="nav-text">RR情况下（ 在第一次读取数据时生成一个ReadView ）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">7.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>

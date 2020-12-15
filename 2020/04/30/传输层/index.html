@@ -131,7 +131,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%829.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8210.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%8211.png">
-<meta property="og:updated_time" content="2020-11-19T08:28:44.108Z">
+<meta property="og:updated_time" content="2020-12-12T14:26:31.873Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="传输层">
 <meta name="twitter:description" content="UDP协议传输层有两个协议：大哥TCP，二哥UDP，大哥可靠，二哥不可靠 UDP主要特点：  无连接，减少发送数据前的时延 使用最大努力交付，不可靠 面向报文，适合一次传送少量数据的应用 无拥塞控制，适合实时应用，如网络开会   TCP协议TCP连接 每一条TCP连接有两个端点，而这个端点叫做套接字。将端口号拼接到IP地址后面构成了套接字，例如192.3.4.5：80 每一个TCP连接唯一地被通信">
@@ -538,7 +538,8 @@
 <h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
 <p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
 <h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
-<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>TCP默认使用累计重传</p>
+<p>序号是一个报文段第一个字节的序号，序号可以保证数据有序提交给应用层，序号也是确认重传的基础</p>
+<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>在正常传输时，如果报文段按序完整到达，接收方会返回确认（累计确认）来指导发送方接下来该发送哪个报文段；如果传输工程中出现了什么问题，该确认也能指示发送方重传哪个报文段</p>
 <p>这里123到达TCP缓存后，456因为网络问题尚未到达，78也已经到达，此时接收端的报文段首部确认号字段依然为4</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png" alt></p>
 <h3 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h3><p>超时重传</p>
@@ -761,7 +762,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -380,6 +380,622 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/23/单例模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/07/23/单例模式/" class="post-title-link" itemprop="url">单例模式</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-23 21:07:39" itemprop="dateCreated datePublished" datetime="2020-07-23T21:07:39+08:00">2020-07-23</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/单例模式/" itemprop="url" rel="index"><span itemprop="name">单例模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="单例模式概念"><a href="#单例模式概念" class="headerlink" title="单例模式概念"></a>单例模式概念</h2><p>单例模式即一个类负责创建自己的对象，且确保是单个对象，并且该类提供访问自己唯一对象的方法，可以直接访问，不需要实例化</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>数据库连接对象connection，每次建立连接都创建一个对象，消耗太大（可以复用的对象为毛还要每次创建销毁呢），所以我们可以把这个对象设计成单例，只需创建一次并且可以重复使用不就行了</p>
+<h2 id="单例模式三大目标"><a href="#单例模式三大目标" class="headerlink" title="单例模式三大目标"></a>单例模式三大目标</h2><ul>
+<li>懒加载：程序创建时不需要创建对象，等用到时在创建</li>
+<li>线程安全</li>
+<li></li>
+</ul>
+<h2 id="单例模式代码演化"><a href="#单例模式代码演化" class="headerlink" title="单例模式代码演化"></a>单例模式代码演化</h2><h3 id="one"><a href="#one" class="headerlink" title="one"></a>one</h3><p>这种情况下线程不安全</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton1</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton1 singleton1;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton1 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            singleton1 =<span class="keyword">new</span> Singleton1();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="two"><a href="#two" class="headerlink" title="two"></a>two</h3><p>锁方法造成效率低下，每次拿对象都得获取锁，我们只需要在构建对象时加锁即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton2</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton2 singleton2;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton2 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            singleton2 =<span class="keyword">new</span> Singleton2();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="three"><a href="#three" class="headerlink" title="three"></a>three</h3><p>这里在构建对象时加锁，但还是存在问题，例如A,B两个线程都执行完1步，此时假设A线程获取锁，创建了对象，结束；然后B线程此时因为已经执行完1，也会获得锁，创建对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span>   Singleton3 singleton3;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton3</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Singleton3 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(singleton3==<span class="keyword">null</span>)&#123;<span class="comment">//1</span></span><br><span class="line">        <span class="keyword">synchronized</span> (Singleton3.class)&#123;<span class="comment">//2</span></span><br><span class="line">            singleton3=<span class="keyword">new</span> Singleton3();<span class="comment">//3</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> singleton3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="four"><a href="#four" class="headerlink" title="four"></a>four</h3><p>双校验锁，在获得锁之后再加一次判断，当然这种方式也会有问题，但已经不错了。问题在于：singleton5=new Singleton5()这一句代表包括3步，分配内存，初始化对象，对象指向内存空间；此时可能会有指令重排，假设A执行了分配内存，对象执行内存空间，而没有初始化，当B线程判断instance已存在时会直接返回一个A线程没有初始化的instance</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton5</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>   Singleton5 singleton5;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton5</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Singleton5 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton5==<span class="keyword">null</span>)&#123;<span class="comment">//1</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton5.class)&#123;<span class="comment">//2</span></span><br><span class="line">                <span class="keyword">if</span>(singleton5==<span class="keyword">null</span>)&#123;</span><br><span class="line">                    singleton5=<span class="keyword">new</span> Singleton5();<span class="comment">//3</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="five"><a href="#five" class="headerlink" title="five"></a>five</h3><p>加个volatile解决</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton5 &#123;</span><br><span class="line">    private static volatile Singleton5 singleton5;</span><br><span class="line"></span><br><span class="line">    private Singleton5()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    private static Singleton5 getSingleton()&#123;</span><br><span class="line">        if(singleton5==null)&#123;//1</span><br><span class="line">            synchronized (Singleton5.class)&#123;//2</span><br><span class="line">                if(singleton5==null)&#123;</span><br><span class="line">                    singleton5=new Singleton5();//3</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return singleton5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/rabbitmq/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/06/16/rabbitmq/" class="post-title-link" itemprop="url">rabbitmq</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-16 16:38:58" itemprop="dateCreated datePublished" datetime="2020-06-16T16:38:58+08:00">2020-06-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/rabbitmq/" itemprop="url" rel="index"><span itemprop="name">rabbitmq</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="RabbitMq"><a href="#RabbitMq" class="headerlink" title="RabbitMq"></a><strong>RabbitMq</strong></h2><p>RabbitMQ是一个实现了AMQP（Advanced Message Queuing Protocol）高级消息队列协议的消息队列服务 </p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/rabbitmq1.png" alt></p>
+<ul>
+<li><p>publisher：生产者，即数据的发送方，会发送一个实现了<strong>序列化</strong>的<strong>Message</strong>对象进行消息传递，Message包括 payload（有效载荷）和label（标签），payload顾名思义就是传输的数据，label是exchange的名字或者说是一个tag，它描述了payload，而且RabbitMQ也是通过这个label来决定把这个Message发给哪个Consumer </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY_NAME,emp,<span class="keyword">new</span> CorrelationData(msgId));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CorrelationData</span><span class="params">(String id)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">this</span>.id = id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的convertAndSend方法会将emp对象转换为Message发送，CorrelationData只有一个id属性可用来保证可靠消息，以后再说</p>
+</li>
+<li><p>broker： 接收和分发消息的应用 （rabbitmq服务器）</p>
+</li>
+<li><p>exchange：交换机， 根据分发规则，匹配查询表中的routing key，分发消息到queue中去。常用的类型有：direct (point-to-point), topic (publish-subscribe) and fanout (multicast) </p>
+</li>
+<li><p>binding： exchange和queue之间的虚拟连接，binding中可以包含routing key</p>
+</li>
+<li><p>queue：队列</p>
+</li>
+<li><p>Connection： publisher／consumer和broker之间的TCP连接 </p>
+</li>
+<li><p>Channel： 如果每一次访问RabbitMQ都建立一个Connection，在消息量大的时候建立TCP Connection的开销将是巨大的，效率也较低。Channel是在connection</p>
+</li>
+<li><p>内部建立的逻辑连接，如果应用程序支持多线程，通常每个thread创建单独的channel进行通讯，AMQP method包含了channel id帮助客户端和message broker识别channel，所以channel之间是完全隔离的 </p>
+</li>
+</ul>
+<p>exchange类型</p>
+<ul>
+<li><p>Direct exchange 直接转发路由</p>
+<p>将消息的routing key和binding中的routing key比照，匹配则发到对应的队列</p>
+</li>
+<li><p>Fanout exchange 复制分发路由</p>
+<p>不需要routkey，当exchange收到消息后，将消息复制多份转发给与自己绑定的消息队列 </p>
+</li>
+<li><p>topic exchange 通配路由</p>
+<p>根据routing key，及通配规则，Topic exchange将分发到目标queue中。 </p>
+</li>
+</ul>
+<h3 id="可靠消息"><a href="#可靠消息" class="headerlink" title="可靠消息"></a>可靠消息</h3><p>在使用 <strong>RabbitMQ</strong> 的时候，作为消息发送方希望杜绝任何消息丢失或者投递失败场景。<strong>RabbitMQ</strong> 为我们提供了两个选项用来控制消息的投递可靠性模式。 </p>
+<p>消息传递路径为</p>
+<p> <strong><em>producer-&gt;rabbitmq broker cluster-&gt;exchange-&gt;queue-&gt;consumer</em></strong> </p>
+<ul>
+<li><p><strong>message</strong> 从 <strong>producer</strong> 到 <strong>rabbitmq broker cluster</strong> 则会返回一个 <strong>confirmCallback</strong> </p>
+<p>开启配置（这边的思路是发送者发送完消息会在数据库中记录下消息id，状态，创建时间等信息，发送成功则confirmcallback并修改数据库表的信息，发送失败则通过定时任务进行重发）</p>
+<p>常规配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">Queue <span class="title">mailQueue</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Queue(MailConstants.MAIL_QUEUE_NAME,<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">DirectExchange <span class="title">directExchange</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DirectExchange(MailConstants.MAIL_EXCHANGE_NAME,<span class="keyword">true</span>,<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">Binding <span class="title">binding</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> BindingBuilder.bind(mailQueue()).to(directExchange()).with(MailConstants.MAIL_ROUTING_KEY_NAME);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.publisher-confirms=true</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function">RabbitTemplate <span class="title">rabbitTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">    RabbitTemplate rabbitTemplate=<span class="keyword">new</span> RabbitTemplate(cachingConnectionFactory);</span><br><span class="line">    <span class="comment">//保证消息到broker</span></span><br><span class="line">    rabbitTemplate.setConfirmCallback((data,ack,cause)-&gt;&#123;</span><br><span class="line">        String msgId = data.getId();</span><br><span class="line">        <span class="keyword">if</span> (ack)&#123;</span><br><span class="line">            logger.info(<span class="string">"发送成功"</span>);</span><br><span class="line">            mailSendLogService.updateMailSendLog(msgId,<span class="number">1</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            logger.info(<span class="string">"发送失败"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">//保证消息到queue</span></span><br><span class="line">    rabbitTemplate.setReturnCallback((msg,repCode,repText,exchange,routingKey)-&gt;&#123;</span><br><span class="line">        logger.info(<span class="string">"发送失败"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> rabbitTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//0为初始值，10偏移量，第一位秒，分，小时，日，月，星期（1，2）</span></span><br><span class="line"><span class="meta">@Scheduled</span>(cron = <span class="string">"0/10 * * * * ?"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reSend</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;MailSendLog&gt;logs= mailSendLogService.getMailByStatus();</span><br><span class="line">    logs.forEach(mailSendLog -&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (mailSendLog.getCount() &gt;= <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="comment">//重发超过三次就失败，改数据库表的状态为2</span></span><br><span class="line">            mailSendLogService.updateMailSendLog(mailSendLog.getMsgId(),<span class="number">2</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            mailSendLogService.updateMailCount(mailSendLog.getMsgId(),<span class="keyword">new</span> Date());</span><br><span class="line">            Employee emp=employeeService.getEmployeeById(mailSendLog.getEmpId());</span><br><span class="line">            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME,MailConstants.MAIL_ROUTING_KEY_NAME,emp,<span class="keyword">new</span> CorrelationData(mailSendLog.getMsgId()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>message</strong> 从 <strong>exchange-&gt;queue</strong> 投递失败则会返回一个 <strong>returnCallback</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.publisher-returns=true</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//保证消息到queue</span><br><span class="line">rabbitTemplate.setReturnCallback((msg,repCode,repText,exchange,routingKey)-&gt;&#123;</span><br><span class="line">    logger.info(&quot;发送失败&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="解决幂等性问题"><a href="#解决幂等性问题" class="headerlink" title="解决幂等性问题"></a>解决幂等性问题</h3><p>幂等性指的是消费者已经接受的消息，下次就不用再发了</p>
+<p>例如消费者接收消息后在返回ack的过程中，出现了故障，此时可能队列那边又会重新发送一遍，这样就出现了重复消费</p>
+<p>这里的思路是：消费者接收逻辑执行完后将消息的msgId存入redis中，发送channel.ack确认，下次如果有相同的消息即msgId一样就通过再channel.ack告诉消息中间件已经确认收到了，此时不需要在进行消费逻辑直接return结束</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spring.rabbitmq.listener.simple.acknowledge-mode=manual</span><br><span class="line">spring.rabbitmq.listener.simple.prefetch=100</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailserverApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(MailserverApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">Queue <span class="title">queue</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Queue(<span class="string">"javaboy.mail"</span>) ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RabbitListener</span>(queues = <span class="string">"javaboy.mail"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handler</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Employee employee = (Employee) message.getPayload();</span><br><span class="line">        MessageHeaders headers = message.getHeaders();</span><br><span class="line">        Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);</span><br><span class="line">        String msgId = (String) headers.get(<span class="string">"spring_returned_message_correlation"</span>);</span><br><span class="line">        <span class="keyword">if</span>(redisTemplate.opsForHash().entries(<span class="string">"mail_log"</span>).containsKey(msgId))&#123;</span><br><span class="line">            logger.info(<span class="string">"消息被消费"</span>);</span><br><span class="line">            channel.basicAck(tag,<span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        logger.info(employee.toString());</span><br><span class="line">        MimeMessage mimeMessage = javaMailSender.createMimeMessage();</span><br><span class="line">        MimeMessageHelper mimeMessageHelper = <span class="keyword">new</span> MimeMessageHelper(mimeMessage);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            mimeMessageHelper.setTo(employee.getEmail());</span><br><span class="line">            mimeMessageHelper.setFrom(mailProperties.getUsername());</span><br><span class="line">            mimeMessageHelper.setSubject(<span class="string">"入职欢迎"</span>);</span><br><span class="line">            mimeMessageHelper.setSentDate(<span class="keyword">new</span> Date());</span><br><span class="line">            Context context=<span class="keyword">new</span> Context();</span><br><span class="line">            context.setVariable(<span class="string">"name"</span>,employee.getName());</span><br><span class="line">            context.setVariable(<span class="string">"posName"</span>,employee.getPosition().getName());</span><br><span class="line">            context.setVariable(<span class="string">"joblevelName"</span>,employee.getJobLevel().getName());</span><br><span class="line">            context.setVariable(<span class="string">"departmentName"</span>,employee.getDepartment().getName());</span><br><span class="line">            String mail = templateEngine.process(<span class="string">"mail"</span>, context);</span><br><span class="line">            mimeMessageHelper.setText(mail,<span class="keyword">true</span>);</span><br><span class="line">            javaMailSender.send(mimeMessage);</span><br><span class="line">            redisTemplate.opsForHash().put(<span class="string">"mail_log"</span>,msgId,<span class="string">"javaboy"</span>);</span><br><span class="line">            channel.basicAck(tag,<span class="keyword">false</span>);</span><br><span class="line">            logger.info(msgId+<span class="string">"邮件发送成功"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MessagingException e) &#123;</span><br><span class="line">            channel.basicNack(tag,<span class="keyword">false</span>,<span class="keyword">true</span>);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            logger.error(<span class="string">"发送失败"</span>+e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p> <a href="https://zhuanlan.zhihu.com/p/63700605" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/63700605</a> </p>
+<p> <a href="https://www.cnblogs.com/frankyou/p/5283539.html" target="_blank" rel="noopener">https://www.cnblogs.com/frankyou/p/5283539.html</a> </p>
+<p> <a href="https://www.cnblogs.com/wangiqngpei557/p/9381478.html" target="_blank" rel="noopener">https://www.cnblogs.com/wangiqngpei557/p/9381478.html</a> </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/对象内存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/06/16/对象内存/" class="post-title-link" itemprop="url">对象内存</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-06-16 16:21:48" itemprop="dateCreated datePublished" datetime="2020-06-16T16:21:48+08:00">2020-06-16</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM虚拟机/" itemprop="url" rel="index"><span itemprop="name">JVM虚拟机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="对象内存"><a href="#对象内存" class="headerlink" title="对象内存"></a>对象内存</h2><h3 id="对象创建过程"><a href="#对象创建过程" class="headerlink" title="对象创建过程"></a>对象创建过程</h3><p>虚拟机遇到一条new指令时，先去检查该类有没有被加载，没有就去执行类加载过程；</p>
+<p>加载过后，虚拟机将为新生对象分配内存，然后将分配到的内存空间都赋初值（不包括对象头）；</p>
+<p>接下来对对象进行必要的设置，例如这个对象是哪个类的实例，锁信息等</p>
+<p>这时从虚拟机角度看对象已经被创建了，但从java程序看对象创建才刚刚开始，还需要执行init方法，按程序员意愿进行初始化</p>
+<h3 id="对象的内存布局"><a href="#对象的内存布局" class="headerlink" title="对象的内存布局"></a>对象的内存布局</h3><p>对象的内存布局可分为3部分：对象头，对象实例数据和对齐填充（padding）</p>
+<p>对象头又包括2部分信息</p>
+<ul>
+<li>Mark Word：存储一些对象自身数据，比如哈希码，Gc分代年龄，锁状态等，一般64位虚拟机就占8字节，32位占4字节</li>
+<li>对象类型数据（引用）：指向方法区的.class，确定这个对象是哪个类的实例</li>
+</ul>
+<p>对象实例数据：包括成员变量等</p>
+<p>对齐填充：可有可不有，满足是8字节的整数倍时为0，不满足时进行填充</p>
+<h3 id="对象访问"><a href="#对象访问" class="headerlink" title="对象访问"></a>对象访问</h3><p>两种方式</p>
+<ul>
+<li><p>句柄访问：堆内划分出一块内存作为句柄，包括指向<strong>对象实例数据</strong>和<strong>对象类型数据</strong>的<strong>指针</strong></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%981.jpg" alt></p>
+</li>
+<li><p>直接访问</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%982.jpg" alt></p>
+</li>
+</ul>
+<h3 id="new-Object-占多少字节"><a href="#new-Object-占多少字节" class="headerlink" title="new Object()占多少字节"></a>new Object()占多少字节</h3><p>普通对象和数组在内存布局是不一样的</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%983.png" alt></p>
+<p>对象头8字节</p>
+<p>类型指针8字节，但一般开启了压缩为4字节</p>
+<p>实例数据暂时没有，为0字节</p>
+<p>此时一共12字节，需要填充4字节，所以一共占16字节</p>
+<p>ps：如果关闭了压缩，则类型指针8字节，一共16字节，不需要填充</p>
+<h3 id="查看是否压缩指针"><a href="#查看是否压缩指针" class="headerlink" title="查看是否压缩指针"></a>查看是否压缩指针</h3><p>通过java -XX:+PrintCommandLineFlags -version查看指向java命令时默认带着的参数</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%984.png" alt></p>
+<p>-XX:+UseCompressedClassPointers：这个就是指压缩了指针，<strong>64位jvm虚拟机</strong>默认指针是64位，压缩到4个字节</p>
+<p>-XX:+UseCompressedOops：和上面的并不一样，它指的是例如一个对象内部有一个String成员变量指向了另一个对象，此时也会压缩，也是4个字节</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p>深入理解JVM虚拟机 </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/16/GC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -978,7 +1594,8 @@
 <h2 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h2><p>网络层提供的是不可靠交付，所以需要在传输层提供可靠传输</p>
 <p>可靠传输4个机制：检验（首部）-序号-确认-重传</p>
 <h3 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%826.png" alt></p>
-<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>TCP默认使用累计重传</p>
+<p>序号是一个报文段第一个字节的序号，序号可以保证数据有序提交给应用层，序号也是确认重传的基础</p>
+<h3 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h3><p>在正常传输时，如果报文段按序完整到达，接收方会返回确认（累计确认）来指导发送方接下来该发送哪个报文段；如果传输工程中出现了什么问题，该确认也能指示发送方重传哪个报文段</p>
 <p>这里123到达TCP缓存后，456因为网络问题尚未到达，78也已经到达，此时接收端的报文段首部确认号字段依然为4</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E4%BC%A0%E8%BE%93%E5%B1%827.png" alt></p>
 <h3 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h3><p>超时重传</p>
@@ -1914,578 +2531,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/04/如何安全删除集合元素/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/04/04/如何安全删除集合元素/" class="post-title-link" itemprop="url">如何安全删除集合元素</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-04-04 13:32:48" itemprop="dateCreated datePublished" datetime="2020-04-04T13:32:48+08:00">2020-04-04</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>删除集合的元素，如果采用下面的方法，可以吗</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class deleteElement &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list=new ArrayList();</span><br><span class="line">        list.add(&quot;小明&quot;);</span><br><span class="line">        list.add(&quot;小李&quot;);</span><br><span class="line">        list.add(&quot;小红&quot;);</span><br><span class="line">        list.add(&quot;小王&quot;);</span><br><span class="line">        for (String s:list)&#123;</span><br><span class="line">            if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">                list.remove(s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行时异常</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%A6%82%E4%BD%95%E5%AE%89%E5%85%A8%E5%88%A0%E9%99%A4%E9%9B%86%E5%90%88%E5%85%83%E7%B4%A01.png" alt></p>
-<p>为什么呢？</p>
-<p>增强for循环本质上也是通过迭代器实现的</p>
-<p>arraylist等集合都已经实现了Iterator接口，那我们来看看其中的源码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayList</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractList</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">       <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">RandomAccess</span>, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span></span></span><br><span class="line"><span class="class"></span>&#123;  </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> Itr();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> cursor;       <span class="comment">// index of next element to return</span></span><br><span class="line">       <span class="keyword">int</span> lastRet = -<span class="number">1</span>; <span class="comment">// index of last element returned; -1 if no such</span></span><br><span class="line">       <span class="keyword">int</span> expectedModCount = modCount;</span><br><span class="line"></span><br><span class="line">       Itr() &#123;&#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> cursor != size;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">       <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           checkForComodification();</span><br><span class="line">           <span class="keyword">int</span> i = cursor;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= size)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</span><br><span class="line">           Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= elementData.length)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           cursor = i + <span class="number">1</span>;</span><br><span class="line">           <span class="keyword">return</span> (E) elementData[lastRet = i];</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">if</span> (lastRet &lt; <span class="number">0</span>)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</span><br><span class="line">           checkForComodification();</span><br><span class="line"></span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               ArrayList.<span class="keyword">this</span>.remove(lastRet);</span><br><span class="line">               cursor = lastRet;</span><br><span class="line">               lastRet = -<span class="number">1</span>;</span><br><span class="line">               expectedModCount = modCount;</span><br><span class="line">           &#125; <span class="keyword">catch</span> (IndexOutOfBoundsException ex) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@Override</span></span><br><span class="line">       <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachRemaining</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> E&gt; consumer)</span> </span>&#123;</span><br><span class="line">           Objects.requireNonNull(consumer);</span><br><span class="line">           <span class="keyword">final</span> <span class="keyword">int</span> size = ArrayList.<span class="keyword">this</span>.size;</span><br><span class="line">           <span class="keyword">int</span> i = cursor;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= size) &#123;</span><br><span class="line">               <span class="keyword">return</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">final</span> Object[] elementData = ArrayList.<span class="keyword">this</span>.elementData;</span><br><span class="line">           <span class="keyword">if</span> (i &gt;= elementData.length) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">while</span> (i != size &amp;&amp; modCount == expectedModCount) &#123;</span><br><span class="line">               consumer.accept((E) elementData[i++]);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">// update once at end of iteration to reduce heap write traffic</span></span><br><span class="line">           cursor = i;</span><br><span class="line">           lastRet = i - <span class="number">1</span>;</span><br><span class="line">           checkForComodification();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</span><br><span class="line">           <span class="keyword">if</span> (modCount != expectedModCount)</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>arraylist通过size属性来维护状态，而Iterator是通过 <strong>cursor</strong> 来维护状态。当你使用集合的remove删除元素时，迭代器的cursor并不能同步更新，从而报错，只有采用迭代的remove方法使元素列表发生变化时，它会更新cursor来同步这一变化。 为了防止状态不一致可能引发的无法设想的后果，Iterator会经常做checkForComodification检查，以防有变。 </p>
-<p>当然你可以采用遍历集合的方式来删，但并不推荐</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for(int i=0;i&lt;list.size();i++)&#123;</span><br><span class="line">    String s = list.get(i);</span><br><span class="line">    if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">        list.remove(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确姿势</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class deleteElement &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list=new ArrayList();</span><br><span class="line">        list.add(&quot;小明&quot;);</span><br><span class="line">        list.add(&quot;小李&quot;);</span><br><span class="line">        list.add(&quot;小红&quot;);</span><br><span class="line">        list.add(&quot;小王&quot;);</span><br><span class="line">        Iterator&lt;String&gt; iterator = list.iterator();</span><br><span class="line">        while (iterator.hasNext())&#123;</span><br><span class="line">            String s = iterator.next();</span><br><span class="line">            if (s.equals(&quot;小李&quot;))&#123;</span><br><span class="line">                iterator.remove();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[小明, 小红, 小王]</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/05/搞清内存分配/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/12/05/搞清内存分配/" class="post-title-link" itemprop="url">搞清内存分配</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-12-05 12:47:45" itemprop="dateCreated datePublished" datetime="2019-12-05T12:47:45+08:00">2019-12-05</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="java中的内存划分"><a href="#java中的内存划分" class="headerlink" title="java中的内存划分"></a>java中的内存划分</h2><p>java的内存分为5个部分</p>
-<ul>
-<li>栈（Stack）：存放的都是方法的局部变量，<strong>方法的运行也是在栈中</strong></li>
-<li>堆（Heap）：<strong>凡是new出来的东西</strong>都在堆中，堆里面的东西都有一个地址值，堆内存里的数据都有默认值</li>
-<li>方法区（Method Area）：存储.class相关信息，包含方法的信息</li>
-<li>本地方法栈：与操作系统相关</li>
-<li>寄存器：与cpu相关</li>
-</ul>
-<h2 id="数组的内存图"><a href="#数组的内存图" class="headerlink" title="数组的内存图"></a>数组的内存图</h2><p><strong>数组属于引用变量</strong>，array[0]是通过地址值找到new 出的数组，访问对应索引得到的</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E6%95%B0%E7%BB%84%E5%86%85%E5%AD%98.png" alt></p>
-<h2 id="对象的内存图"><a href="#对象的内存图" class="headerlink" title="对象的内存图"></a>对象的内存图</h2><ul>
-<li>栈中遵循先进后出的原则</li>
-<li>方法的执行是在栈中</li>
-<li>成员方法在堆中存放的是地址值，指向方法区中的方法</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98.png" alt></p>
-<h2 id="字符串的常量池"><a href="#字符串的常量池" class="headerlink" title="字符串的常量池"></a>字符串的常量池</h2><h3 id="字符串内存图"><a href="#字符串内存图" class="headerlink" title="字符串内存图"></a>字符串内存图</h3><ul>
-<li>底层都是通过btye[]实现的</li>
-<li>str1和str2的地址值都是指向常量池中的字符串对象，是相同的</li>
-<li>str3通过new的方式。会在堆中创建一个字符串对象，是不同的对象，这也是通过构造函数和通过new方式创建字符串对象的区别</li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E5%AD%98.png" alt></p>
-<h2 id="String类的构造方法创建对象的3种方式"><a href="#String类的构造方法创建对象的3种方式" class="headerlink" title="String类的构造方法创建对象的3种方式"></a>String类的构造方法创建对象的3种方式</h2><p>构造方法创建有3种形式</p>
-<ul>
-<li>public String() ：初始化新创建的 String对象，以使其表示空字符序列</li>
-<li>public String(char[] value) ：通过当前参数中的字符数组来构造新的String</li>
-<li>public String(byte[] bytes) ：通过使用平台的默认字符集解码当前参数中的字节数组来构造新的 String</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String s1=new String(&quot;abc&quot;);</span><br><span class="line">char[] chars=&#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;&#125;;</span><br><span class="line">String s2=new String(chars);</span><br><span class="line">byte[] bytes=&#123;97,98,99&#125;;</span><br><span class="line">String s3=new String(bytes);</span><br></pre></td></tr></table></figure>
-
-<h2 id="static的内存图"><a href="#static的内存图" class="headerlink" title="static的内存图"></a>static的内存图</h2><p>static修饰的内容：</p>
-<ul>
-<li>是随着类的加载而加载的，且只加载一次</li>
-<li>存储于一块固定的内存区域（<strong>静态区</strong>），所以，可以直接被类名调用</li>
-<li>它优先于对象存在，所以，可以被所有对象共享 </li>
-</ul>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E9%9D%99%E6%80%81%E5%86%85%E5%AD%98.png" alt></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/22/hashcode和equals/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/22/hashcode和equals/" class="post-title-link" itemprop="url">hashcode和equals</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-11-22 10:02:20" itemprop="dateCreated datePublished" datetime="2019-11-22T10:02:20+08:00">2019-11-22</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一道常问面试题"><a href="#一道常问面试题" class="headerlink" title="一道常问面试题"></a>一道常问面试题</h2><p>你重写过hashcode方法吗？答：没有</p>
-<p>你在用hashMap的时候，key的部分用过自定义对象吗？答：有</p>
-<p>这其实就自相矛盾了</p>
-<p>hash算法回顾</p>
-<p>hash在查找上效率很高，通过设计合适的hash函数，很多时候一下就能找到，例如6在如下hash表中直接定位到1的位置</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash1.png" alt></p>
-<p>就算发生冲突，也可用链地址法加以解决</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash2.png" alt></p>
-<h2 id="重写hashcode以及equals的必要性"><a href="#重写hashcode以及equals的必要性" class="headerlink" title="重写hashcode以及equals的必要性"></a>重写hashcode以及equals的必要性</h2><p><strong>2个基础知识</strong>：</p>
-<ul>
-<li>HashMap在存数据时，要先计算key类的hashcode方法返回hash值，默认使用Object的hashcode方法，返回对象地址</li>
-<li>如果自定义类不重写equals方法，默认会调用Object的equals方法，通过对象地址进行比较</li>
-</ul>
-<p>看下面的代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public class Key &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    public Integer getKey()&#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Key(Integer id)&#123;</span><br><span class="line">        this.id=id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">/*    public int hashCode()&#123;</span><br><span class="line">        return id.hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean equals(Object o)&#123;</span><br><span class="line">        if (o==null)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            return this.getKey().equals(((Key)o).getKey());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;*/</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class Judge &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Key key1 = new Key(1);</span><br><span class="line">        Key key2 = new Key(1);</span><br><span class="line"></span><br><span class="line">        HashMap&lt;Key, String&gt; hashMap = new HashMap&lt;&gt;();</span><br><span class="line">        hashMap.put(key1, &quot;我的id是1&quot;);</span><br><span class="line">        String value = hashMap.get(key2);</span><br><span class="line">        System.out.println(value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在注释掉hashcode和equals方法后输出为null，即取不出key2的值，为啥呢？</p>
-<p>在put时，会调用key1的默认hashcode方法，返回的是key1的地址，get的时候也会调用key2的hashcode方法，按照key2的地址进行查询，可能key1的地址1000，key2的地址为2000，也就自然查不到了</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash3.png" alt></p>
-<p>那接下来把hashcode的注释取消掉，结果还是null，为啥呢？</p>
-<p>现在重写了之后，get的时候都是按照id的hashcode来查，都是一样的，但是只是按照相同的hash值来找，找到对应位置后可能有很多对象在一条链上，毕竟是会有冲突的可能，get（key2），可事实上key2并没有存入map，只有key1，<strong>我们的本意是key1和key2的value值是一样的，通过key2也能拿到value值</strong>，现在的问题出在了key1和key2默认的equals的比较的是对象地址，并不一样。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/hash4.png" alt></p>
-<p>所以我们重写equals方法，只要id值一样，我们就算他们一样，这样key1和key2对象实际上就是相等的，通过hash值找到对应位置，再通过key2对象，就拿到了我们需要的值</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>参考了羊哥的博客，欢迎关注codesheep公众号，一个很nice的b站up主</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2534,7 +2579,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

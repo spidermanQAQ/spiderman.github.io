@@ -112,22 +112,22 @@
   </script>
 
 
-  <meta name="description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
+  <meta name="description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
 <meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="volatile详解">
 <meta property="og:url" content="http://yoursite.com/2020/12/01/volatile详解/index.html">
 <meta property="og:site_name" content="XJH">
-<meta property="og:description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
+<meta property="og:description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile3.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile4.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile1.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile2.png">
-<meta property="og:updated_time" content="2020-12-01T08:07:35.570Z">
+<meta property="og:updated_time" content="2020-12-12T12:39:45.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="volatile详解">
-<meta name="twitter:description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
+<meta name="twitter:description" content="volatile原理 volatile关键字主要⽤于解决变量在多个线程之间的可⻅性   当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存 当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，再从主内存中读取该共享变量  编译过程java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在c">
 <meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/volatile3.png">
 
 
@@ -487,7 +487,7 @@
         <h2 id="volatile原理"><a href="#volatile原理" class="headerlink" title="volatile原理"></a>volatile原理</h2><p> volatile关键字主要⽤于解决变量在多个线程之间的可⻅性 </p>
 <ul>
 <li>当写一个volatile变量时，JMM会把线程对应的本地内存中的共享变量值刷新到主内存</li>
-<li>当读一个volatile变量时，JMM会把线程队友的本地内存置为无效，再从主内存中读取该共享变量</li>
+<li>当读一个volatile变量时，JMM会把线程对应的本地内存置为无效，再从主内存中读取该共享变量</li>
 </ul>
 <h3 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h3><p>java代码编译后会变成java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在cpu上执行，所以<strong>java的并发机制依赖于JVM的实现和CPU指令</strong></p>
 <h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>java代码</p>
@@ -503,7 +503,7 @@
 </ul>
 <p>为了提高处理速度，内存不会直接和cpu进行通信，而是先将系统内存读到内部缓存（L1,L2）,但操作完不知道何时写回内存；</p>
 <p>用volatile修饰的变量进行写操作，JVM会向处理器发送一条Lock前缀指令，进行<strong>缓存锁定</strong>：如果访问的内存区域已经缓存在处理器内部，则不会声言LOCK#信号（总线锁），而是锁住这块内存区域的缓存并写回内存（缓存所），并使用<strong>缓存一致性</strong>来确保修改的原子性，缓存一致性：会阻止同时修改由两个以上处理器缓存的内存区域数据</p>
-<p>使用<strong>MESI控制协议</strong>维护内部缓存和其他处理器缓存的一致性，通过嗅探一个处理器来检测其他处理器打算写内存地址，而这个地址处于共享状态，那么正在嗅探的处理器将使它的缓存行无效，在下次访问相同内存地址时。强行进行缓存行填</p>
+<p>使用<strong>MESI控制协议</strong>维护内部缓存和其他处理器缓存的一致性，处理器使用嗅探技术来保证内部缓存，系统内存和其他处理器缓存的一致性</p>
 <h3 id="处理器如何实现原子操作"><a href="#处理器如何实现原子操作" class="headerlink" title="处理器如何实现原子操作"></a>处理器如何实现原子操作</h3><p><strong>总线锁</strong></p>
 <p>使用处理器提供的LOCK#信号，当一个处理器在总线上输出此信号时，其他处理器的请求会被阻塞住，那么该处理器就能独占共享内存</p>
 <p><strong>缓存锁见上</strong></p>
@@ -731,7 +731,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">64</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
