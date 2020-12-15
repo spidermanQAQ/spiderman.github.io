@@ -380,6 +380,227 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/15/线程状态及线程通信/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/12/15/线程状态及线程通信/" class="post-title-link" itemprop="url">线程状态及线程通信</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-12-15 15:48:45" itemprop="dateCreated datePublished" datetime="2020-12-15T15:48:45+08:00">2020-12-15</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/并发编程/" itemprop="url" rel="index"><span itemprop="name">并发编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="线程主要有5个状态"><a href="#线程主要有5个状态" class="headerlink" title="线程主要有5个状态"></a>线程主要有5个状态</h3><p><strong>开始</strong></p>
+<p>New 表示线程<strong>被创建但尚未启动的状态</strong>：当我们用 new Thread() 新建一个线程时，如果线程没有开始运行 start() 方法，所以也没有开始执行 run() 方法里面的代码，那么此时它的状态就是 New</p>
+<p><strong>就绪</strong></p>
+<p>Java 中的 Runable 状态对应操作系统线程状态中的两种状态，分别是 <strong>Running 和 Ready</strong>，也就是说，Java 中处于 Runnable 状态的线程有可能正在执行，也有可能没有正在执行，正在等待被分配 CPU 资源。</p>
+<p>所以，如果一个正在运行的线程是 Runnable 状态，当它运行到任务的一半时，执行该线程的 CPU 被调度去做其他事情，导致该线程暂时不运行，<strong>它的状态依然不变，还是 Runnable</strong>，因为它有可能随时被调度回来继续执行任务</p>
+<p><strong>阻塞</strong></p>
+<p>Runnable 状态进入 Blocked 状态只有一种可能，就是<strong>进入 synchronized 保护的代码时没有抢到 monitor 锁</strong></p>
+<p><strong>等待</strong></p>
+<p>Blocked 仅仅针对 <code>synchronized monitor</code> 锁，可是在 Java 中还有很多其他的锁，比如 <code>ReentrantLock</code>，如果线程在获取这种锁时没有抢到该锁就会进入 Waiting 状态，因为本质上它执行了 <code>LockSupport.park()</code> 方法，所以会进入 Waiting 状态。同样，<code>Object.wait()</code> 和 <code>Thread.join()</code> 也会让线程进入 Waiting 状态。</p>
+<p>Blocked 与 Waiting 的区别是 Blocked 在等待其他线程释放 monitor 锁，而 Waiting 则是在等待某个条件，比如 join 的线程执行完毕，或者是 <code>notify()</code>/<code>notifyAll()</code> 。</p>
+<p><strong>超时等待</strong></p>
+<p>在 Waiting 上面是 Timed Waiting 状态，这两个状态是非常相似的，区别仅在于有没有时间限制，Timed Waiting 会等待超时，由系统自动唤醒，或者在超时前被唤醒信号唤醒</p>
+<p><strong>特别注意</strong></p>
+<p>如果其他线程调用 <code>notify()</code> 或 <code>notifyAll()</code>来唤醒它，它会<strong>直接进入 Blocked 状态</strong>，这是为什么呢？因为唤醒 Waiting 线程的线程如果调用 <code>notify()</code> 或 <code>notifyAll()</code>，要求必须首先持有该 monitor 锁，所以处于 Waiting 状态的线程被唤醒时拿不到该锁，就会进入 Blocked 状态，直到执行了 <code>notify()</code>/<code>notifyAll()</code> 的唤醒它的线程执行完毕并释放 monitor 锁，才可能轮到它去抢夺这把锁，如果它能抢到，就会从 <code>Blocked</code> 状态回到 <code>Runnable</code> 状态</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A11.png" alt></p>
+<h3 id="线程通信"><a href="#线程通信" class="headerlink" title="线程通信"></a>线程通信</h3><h4 id="synchronized和volatile关键字"><a href="#synchronized和volatile关键字" class="headerlink" title="synchronized和volatile关键字"></a>synchronized和volatile关键字</h4><p><code>synchronized</code>关键字可以修饰代码块和方法，确保多个线程在同一时刻，只能有一个线程访问变量</p>
+<p><code>volatile</code>关键字</p>
+<ul>
+<li>写变量时，JMM把线程对应的本地内存的共享变量刷新到主内存</li>
+<li>读变量时，JMM会把线程对应的本地内存的共享变量置为无效，从主存读取</li>
+</ul>
+<h4 id="等待-通知机制"><a href="#等待-通知机制" class="headerlink" title="等待/通知机制"></a>等待/通知机制</h4><p>等待/通知机制是指一个线程A调用了对象O的wait()方法进入等待状态，而另一个线程B调用了对象O的notify()或notifyAll()方法，线程A收到通知后从等待状态返回，继续执行后续操作</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>wait()</td>
+<td>调用该方法的线程进入WAITING状态，只有等待其他线程通知后或被中断才会返回，<strong>需要注意调用wait()方法后会释放锁</strong></td>
+</tr>
+<tr>
+<td>wait(long)</td>
+<td>超时等待一段时间</td>
+</tr>
+<tr>
+<td>notify()</td>
+<td>通知一个在对象上等待的线程，使其从wait()返回，返回的前提是该线程获取到了对象的锁</td>
+</tr>
+<tr>
+<td>notifyAll()</td>
+<td>通知在这个对象上的所有等待线程</td>
+</tr>
+</tbody></table>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaitNotify</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">boolean</span> flag=<span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">static</span> Object lock=<span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread waitThread =<span class="keyword">new</span> Thread(<span class="keyword">new</span> Wait(),<span class="string">"waitThread"</span>);</span><br><span class="line">        waitThread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        Thread notifyThread =<span class="keyword">new</span> Thread(<span class="keyword">new</span> Notify(),<span class="string">"notifyThread"</span>);</span><br><span class="line">        notifyThread.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Wait</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (lock)&#123;</span><br><span class="line">                <span class="keyword">while</span> (flag)&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        System.out.println(Thread.currentThread()+<span class="string">"flag is true 等着"</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;<span class="keyword">catch</span> (InterruptedException e)&#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//条件满足，继续执行</span></span><br><span class="line">                System.out.println(Thread.currentThread()+<span class="string">"flag is false 继续执行"</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Notify</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (lock)&#123;</span><br><span class="line">                System.out.println(Thread.currentThread()+<span class="string">"notify线程持有锁"</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));</span><br><span class="line">                lock.notifyAll();</span><br><span class="line">                flag=<span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A12.png" alt></p>
+<p><strong>流程</strong></p>
+<ul>
+<li>wait线程获取对象的锁，调用了wait()方法，从而放弃了锁，进入了对象的等待队列<code>WaitQueue</code></li>
+<li>由于wait线程释放了锁。notify线程得以获取锁，调用<code>notifyAll()</code>方法，将wait线程从<code>WaitQueue</code>移到<code>SynchronizedQueue</code>，此时wait线程变为<strong>阻塞状态</strong></li>
+<li>notify释放锁后wait线程获取到锁继续执行</li>
+</ul>
+<h4 id="管道输入-输出流"><a href="#管道输入-输出流" class="headerlink" title="管道输入/输出流"></a>管道输入/输出流</h4><p>通过<code>PipedInputStream</code> ,<code>PipedOutputStream</code>，<code>PipedReader</code>，<code>PipedWriter</code>实现线程间得数据传输</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/15/用户态与内核态/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -485,7 +706,8 @@
             <h3 id="用户态与和核心态"><a href="#用户态与和核心态" class="headerlink" title="用户态与和核心态"></a>用户态与和核心态</h3><p>处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令</p>
 <p>cpu处于用户态还是核心态是通过<strong>程序状态寄存器</strong>的某个标志位来标识的，如0为用户态，1为内核态</p>
 <h4 id="切换"><a href="#切换" class="headerlink" title="切换"></a>切换</h4><p>用户态向内核态的切换主要有3种方式：<strong>系统调用</strong>，<strong>中断</strong>（外中断），<strong>异常</strong></p>
-<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去执行相应的处理程序，处理完该事件后再返回中断处继续执行原来的程序</p>
+<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%812.png" alt></p>
+<p>中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去执行相应的处理程序，处理完该事件后再返回中断处继续执行原来的程序</p>
 <p>中断包括3类：</p>
 <ul>
 <li><p>外中断</p>
@@ -507,7 +729,7 @@
 <li>进程通信  完成进程间的消息传递等</li>
 </ul>
 <h3 id="系统调用与库函数的区别"><a href="#系统调用与库函数的区别" class="headerlink" title="系统调用与库函数的区别"></a>系统调用与库函数的区别</h3><p>库函数封装了系统调用的操作，屏蔽了底层的一些细节</p>
-<p><img src="/2020/12/15/用户态与内核态/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png" alt></p>
 
           
         
@@ -1044,7 +1266,7 @@
 </li>
 <li><p><strong>synchronized修饰方法</strong></p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized1.png" alt></p>
-<p>synchronized 修饰的⽅法并没有 monitorenter 指令和 monitorexit 指令，取得代之的确实是 <strong>ACC_SYNCHRONIZED</strong> 标识，该标识指明了该⽅法是⼀个同步⽅法，JVM 通过该 ACC_SYNCHRONIZED 访问 标志来辨别⼀个⽅法是否声明为同步⽅法，从⽽执⾏相应的同步调⽤。  </p>
+<p>synchronized 修饰的⽅法并没有 monitorenter 指令和 monitorexit 指令，取得代之的确实是 <strong>ACC_SYNCHRONIZED</strong> 标识，被 synchronized 修饰的方法会有一个 ACC_SYNCHRONIZED 标志。当某个线程要访问某个方法的时候，会首先检查方法是否有 ACC_SYNCHRONIZED 标志，如果有则需要先获得 monitor 锁，然后才能开始执行方法，方法执行之后再释放 monitor 锁  </p>
 </li>
 </ul>
 <h3 id="最主要的三种使用方式"><a href="#最主要的三种使用方式" class="headerlink" title="最主要的三种使用方式"></a>最主要的三种使用方式</h3><ul>
@@ -1385,7 +1607,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/11/22/synchronized-和-ReentrantLock/" class="post-title-link" itemprop="url">synchronized 和 ReentrantLock</a>
+                <a href="/2020/11/22/synchronized-和-ReentrantLock/" class="post-title-link" itemprop="url">synchronized和ReentrantLock</a>
               
             
           </h1>
@@ -1692,6 +1914,17 @@
 <li>得到该页号对应页面在内存的起始地址</li>
 <li>根据逻辑地址算出页面内偏移量</li>
 <li>物理地址=页面始址+偏移量</li>
+</ul>
+<h3 id="为什么要有逻辑地址"><a href="#为什么要有逻辑地址" class="headerlink" title="为什么要有逻辑地址"></a>为什么要有逻辑地址</h3><p>没有虚拟地址的话，程序可以直接访问和操作内存</p>
+<ul>
+<li>用户程序可以任意访问内存，寻址内存每一个字节，很容易造成操作系统破坏</li>
+<li>运行多个程序程序很困难，比如同时运行qq，微信，qq使用了1XXX地址，后面微信也使用了这个地址，造成了覆盖</li>
+</ul>
+<p>通过虚拟地址访问内存有如下好处</p>
+<ul>
+<li>程序可以使⽤⼀系列相邻的虚拟地址来访问物理内存中不相邻的⼤内存缓冲区。</li>
+<li>程序可以使⽤⼀系列虚拟地址来访问⼤于可⽤物理内存的内存缓冲区。当物理内存的供应量变小 时，内存管理器会将物理内存⻚（通常大小为 4 KB）保存到磁盘⽂件。数据或代码页会根据需 要在物理内存与磁盘之间移动。 </li>
+<li>不同进程使用的虚拟地址彼此隔离。⼀个进程中的代码⽆法更改正在由另⼀进程或操作系统使⽤的物理内存。 </li>
 </ul>
 <h2 id="基本地址转换"><a href="#基本地址转换" class="headerlink" title="基本地址转换"></a>基本地址转换</h2><p>基本地址转换可以将逻辑地址根据页表转换成物理地址：通常系统会设置一个页表寄存器，存放页表的起始地址和页表长度；进程未执行时，页表的起始地址和页表长度保存在进程的PCB中，进程被调度，将它们放到页表寄存器中</p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%861.png" alt></p>
@@ -2185,194 +2418,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/15/深克隆与浅克隆/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/11/15/深克隆与浅克隆/" class="post-title-link" itemprop="url">深克隆与浅克隆</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-11-15 13:49:35" itemprop="dateCreated datePublished" datetime="2020-11-15T13:49:35+08:00">2020-11-15</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="深克隆，浅克隆概念"><a href="#深克隆，浅克隆概念" class="headerlink" title="深克隆，浅克隆概念"></a>深克隆，浅克隆概念</h2><p>浅克隆</p>
-<p>把原型对象中成员变量为值类型的属性都复制给克隆对象，把原型对象中成员变量为引用类型的引用地址也复制给克隆对象；简单来说就是浅克隆只会复制原型对象，但不会复制它所引用的对象</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%85%8B%E9%9A%861.png" alt></p>
-<p>深克隆</p>
-<p>原型对象中的所有类型，无论是值类型还是引用类型，都复制一份给克隆对象，也就是说深克隆会把原型对象和<strong>原型对象所引用的对象</strong>，都复制一份给克隆对象</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%85%8B%E9%9A%862.png" alt></p>
-<h2 id="java实现克隆"><a href="#java实现克隆" class="headerlink" title="java实现克隆"></a>java实现克隆</h2><p>在 Java 语言中要实现克隆则需要实现 Cloneable 接口，并重写 Object 类中的 clone() 方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">public class CloneExample &#123;</span><br><span class="line">    public static void main(String[] args) throws CloneNotSupportedException &#123;</span><br><span class="line">        // 创建被赋值对象</span><br><span class="line">        People p1 = new People();</span><br><span class="line">        p1.setId(1);</span><br><span class="line">        p1.setName(&quot;Java&quot;);</span><br><span class="line">        // 克隆 p1 对象</span><br><span class="line">        People p2 = (People) p1.clone();</span><br><span class="line">        // 打印名称</span><br><span class="line">        System.out.println(&quot;p2:&quot; + p2.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    static class People implements Cloneable &#123;</span><br><span class="line">        // 属性</span><br><span class="line">        private Integer id;</span><br><span class="line">        private String name;</span><br><span class="line">        /**</span><br><span class="line">         * 重写 clone 方法</span><br><span class="line">         * @throws CloneNotSupportedException</span><br><span class="line">         */</span><br><span class="line">        @Override</span><br><span class="line">        protected Object clone() throws CloneNotSupportedException &#123;</span><br><span class="line">            return super.clone();</span><br><span class="line">        &#125;</span><br><span class="line">        public Integer getId() &#123;</span><br><span class="line">            return id;</span><br><span class="line">        &#125;</span><br><span class="line">        public void setId(Integer id) &#123;</span><br><span class="line">            this.id = id;</span><br><span class="line">        &#125;</span><br><span class="line">        public String getName() &#123;</span><br><span class="line">            return name;</span><br><span class="line">        &#125;</span><br><span class="line">        public void setName(String name) &#123;</span><br><span class="line">            this.name = name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Arrays-copyOf-是深克隆还是浅克隆？"><a href="#Arrays-copyOf-是深克隆还是浅克隆？" class="headerlink" title="Arrays.copyOf() 是深克隆还是浅克隆？"></a>Arrays.copyOf() 是深克隆还是浅克隆？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">People[] o1 = &#123;new People(1, &quot;Java&quot;)&#125;;</span><br><span class="line">People[] o2 = Arrays.copyOf(o1, o1.length);</span><br><span class="line">// 修改原型对象的第一个元素的值</span><br><span class="line">o1[0].setName(&quot;Jdk&quot;);</span><br><span class="line">System.out.println(&quot;o1:&quot; + o1[0].getName());</span><br><span class="line">System.out.println(&quot;o2:&quot; + o2[0].getName());</span><br><span class="line"></span><br><span class="line">o1:Jdk</span><br><span class="line">o2:Jdk</span><br></pre></td></tr></table></figure>
-
-<p>所以Arrays.copyOf() 是浅克隆，修改了原型对象的第一个属性，克隆对象也被修改了</p>
-<h2 id="深克隆实现方式（这里只介绍两种）"><a href="#深克隆实现方式（这里只介绍两种）" class="headerlink" title="深克隆实现方式（这里只介绍两种）"></a>深克隆实现方式（这里只介绍两种）</h2><ul>
-<li>所有对象都实现克隆方法</li>
-<li>通过构造方法实现深克隆</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Address address; <span class="comment">// 包含 Address 引用对象</span></span><br><span class="line">    <span class="comment">// 忽略构造方法、set、get 方法</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 地址类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Address</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String city;</span><br><span class="line">    <span class="comment">// 忽略构造方法、set、get 方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="所有对象都实现克隆方法"><a href="#所有对象都实现克隆方法" class="headerlink" title="所有对象都实现克隆方法"></a>所有对象都实现克隆方法</h3><p>这种方式我们需要修改 People 和 Address 类，让它们都实现 Cloneable 的接口，让所有的引用对象都实现克隆，从而实现 People 类的深克隆</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">public class CloneExample1 &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws CloneNotSupportedException &#123;</span><br><span class="line">        Address address = new Address(&quot;南京&quot;);</span><br><span class="line">        Person person1 = new Person(&quot;小李&quot;,address);</span><br><span class="line">        Person clone = person1.clone();</span><br><span class="line">        person1.getAddress().setCity(&quot;北京&quot;);</span><br><span class="line">        System.out.println(clone.getAddress().getCity());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    static class Person implements Cloneable&#123;</span><br><span class="line">        private String name;</span><br><span class="line">        private Address address;</span><br><span class="line"></span><br><span class="line">        public Person(String name, Address address) &#123;</span><br><span class="line">            this.name = name;</span><br><span class="line">            this.address = address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Address getAddress() &#123;</span><br><span class="line">            return address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void setAddress(Address address) &#123;</span><br><span class="line">            this.address = address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Person clone( ) throws CloneNotSupportedException &#123;</span><br><span class="line">            Person clonePerson = (Person) super.clone();</span><br><span class="line">            clonePerson.setAddress(this.address.clone());</span><br><span class="line">            return clonePerson;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static class Address implements Cloneable&#123;</span><br><span class="line">        private String city;</span><br><span class="line"></span><br><span class="line">        public Address(String city) &#123;</span><br><span class="line">            this.city = city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public String getCity() &#123;</span><br><span class="line">            return city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public void setCity(String city) &#123;</span><br><span class="line">            this.city = city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public Address clone() throws CloneNotSupportedException &#123;</span><br><span class="line">            return ((Address) super.clone());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">输出：南京</span><br></pre></td></tr></table></figure>
-
-<h3 id="通过构造方法实现深克隆"><a href="#通过构造方法实现深克隆" class="headerlink" title="通过构造方法实现深克隆"></a>通过构造方法实现深克隆</h3><p>如果构造器的参数为基本数据类型或字符串类型则直接赋值，如果是对象类型，则需要重新 new 一个对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CloneExample2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Address address = <span class="keyword">new</span> Address(<span class="string">"南京"</span>);</span><br><span class="line">        Person person1 = <span class="keyword">new</span> Person(<span class="string">"小李"</span>, address);</span><br><span class="line">        Person person2=<span class="keyword">new</span> Person(person1.getName(),<span class="keyword">new</span> Address(person1.getAddress().getCity()));</span><br><span class="line">        person1.getAddress().setCity(<span class="string">"北京"</span>);</span><br><span class="line">        System.out.println(person2.getAddress().getCity());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line">        <span class="keyword">private</span> Address address;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, Address address)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">            <span class="keyword">this</span>.address = address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Address <span class="title">getAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> address;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAddress</span><span class="params">(Address address)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.address = address;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Address</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> String city;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Address</span><span class="params">(String city)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.city = city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getCity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> city;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCity</span><span class="params">(String city)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.city = city;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2474,7 +2519,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2525,7 +2572,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

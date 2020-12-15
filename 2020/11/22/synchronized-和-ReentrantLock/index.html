@@ -115,15 +115,15 @@
   <meta name="description" content="如何实现synchronized 属于独占式悲观锁，是通过 JVM 隐式实现的，synchronized 只允许同一时刻只有一个线程操作资源。 在 Java 中每个对象都隐式包含一个 monitor（监视器）对象，加锁的过程其实就是竞争 monitor 的过程，当线程进入字节码 monitorenter 指令之后，线程将持有 monitor 对象，执行 monitorexit 时释放 monito">
 <meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="synchronized 和 ReentrantLock">
+<meta property="og:title" content="synchronized和ReentrantLock">
 <meta property="og:url" content="http://yoursite.com/2020/11/22/synchronized-和-ReentrantLock/index.html">
 <meta property="og:site_name" content="XJH">
 <meta property="og:description" content="如何实现synchronized 属于独占式悲观锁，是通过 JVM 隐式实现的，synchronized 只允许同一时刻只有一个线程操作资源。 在 Java 中每个对象都隐式包含一个 monitor（监视器）对象，加锁的过程其实就是竞争 monitor 的过程，当线程进入字节码 monitorenter 指令之后，线程将持有 monitor 对象，执行 monitorexit 时释放 monito">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized%20%E5%92%8C%20ReentrantLock1.png">
-<meta property="og:updated_time" content="2020-11-24T12:26:49.751Z">
+<meta property="og:updated_time" content="2020-12-15T08:37:29.844Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="synchronized 和 ReentrantLock">
+<meta name="twitter:title" content="synchronized和ReentrantLock">
 <meta name="twitter:description" content="如何实现synchronized 属于独占式悲观锁，是通过 JVM 隐式实现的，synchronized 只允许同一时刻只有一个线程操作资源。 在 Java 中每个对象都隐式包含一个 monitor（监视器）对象，加锁的过程其实就是竞争 monitor 的过程，当线程进入字节码 monitorenter 指令之后，线程将持有 monitor 对象，执行 monitorexit 时释放 monito">
 <meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized%20%E5%92%8C%20ReentrantLock1.png">
 
@@ -143,7 +143,7 @@
   };
 </script>
 
-  <title>synchronized 和 ReentrantLock | XJH</title>
+  <title>synchronized和ReentrantLock | XJH</title>
   
 
 
@@ -400,7 +400,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">synchronized 和 ReentrantLock
+          <h1 class="post-title" itemprop="name headline">synchronized和ReentrantLock
 
               
             
@@ -758,7 +758,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -809,7 +811,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

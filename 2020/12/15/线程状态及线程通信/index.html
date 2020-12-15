@@ -112,24 +112,21 @@
   </script>
 
 
-  <meta name="description" content="单机redis存在问题 机器故障：单机redis出现故障会对业务造成毁灭性打击 容量瓶颈：需要不断升内存  将数据复制多个副本保存在不同的服务器上，链接在一起，并保证数据是否同步的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务   一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接 主从复制搭建进入redi">
-<meta name="keywords" content="redis">
+  <meta name="description" content="线程主要有5个状态开始 New 表示线程被创建但尚未启动的状态：当我们用 new Thread() 新建一个线程时，如果线程没有开始运行 start() 方法，所以也没有开始执行 run() 方法里面的代码，那么此时它的状态就是 New 就绪 Java 中的 Runable 状态对应操作系统线程状态中的两种状态，分别是 Running 和 Ready，也就是说，Java 中处于 Runnable">
+<meta name="keywords" content="并发编程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis主从复制">
-<meta property="og:url" content="http://yoursite.com/2020/06/01/redis主从复制/index.html">
+<meta property="og:title" content="线程状态及线程通信">
+<meta property="og:url" content="http://yoursite.com/2020/12/15/线程状态及线程通信/index.html">
 <meta property="og:site_name" content="XJH">
-<meta property="og:description" content="单机redis存在问题 机器故障：单机redis出现故障会对业务造成毁灭性打击 容量瓶颈：需要不断升内存  将数据复制多个副本保存在不同的服务器上，链接在一起，并保证数据是否同步的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务   一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接 主从复制搭建进入redi">
+<meta property="og:description" content="线程主要有5个状态开始 New 表示线程被创建但尚未启动的状态：当我们用 new Thread() 新建一个线程时，如果线程没有开始运行 start() 方法，所以也没有开始执行 run() 方法里面的代码，那么此时它的状态就是 New 就绪 Java 中的 Runable 状态对应操作系统线程状态中的两种状态，分别是 Running 和 Ready，也就是说，Java 中处于 Runnable">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis5.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis3.png">
-<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png">
-<meta property="og:updated_time" content="2020-11-30T09:53:46.659Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A11.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A12.png">
+<meta property="og:updated_time" content="2020-12-15T08:36:38.217Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="redis主从复制">
-<meta name="twitter:description" content="单机redis存在问题 机器故障：单机redis出现故障会对业务造成毁灭性打击 容量瓶颈：需要不断升内存  将数据复制多个副本保存在不同的服务器上，链接在一起，并保证数据是否同步的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务   一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接 主从复制搭建进入redi">
-<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif">
+<meta name="twitter:title" content="线程状态及线程通信">
+<meta name="twitter:description" content="线程主要有5个状态开始 New 表示线程被创建但尚未启动的状态：当我们用 new Thread() 新建一个线程时，如果线程没有开始运行 start() 方法，所以也没有开始执行 run() 方法里面的代码，那么此时它的状态就是 New 就绪 Java 中的 Runable 状态对应操作系统线程状态中的两种状态，分别是 Running 和 Ready，也就是说，Java 中处于 Runnable">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A11.png">
 
 
 
@@ -137,7 +134,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2020/06/01/redis主从复制/">
+  <link rel="canonical" href="http://yoursite.com/2020/12/15/线程状态及线程通信/">
 
 
 
@@ -147,7 +144,7 @@
   };
 </script>
 
-  <title>redis主从复制 | XJH</title>
+  <title>线程状态及线程通信 | XJH</title>
   
 
 
@@ -387,7 +384,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/redis主从复制/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/15/线程状态及线程通信/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="spiderman">
@@ -404,7 +401,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">redis主从复制
+          <h1 class="post-title" itemprop="name headline">线程状态及线程通信
 
               
             
@@ -430,7 +427,7 @@
                 
               
 
-              <time title="创建时间：2020-06-01 09:16:56" itemprop="dateCreated datePublished" datetime="2020-06-01T09:16:56+08:00">2020-06-01</time>
+              <time title="创建时间：2020-12-15 15:48:45" itemprop="dateCreated datePublished" datetime="2020-12-15T15:48:45+08:00">2020-12-15</time>
             </span>
           
 
@@ -445,7 +442,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/并发编程/" itemprop="url" rel="index"><span itemprop="name">并发编程</span></a></span>
 
                 
                 
@@ -485,65 +482,63 @@
       
 
       
-        <h3 id="单机redis存在问题"><a href="#单机redis存在问题" class="headerlink" title="单机redis存在问题"></a>单机redis存在问题</h3><ul>
-<li>机器故障：单机redis出现故障会对业务造成毁灭性打击</li>
-<li>容量瓶颈：需要不断升内存</li>
-</ul>
-<p>将数据复制多个副本保存在不同的服务器上，<strong>链接在一起</strong>，并保证数据是否<strong>同步</strong>的，即使有其中一台服务器宕机，其他服务器依然可以继续提供服务 </p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis1.gif" alt></p>
-<p>一个master可以拥有多个slave，一个slave只对应一个master 。主要分为3步：建立连接，同步数据，反复同步建立连接</p>
-<h3 id="主从复制搭建"><a href="#主从复制搭建" class="headerlink" title="主从复制搭建"></a>主从复制搭建</h3><p>进入redis目录，分别建立（vim会直接新建文件）<strong>redis6379.conf，redis6380.conf， redis6381.conf</strong></p>
-<p>以<strong>redis6380.conf</strong>为例进行配置                 一个配置完cp命令复制就行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">include /opt/redis-5.0.9/redis.conf       #拷贝redis目录下的redis配置文件</span><br><span class="line">port 6380</span><br><span class="line">pidfile /var/run/redis6380.conf</span><br><span class="line">dbfilename dump6380.rdb</span><br><span class="line">slaveof 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
-
-<p>配置完后，分别启动</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis5.png" alt></p>
-<p>通过命令查看进程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep redis</span><br></pre></td></tr></table></figure>
-
-<p>开启3个客户端，通过info replication查看信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 127.0.0.1 6379  #6380/6381</span><br><span class="line">info replication #6379端口的的role:master 6380/6381 role:slave</span><br></pre></td></tr></table></figure>
-
-<p>分别set可以发现，主服务器可以读写，而从服务器只能读不能写</p>
-<h3 id="主从复制原理-建立连接"><a href="#主从复制原理-建立连接" class="headerlink" title="主从复制原理-建立连接"></a>主从复制原理-建立连接</h3><p>指令就1条</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof master_ip master_port</span><br></pre></td></tr></table></figure>
-
-<p>3种方式连接</p>
+        <h3 id="线程主要有5个状态"><a href="#线程主要有5个状态" class="headerlink" title="线程主要有5个状态"></a>线程主要有5个状态</h3><p><strong>开始</strong></p>
+<p>New 表示线程<strong>被创建但尚未启动的状态</strong>：当我们用 new Thread() 新建一个线程时，如果线程没有开始运行 start() 方法，所以也没有开始执行 run() 方法里面的代码，那么此时它的状态就是 New</p>
+<p><strong>就绪</strong></p>
+<p>Java 中的 Runable 状态对应操作系统线程状态中的两种状态，分别是 <strong>Running 和 Ready</strong>，也就是说，Java 中处于 Runnable 状态的线程有可能正在执行，也有可能没有正在执行，正在等待被分配 CPU 资源。</p>
+<p>所以，如果一个正在运行的线程是 Runnable 状态，当它运行到任务的一半时，执行该线程的 CPU 被调度去做其他事情，导致该线程暂时不运行，<strong>它的状态依然不变，还是 Runnable</strong>，因为它有可能随时被调度回来继续执行任务</p>
+<p><strong>阻塞</strong></p>
+<p>Runnable 状态进入 Blocked 状态只有一种可能，就是<strong>进入 synchronized 保护的代码时没有抢到 monitor 锁</strong></p>
+<p><strong>等待</strong></p>
+<p>Blocked 仅仅针对 <code>synchronized monitor</code> 锁，可是在 Java 中还有很多其他的锁，比如 <code>ReentrantLock</code>，如果线程在获取这种锁时没有抢到该锁就会进入 Waiting 状态，因为本质上它执行了 <code>LockSupport.park()</code> 方法，所以会进入 Waiting 状态。同样，<code>Object.wait()</code> 和 <code>Thread.join()</code> 也会让线程进入 Waiting 状态。</p>
+<p>Blocked 与 Waiting 的区别是 Blocked 在等待其他线程释放 monitor 锁，而 Waiting 则是在等待某个条件，比如 join 的线程执行完毕，或者是 <code>notify()</code>/<code>notifyAll()</code> 。</p>
+<p><strong>超时等待</strong></p>
+<p>在 Waiting 上面是 Timed Waiting 状态，这两个状态是非常相似的，区别仅在于有没有时间限制，Timed Waiting 会等待超时，由系统自动唤醒，或者在超时前被唤醒信号唤醒</p>
+<p><strong>特别注意</strong></p>
+<p>如果其他线程调用 <code>notify()</code> 或 <code>notifyAll()</code>来唤醒它，它会<strong>直接进入 Blocked 状态</strong>，这是为什么呢？因为唤醒 Waiting 线程的线程如果调用 <code>notify()</code> 或 <code>notifyAll()</code>，要求必须首先持有该 monitor 锁，所以处于 Waiting 状态的线程被唤醒时拿不到该锁，就会进入 Blocked 状态，直到执行了 <code>notify()</code>/<code>notifyAll()</code> 的唤醒它的线程执行完毕并释放 monitor 锁，才可能轮到它去抢夺这把锁，如果它能抢到，就会从 <code>Blocked</code> 状态回到 <code>Runnable</code> 状态</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A11.png" alt></p>
+<h3 id="线程通信"><a href="#线程通信" class="headerlink" title="线程通信"></a>线程通信</h3><h4 id="synchronized和volatile关键字"><a href="#synchronized和volatile关键字" class="headerlink" title="synchronized和volatile关键字"></a>synchronized和volatile关键字</h4><p><code>synchronized</code>关键字可以修饰代码块和方法，确保多个线程在同一时刻，只能有一个线程访问变量</p>
+<p><code>volatile</code>关键字</p>
 <ul>
-<li>发送命令 <code>slaveof master_ip master_port</code> </li>
-<li>启动时使用参数<code>--slaveof master_ip master_port</code> （redis-cli -p xxxx –slaveof）</li>
-<li>服务器配置 <code>slaveof master_ip master_port</code> （修改配置文件）</li>
+<li>写变量时，JMM把线程对应的本地内存的共享变量刷新到主内存</li>
+<li>读变量时，JMM会把线程对应的本地内存的共享变量置为无效，从主存读取</li>
 </ul>
-<h3 id="主从复制原理-数据同步"><a href="#主从复制原理-数据同步" class="headerlink" title="主从复制原理-数据同步"></a>主从复制原理-数据同步</h3><p> 具体执行的方式是：从节点向主节点发送psync命令（Redis2.8以前是sync命令），开始同步。</p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis2.png" alt></p>
-<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a><strong>全量复制</strong></h4><p>用于初次复制或其他无法进行部分复制的情况，将主节点中的所有数据都发送给从节点，是一个非常重型的操作 </p>
+<h4 id="等待-通知机制"><a href="#等待-通知机制" class="headerlink" title="等待/通知机制"></a>等待/通知机制</h4><p>等待/通知机制是指一个线程A调用了对象O的wait()方法进入等待状态，而另一个线程B调用了对象O的notify()或notifyAll()方法，线程A收到通知后从等待状态返回，继续执行后续操作</p>
+<table>
+<thead>
+<tr>
+<th>方法名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>wait()</td>
+<td>调用该方法的线程进入WAITING状态，只有等待其他线程通知后或被中断才会返回，<strong>需要注意调用wait()方法后会释放锁</strong></td>
+</tr>
+<tr>
+<td>wait(long)</td>
+<td>超时等待一段时间</td>
+</tr>
+<tr>
+<td>notify()</td>
+<td>通知一个在对象上等待的线程，使其从wait()返回，返回的前提是该线程获取到了对象的锁</td>
+</tr>
+<tr>
+<td>notifyAll()</td>
+<td>通知在这个对象上的所有等待线程</td>
+</tr>
+</tbody></table>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WaitNotify</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">boolean</span> flag=<span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">static</span> Object lock=<span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread waitThread =<span class="keyword">new</span> Thread(<span class="keyword">new</span> Wait(),<span class="string">"waitThread"</span>);</span><br><span class="line">        waitThread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        Thread notifyThread =<span class="keyword">new</span> Thread(<span class="keyword">new</span> Notify(),<span class="string">"notifyThread"</span>);</span><br><span class="line">        notifyThread.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Wait</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (lock)&#123;</span><br><span class="line">                <span class="keyword">while</span> (flag)&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        System.out.println(Thread.currentThread()+<span class="string">"flag is true 等着"</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;<span class="keyword">catch</span> (InterruptedException e)&#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//条件满足，继续执行</span></span><br><span class="line">                System.out.println(Thread.currentThread()+<span class="string">"flag is false 继续执行"</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Notify</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (lock)&#123;</span><br><span class="line">                System.out.println(Thread.currentThread()+<span class="string">"notify线程持有锁"</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"HH:mm:ss"</span>).format(<span class="keyword">new</span> Date()));</span><br><span class="line">                lock.notifyAll();</span><br><span class="line">                flag=<span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E5%8F%8A%E9%80%9A%E4%BF%A12.png" alt></p>
+<p><strong>流程</strong></p>
 <ul>
-<li>从节点判断无法进行部分复制，向主节点发送全量复制的请求；或从节点发送部分复制的请求，但主节点判断无法进行部分复制；具体判断过程需要在讲述了部分复制原理后再介绍。</li>
-<li>主节点收到全量复制的命令后，执行bgsave，在后台生成RDB文件，并使用一个缓冲区（称为复制缓冲区）记录从现在开始执行的所有写命令</li>
-<li>主节点的bgsave执行完成后，将RDB文件发送给从节点；<strong>从节点首先清除自己的旧数据，然后载入接收的RDB文件</strong>，将数据库状态更新至主节点执行bgsave时的数据库状态</li>
-<li>主节点将前述复制缓冲区中的所有写命令发送给从节点，从节点执行这些写命令，将数据库状态更新至主节点的最新状态</li>
-<li>如果从节点开启了AOF，则会触发bgrewriteaof的执行，从而保证AOF文件更新至主节点的最新状态</li>
+<li>wait线程获取对象的锁，调用了wait()方法，从而放弃了锁，进入了对象的等待队列<code>WaitQueue</code></li>
+<li>由于wait线程释放了锁。notify线程得以获取锁，调用<code>notifyAll()</code>方法，将wait线程从<code>WaitQueue</code>移到<code>SynchronizedQueue</code>，此时wait线程变为<strong>阻塞状态</strong></li>
+<li>notify释放锁后wait线程获取到锁继续执行</li>
 </ul>
-<h4 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a><strong>部分复制</strong></h4><p>用于网络中断等情况后的复制，只将中断期间主节点执行的写命令发送给从节点，与全量复制相比更加高效 </p>
-<p>部分复制依赖于下面三个主要概念</p>
-<p><strong>复制偏移量</strong></p>
-<p>主节点和从节点分别维护一个复制偏移量（offset），代表的是<strong>主节点向从节点传递的字节数</strong>；主节点每次向从节点传播N个字节数据时，主节点的offset增加N；从节点每次收到主节点传来的N个字节数据时，从节点的offset增加N。</p>
-<p>offset用于判断主从节点的数据库状态是否一致：如果二者offset相同，则一致；如果offset不同，则不一致，此时可以根据两个offset找出从节点缺少的那部分数据。例如，如果主节点的offset是1000，而从节点的offset是500，那么部分复制就需要将offset为501-1000的数据传递给从节点。而offset为501-1000的数据存储的位置，就是下面要介绍的复制积压缓冲区。</p>
-<p><strong>复制积压缓冲区</strong></p>
-<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis3.png" alt></p>
-<p>复制积压缓冲区是由主节点维护的、固定长度的、先进先出(FIFO)队列，默认大小1MB；当主节点开始有从节点时创建，其作用是备份主节点最近发送给从节点的数据。注意，无论主节点有一个还是多个从节点，都只需要一个复制积压缓冲区。</p>
-<p>在<strong>命令传播阶段</strong>，主节点除了将写命令发送给从节点，还会发送一份给复制积压缓冲区，作为写命令的备份；除了存储写命令，复制积压缓冲区中还存储了其中的每个字节对应的复制偏移量（offset）。由于复制积压缓冲区定长且是先进先出，所以它保存的是主节点最近执行的写命令；时间较早的写命令会被挤出缓冲区</p>
-<p><strong>服务器运行ID(runid)</strong></p>
-<p>主从节点初次复制时，主节点将自己的runid发送给从节点，从节点将这个runid保存起来；当断线重连时，从节点会将这个runid发送给主节点；主节点根据runid判断能否进行部分复制：</p>
-<ul>
-<li>如果从节点保存的runid与主节点现在的runid相同，说明主从节点之前同步过，主节点会继续尝试使用部分复制(到底能不能部分复制还要看offset和复制积压缓冲区的情况)；</li>
-<li>如果从节点保存的runid与主节点现在的runid不同，说明从节点在断线前同步的Redis节点并不是当前的主节点，只能进行全量复制</li>
-</ul>
-<h3 id="主从复制原理-命令传播阶段"><a href="#主从复制原理-命令传播阶段" class="headerlink" title="主从复制原理-命令传播阶段"></a>主从复制原理-命令传播阶段</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/redis4.png" alt></p>
-<h4 id="心跳机制"><a href="#心跳机制" class="headerlink" title="心跳机制"></a>心跳机制</h4><p>master 通过ping指令看slave是否连接着，一般10秒一次</p>
-<h4 id="REPLCONF-ACK"><a href="#REPLCONF-ACK" class="headerlink" title="REPLCONF ACK"></a>REPLCONF ACK</h4><p><strong>从节点会向主节点发送REPLCONF ACK命令</strong>，频率是每秒1次；命令格式为：REPLCONF ACK {offset}，其中offset指从节点保存的复制偏移量</p>
-<p>检测命令丢失：从节点发送了自身的offset，主节点会与自己的offset对比，如果从节点数据缺失（如网络丢包），主节点会推送缺失的数据（这里也会利用复制积压缓冲区） </p>
-<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p> <a href="https://www.cnblogs.com/kismetv/p/9236731.html" target="_blank" rel="noopener">https://www.cnblogs.com/kismetv/p/9236731.html</a> </p>
+<h4 id="管道输入-输出流"><a href="#管道输入-输出流" class="headerlink" title="管道输入/输出流"></a>管道输入/输出流</h4><p>通过<code>PipedInputStream</code> ,<code>PipedOutputStream</code>，<code>PipedReader</code>，<code>PipedWriter</code>实现线程间得数据传输</p>
 
       
     </div>
@@ -617,7 +612,7 @@
         
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag"># redis</a>
+            <a href="/tags/并发编程/" rel="tag"># 并发编程</a>
           
         </div>
       
@@ -630,8 +625,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/04/30/传输层/" rel="next" title="传输层">
-                <i class="fa fa-chevron-left"></i> 传输层
+              <a href="/2020/12/15/用户态与内核态/" rel="next" title="用户态与内核态">
+                <i class="fa fa-chevron-left"></i> 用户态与内核态
               </a>
             
           </div>
@@ -639,10 +634,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/16/GC/" rel="prev" title="GC">
-                GC <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -925,7 +916,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#单机redis存在问题"><span class="nav-number">1.</span> <span class="nav-text">单机redis存在问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制搭建"><span class="nav-number">2.</span> <span class="nav-text">主从复制搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制原理-建立连接"><span class="nav-number">3.</span> <span class="nav-text">主从复制原理-建立连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制原理-数据同步"><span class="nav-number">4.</span> <span class="nav-text">主从复制原理-数据同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#全量复制"><span class="nav-number">4.1.</span> <span class="nav-text">全量复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部分复制"><span class="nav-number">4.2.</span> <span class="nav-text">部分复制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制原理-命令传播阶段"><span class="nav-number">5.</span> <span class="nav-text">主从复制原理-命令传播阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#心跳机制"><span class="nav-number">5.1.</span> <span class="nav-text">心跳机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REPLCONF-ACK"><span class="nav-number">5.2.</span> <span class="nav-text">REPLCONF ACK</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-number">6.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程主要有5个状态"><span class="nav-number">1.</span> <span class="nav-text">线程主要有5个状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程通信"><span class="nav-number">2.</span> <span class="nav-text">线程通信</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#synchronized和volatile关键字"><span class="nav-number">2.1.</span> <span class="nav-text">synchronized和volatile关键字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#等待-通知机制"><span class="nav-number">2.2.</span> <span class="nav-text">等待/通知机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#管道输入-输出流"><span class="nav-number">2.3.</span> <span class="nav-text">管道输入/输出流</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -112,20 +112,21 @@
   </script>
 
 
-  <meta name="description" content="用户态与和核心态处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令 cpu处于用户态还是核心态是通过程序状态寄存器的某个标志位来标识的，如0为用户态，1为内核态 切换用户态向内核态的切换主要有3种方式：系统调用，中断（外中断），异常 中断中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去">
+  <meta name="description" content="用户态与和核心态处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令 cpu处于用户态还是核心态是通过程序状态寄存器的某个标志位来标识的，如0为用户态，1为内核态 切换用户态向内核态的切换主要有3种方式：系统调用，中断（外中断），异常 中断 中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动">
 <meta name="keywords" content="操作系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用户态与内核态">
 <meta property="og:url" content="http://yoursite.com/2020/12/15/用户态与内核态/index.html">
 <meta property="og:site_name" content="XJH">
-<meta property="og:description" content="用户态与和核心态处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令 cpu处于用户态还是核心态是通过程序状态寄存器的某个标志位来标识的，如0为用户态，1为内核态 切换用户态向内核态的切换主要有3种方式：系统调用，中断（外中断），异常 中断中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去">
+<meta property="og:description" content="用户态与和核心态处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令 cpu处于用户态还是核心态是通过程序状态寄存器的某个标志位来标识的，如0为用户态，1为内核态 切换用户态向内核态的切换主要有3种方式：系统调用，中断（外中断），异常 中断 中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/2020/12/15/用户态与内核态/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png">
-<meta property="og:updated_time" content="2020-12-15T05:54:20.226Z">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%812.png">
+<meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png">
+<meta property="og:updated_time" content="2020-12-15T06:00:38.175Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用户态与内核态">
-<meta name="twitter:description" content="用户态与和核心态处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令 cpu处于用户态还是核心态是通过程序状态寄存器的某个标志位来标识的，如0为用户态，1为内核态 切换用户态向内核态的切换主要有3种方式：系统调用，中断（外中断），异常 中断中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去">
-<meta name="twitter:image" content="http://yoursite.com/2020/12/15/用户态与内核态/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png">
+<meta name="twitter:description" content="用户态与和核心态处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令 cpu处于用户态还是核心态是通过程序状态寄存器的某个标志位来标识的，如0为用户态，1为内核态 切换用户态向内核态的切换主要有3种方式：系统调用，中断（外中断），异常 中断 中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动">
+<meta name="twitter:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%812.png">
 
 
 
@@ -484,7 +485,8 @@
         <h3 id="用户态与和核心态"><a href="#用户态与和核心态" class="headerlink" title="用户态与和核心态"></a>用户态与和核心态</h3><p>处于用户态下cpu只能执行非特权指令，当应用程序需要调用计算机资源时需要切换到用户态，用户态可以执行相关的特权指令</p>
 <p>cpu处于用户态还是核心态是通过<strong>程序状态寄存器</strong>的某个标志位来标识的，如0为用户态，1为内核态</p>
 <h4 id="切换"><a href="#切换" class="headerlink" title="切换"></a>切换</h4><p>用户态向内核态的切换主要有3种方式：<strong>系统调用</strong>，<strong>中断</strong>（外中断），<strong>异常</strong></p>
-<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去执行相应的处理程序，处理完该事件后再返回中断处继续执行原来的程序</p>
+<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%812.png" alt></p>
+<p>中断是指CPU对系统发生的某个事件做出的一种反应，CPU暂停正在执行的程序，保存cpu现场后自动去执行相应的处理程序，处理完该事件后再返回中断处继续执行原来的程序</p>
 <p>中断包括3类：</p>
 <ul>
 <li><p>外中断</p>
@@ -506,7 +508,7 @@
 <li>进程通信  完成进程间的消息传递等</li>
 </ul>
 <h3 id="系统调用与库函数的区别"><a href="#系统调用与库函数的区别" class="headerlink" title="系统调用与库函数的区别"></a>系统调用与库函数的区别</h3><p>库函数封装了系统调用的操作，屏蔽了底层的一些细节</p>
-<p><img src="/2020/12/15/用户态与内核态/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CDesktop%5C%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png" alt></p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E4%B8%8E%E7%94%A8%E6%88%B7%E6%80%811.png" alt></p>
 
       
     </div>
@@ -602,6 +604,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/15/线程状态及线程通信/" rel="prev" title="线程状态及线程通信">
+                线程状态及线程通信 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -725,7 +731,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -776,7 +784,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

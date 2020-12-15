@@ -123,7 +123,7 @@
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized1.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized1.png">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized3.png">
-<meta property="og:updated_time" content="2020-12-01T12:52:51.369Z">
+<meta property="og:updated_time" content="2020-12-15T06:30:15.115Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="synchronized详解">
 <meta name="twitter:description" content="synchronizedsynchronized关键字解决的是 多个线程之间访问资源的同步性  synchronized底层原理 synchronized修饰代码块 javac SynchronizedDemo.java 命令⽣成编译后的 .class ⽂件 执⾏ javap -c -s -v -l SynchronizedDemo.class  1234567public class Synch">
@@ -496,7 +496,7 @@
 </li>
 <li><p><strong>synchronized修饰方法</strong></p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/synchronized1.png" alt></p>
-<p>synchronized 修饰的⽅法并没有 monitorenter 指令和 monitorexit 指令，取得代之的确实是 <strong>ACC_SYNCHRONIZED</strong> 标识，该标识指明了该⽅法是⼀个同步⽅法，JVM 通过该 ACC_SYNCHRONIZED 访问 标志来辨别⼀个⽅法是否声明为同步⽅法，从⽽执⾏相应的同步调⽤。  </p>
+<p>synchronized 修饰的⽅法并没有 monitorenter 指令和 monitorexit 指令，取得代之的确实是 <strong>ACC_SYNCHRONIZED</strong> 标识，被 synchronized 修饰的方法会有一个 ACC_SYNCHRONIZED 标志。当某个线程要访问某个方法的时候，会首先检查方法是否有 ACC_SYNCHRONIZED 标志，如果有则需要先获得 monitor 锁，然后才能开始执行方法，方法执行之后再释放 monitor 锁  </p>
 </li>
 </ul>
 <h3 id="最主要的三种使用方式"><a href="#最主要的三种使用方式" class="headerlink" title="最主要的三种使用方式"></a>最主要的三种使用方式</h3><ul>
@@ -735,7 +735,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -786,7 +788,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
