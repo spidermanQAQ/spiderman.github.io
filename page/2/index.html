@@ -1986,183 +1986,8 @@
 <h2 id="为什么Survivor不是0块"><a href="#为什么Survivor不是0块" class="headerlink" title="为什么Survivor不是0块"></a>为什么Survivor不是0块</h2><p>Survivor如果是0的话，那在eden中垃圾回收之后存活的对象都会进入老生代，这样老生代的内存空间很快就被占满了，从而触发最耗时的 Full GC </p>
 <h2 id="为什么Survivor不是1块"><a href="#为什么Survivor不是1块" class="headerlink" title="为什么Survivor不是1块"></a>为什么Survivor不是1块</h2><p>如果 Survivor 分区是 1 个的话，假设我们把两个区域分为 1:1，那么任何时候都有一半的内存空间是闲置的，显然空间利用率太低 </p>
 <p>但如果设置内存空间的比例是 8:2 ，只是看起来似乎“很好”，假设新生代的内存为 100 MB（ Survivor 大小为 20 MB ），现在有 70 MB 对象进行垃圾回收之后，剩余活跃的对象为 15 MB 进入 Survivor 区，这个时候新生代可用的内存空间只剩了 5 MB，这样很快又要进行垃圾回收操作 </p>
-<h2 id="堆内存分3块有什么好处"><a href="#堆内存分3块有什么好处" class="headerlink" title="堆内存分3块有什么好处"></a>堆内存分3块有什么好处</h2><p>HotSpot将新生代划分为三块，一块较大的Eden空间和两块较小的Survivor空间，默认比例为8：1：1。划分的目的是因为HotSpot采用复制算法来回收新生代，设置这个比例是为了充分利用内存空间，减少浪费。新生成的对象在Eden区分配（大对象除外，大对象直接进入老年代），当Eden区没有足够的空间进行分配时，虚拟机将发起一次Minor GC。 </p>
-<p>GC开始时，对象只会存在于Eden区和From Survivor区，To Survivor区是空的（作为保留区域）。GC进行时，Eden区中所有存活的对象都会被复制到To Survivor区，而在From Survivor区中，仍存活的对象会根据它们的年龄值决定去向，年龄值达到年龄阀值（默认为15，新生代中的对象每熬过一轮垃圾回收，年龄值就加1，GC分代年龄存储在对象的header中）的对象会被移到老年代中，没有达到阀值的对象会被复制到To Survivor区。接着清空Eden区和From Survivor区，新生代中存活的对象都在To Survivor区。接着， From Survivor区和To Survivor区会交换它们的角色，也就是新的To Survivor区就是上次GC清空的From Survivor区，新的From Survivor区就是上次GC的To Survivor区，总之，不管怎样都会保证To Survivor区在一轮GC后是空的 </p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/29/vue-cli3构建Vue项目/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/07/29/vue-cli3构建Vue项目/" class="post-title-link" itemprop="url">vue-cli3构建Vue项目</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-07-29 17:33:11" itemprop="dateCreated datePublished" datetime="2020-07-29T17:33:11+08:00">2020-07-29</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/仿牛客项目/" itemprop="url" rel="index"><span itemprop="name">仿牛客项目</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>vue-cli3构建Vue项目</p>
-<p>shift+右键打开shell，使用create vue 项目名指令</p>
-<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-1.png" alt></p>
-<p>选择manually select，使用空格选择</p>
-<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-2.png" alt></p>
-<p>这里没有选择使用历史模式</p>
-<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-3.png" alt></p>
-<p>选择在package.json中放配置，不作为未来工程的一个模板</p>
-<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-4.png" alt></p>
-<p>进入有package.json的文件夹，运行npm run serve启动</p>
-<p><img src="/2020/07/29/vue-cli3构建Vue项目/F:%5C%E5%BE%90%E4%BF%8A%E8%BE%89%5CPictures%5Cvue-cli3-5.png" alt></p>
+<h2 id="堆内存分3块有什么好处"><a href="#堆内存分3块有什么好处" class="headerlink" title="堆内存分3块有什么好处"></a>堆内存分3块有什么好处</h2><p>HotSpot将<strong>新生代</strong>划分为三块，一块较大的Eden空间和两块较小的Survivor空间，默认比例为8：1：1。划分的目的是因为HotSpot采用<strong>复制算法</strong>来回收新生代，设置这个比例是为了充分利用内存空间，减少浪费。新生成的对象在Eden区分配（大对象除外，大对象直接进入老年代），当Eden区没有足够的空间进行分配时，虚拟机将发起一次Minor GC。 </p>
+<p>GC开始时，对象只会存在于<code>Eden</code>区和<code>From Survivor</code>区，<code>To Survivor</code>区是空的（作为保留区域）。GC进行时，Eden区中所有存活的对象都会被复制到<code>To Survivor</code>区，而在<code>From Survivor</code>区中，仍存活的对象会根据它们的年龄值决定去向，年龄值达到年龄阀值（默认为15，新生代中的对象每熬过一轮垃圾回收，年龄值就加1，GC分代年龄存储在对象的header中）的对象会被移到老年代中，没有达到阀值的对象会被复制到<code>To Survivor</code>区。接着清空<code>Eden</code>区和<code>From Survivor</code>区，新生代中存活的对象都在<code>To Survivor</code>区。接着， <code>From Survivor</code>区和<code>To Survivor</code>区会交换它们的角色，也就是新的<code>To Survivor</code>区就是上次GC清空的<code>From Survivor</code>区，新的<code>From Survivor</code>区就是上次GC的<code>To Survivor</code>区，总之，不管怎样都会保证<code>To Survivor</code>区在一轮GC后是空的 </p>
 
           
         
@@ -3052,6 +2877,192 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/23/单例模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/07/23/单例模式/" class="post-title-link" itemprop="url">单例模式</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-23 21:07:39" itemprop="dateCreated datePublished" datetime="2020-07-23T21:07:39+08:00">2020-07-23</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/单例模式/" itemprop="url" rel="index"><span itemprop="name">单例模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="单例模式概念"><a href="#单例模式概念" class="headerlink" title="单例模式概念"></a>单例模式概念</h2><p>单例模式即一个类负责创建自己的对象，且确保是单个对象，并且该类提供访问自己唯一对象的方法，可以直接访问，不需要实例化</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>数据库连接对象connection，每次建立连接都创建一个对象，消耗太大（可以复用的对象为毛还要每次创建销毁呢），所以我们可以把这个对象设计成单例，只需创建一次并且可以重复使用不就行了</p>
+<h2 id="单例模式三大目标"><a href="#单例模式三大目标" class="headerlink" title="单例模式三大目标"></a>单例模式三大目标</h2><ul>
+<li>懒加载：程序创建时不需要创建对象，等用到时在创建</li>
+<li>线程安全</li>
+<li></li>
+</ul>
+<h2 id="单例模式代码演化"><a href="#单例模式代码演化" class="headerlink" title="单例模式代码演化"></a>单例模式代码演化</h2><h3 id="one"><a href="#one" class="headerlink" title="one"></a>one</h3><p>这种情况下线程不安全</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton1</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton1 singleton1;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton1 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            singleton1 =<span class="keyword">new</span> Singleton1();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="two"><a href="#two" class="headerlink" title="two"></a>two</h3><p>锁方法造成效率低下，每次拿对象都得获取锁，我们只需要在构建对象时加锁即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton2</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton2 singleton2;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton2 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            singleton2 =<span class="keyword">new</span> Singleton2();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="three"><a href="#three" class="headerlink" title="three"></a>three</h3><p>这里在构建对象时加锁，但还是存在问题，例如A,B两个线程都执行完1步，此时假设A线程获取锁，创建了对象，结束；然后B线程此时因为已经执行完1，也会获得锁，创建对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span>   Singleton3 singleton3;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton3</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Singleton3 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(singleton3==<span class="keyword">null</span>)&#123;<span class="comment">//1</span></span><br><span class="line">        <span class="keyword">synchronized</span> (Singleton3.class)&#123;<span class="comment">//2</span></span><br><span class="line">            singleton3=<span class="keyword">new</span> Singleton3();<span class="comment">//3</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> singleton3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="four"><a href="#four" class="headerlink" title="four"></a>four</h3><p>双校验锁，在获得锁之后再加一次判断，当然这种方式也会有问题，但已经不错了。问题在于：singleton5=new Singleton5()这一句代表包括3步，分配内存，初始化对象，对象指向内存空间；此时可能会有指令重排，假设A执行了分配内存，对象执行内存空间，而没有初始化，当B线程判断instance已存在时会直接返回一个A线程没有初始化的instance</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton5</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>   Singleton5 singleton5;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton5</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Singleton5 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton5==<span class="keyword">null</span>)&#123;<span class="comment">//1</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton5.class)&#123;<span class="comment">//2</span></span><br><span class="line">                <span class="keyword">if</span>(singleton5==<span class="keyword">null</span>)&#123;</span><br><span class="line">                    singleton5=<span class="keyword">new</span> Singleton5();<span class="comment">//3</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="five"><a href="#five" class="headerlink" title="five"></a>five</h3><p>加个volatile解决</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton5 &#123;</span><br><span class="line">    private static volatile Singleton5 singleton5;</span><br><span class="line"></span><br><span class="line">    private Singleton5()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    private static Singleton5 getSingleton()&#123;</span><br><span class="line">        if(singleton5==null)&#123;//1</span><br><span class="line">            synchronized (Singleton5.class)&#123;//2</span><br><span class="line">                if(singleton5==null)&#123;</span><br><span class="line">                    singleton5=new Singleton5();//3</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return singleton5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -3100,7 +3111,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">63</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3151,11 +3162,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3204,11 +3211,7 @@
                     
                       
                     
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
