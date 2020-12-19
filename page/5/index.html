@@ -380,6 +380,201 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/29/mvc拦截器与servlet过滤器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/29/mvc拦截器与servlet过滤器/" class="post-title-link" itemprop="url">mvc拦截器与servlet过滤器</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-29 14:00:21" itemprop="dateCreated datePublished" datetime="2019-10-29T14:00:21+08:00">2019-10-29</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/springmvc/" itemprop="url" rel="index"><span itemprop="name">springmvc</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><p><strong>作用</strong></p>
+<ul>
+<li>对服务器接受的请求资源和响应给浏览器的资源进行管理</li>
+<li>保护servlet</li>
+</ul>
+<p><strong>使用</strong></p>
+<ul>
+<li><p>创建一个实现了Filter接口的普通java类</p>
+</li>
+<li><p>覆写接口中的方法</p>
+<p>init方法：服务器启动即执行，资源初始化</p>
+<p>doFilter方法：拦截请求的方法，此方法中可以对资源实现管理（需要手动进行放行）</p>
+<p>destory方法：服务器关闭执行</p>
+</li>
+<li><p>在web.xml中配置过滤器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--配置解决中文乱码的过滤器--&gt;</span><br><span class="line">&lt;filter&gt;</span><br><span class="line">  &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">  &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;</span><br><span class="line">  &lt;init-param&gt;</span><br><span class="line">    &lt;param-name&gt;encoding&lt;/param-name&gt;</span><br><span class="line">    &lt;param-value&gt;UTF-8&lt;/param-value&gt;</span><br><span class="line">  &lt;/init-param&gt;</span><br><span class="line">&lt;/filter&gt;</span><br><span class="line">&lt;filter-mapping&gt;</span><br><span class="line">  &lt;filter-name&gt;characterEncodingFilter&lt;/filter-name&gt;</span><br><span class="line">  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">&lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>生命周期</strong>：服务器启动到服务器关闭</p>
+<p><strong>过滤器流程</strong>：客户端发送url请求，服务器接收后在web.xml中查找有无对应的过滤器类，如果满足此拦截条件，那么在过滤器中的doFilter方法中调用filterChain.doFilter(servletRequest,servletResponse) ，执行，否则重定向跳转到错误界面。</p>
+<h2 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h2><p>创建类，实现HandlerInterceptor接口，重写需要的方法</p>
+<p>preHandle方法：进入Handler方法之前执行。可以用于身份认证、身份授权。比如如果认证没有通过表示用户没有登陆，需要此方法拦截不再往下执行（return false），否则就放行（return true）。</p>
+<p>postHandle方法：进入Handler方法之后，返回ModelAndView之前执行。可以看到该方法中有个modelAndView的形参。应用场景：从modelAndView出发：将公用的模型数据（比如菜单导航之类的）在这里传到视图，也可以在这里同一指定视图。</p>
+<p>afterCompletion方法：执行Handler完成之后执行。应用场景：统一异常处理，统一日志处理等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class interceptor1 implements HandlerInterceptor &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;我要拦截你，interceptor1&quot;);</span><br><span class="line">        //request.getRequestDispatcher(&quot;WEB-INF/pages/error.jsp&quot;).forward(request,response);</span><br><span class="line">        //放行</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;拦截1已经执行了&quot;);</span><br><span class="line">        //request.getRequestDispatcher(&quot;WEB-INF/pages/error.jsp&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;我最后&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在springmvc.xml中配置拦截器类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:interceptors&gt;</span><br><span class="line">    &lt;mvc:interceptor&gt;</span><br><span class="line">        &lt;mvc:mapping path=&quot;/user/*&quot;/&gt;</span><br><span class="line">        &lt;bean class=&quot;interceptor.interceptor1&quot;&gt;&lt;/bean&gt;</span><br><span class="line">    &lt;/mvc:interceptor&gt;</span><br><span class="line">&lt;/mvc:interceptors&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>1、拦截器是基于java的反射机制的，而过滤器是基于函数回调<br>2、过滤器依赖与servlet容器，而拦截器不依赖与servlet容器<br>3、拦截器只能对action请求起作用，而过滤器则可以对几乎所有的请求起作用<br>4、拦截器可以访问action上下文、值栈里的对象，而过滤器不能<br>5、在action的生命周期中，拦截器可以多次被调用，而过滤器只能在容器初始化时被调用一次 </p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/26/事务的前世今生/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2418,205 +2613,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/28/static-instanceof-转型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/09/28/static-instanceof-转型/" class="post-title-link" itemprop="url">static,instanceof,转型</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-09-28 14:21:20" itemprop="dateCreated datePublished" datetime="2019-09-28T14:21:20+08:00">2019-09-28</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/java基础/" itemprop="url" rel="index"><span itemprop="name">java基础</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="static关键字"><a href="#static关键字" class="headerlink" title="static关键字"></a>static关键字</h2><h3 id="静态变量和静态方法"><a href="#静态变量和静态方法" class="headerlink" title="静态变量和静态方法"></a>静态变量和静态方法</h3><p>static最基本的用法</p>
-<ol>
-<li>被static修饰的变量属于类变量，可以通过<strong>类名.变量名</strong>直接引用，而不需要new出一个类来</li>
-<li>被static修饰的方法属于类方法，可以通过<strong>类名.方法名</strong>直接引用，而不需要new出一个类来</li>
-</ol>
-<p>被static修饰的变量、被static修饰的方法统一属于类的<strong>静态资源，是类实例之间共享的，换言之，一处变、处处变</strong>。JDK把不同的静态资源放在了不同的类中而不把所有静态资源放在一个类里面，很多人可能想当然认为当然要这么做，但是是否想过为什么要这么做呢？个人认为主要有三个好处：</p>
-<p>1、不同的类有自己的静态资源，这可以实现静态资源分类。比如和数学相关的静态资源放在java.lang.Math中，和日历相关的静态资源放在java.util.Calendar中，这样就很清晰了</p>
-<p>2、避免重名。不同的类之间有重名的静态变量名、静态方法名也是很正常的，如果所有的都放在一起不可避免的一个问题就是名字重复，这时候怎么办？分类放置就好了。</p>
-<p>3、避免静态资源类无限膨胀，这很好理解。</p>
-<p>OK，再微微深入一下，也是有些人容易混淆的一个问题：静态方法能不能引用非静态资源？静态方法里面能不能引用静态资源？非静态方法里面能不能引用静态资源？比如就以这段代码为例，是否有错？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 public class A</span><br><span class="line">2 &#123;</span><br><span class="line">3     private int i = 1;</span><br><span class="line">4     </span><br><span class="line">5     public static void main(String[] args)</span><br><span class="line">6     &#123;</span><br><span class="line">7         i = 1;</span><br><span class="line">8     &#125;</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然有错，在第7行的地方。不妨这么思考这个问题：</p>
-<p>静态资源属于类，但是是独立于类存在的。从JVM的类加载机制的角度讲，<strong>静态资源是类初始化的时候加载的，而非静态资源是类new的时候加载的</strong>。类的初始化早于类的new，比如Class.forName(“xxx”)方法，就是初始化了一个类，但是并没有new它，只是加载这个类的静态资源罢了。所以对于静态资源来说，它是不可能知道一个类中有哪些非静态资源的；但是对于非静态资源来说就不一样了，由于它是new出来之后产生的，因此属于类的这些东西它都能认识。所以上面的几个问题答案就很明确了：</p>
-<p>1、静态方法能不能引用非静态资源？不能，new的时候才会产生的东西，对于初始化后就存在的静态资源来说，根本不认识它。</p>
-<p>2、静态方法里面能不能引用静态资源？可以，因为都是类初始化的时候加载的，大家相互都认识。</p>
-<p>3、非静态方法里面能不能引用静态资源？可以，非静态方法就是实例方法，那是new之后才产生的，那么属于类的内容它都认识。</p>
-<h3 id="静态块"><a href="#静态块" class="headerlink" title="静态块"></a>静态块</h3><p>静态块也是static的重要应用之一。也是用于初始化一个类的时候做操作用的，和静态变量、静态方法一样，<strong>静态块里面的代码只执行一次，且只在初始化类的时候执行</strong>。静态块很简单，不过提三个小细节：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     private static int a = B();</span><br><span class="line"> 4     </span><br><span class="line"> 5     static</span><br><span class="line"> 6     &#123;</span><br><span class="line"> 7         System.out.println(&quot;Enter A.static block&quot;);</span><br><span class="line"> 8     &#125;</span><br><span class="line"> 9     </span><br><span class="line">10     public static void main(String[] args)</span><br><span class="line">11     &#123;</span><br><span class="line">12         new A();</span><br><span class="line">13     &#125;</span><br><span class="line">14     </span><br><span class="line">15     public static int B()</span><br><span class="line">16     &#123;</span><br><span class="line">17         System.out.println(&quot;Enter A.B()&quot;);</span><br><span class="line">18         return 1;</span><br><span class="line">19     &#125;</span><br><span class="line">20 &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Enter A.B()</span><br><span class="line">Enter A.static block</span><br></pre></td></tr></table></figure>
-
-<p>出第一个结论：<strong>静态资源的加载顺序是严格按照静态资源的定义顺序来加载的</strong>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     static</span><br><span class="line"> 4     &#123;</span><br><span class="line"> 5         c = 3;</span><br><span class="line"> 6         System.out.println(c);</span><br><span class="line"> 7     &#125;</span><br><span class="line"> 8     </span><br><span class="line"> 9     private static int c;</span><br><span class="line">10 &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码的第6行是有错误的“Cannot reference a field before it is defined”。从这个例子得出第二个结论：<strong>静态代码块对于定义在它之后的静态变量，可以赋值，但是不能访问</strong></p>
-<p>最后一个小例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     static</span><br><span class="line"> 4     &#123;</span><br><span class="line"> 5         System.out.println(&quot;A.static block&quot;);</span><br><span class="line"> 6     &#125;</span><br><span class="line"> 7     </span><br><span class="line"> 8     public A()</span><br><span class="line"> 9     &#123;</span><br><span class="line">10         System.out.println(&quot;A.constructor()&quot;);</span><br><span class="line">11     &#125;</span><br><span class="line">12 &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> 1 public class B extends A</span><br><span class="line"> 2 &#123;</span><br><span class="line"> 3     static </span><br><span class="line"> 4     &#123;</span><br><span class="line"> 5         System.out.println(&quot;B.static block&quot;);</span><br><span class="line"> 6     &#125;</span><br><span class="line"> 7     </span><br><span class="line"> 8     public B()</span><br><span class="line"> 9     &#123;</span><br><span class="line">10         System.out.println(&quot;B.constructor()&quot;);</span><br><span class="line">11     &#125;</span><br><span class="line">12     </span><br><span class="line">13     public static void main(String[] args)</span><br><span class="line">14     &#123;</span><br><span class="line">15         new B();</span><br><span class="line">16         new B();</span><br><span class="line">17     &#125;</span><br><span class="line">18 &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">A.static block</span><br><span class="line">B.static block</span><br><span class="line">A.constructor()</span><br><span class="line">B.constructor()</span><br><span class="line">A.constructor()</span><br><span class="line">B.constructor()</span><br></pre></td></tr></table></figure>
-
-<p>这个例子得出第三个结论：<strong>静态代码块是严格按照父类静态代码块-&gt;子类静态代码块的顺序加载的，且只加载一次</strong></p>
-<p>这一部分转自<a href="https://www.cnblogs.com/swisszhang/p/9892992.html" target="_blank" rel="noopener">https://www.cnblogs.com/swisszhang/p/9892992.html</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2665,7 +2661,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2716,7 +2712,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2765,7 +2763,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

@@ -380,6 +380,224 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/15/ThreadLocal/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/11/15/ThreadLocal/" class="post-title-link" itemprop="url">ThreadLocal</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-11-15 15:42:45" itemprop="dateCreated datePublished" datetime="2020-11-15T15:42:45+08:00">2020-11-15</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/多线程/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="ThreadLocal的两种典型使用场景"><a href="#ThreadLocal的两种典型使用场景" class="headerlink" title="ThreadLocal的两种典型使用场景"></a>ThreadLocal的两种典型使用场景</h2><ul>
+<li>ThreadLocal 用作保存每个线程独享的对象，为每个线程都创建一个副本（也就不用考虑线程共享，这里是独享），这样每个线程都可以修改自己所拥有的副本, 而不会影响其他线程的副本，确保了线程安全</li>
+<li>ThreadLocal 用作每个线程内需要独立保存信息，以便供其他方法更方便地获取该信息的场景,避免了传参，类似于全局变量的概念</li>
+</ul>
+<h3 id="典型场景1（SimpleDateFormat进化过程-详细看参考链接）"><a href="#典型场景1（SimpleDateFormat进化过程-详细看参考链接）" class="headerlink" title="典型场景1（SimpleDateFormat进化过程-详细看参考链接）"></a>典型场景1（SimpleDateFormat进化过程-详细看参考链接）</h3><p>1.2 个线程都要用到 SimpleDateFormat</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal1.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalDemo01</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            String date = <span class="keyword">new</span> ThreadLocalDemo01().date(<span class="number">1</span>);</span><br><span class="line">            System.out.println(date);</span><br><span class="line">        &#125;).start();</span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            String date = <span class="keyword">new</span> ThreadLocalDemo01().date(<span class="number">2</span>);</span><br><span class="line">            System.out.println(date);</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">date</span><span class="params">(<span class="keyword">int</span> seconds)</span> </span>&#123;</span><br><span class="line">        Date date = <span class="keyword">new</span> Date(<span class="number">1000</span> * seconds);</span><br><span class="line">        SimpleDateFormat simpleDateFormat = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"mm:ss"</span>);</span><br><span class="line">        <span class="keyword">return</span> simpleDateFormat.format(date);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.10 个线程都要用到 SimpleDateFormat （使用for循环）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal2.png" alt></p>
+<p>3.需求变成了 1000 个线程都要用到 SimpleDateFormat（使用线程池复用，但还得创建1000个SimpleDateFormat对象）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal3.png" alt></p>
+<p>4.所有的线程都共用一个 simpleDateFormat 对象（simpleDateFormat 对象变成 static 静态变量）</p>
+<p>5.线程不安全，出现了并发安全问题（多线程出现并发，加锁或者ThreadLocal）</p>
+<p>6.加锁（synchronized ，这样线程得等待，效率不高）</p>
+<p>7.使用 ThreadLocal（让每个线程都拥有一个自己的 simpleDateFormat 对象）</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal5.png" alt></p>
+<h3 id="典型场景2"><a href="#典型场景2" class="headerlink" title="典型场景2"></a>典型场景2</h3><p>每个线程内需要保存类似于全局变量的信息（例如在拦截器中获取的用户信息），可以让不同方法直接使用，避免参数传递的麻烦却不想被多线程共享（因为不同线程获取到的用户信息不一样）</p>
+<p>例如，用 ThreadLocal 保存一些业务内容（用户权限信息、从用户系统获取到的用户名、用户ID 等），这些信息在同一个线程内相同，但是不同的线程使用的业务内容是不相同的。</p>
+<p>在线程生命周期内，都通过这个静态 ThreadLocal 实例的 get() 方法取得自己 set 过的那个对象，避免了将这个对象（如 user 对象）作为参数传递的麻烦</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal8.png" alt></p>
+<p>想到可以用HashMap保存user，但是线程不安全</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal6.png" alt></p>
+<p>使用ThreadLocal 拿到只属于自己的独享对象</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal7.png" alt></p>
+<h2 id="ThreadLocal-是用来解决共享资源的多线程访问的问题吗"><a href="#ThreadLocal-是用来解决共享资源的多线程访问的问题吗" class="headerlink" title="ThreadLocal 是用来解决共享资源的多线程访问的问题吗"></a>ThreadLocal 是用来解决共享资源的多线程访问的问题吗</h2><p>不是，ThreadLocal 并不是用来解决共享资源问题的。虽然 ThreadLocal 确实可以用于解决多线程情况下的线程安全问题，但其资源并不是共享的，而是每个线程独享的</p>
+<p>具体而言，它可以在 initialValue 中 new 出自己线程独享的资源，而多个线程之间，它们所访问的对象本身是不共享的，自然就不存在任何并发问题</p>
+<h3 id="ThreadLocal-和-synchronized-是什么关系"><a href="#ThreadLocal-和-synchronized-是什么关系" class="headerlink" title="ThreadLocal 和 synchronized 是什么关系"></a>ThreadLocal 和 synchronized 是什么关系</h3><p>面试官可能会问：你既然说 ThreadLocal 和 synchronized 它们两个都能解决线程安全问题，那么 ThreadLocal 和 synchronized 是什么关系呢？</p>
+<ul>
+<li>ThreadLocal 是通过让每个线程独享自己的副本，避免了资源的竞争。</li>
+<li>synchronized 主要用于临界资源的分配，在同一时刻限制最多只有一个线程能访问该资源</li>
+</ul>
+<p>synchronized 的效率会更低一些，但是花费的内存也更少，ThreadLocal还可以用来避免传参</p>
+<h2 id="ThreadLocal-在-Thread-中的-threadlocals-里是怎么存储的？"><a href="#ThreadLocal-在-Thread-中的-threadlocals-里是怎么存储的？" class="headerlink" title="ThreadLocal 在 Thread 中的 threadlocals 里是怎么存储的？"></a>ThreadLocal 在 Thread 中的 threadlocals 里是怎么存储的？</h2><p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/ThreadLocal9.png" alt></p>
+<p>可以看到：</p>
+<ul>
+<li><p>每个 Thread 对象中都持有一个 ThreadLocalMap 类型的成员变量</p>
+</li>
+<li><p>而这个 ThreadLocalMap 自身类似于是一个 Map，里面会有一个个 key value 形式的键值对</p>
+</li>
+<li><p>key 就是 ThreadLocal 的引用，value就是ThreadLocal 存储的内容</p>
+</li>
+</ul>
+<p><strong>源码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public void set(T value) &#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    if (map != null)</span><br><span class="line">        map.set(this, value);</span><br><span class="line">    else</span><br><span class="line">        createMap(t, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void set(ThreadLocal&lt;?&gt; key, Object value) &#123;</span><br><span class="line">            Entry[] tab = table;</span><br><span class="line">            int len = tab.length;</span><br><span class="line">            int i = key.threadLocalHashCode &amp; (len-1);</span><br><span class="line"></span><br><span class="line">            for (Entry e = tab[i];</span><br><span class="line">                 e != null;</span><br><span class="line">                 e = tab[i = nextIndex(i, len)]) &#123;</span><br><span class="line">                ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line"></span><br><span class="line">                if (k == key) &#123;</span><br><span class="line">                    e.value = value;</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (k == null) &#123;</span><br><span class="line">                    replaceStaleEntry(key, value, i);</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            tab[i] = new Entry(key, value);</span><br><span class="line">            int sz = ++size;</span><br><span class="line">            if (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)</span><br><span class="line">                rehash();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存泄漏——为何每次用完-ThreadLocal-都要调用-remove-？"><a href="#内存泄漏——为何每次用完-ThreadLocal-都要调用-remove-？" class="headerlink" title="内存泄漏——为何每次用完 ThreadLocal 都要调用 remove()？"></a>内存泄漏——为何每次用完 ThreadLocal 都要调用 remove()？</h2><h3 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h3><p>内存泄漏指的是，当某一个对象不再有用的时候，占用的内存却不能被回收，这就叫作内存泄漏</p>
+<h3 id="Key-的泄漏"><a href="#Key-的泄漏" class="headerlink" title="Key 的泄漏"></a>Key 的泄漏</h3><p>之前讲了ThreadLocal存储的过程，如果我们执行ThreadLocal instance = null 操作，想清理掉这个 ThreadLocal 实例，但是呢entry里的key又强引用了ThreadLocal，引用链依然存在，可达性分析会发现实例依然可达没无法回收，造成内存泄漏</p>
+<p>所以 ThreadLocalMap 中的 Entry 继承了 WeakReference 弱引用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static class Entry extends WeakReference&lt;ThreadLocal&lt;?&gt;&gt; &#123;</span><br><span class="line">    /** The value associated with this ThreadLocal. */</span><br><span class="line">    Object value;</span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        super(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时的k就是弱引用，一旦gc就被回收</p>
+<h3 id="Value-的泄漏"><a href="#Value-的泄漏" class="headerlink" title="Value 的泄漏"></a>Value 的泄漏</h3><p> ThreadLocalMap 中使⽤的 key 为 ThreadLocal 的弱引⽤,⽽ value 是强引⽤。所以，如果 ThreadLocal 没有被外部强引⽤的情况下，在垃圾回收的时候，key 会被清理掉，⽽ value 不会被 清理掉。这样⼀来， ThreadLocalMap 中就会出现key为null的Entry。假如我们不做任何措施的话， value 永远⽆法被GC 回收，这个时候就可能会产⽣内存泄露。ThreadLocalMap实现中已经考虑了这种 情况，在调⽤ set() 、 get() 、 remove() ⽅法的时候，会清理掉 key 为 null 的记录。使⽤完 ThreadLocal ⽅法后 最好⼿动调⽤ remove() ⽅法 </p>
+<h3 id="如何避免内存泄露"><a href="#如何避免内存泄露" class="headerlink" title="如何避免内存泄露"></a>如何避免内存泄露</h3><p>使用完了 ThreadLocal 之后，我们应该手动去调用它的 remove 方法</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/15/深克隆与浅克隆/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -906,7 +1124,8 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>)</span><br><span class="line">        map.set(<span class="keyword">this</span>, value);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        createMap(t, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(ThreadLocal&lt;?&gt; key, Object value)</span> </span>&#123;</span><br><span class="line">    Entry[] tab = table;</span><br><span class="line">    <span class="keyword">int</span> len = tab.length;</span><br><span class="line">    <span class="keyword">int</span> i = key.threadLocalHashCode &amp; (len-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (Entry e = tab[i];</span><br><span class="line">         e != <span class="keyword">null</span>;</span><br><span class="line">         e = tab[i = nextIndex(i, len)]) &#123;</span><br><span class="line">         ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line"></span><br><span class="line">         <span class="keyword">if</span> (k == key) &#123;</span><br><span class="line">                e.value = value;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">if</span> (k == <span class="keyword">null</span>) &#123;</span><br><span class="line">                replaceStaleEntry(key, value, i);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      tab[i] = <span class="keyword">new</span> Entry(key, value);</span><br><span class="line">      <span class="keyword">int</span> sz = ++size;</span><br><span class="line">      <span class="keyword">if</span> (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)</span><br><span class="line">          rehash();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">        <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">        Object value;</span><br><span class="line"></span><br><span class="line">        Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">            <span class="keyword">super</span>(k);</span><br><span class="line">            value = v;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><p>虚引用 就是 形同虚设 ，它并不能决定 对象的生命周期。任何时候这个只有虚引用的对象都有可能被回收。因此，虚引用主要用来跟踪对象的回收，清理被销毁对象的相关资源 </p>
+<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><p>虚引用要和队列联合使用，当弱引用指向的对象被回收时可以起到一个通知作用。</p>
+<p>任何时候这个只有虚引用的对象都有可能被回收。 </p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%99%9A%E5%BC%95%E7%94%A8.png" alt></p>
 
           
@@ -2284,12 +2503,13 @@
 
 <p><strong>思路</strong></p>
 <ul>
-<li>对于奇数，中位数是(len1+len2)/2;对于偶数，是(len1+len2)/2+(len1+len2)/2+1,找到即可</li>
-<li>找第k个数，可以每次选择A[0-k/2-1]，B[0-k/2-1]，对于更小的，可以确定k/2个淘汰</li>
-<li>这样剩下来k=1就是两个数组中的第1个</li>
+<li>通过建一个分割线，将两个数组都分成2分，使得2个数组左边数量比右边多一个</li>
+<li>如果原来两个数组和是奇数，返回左边最大值即可</li>
+<li>如果和是偶数，返回左边最大值和右边最小值，除以二即可</li>
+<li>所以此题就是找切割线的位置</li>
 </ul>
 <p><strong>代码</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public double findMedianSortedArrays(int[] nums1, int[] nums2) &#123;</span><br><span class="line">        int len1=nums1.length;</span><br><span class="line">        int len2=nums2.length;</span><br><span class="line">        if((len1+len2)%2==1)&#123;</span><br><span class="line">            double res=getElement(nums1,nums2,(len1+len2)/2+1);</span><br><span class="line">            return res;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            double res=(getElement(nums1,nums2,(len1+len2)/2)+getElement(nums1,nums2,(len1+len2)/2+1))/2.0;</span><br><span class="line">            return res;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    int getElement(int[] nums1,int[] nums2,int k)&#123;</span><br><span class="line">        int index1=0,index2=0;</span><br><span class="line">        int length1=nums1.length;</span><br><span class="line">        int length2=nums2.length;</span><br><span class="line">        while(true)&#123;</span><br><span class="line">          if(length1==index1)</span><br><span class="line">            return nums2[index2+k-1];</span><br><span class="line">        </span><br><span class="line">          if(length2==index2)</span><br><span class="line">            return nums1[index1+k-1];</span><br><span class="line"></span><br><span class="line">          if(k==1)&#123;</span><br><span class="line">            return Math.min(nums1[index1],nums2[index2]);</span><br><span class="line">          &#125;</span><br><span class="line">            int half=k/2;</span><br><span class="line">            //有可能数组长度小于k/2，此时又下标只能是length</span><br><span class="line">            int newIndex1=Math.min(index1+half,length1)-1;</span><br><span class="line">            int newIndex2=Math.min(index2+half,length2)-1;</span><br><span class="line">            if(nums1[newIndex1]&lt;=nums2[newIndex2])&#123;</span><br><span class="line">                //k减去数组2个下标之间的元素，主要也是因为newIndex不一定就是+k/2</span><br><span class="line">                k-=(newIndex1-index1+1);</span><br><span class="line">                index1=newIndex1+1;</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                k-=(newIndex2-index2+1);</span><br><span class="line">                index2=newIndex2+1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span>[] nums2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums1.length&gt;nums2.length)&#123;</span><br><span class="line">            <span class="keyword">int</span>[]temp=nums1;</span><br><span class="line">            nums1=nums2;</span><br><span class="line">            nums2=temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> m=nums1.length;</span><br><span class="line">        <span class="keyword">int</span> n=nums2.length;</span><br><span class="line">        <span class="keyword">int</span> left=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> right=m;</span><br><span class="line">        <span class="keyword">int</span> totalLeft=(m+n+<span class="number">1</span>)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">while</span>(left&lt;right)&#123;</span><br><span class="line">            <span class="keyword">int</span> i = left + (right - left + <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">int</span> j=totalLeft-i;</span><br><span class="line">            <span class="keyword">if</span>(nums1[i-<span class="number">1</span>]&gt;nums2[j])&#123;</span><br><span class="line">                right=i-<span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                left=i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> i=left;</span><br><span class="line">        <span class="keyword">int</span> j=totalLeft-i;</span><br><span class="line">        <span class="keyword">int</span> nums1LeftMax=i==<span class="number">0</span>?Integer.MIN_VALUE:nums1[i-<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> nums1RightMin=i==m?Integer.MAX_VALUE:nums1[i];</span><br><span class="line">        <span class="keyword">int</span> nums2LeftMax=j==<span class="number">0</span>?Integer.MIN_VALUE:nums2[j-<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> nums2RightMin=j==n?Integer.MAX_VALUE:nums2[j];</span><br><span class="line">        <span class="keyword">if</span>(((m+n)%<span class="number">2</span>)==<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> Math.max(nums1LeftMax,nums2LeftMax);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">double</span>)(Math.max(nums1LeftMax,nums2LeftMax)+Math.min(nums1RightMin,nums2RightMin))/<span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="53-II-0-0-n-1缺失的数字"><a href="#53-II-0-0-n-1缺失的数字" class="headerlink" title="53-II.0 0~n-1缺失的数字"></a>53-II.0 0~n-1缺失的数字</h3><p>一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [0,1,3]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
@@ -2692,7 +2912,21 @@
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">cuttingRope</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &lt;= <span class="number">3</span>) <span class="keyword">return</span> n - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">long</span> res=<span class="number">1L</span>;</span><br><span class="line">        <span class="keyword">int</span> p=(<span class="keyword">int</span>)<span class="number">1e9</span>+<span class="number">7</span>;</span><br><span class="line">        <span class="comment">//贪心算法，优先切三，其次切二</span></span><br><span class="line">        <span class="keyword">while</span>(n&gt;<span class="number">4</span>)&#123;</span><br><span class="line">            res=res*<span class="number">3</span>%p;</span><br><span class="line">            n-=<span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//出来循环只有三种情况，分别是n=2、3、4</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)(res*n%p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="链表遍历"><a href="#链表遍历" class="headerlink" title="链表遍历"></a>链表遍历</h2><h3 id="24-反转链表"><a href="#24-反转链表" class="headerlink" title="24.反转链表"></a>24.反转链表</h3><p> 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点 </p>
+<h2 id="链表遍历"><a href="#链表遍历" class="headerlink" title="链表遍历"></a>链表遍历</h2><h3 id="160-相交链表"><a href="#160-相交链表" class="headerlink" title="160.相交链表"></a>160.相交链表</h3><p> 写一个程序，找到两个单链表相交的起始节点 </p>
+<p><strong>思路</strong></p>
+<p>两个链表，l1+l2=l2+l1,使用双指针</p>
+<p>a指针从headA开始向后遍历，到null时，接上headB</p>
+<p>b指针从headB开始向后遍历，到null时，接上headA</p>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public ListNode getIntersectionNode(ListNode headA, ListNode headB) &#123;</span><br><span class="line">        ListNode a=headA;</span><br><span class="line">        ListNode b=headB;</span><br><span class="line">        while(a!=b)&#123;</span><br><span class="line">            a=a!=null?a.next:headB;</span><br><span class="line">            b=b!=null?b.next:headA;</span><br><span class="line">        &#125;</span><br><span class="line">        return a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="146-LRU缓存机制"><a href="#146-LRU缓存机制" class="headerlink" title="146.LRU缓存机制"></a>146.LRU缓存机制</h3><p>运用你所掌握的数据结构，设计和实现一个 LRU (最近最少使用) 缓存机制 </p>
+<p><strong>思路</strong></p>
+<p>借助Hashmap和双链表</p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> key;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="keyword">public</span> Node next;</span><br><span class="line">    <span class="keyword">public</span> Node pre;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.key=x;</span><br><span class="line">        <span class="keyword">this</span>.value=y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleList</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="keyword">public</span> Node head;</span><br><span class="line">    <span class="keyword">public</span> Node tail;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DoubleList</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.size=<span class="number">0</span>;</span><br><span class="line">        head=<span class="keyword">new</span> Node();</span><br><span class="line">        tail=<span class="keyword">new</span> Node();</span><br><span class="line">        head.next=tail;</span><br><span class="line">        tail.pre=head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(Node node)</span></span>&#123;</span><br><span class="line">        node.next=head.next;</span><br><span class="line">        head.next.pre=node;</span><br><span class="line">        head.next=node;</span><br><span class="line">        node.pre=head;</span><br><span class="line">        ++size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(Node node)</span></span>&#123;</span><br><span class="line">        node.pre.next=node.next;</span><br><span class="line">        node.next.pre=node.pre;</span><br><span class="line">        --size;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">moveToFirst</span><span class="params">(Node node)</span></span>&#123;</span><br><span class="line">        remove(node);</span><br><span class="line">        addFirst(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">removeLast</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Node node=tail.pre;</span><br><span class="line">        remove(node);</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> capacity;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;Integer,Node&gt;map;</span><br><span class="line">    <span class="keyword">private</span> DoubleList doubleList;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUCache</span><span class="params">(<span class="keyword">int</span> capacity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.capacity=capacity;</span><br><span class="line">        map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        doubleList=<span class="keyword">new</span> DoubleList();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!map.containsKey(key))&#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Node node=map.get(key);</span><br><span class="line">        doubleList.moveToFirst(node);</span><br><span class="line">        <span class="keyword">return</span> node.value;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> key, <span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">        Node node=map.get(key);</span><br><span class="line">        <span class="keyword">if</span>(node!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            node.value=value;</span><br><span class="line">            doubleList.moveToFirst(node);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//注意这里别再用node哈，和上面的重复了</span></span><br><span class="line">            Node newNode=<span class="keyword">new</span> Node(key,value);</span><br><span class="line">            map.put(key,newNode);</span><br><span class="line">            doubleList.addFirst(newNode);</span><br><span class="line">            <span class="keyword">if</span>(doubleList.size&gt;capacity)&#123;</span><br><span class="line">                Node lastNode=doubleList.removeLast();</span><br><span class="line">                map.remove(lastNode.key);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="24-反转链表"><a href="#24-反转链表" class="headerlink" title="24.反转链表"></a>24.反转链表</h3><p> 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL</span><br><span class="line">输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL</span><br></pre></td></tr></table></figure>
 
 <p><strong>思路</strong></p>
@@ -2725,7 +2959,7 @@
 <p><strong>思路</strong></p>
 <p>利用栈</p>
 <p><strong>代码</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int[] reversePrint(ListNode head) &#123;</span><br><span class="line">        Stack&lt;ListNode&gt;stack=new Stack&lt;&gt;();</span><br><span class="line">        ListNode temp=head;</span><br><span class="line">        while(temp!=null)&#123;</span><br><span class="line">            stack.push(temp);</span><br><span class="line">            temp=temp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        int size=stack.size();</span><br><span class="line">        int[] res=new int[size];</span><br><span class="line">        for(int i=0;i&lt;size;i++)&#123;</span><br><span class="line">            res[i]=stack.pop().val;</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] reversePrint(ListNode head) &#123;</span><br><span class="line">        LinkedList&lt;ListNode&gt;list=<span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        ListNode temp=head;</span><br><span class="line">        <span class="keyword">while</span>(temp!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            list.addLast(temp);</span><br><span class="line">            temp=temp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> k=list.size();</span><br><span class="line">        <span class="keyword">int</span>[]res=<span class="keyword">new</span> <span class="keyword">int</span>[k];</span><br><span class="line">        <span class="comment">//注意下面不要写list.size()，下面出栈长度会变，注意</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;k;i++)&#123;</span><br><span class="line">            res[i]=list.removeLast().val;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="精选top19-删除链表的倒数第n个结点"><a href="#精选top19-删除链表的倒数第n个结点" class="headerlink" title="精选top19 删除链表的倒数第n个结点"></a>精选top19 删除链表的倒数第n个结点</h3><p> 给定一个链表，删除链表的倒数第 <em>n</em> 个节点，并且返回链表的头结点 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">给定一个链表: 1-&gt;2-&gt;3-&gt;4-&gt;5, 和 n = 2.</span><br><span class="line"></span><br><span class="line">当删除了倒数第二个节点后，链表变为 1-&gt;2-&gt;3-&gt;5</span><br></pre></td></tr></table></figure>
@@ -2756,7 +2990,15 @@
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] getLeastNumbers(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) &#123;</span><br><span class="line">        <span class="keyword">if</span>(k==<span class="number">0</span>||arr.length==<span class="number">0</span>)</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> right=arr.length-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span>[]res=<span class="keyword">new</span> <span class="keyword">int</span>[k];</span><br><span class="line">        res=quickSort(arr,<span class="number">0</span>,right,k-<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] quickSort(<span class="keyword">int</span>[] nums,<span class="keyword">int</span> left,<span class="keyword">int</span> right,<span class="keyword">int</span> k)&#123;</span><br><span class="line">        <span class="keyword">int</span> j=partition(nums,left,right);</span><br><span class="line">        <span class="keyword">if</span>(j==k)  </span><br><span class="line">          <span class="keyword">return</span> Arrays.copyOf(nums,j+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> j&lt;k?quickSort(nums,left+<span class="number">1</span>,right,k):quickSort(nums,left,right-<span class="number">1</span>,k);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//一次快排,确定了nums[j]</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] nums,<span class="keyword">int</span> left,<span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="comment">//right+1是因为后面循环要--j</span></span><br><span class="line">        <span class="keyword">int</span> i=left,j=right+<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//基准元素</span></span><br><span class="line">        <span class="keyword">int</span> target=nums[left];</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            <span class="keyword">while</span>(++i&lt;=right&amp;&amp;nums[i]&lt;target);</span><br><span class="line">            <span class="keyword">while</span>(--j&gt;=left&amp;&amp;nums[j]&gt;target);</span><br><span class="line">            <span class="comment">//循环终止</span></span><br><span class="line">            <span class="keyword">if</span>(i&gt;=j)</span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">int</span> temp=nums[i];</span><br><span class="line">            nums[i]=nums[j];</span><br><span class="line">            nums[j]=temp;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[left]=nums[j];</span><br><span class="line">        nums[j]=target;</span><br><span class="line">        <span class="keyword">return</span> j; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="树类"><a href="#树类" class="headerlink" title="树类"></a>树类</h2><h3 id="236-二叉树的最近公共祖先"><a href="#236-二叉树的最近公共祖先" class="headerlink" title="236.二叉树的最近公共祖先"></a>236.二叉树的最近公共祖先</h3><p>给定一个二叉树, 找到该树中两个指定节点的最近公共祖先 </p>
+<h2 id="树类"><a href="#树类" class="headerlink" title="树类"></a>树类</h2><h3 id="27-二叉树的镜像"><a href="#27-二叉树的镜像" class="headerlink" title="27.二叉树的镜像"></a>27.二叉树的镜像</h3><p> 请完成一个函数，输入一个二叉树，该函数输出它的镜像 -交换子树</p>
+<p><strong>代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public TreeNode mirrorTree(TreeNode root) &#123;</span><br><span class="line">        if(root==null)</span><br><span class="line">          return null;</span><br><span class="line">        TreeNode rightNode=mirrorTree(root.right);</span><br><span class="line">        TreeNode leftNode=mirrorTree(root.left);</span><br><span class="line">        root.left=rightNode;</span><br><span class="line">        root.right=leftNode;</span><br><span class="line">        return root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="102-层次遍历"><a href="#102-层次遍历" class="headerlink" title="102.层次遍历"></a>102.层次遍历</h3><p> 给你一个二叉树，请你返回其按 <strong>层序遍历</strong> 得到的节点值 </p>
+<p><strong>代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) &#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt;res=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span> res;</span><br><span class="line">        LinkedList&lt;TreeNode&gt;queue=<span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        queue.addFirst(root);</span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            List&lt;Integer&gt;list=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">int</span> n=queue.size();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">                TreeNode node=queue.removeLast();</span><br><span class="line">                list.add(node.val);</span><br><span class="line">                <span class="keyword">if</span>(node.left!=<span class="keyword">null</span>)</span><br><span class="line">                  queue.addFirst(node.left);</span><br><span class="line">                <span class="keyword">if</span>(node.right!=<span class="keyword">null</span>)</span><br><span class="line">                  queue.addFirst(node.right);</span><br><span class="line">            &#125;</span><br><span class="line">            res.add(list);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="236-二叉树的最近公共祖先"><a href="#236-二叉树的最近公共祖先" class="headerlink" title="236.二叉树的最近公共祖先"></a>236.二叉树的最近公共祖先</h3><p>给定一个二叉树, 找到该树中两个指定节点的最近公共祖先 </p>
 <p><strong>思路</strong></p>
 <ul>
 <li>在左右子树找，找到p，q就返回</li>
@@ -2813,7 +3055,7 @@
 <h3 id="普通617-合并二叉树"><a href="#普通617-合并二叉树" class="headerlink" title="普通617.合并二叉树"></a>普通617.合并二叉树</h3><p>给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。</p>
 <p>你需要将他们合并为一个新的二叉树。合并的规则是如果两个节点重叠，那么将他们的值相加作为节点合并后的新值，否则不为 NULL 的节点将直接作为新二叉树的节点。</p>
 <p>代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) &#123;</span><br><span class="line">        if(t1==null)</span><br><span class="line">          return t2;</span><br><span class="line">        if(t2==null)</span><br><span class="line">          return t1;  </span><br><span class="line">        TreeNode node=new TreeNode(t1.val+t2.val);</span><br><span class="line">        node.left=mergeTrees(t1.left,t2.left);</span><br><span class="line">        node.right=mergeTrees(t1.right,t2.right);</span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> TreeNode <span class="title">mergeTrees</span><span class="params">(TreeNode t1, TreeNode t2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(t1==<span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span> t2;</span><br><span class="line">        <span class="keyword">if</span>(t2==<span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span> t1;  </span><br><span class="line">        TreeNode node=<span class="keyword">new</span> TreeNode(t1.val+t2.val);</span><br><span class="line">        node.left=mergeTrees(t1.left,t2.left);</span><br><span class="line">        node.right=mergeTrees(t1.right,t2.right);</span><br><span class="line">        <span class="keyword">return</span> node;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="36-二叉搜索树与双向链表"><a href="#36-二叉搜索树与双向链表" class="headerlink" title="36.二叉搜索树与双向链表"></a>36.二叉搜索树与双向链表</h3><p>输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。 </p>
 <p><strong>思路</strong></p>
@@ -2829,192 +3071,6 @@
 </ul>
 <p><strong>代码</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    Node pre,head;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">treeToDoublyList</span><span class="params">(Node root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root==<span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        DFS(root);</span><br><span class="line">        <span class="comment">//循环，构建首尾</span></span><br><span class="line">        head.left=pre;</span><br><span class="line">        pre.right=head;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">DFS</span><span class="params">(Node cur)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(cur==<span class="keyword">null</span>)</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        DFS(cur.left);</span><br><span class="line">        <span class="keyword">if</span>(pre!=<span class="keyword">null</span>)</span><br><span class="line">          pre.right=cur;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          head=cur;</span><br><span class="line">        cur.left=pre;</span><br><span class="line">        pre=cur;</span><br><span class="line">        DFS(cur.right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-<div>
-  
-</div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/23/单例模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="spiderman">
-      <meta itemprop="description" content="研狗一枚">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XJH">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2020/07/23/单例模式/" class="post-title-link" itemprop="url">单例模式</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2020-07-23 21:07:39" itemprop="dateCreated datePublished" datetime="2020-07-23T21:07:39+08:00">2020-07-23</time>
-            </span>
-          
-
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/单例模式/" itemprop="url" rel="index"><span itemprop="name">单例模式</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="单例模式概念"><a href="#单例模式概念" class="headerlink" title="单例模式概念"></a>单例模式概念</h2><p>单例模式即一个类负责创建自己的对象，且确保是单个对象，并且该类提供访问自己唯一对象的方法，可以直接访问，不需要实例化</p>
-<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>数据库连接对象connection，每次建立连接都创建一个对象，消耗太大（可以复用的对象为毛还要每次创建销毁呢），所以我们可以把这个对象设计成单例，只需创建一次并且可以重复使用不就行了</p>
-<h2 id="单例模式三大目标"><a href="#单例模式三大目标" class="headerlink" title="单例模式三大目标"></a>单例模式三大目标</h2><ul>
-<li>懒加载：程序创建时不需要创建对象，等用到时在创建</li>
-<li>线程安全</li>
-<li></li>
-</ul>
-<h2 id="单例模式代码演化"><a href="#单例模式代码演化" class="headerlink" title="单例模式代码演化"></a>单例模式代码演化</h2><h3 id="one"><a href="#one" class="headerlink" title="one"></a>one</h3><p>这种情况下线程不安全</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton1</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton1 singleton1;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton1 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton1==<span class="keyword">null</span>)&#123;</span><br><span class="line">            singleton1 =<span class="keyword">new</span> Singleton1();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="two"><a href="#two" class="headerlink" title="two"></a>two</h3><p>锁方法造成效率低下，每次拿对象都得获取锁，我们只需要在构建对象时加锁即可</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton2</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton2 singleton2;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton2 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton2==<span class="keyword">null</span>)&#123;</span><br><span class="line">            singleton2 =<span class="keyword">new</span> Singleton2();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="three"><a href="#three" class="headerlink" title="three"></a>three</h3><p>这里在构建对象时加锁，但还是存在问题，例如A,B两个线程都执行完1步，此时假设A线程获取锁，创建了对象，结束；然后B线程此时因为已经执行完1，也会获得锁，创建对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span>   Singleton3 singleton3;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Singleton3</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Singleton3 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(singleton3==<span class="keyword">null</span>)&#123;<span class="comment">//1</span></span><br><span class="line">        <span class="keyword">synchronized</span> (Singleton3.class)&#123;<span class="comment">//2</span></span><br><span class="line">            singleton3=<span class="keyword">new</span> Singleton3();<span class="comment">//3</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> singleton3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="four"><a href="#four" class="headerlink" title="four"></a>four</h3><p>双校验锁，在获得锁之后再加一次判断，当然这种方式也会有问题，但已经不错了。问题在于：singleton5=new Singleton5()这一句代表包括3步，分配内存，初始化对象，对象指向内存空间；此时可能会有指令重排，假设A执行了分配内存，对象执行内存空间，而没有初始化，当B线程判断instance已存在时会直接返回一个A线程没有初始化的instance</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton5</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span>   Singleton5 singleton5;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton5</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Singleton5 <span class="title">getSingleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(singleton5==<span class="keyword">null</span>)&#123;<span class="comment">//1</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton5.class)&#123;<span class="comment">//2</span></span><br><span class="line">                <span class="keyword">if</span>(singleton5==<span class="keyword">null</span>)&#123;</span><br><span class="line">                    singleton5=<span class="keyword">new</span> Singleton5();<span class="comment">//3</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleton5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="five"><a href="#five" class="headerlink" title="five"></a>five</h3><p>加个volatile解决</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton5 &#123;</span><br><span class="line">    private static volatile Singleton5 singleton5;</span><br><span class="line"></span><br><span class="line">    private Singleton5()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    private static Singleton5 getSingleton()&#123;</span><br><span class="line">        if(singleton5==null)&#123;//1</span><br><span class="line">            synchronized (Singleton5.class)&#123;//2</span><br><span class="line">                if(singleton5==null)&#123;</span><br><span class="line">                    singleton5=new Singleton5();//3</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return singleton5;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
           
@@ -3111,7 +3167,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -3162,7 +3218,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -3211,7 +3269,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

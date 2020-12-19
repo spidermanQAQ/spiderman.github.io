@@ -380,6 +380,255 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/Cookie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="spiderman">
+      <meta itemprop="description" content="研狗一枚">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XJH">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/08/Cookie/" class="post-title-link" itemprop="url">Cookie和session</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-08 15:35:07" itemprop="dateCreated datePublished" datetime="2019-09-08T15:35:07+08:00">2019-09-08</time>
+            </span>
+          
+
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Servlet/" itemprop="url" rel="index"><span itemprop="name">Servlet</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h1><p>Cookie 是存储在客户端计算机上的文本文件，并保留了各种跟踪信息 。简单例子就是淘宝等账户几天内不用重复登陆。</p>
+<p>识别返回用户包括三个步骤：</p>
+<ul>
+<li>服务器脚本向浏览器发送一组 Cookie。例如：姓名、年龄或识别号码等。</li>
+<li>浏览器将这些信息存储在本地计算机上，以备将来使用。</li>
+<li>当下一次浏览器向 Web 服务器发送任何请求时，浏览器会把这些 Cookie 信息发送到服务器，服务器将使用这些信息来识别用户</li>
+</ul>
+<p>cookie设置过程：</p>
+<ul>
+<li><strong>客户端发送一个http请求到服务器端</strong> </li>
+<li><strong>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部</strong></li>
+<li><strong>客户端发送一个http请求到服务器端，其中包含Cookie头部</strong></li>
+<li><strong>服务器端发送一个http响应到客户端</strong></li>
+</ul>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E6%B5%81%E7%A8%8B.jpg" alt></p>
+<p>这里给一个Cookie响应头例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Date: Fri, 04 Feb 2000 21:03:38 GMT</span><br><span class="line">Server: Apache/1.3.9 (UNIX) PHP/4.0b3</span><br><span class="line">Set-Cookie: name=xyz; expires=Friday, 04-Feb-07 22:03:38 GMT; </span><br><span class="line">                 path=/; domain=runoob.com</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: text/html</span><br></pre></td></tr></table></figure>
+
+<p>Set-Cookie中包含了键值对、一个 GMT 日期、一个路径和一个域 。 </p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/cookie%E5%B1%9E%E6%80%A7.png" alt></p>
+<p>使用：</p>
+<ol>
+<li><p>创建一个Cookie对象，cookie 名称和 cookie 值都是字符串 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie = new Cookie(&quot;key&quot;,&quot;value&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置最大生命周期（以秒为单位）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cookie.setMaxAge(60*60*24);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送Cookie到HTTP响应头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.addCookie(cookie);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cookie cookie=new Cookie(&quot;name&quot;,request.getParameter(&quot;name&quot;));</span><br><span class="line">Cookie url=new Cookie(&quot;url&quot;,request.getParameter(&quot;url&quot;));</span><br><span class="line">cookie.setMaxAge(60*60*24);</span><br><span class="line">url.setMaxAge(60*60*24);</span><br><span class="line">response.addCookie(cookie);</span><br><span class="line">response.addCookie(url);</span><br></pre></td></tr></table></figure>
+
+<p> 特点：</p>
+<ol>
+<li><p>这是浏览器端的数据存储技术</p>
+</li>
+<li><p>数据声明是在服务器</p>
+</li>
+<li><p>2种存储  临时存储：数据存储在浏览器运行内存中，关了就没了</p>
+<p>​                定时存储：到期之后才会没得</p>
+</li>
+</ol>
+<h1 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h1><p>Session是另一种记录浏览器状态的机制，Cookie保存在浏览器中，Session保存在服务器中。用户使用浏览器访问服务器的时候，服务把用户的信息，以某种形式记录在服务器，这就是Session </p>
+<p> <img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/session.png" alt></p>
+<p>如图，浏览器中只有jessionId的键值对，cookie对象中也只有jessionid，用户信息均存在服务器中，用户下次发送请求中会携带jessionId，服务器会识别。</p>
+<p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/session2.png" alt></p>
+<p>对比可知，cookie直接以 [{user:xavier},{gender:man}]的格式放在客户端cookie上的，而session是用[{“JsessionId:xxxx”}]的格式放在客户端cookie，然后在再次访问的时候运用读取JessionId的值即(xxxx)的方式在服务器域对象里面找到对应的数据，既 [{user:xavier},{gender:man}]。 </p>
+<p>特点：</p>
+<ol>
+<li>存储在服务器</li>
+<li>服务器进行创建</li>
+<li>依赖Cookie技术</li>
+<li>一次会话</li>
+<li>默认存储时间30分钟</li>
+</ol>
+<p>使用：</p>
+<ol>
+<li><p>创建session对象/获取session对象         </p>
+</li>
+<li><p>HttpSession hs=request.getSession()</p>
+<p>这么理解：如果创建了session，那么在浏览器中会有JSESSIONID，那么就会返回session对象</p>
+<p>如果没有创建，那么新建一个</p>
+</li>
+<li><p>设置session存储时间 hs.invalidate( )</p>
+</li>
+<li><p>存储数据 hs.setAttribute(String name,Object value)</p>
+<p>获取数据 hs.getAttribute(String name)</p>
+</li>
+</ol>
+<p>使用情景</p>
+<p>​         用户登陆时将用户信息存入session中，供<strong>该用户</strong>的<strong>其他请求</strong>使用</p>
+<p>注意</p>
+<p>​         JESSIONID是在浏览器中，关闭浏览器就没得了</p>
+<p>​         存储和获取是在不同请求，即<a href="http://aa" target="_blank" rel="noopener">http://aa</a> <a href="http://bb这样不同请求，但存储要先于获取" target="_blank" rel="noopener">http://bb这样不同请求，但存储要先于获取</a></p>
+<p>作用域</p>
+<p>​          一次会话（即可以多次请求，主要session没失效）</p>
+<p>代码示例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">     response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">     //获取请求信息</span><br><span class="line">    String name=&quot;张三&quot;;</span><br><span class="line">    //处理消息</span><br><span class="line">    //创建session对象</span><br><span class="line">    HttpSession ps=request.getSession();</span><br><span class="line">    System.out.println(ps.getId());</span><br><span class="line">    ps.setAttribute(&quot;name&quot;,name);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">response.setHeader(&quot;content-type&quot;,&quot;text/html;charset=utf-8&quot;);</span><br><span class="line">//获取请求信息</span><br><span class="line">String name=&quot;张三&quot;;</span><br><span class="line">//处理消息</span><br><span class="line">//创建session对象</span><br><span class="line">HttpSession ps=request.getSession();</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getId());</span><br><span class="line">System.out.println(&quot;session2&quot;+ps.getAttribute(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+    
+    
+
+<div>
+  
+</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/05/java装箱与拆箱/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -988,7 +1237,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1039,7 +1288,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1088,7 +1339,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

@@ -121,7 +121,7 @@
 <meta property="og:description" content="强引用一般正常的引用都是强引用  有如下特点  直接指向对象 强引用指向的对象在任何时候都不会被回收 因而也可能出现内存泄露  123456public static void main(String[] args) throws Exception &amp;#123;    M m=new M();    m=null;    System.gc();    System.in.read();&amp;#12">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%99%9A%E5%BC%95%E7%94%A8.png">
-<meta property="og:updated_time" content="2020-12-02T08:28:30.847Z">
+<meta property="og:updated_time" content="2020-12-18T07:45:33.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="强软弱虚四种引用">
 <meta name="twitter:description" content="强引用一般正常的引用都是强引用  有如下特点  直接指向对象 强引用指向的对象在任何时候都不会被回收 因而也可能出现内存泄露  123456public static void main(String[] args) throws Exception &amp;#123;    M m=new M();    m=null;    System.gc();    System.in.read();&amp;#12">
@@ -518,7 +518,8 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>)</span><br><span class="line">        map.set(<span class="keyword">this</span>, value);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        createMap(t, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(ThreadLocal&lt;?&gt; key, Object value)</span> </span>&#123;</span><br><span class="line">    Entry[] tab = table;</span><br><span class="line">    <span class="keyword">int</span> len = tab.length;</span><br><span class="line">    <span class="keyword">int</span> i = key.threadLocalHashCode &amp; (len-<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (Entry e = tab[i];</span><br><span class="line">         e != <span class="keyword">null</span>;</span><br><span class="line">         e = tab[i = nextIndex(i, len)]) &#123;</span><br><span class="line">         ThreadLocal&lt;?&gt; k = e.get();</span><br><span class="line"></span><br><span class="line">         <span class="keyword">if</span> (k == key) &#123;</span><br><span class="line">                e.value = value;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">if</span> (k == <span class="keyword">null</span>) &#123;</span><br><span class="line">                replaceStaleEntry(key, value, i);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      tab[i] = <span class="keyword">new</span> Entry(key, value);</span><br><span class="line">      <span class="keyword">int</span> sz = ++size;</span><br><span class="line">      <span class="keyword">if</span> (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)</span><br><span class="line">          rehash();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">        <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">        Object value;</span><br><span class="line"></span><br><span class="line">        Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">            <span class="keyword">super</span>(k);</span><br><span class="line">            value = v;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><p>虚引用 就是 形同虚设 ，它并不能决定 对象的生命周期。任何时候这个只有虚引用的对象都有可能被回收。因此，虚引用主要用来跟踪对象的回收，清理被销毁对象的相关资源 </p>
+<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><p>虚引用要和队列联合使用，当弱引用指向的对象被回收时可以起到一个通知作用。</p>
+<p>任何时候这个只有虚引用的对象都有可能被回收。 </p>
 <p><img src="https://xjhpic-1259639342.cos.ap-chengdu.myqcloud.com/%E8%99%9A%E5%BC%95%E7%94%A8.png" alt></p>
 
       
@@ -689,7 +690,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -740,7 +741,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -789,7 +792,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
